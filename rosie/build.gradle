@@ -1,26 +1,21 @@
-buildscript {
-  repositories {
-    maven {
-      url "https://oss.sonatype.org/content/repositories/snapshots/"
-    }
-    jcenter()
-  }
-  dependencies {
-    classpath 'com.jimdo.gradle:gradle-apt-plugin:0.2-SNAPSHOT'
-    classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:1.12.+'
+apply plugin: 'com.android.library'
+
+android {
+  compileSdkVersion 22
+  buildToolsVersion "22.0.1"
+
+  defaultConfig {
+    minSdkVersion 14
+    targetSdkVersion 22
+    versionCode 1
+    versionName "0.1"
   }
 }
 
-apply plugin: 'java'
-apply plugin: 'provided-base'
-apply plugin: 'apt'
-
-
 dependencies {
-  provided 'com.google.android:android:4.0.1.2'
-  provided 'com.google.android:support-v4:r7'
+  compile 'com.android.support:appcompat-v7:22.0.0'
 
-  apt 'com.squareup.dagger:dagger-compiler:1.2.2+'
+  provided 'com.squareup.dagger:dagger-compiler:1.2.2+'
 
   compile 'com.squareup.dagger:dagger:1.+'
   compile 'com.path:android-priority-jobqueue:1.1'
@@ -28,11 +23,11 @@ dependencies {
   compile 'com.jakewharton:butterknife:6.1.0'
 
   task checkstyle(type: Checkstyle) {
-      configFile file('../config/checkstyle/checkstyle.xml')
-      source 'src/main/java'
-      include '**/*.java'
-      exclude '**/gen/**'
+    configFile file('../config/checkstyle/checkstyle.xml')
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
 
-      classpath = files()
+    classpath = files()
   }
 }
