@@ -1,0 +1,5 @@
+<resources>
+  <dimen name="avatar_size">48dp</dimen>
+  <dimen name="gap_normal">8dp</dimen>
+  <dimen name="font_size_header">18sp</dimen>
+</resources>

@@ -1,0 +1,33 @@
+apply plugin: 'com.android.library'
+
+android {
+  compileSdkVersion 22
+  buildToolsVersion "22.0.1"
+
+  defaultConfig {
+    minSdkVersion 14
+    targetSdkVersion 22
+    versionCode 1
+    versionName "0.1"
+  }
+}
+
+dependencies {
+  compile 'com.android.support:appcompat-v7:22.0.0'
+
+  provided 'com.squareup.dagger:dagger-compiler:1.2.2+'
+
+  compile 'com.squareup.dagger:dagger:1.+'
+  compile 'com.path:android-priority-jobqueue:1.1'
+  compile 'com.squareup:otto:1.3.+'
+  compile 'com.jakewharton:butterknife:6.1.0'
+
+  task checkstyle(type: Checkstyle) {
+    configFile file('../config/checkstyle/checkstyle.xml')
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    classpath = files()
+  }
+}

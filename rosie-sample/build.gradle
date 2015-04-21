@@ -1,0 +1,26 @@
+
+
+apply plugin: 'com.android.application'
+
+android {
+  compileSdkVersion 21
+  buildToolsVersion "22.0.1"
+
+  defaultConfig {
+    applicationId "com.karumi.rosie.demo"
+    minSdkVersion 19
+    targetSdkVersion 21
+    versionCode 1
+    versionName "1.0"
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+  }
+}
+
+dependencies {
+  compile project(':rosie')
+  compile 'com.squareup.picasso:picasso:2+'
+  provided 'com.squareup.dagger:dagger-compiler:1.+'
+}
