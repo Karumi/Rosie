@@ -16,16 +16,27 @@
 
 package com.karumi.rosie.domain.usercase;
 
+import com.karumi.rosie.domain.usercase.callback.OnSuccessCallback;
+
 /**
  * Created by flipper83 on 21/04/15.
  */
 public class UserCaseParams {
+  private final static OnSuccessCallback EMPTY_SUCESS = new OnSuccessCallback() {
+  };
+
   private String userCaseName = "";
   private Object[] args;
+  private OnSuccessCallback onSuccessCallback = EMPTY_SUCESS;
 
   private UserCaseParams(String userCaseName, Object[] args) {
     this.args = args;
     this.userCaseName = userCaseName;
+  }
+
+  public UserCaseParams(String userCaseName, Object[] args, OnSuccessCallback onSuccess) {
+    this(userCaseName, args);
+    this.onSuccessCallback = onSuccess;
   }
 
   String getUserCaseName() {
@@ -36,9 +47,14 @@ public class UserCaseParams {
     return args;
   }
 
+  public OnSuccessCallback getOnSuccessCallback() {
+    return onSuccessCallback;
+  }
+
   public static class Builder {
     private String userCaseName = "";
     private Object[] args;
+    private OnSuccessCallback onSuccess;
 
     public Builder name(String name) {
       userCaseName = name;
@@ -50,11 +66,16 @@ public class UserCaseParams {
       return this;
     }
 
+    public Builder onSuccess(OnSuccessCallback onSuccessCallback) {
+      this.onSuccess = onSuccessCallback;
+      return this;
+    }
+
     public UserCaseParams build() {
       if (this.args == null) {
         args = new Object[0];
       }
-      return new UserCaseParams(userCaseName, args);
+      return new UserCaseParams(userCaseName, args, onSuccess);
     }
   }
 }

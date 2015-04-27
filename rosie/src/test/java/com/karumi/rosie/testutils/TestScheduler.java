@@ -14,26 +14,23 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase;
+package com.karumi.rosie.testutils;
 
-import java.lang.reflect.Method;
+import com.karumi.rosie.domain.usercase.TaskScheduler;
+import com.karumi.rosie.domain.usercase.UserCaseWrapper;
 
 /**
- * This class envolve the usercase for invoke it.
+ * Scheduler to run the test sequencially
  */
-public class UserCaseWrapper {
-  private final RosieUseCase userCase;
-  private final UserCaseParams userCaseParams;
-  private final UserCaseFilter userCaseFilter;
+public class TestScheduler implements TaskScheduler {
 
-  public UserCaseWrapper(RosieUseCase userCase, UserCaseParams userCaseParams) {
-    this.userCase = userCase;
-    this.userCaseParams = userCaseParams;
-    userCaseFilter = new UserCaseFilter();
-  }
+  private static final String TAG = "TestScheduler";
 
-  public void execute() throws Exception {
-    Method methodToInvoke = userCaseFilter.filter(userCase, userCaseParams);
-    methodToInvoke.invoke(userCase, userCaseParams.getArgs());
+  @Override public void execute(UserCaseWrapper userCaseWrapper) {
+    try {
+      userCaseWrapper.execute();
+    } catch (Exception e) {
+      //avoid exceptions for test scheduler
+    }
   }
 }

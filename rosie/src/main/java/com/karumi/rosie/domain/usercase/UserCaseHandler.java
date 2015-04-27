@@ -37,7 +37,7 @@ public class UserCaseHandler {
    *
    * @param userCase the user case to invoke
    */
-  public void execute(Object userCase) {
+  public void execute(RosieUseCase userCase) {
     execute(userCase, (new UserCaseParams.Builder()).build());
   }
 
@@ -47,11 +47,12 @@ public class UserCaseHandler {
    *
    * @param userCase the
    */
-  public void execute(Object userCase, UserCaseParams userCaseParams) {
+  public void execute(RosieUseCase userCase, UserCaseParams userCaseParams) {
 
     Method methodsFiltered = userCaseFilter.filter(userCase, userCaseParams);
 
     if (methodsFiltered != null) {
+      userCase.setOnSuccess(userCaseParams.getOnSuccessCallback());
       UserCaseWrapper userCaseWrapper = new UserCaseWrapper(userCase, userCaseParams);
       taskScheduler.execute(userCaseWrapper);
     }

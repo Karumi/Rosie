@@ -14,26 +14,11 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase;
-
-import java.lang.reflect.Method;
+package com.karumi.rosie.domain.usercase.callback;
 
 /**
- * This class envolve the usercase for invoke it.
+ * This callback must be invoke when the userCase finish without problems
  */
-public class UserCaseWrapper {
-  private final RosieUseCase userCase;
-  private final UserCaseParams userCaseParams;
-  private final UserCaseFilter userCaseFilter;
+public interface OnSuccessCallback {
 
-  public UserCaseWrapper(RosieUseCase userCase, UserCaseParams userCaseParams) {
-    this.userCase = userCase;
-    this.userCaseParams = userCaseParams;
-    userCaseFilter = new UserCaseFilter();
-  }
-
-  public void execute() throws Exception {
-    Method methodToInvoke = userCaseFilter.filter(userCase, userCaseParams);
-    methodToInvoke.invoke(userCase, userCaseParams.getArgs());
-  }
 }

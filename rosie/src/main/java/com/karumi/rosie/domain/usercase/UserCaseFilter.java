@@ -47,6 +47,8 @@ class UserCaseFilter {
               + "Do you forget add the @UserCase annotation?");
     }
 
+
+
     if (methodsFiltered.size() > 1) {
       throw new IllegalArgumentException(
           "the target contains more than one usercases with the same signature. "

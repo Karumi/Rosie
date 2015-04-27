@@ -32,11 +32,13 @@ public class UserCaseWrapperTest {
 
     UserCaseWrapper userCaseWrapper = new UserCaseWrapper(anyUserCase, argsParams);
 
+    userCaseWrapper.execute();
+
     assertEquals("anyValue", anyUserCase.getArg1());
     assertEquals(2, anyUserCase.getArg2());
   }
 
-  class AnyUserCase {
+  class AnyUserCase extends RosieUseCase {
 
     private String arg1;
     private int arg2;

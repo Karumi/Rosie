@@ -14,26 +14,16 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase;
+package com.karumi.rosie.domain.usercase.annotation;
 
-import java.lang.reflect.Method;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * This class envolve the usercase for invoke it.
+ * This annotation mark success method to invoke when an user case has been finish without error
  */
-public class UserCaseWrapper {
-  private final RosieUseCase userCase;
-  private final UserCaseParams userCaseParams;
-  private final UserCaseFilter userCaseFilter;
-
-  public UserCaseWrapper(RosieUseCase userCase, UserCaseParams userCaseParams) {
-    this.userCase = userCase;
-    this.userCaseParams = userCaseParams;
-    userCaseFilter = new UserCaseFilter();
-  }
-
-  public void execute() throws Exception {
-    Method methodToInvoke = userCaseFilter.filter(userCase, userCaseParams);
-    methodToInvoke.invoke(userCase, userCaseParams.getArgs());
-  }
+@Retention(RetentionPolicy.RUNTIME) @Target(ElementType.METHOD)
+public @interface Success {
 }

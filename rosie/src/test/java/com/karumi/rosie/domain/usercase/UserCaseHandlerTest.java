@@ -16,9 +16,14 @@
 
 package com.karumi.rosie.domain.usercase;
 
+import com.karumi.rosie.domain.usercase.annotation.Success;
 import com.karumi.rosie.domain.usercase.annotation.UserCase;
+import com.karumi.rosie.domain.usercase.callback.OnSuccessCallback;
+import com.karumi.rosie.testutils.TestScheduler;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -27,6 +32,8 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 
 public class UserCaseHandlerTest {
+
+  private static final int ANY_RETURN_VALUE = 2;
 
   @Test
   public void testExecuteAnyObject() throws Exception {
@@ -139,10 +146,91 @@ public class UserCaseHandlerTest {
     verify(taskScheduler, only()).execute(any(UserCaseWrapper.class));
   }
 
-  class AnyUserCase {
+  @Test
+  public void completeCallbackShouldBeCalledWithoutArgs() {
+    TestScheduler taskScheduler = new TestScheduler();
+    EmptyResponseUserCase anyUserCase = new EmptyResponseUserCase();
+
+    EmptyOnSuccess onSuccessCallback = new EmptyOnSuccess();
+
+    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
+
+    UserCaseParams userCaseParams =
+        new UserCaseParams.Builder().onSuccess(onSuccessCallback).build();
+
+    userCaseHandler.execute(anyUserCase, userCaseParams);
+
+    assertTrue(onSuccessCallback.isSuccess());
+  }
+
+  @Test
+  public void completeCallbackShouldBeCalledWithSuccessArgs() {
+    TestScheduler taskScheduler = new TestScheduler();
+    AnyUserCase anyUserCase = new AnyUserCase();
+
+    AnyOnSuccess onSuccessCallback = new AnyOnSuccess();
+
+    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
+
+    UserCaseParams userCaseParams =
+        new UserCaseParams.Builder().onSuccess(onSuccessCallback).build();
+
+    userCaseHandler.execute(anyUserCase, userCaseParams);
+
+    assertEquals(ANY_RETURN_VALUE, onSuccessCallback.getValue());
+  }
+
+  @Test
+  public void completeCallbackShouldNotBeExecuteWhenNotMatchArgs() {
+    TestScheduler taskScheduler = new TestScheduler();
+    AnyUserCase anyUserCase = new AnyUserCase();
+
+    EmptyOnSuccess onSuccessCallback = new EmptyOnSuccess();
+
+    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
+
+    UserCaseParams userCaseParams =
+        new UserCaseParams.Builder().onSuccess(onSuccessCallback).build();
+
+    userCaseHandler.execute(anyUserCase, userCaseParams);
+
+    assertFalse(onSuccessCallback.isSuccess());
+  }
+
+  class AnyOnSuccess implements OnSuccessCallback {
+    private int value;
+
+    @Success
+    public void onSucess(int value) {
+      this.value = value;
+    }
+
+    public int getValue() {
+      return value;
+    }
+  }
+
+  class EmptyOnSuccess implements OnSuccessCallback {
+    private boolean success = false;
+
+    @Success
+    public void onSucess() {
+      success = true;
+    }
+
+    public boolean isSuccess() {
+      return success;
+    }
+  }
+
+  class AnyUserCase extends RosieUseCase {
+
+    AnyUserCase() {
+    }
+
     @UserCase(name = "anyExecution")
     public void anyExecution() {
-
+      notifySuccesss(ANY_RETURN_VALUE);
     }
 
     @UserCase
@@ -151,7 +239,7 @@ public class UserCaseHandlerTest {
     }
   }
 
-  class AmbigousUserCase {
+  class AmbigousUserCase extends RosieUseCase {
     @UserCase(name = "method1")
     public void method1(String arg1, int arg2) {
 
@@ -163,6 +251,13 @@ public class UserCaseHandlerTest {
     }
   }
 
-  private class NoUserCase {
+  private class NoUserCase extends RosieUseCase {
+  }
+
+  private class EmptyResponseUserCase extends RosieUseCase {
+    @UserCase
+    public void method2() {
+      notifySuccesss();
+    }
   }
 }
