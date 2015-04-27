@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
@@ -23,7 +22,8 @@ public class UserCaseHandlerTest {
 
     userCaseHandler.execute(anyUserCase);
 
-    verify(taskScheduler, only()).execute(eq(anyUserCase), any(UserCaseParams.class));
+
+    verify(taskScheduler, only()).execute(any(UserCaseWrapper.class));
   }
 
   @Test
@@ -41,7 +41,7 @@ public class UserCaseHandlerTest {
     }
 
     assertTrue(exception);
-    verify(taskScheduler, never()).execute(any(Object.class), any(UserCaseParams.class));
+    verify(taskScheduler, never()).execute(any(UserCaseWrapper.class));
   }
 
   @Test
@@ -54,7 +54,7 @@ public class UserCaseHandlerTest {
 
     userCaseHandler.execute(anyUserCase, params);
 
-    verify(taskScheduler, only()).execute(anyUserCase, params);
+    verify(taskScheduler, only()).execute(any(UserCaseWrapper.class));
   }
 
   @Test
@@ -73,7 +73,7 @@ public class UserCaseHandlerTest {
     }
 
     assertTrue(error);
-    verify(taskScheduler, never()).execute(anyUserCase, params);
+    verify(taskScheduler, never()).execute(any(UserCaseWrapper.class));
   }
 
   @Test
@@ -88,7 +88,7 @@ public class UserCaseHandlerTest {
 
     userCaseHandler.execute(anyUserCase, paramsWithArgs);
 
-    verify(taskScheduler, only()).execute(anyUserCase, paramsWithArgs);
+    verify(taskScheduler, only()).execute(any(UserCaseWrapper.class));
   }
 
   @Test
@@ -107,7 +107,7 @@ public class UserCaseHandlerTest {
     }
 
     assertTrue(exception);
-    verify(taskScheduler, never()).execute(any(Object.class), any(UserCaseParams.class));
+    verify(taskScheduler, never()).execute(any(UserCaseWrapper.class));
   }
 
   @Test
@@ -119,10 +119,9 @@ public class UserCaseHandlerTest {
 
     UserCaseParams ambiguousParams =
         new UserCaseParams.Builder().args("anyString", 2).name("method1").build();
-
     userCaseHandler.execute(ambigousUserCase, ambiguousParams);
 
-    verify(taskScheduler, only()).execute(ambigousUserCase, ambiguousParams);
+    verify(taskScheduler, only()).execute(any(UserCaseWrapper.class));
   }
 
   class AnyUserCase {
