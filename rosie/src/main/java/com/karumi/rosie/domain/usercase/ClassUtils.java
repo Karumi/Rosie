@@ -8,6 +8,7 @@ import java.util.HashMap;
 final class ClassUtils {
 
   private static HashMap<Class, Class> primitiveWrappers = new HashMap<Class, Class>();
+
   static {
     primitiveWrappers.put(Boolean.class, boolean.class);
     primitiveWrappers.put(Byte.class, byte.class);
@@ -19,7 +20,6 @@ final class ClassUtils {
     primitiveWrappers.put(Double.class, double.class);
     primitiveWrappers.put(Void.class, void.class);
   }
-
 
   public static boolean canAssign(Class<?> baseClass, Class<?> classToCheck) {
     if (baseClass.isAssignableFrom(classToCheck)) {

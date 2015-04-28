@@ -2,6 +2,7 @@
     package="com.karumi.rosie">
 
   <application
+      android:name=".application.RosieApplication"
       android:allowBackup="true">
 
   </application>
