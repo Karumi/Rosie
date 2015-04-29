@@ -1,5 +1,3 @@
-
-
 /*
  * The MIT License (MIT) Copyright (c) 2014 karumi Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation files (the
@@ -16,27 +14,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-apply plugin: 'com.android.application'
+package com.karumi.rosie.domain.usercase;
 
-android {
-  compileSdkVersion 21
-  buildToolsVersion "22.0.1"
+import java.lang.reflect.Method;
 
-  defaultConfig {
-    applicationId "com.karumi.rosie.demo"
-    minSdkVersion 19
-    targetSdkVersion 21
-    versionCode 1
-    versionName "1.0"
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
-    }
+/**
+ * This class envolve the use case for invoke it.
+ */
+public class UserCaseWrapper {
+  private final RosieUseCase userCase;
+  private final UserCaseParams userCaseParams;
+
+  public UserCaseWrapper(RosieUseCase userCase, UserCaseParams userCaseParams) {
+    this.userCase = userCase;
+    this.userCaseParams = userCaseParams;
   }
-}
 
-dependencies {
-  compile project(':rosie')
-  compile 'com.squareup.picasso:picasso:2+'
-  provided 'com.squareup.dagger:dagger-compiler:1.+'
+  public void execute() throws Exception {
+    Method methodToInvoke = UserCaseFilter.filter(userCase, userCaseParams);
+    methodToInvoke.invoke(userCase, userCaseParams.getArgs());
+  }
 }

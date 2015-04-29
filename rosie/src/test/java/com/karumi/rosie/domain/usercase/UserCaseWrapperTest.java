@@ -1,5 +1,3 @@
-
-
 /*
  * The MIT License (MIT) Copyright (c) 2014 karumi Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation files (the
@@ -16,27 +14,48 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-apply plugin: 'com.android.application'
+package com.karumi.rosie.domain.usercase;
 
-android {
-  compileSdkVersion 21
-  buildToolsVersion "22.0.1"
+import com.karumi.rosie.domain.usercase.annotation.UserCase;
+import org.junit.Test;
 
-  defaultConfig {
-    applicationId "com.karumi.rosie.demo"
-    minSdkVersion 19
-    targetSdkVersion 21
-    versionCode 1
-    versionName "1.0"
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+import static org.junit.Assert.assertEquals;
+
+public class UserCaseWrapperTest {
+
+  @Test
+  public void testExecuteWithArgs() throws Exception {
+    AnyUserCase anyUserCase = new AnyUserCase();
+    UserCaseParams argsParams = new UserCaseParams.Builder().args("anyValue", 2).build();
+
+    UserCaseWrapper userCaseWrapper = new UserCaseWrapper(anyUserCase, argsParams);
+
+    userCaseWrapper.execute();
+
+    assertEquals("anyValue", anyUserCase.getArg1());
+    assertEquals(2, anyUserCase.getArg2());
+  }
+
+  private class AnyUserCase extends RosieUseCase {
+
+    private String arg1;
+    private int arg2;
+
+    AnyUserCase() {
+    }
+
+    @UserCase
+    public void methodWithArgs(String arg1, int arg2) {
+      this.arg1 = arg1;
+      this.arg2 = arg2;
+    }
+
+    private String getArg1() {
+      return arg1;
+    }
+
+    private int getArg2() {
+      return arg2;
     }
   }
-}
-
-dependencies {
-  compile project(':rosie')
-  compile 'com.squareup.picasso:picasso:2+'
-  provided 'com.squareup.dagger:dagger-compiler:1.+'
 }

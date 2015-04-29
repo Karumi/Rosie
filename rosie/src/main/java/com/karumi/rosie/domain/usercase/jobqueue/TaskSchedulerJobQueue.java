@@ -1,5 +1,3 @@
-
-
 /*
  * The MIT License (MIT) Copyright (c) 2014 karumi Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation files (the
@@ -16,27 +14,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-apply plugin: 'com.android.application'
+package com.karumi.rosie.domain.usercase.jobqueue;
 
-android {
-  compileSdkVersion 21
-  buildToolsVersion "22.0.1"
+import com.karumi.rosie.domain.usercase.TaskScheduler;
+import com.karumi.rosie.domain.usercase.UserCaseWrapper;
+import com.path.android.jobqueue.JobManager;
 
-  defaultConfig {
-    applicationId "com.karumi.rosie.demo"
-    minSdkVersion 19
-    targetSdkVersion 21
-    versionCode 1
-    versionName "1.0"
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
-    }
+/**
+ * This is an implementation for a TaskScheduler based on android-priority-jobqueue
+ */
+public class TaskSchedulerJobQueue implements TaskScheduler {
+  private final JobManager jobManager;
+
+  public TaskSchedulerJobQueue(JobManager jobManager) {
+    this.jobManager = jobManager;
   }
-}
 
-dependencies {
-  compile project(':rosie')
-  compile 'com.squareup.picasso:picasso:2+'
-  provided 'com.squareup.dagger:dagger-compiler:1.+'
+  @Override public void execute(UserCaseWrapper userCaseWrapper) {
+    UserCaseWrapperJob userCaseWrapperJob = new UserCaseWrapperJob(userCaseWrapper);
+    jobManager.addJobInBackground(userCaseWrapperJob);
+  }
 }
