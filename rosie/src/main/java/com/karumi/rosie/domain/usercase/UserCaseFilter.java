@@ -17,6 +17,7 @@
 package com.karumi.rosie.domain.usercase;
 
 import com.karumi.rosie.domain.usercase.annotation.UserCase;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,7 +28,7 @@ import java.util.List;
  */
 class UserCaseFilter {
 
-  public Method filter(Object userCase, UserCaseParams userCaseParams) {
+  public static Method filter(Object userCase, UserCaseParams userCaseParams) {
     List<Method> methodsFiltered = filterValidUserCases(userCase);
     if (methodsFiltered.isEmpty()) {
       throw new IllegalArgumentException("This object doesn't contain any user case to execute."
@@ -58,7 +59,7 @@ class UserCaseFilter {
     return methodsFiltered.get(0);
   }
 
-  private List<Method> filterValidUserCases(Object target) {
+  private static List<Method> filterValidUserCases(Object target) {
     List<Method> userCaseMethods = new ArrayList<>();
 
     Method[] methods = target.getClass().getMethods();
@@ -73,7 +74,7 @@ class UserCaseFilter {
     return userCaseMethods;
   }
 
-  private List<Method> filterValidUserCaseArgs(UserCaseParams userCaseParams,
+  private static List<Method> filterValidUserCaseArgs(UserCaseParams userCaseParams,
       List<Method> methodsFiltered) {
 
     Object[] selectedArgs = userCaseParams.getArgs();
@@ -96,7 +97,7 @@ class UserCaseFilter {
     return methodsFiltered;
   }
 
-  private boolean isValidArguments(Class<?>[] parameters, Object[] selectedArgs) {
+  private static boolean isValidArguments(Class<?>[] parameters, Object[] selectedArgs) {
     for (int i = 0; i < parameters.length; i++) {
       Class<?> targetClass = selectedArgs[i].getClass();
       Class<?> parameterClass = parameters[i];
@@ -107,7 +108,7 @@ class UserCaseFilter {
     return true;
   }
 
-  private List<Method> filterValidUserCaseName(UserCaseParams userCaseParams,
+  private static List<Method> filterValidUserCaseName(UserCaseParams userCaseParams,
       List<Method> methodsFiltered) {
     String nameUserCase = userCaseParams.getUserCaseName();
     if (nameUserCase == null || nameUserCase.equals("")) {
@@ -124,5 +125,34 @@ class UserCaseFilter {
     }
 
     return methodsFiltered;
+  }
+
+  public static Method filterValidMethodArgs(Object[] argsToSend, Method[] methods,
+      Class typeAnnotation) {
+
+    List<Method> methodsFiltered = new ArrayList<>();
+
+    for (Method method : methods) {
+      Annotation annotationValid = method.getAnnotation(typeAnnotation);
+      if (annotationValid != null) {
+        Class<?>[] parameters = method.getParameterTypes();
+        if (parameters.length == argsToSend.length) {
+          if (isValidArguments(parameters, argsToSend)) {
+            methodsFiltered.add(method);
+          }
+        }
+      }
+    }
+
+    if (methodsFiltered.isEmpty()) {
+      throw new RuntimeException("Not exist any method on this success with this signature");
+    }
+
+    if (methodsFiltered.size() > 1) {
+      throw new RuntimeException(
+          "This success has more than one method with this signature." + "Remove the ambiguity.");
+    }
+
+    return methodsFiltered.get(0);
   }
 }

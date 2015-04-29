@@ -18,38 +18,26 @@ package com.karumi.rosie.domain.usercase;
 
 import com.karumi.rosie.domain.usercase.annotation.Success;
 import com.karumi.rosie.domain.usercase.callback.OnSuccessCallback;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * This is the base implementation of user case, all user cases must inherate from this one.
+ * This is the base implementation of a UseCase. Every UseCase implementation has to extend from
+ * this class.
  */
 public class RosieUseCase {
   private OnSuccessCallback onSuccess;
 
-  protected void notifySuccesss(Object... values) {
+  protected void notifySuccess(Object... values) {
 
     Method[] methodsArray = onSuccess.getClass().getMethods();
     if (methodsArray.length > 0) {
-      List<Method> methodsToInvoke = filterValidMethodArgs(values, methodsArray, Success.class);
-
-      if (methodsToInvoke.isEmpty()) {
-        throw new RuntimeException("Not exist any method on this success with this signature");
-      }
-
-      if (methodsToInvoke.size() > 1) {
-        throw new RuntimeException(
-            "This success has more than one method with this signature." + "Remove the ambiguity.");
-      }
-
-      Method methodToInvoke = methodsToInvoke.get(0);
+      Method methodToInvoke = UserCaseFilter.filterValidMethodArgs(values, methodsArray,
+          Success.class);
 
       try {
         methodToInvoke.invoke(onSuccess, values);
       } catch (Exception e) {
-        throw new RuntimeException("internal error invoking the sucess object", e);
+        throw new RuntimeException("internal error invoking the success object", e);
       }
     }
   }
@@ -58,34 +46,5 @@ public class RosieUseCase {
     this.onSuccess = onSuccess;
   }
 
-  private List<Method> filterValidMethodArgs(Object[] argsToSend, Method[] methods,
-      Class typeAnnotation) {
 
-    List<Method> methodsFiltered = new ArrayList<>();
-
-    for (Method method : methods) {
-      Annotation annotationValid = method.getAnnotation(typeAnnotation);
-      if (annotationValid != null) {
-        Class<?>[] parameters = method.getParameterTypes();
-        if (parameters.length == argsToSend.length) {
-          if (isValidArguments(parameters, argsToSend)) {
-            methodsFiltered.add(method);
-          }
-        }
-      }
-    }
-
-    return methodsFiltered;
-  }
-
-  private boolean isValidArguments(Class<?>[] parameters, Object[] selectedArgs) {
-    for (int i = 0; i < parameters.length; i++) {
-      Class<?> targetClass = selectedArgs[i].getClass();
-      Class<?> parameterClass = parameters[i];
-      if (!ClassUtils.canAssign(targetClass, parameterClass)) {
-        return false;
-      }
-    }
-    return true;
-  }
 }

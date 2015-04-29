@@ -19,7 +19,7 @@ package com.karumi.rosie.domain.usercase;
 import com.karumi.rosie.domain.usercase.annotation.Success;
 import com.karumi.rosie.domain.usercase.annotation.UserCase;
 import com.karumi.rosie.domain.usercase.callback.OnSuccessCallback;
-import com.karumi.rosie.testutils.TestScheduler;
+import com.karumi.rosie.testutils.FakeScheduler;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -51,7 +51,7 @@ public class UserCaseHandlerTest {
   @Test
   public void testExecuteFailNotAnyUserCase() throws Exception {
     TaskScheduler taskScheduler = mock(TaskScheduler.class);
-    NoUserCase noUserCase = new NoUserCase();
+    NoUseCase noUserCase = new NoUseCase();
 
     UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
 
@@ -116,7 +116,7 @@ public class UserCaseHandlerTest {
   @Test
   public void testExecuteAmbigous() throws Exception {
     TaskScheduler taskScheduler = mock(TaskScheduler.class);
-    AmbigousUserCase ambigousUserCase = new AmbigousUserCase();
+    AmbiguousUseCase ambigousUserCase = new AmbiguousUseCase();
 
     UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
 
@@ -135,7 +135,7 @@ public class UserCaseHandlerTest {
   @Test
   public void testExecuteNoAmbigous() throws Exception {
     TaskScheduler taskScheduler = mock(TaskScheduler.class);
-    AmbigousUserCase ambigousUserCase = new AmbigousUserCase();
+    AmbiguousUseCase ambigousUserCase = new AmbiguousUseCase();
 
     UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
 
@@ -148,8 +148,8 @@ public class UserCaseHandlerTest {
 
   @Test
   public void completeCallbackShouldBeCalledWithoutArgs() {
-    TestScheduler taskScheduler = new TestScheduler();
-    EmptyResponseUserCase anyUserCase = new EmptyResponseUserCase();
+    FakeScheduler taskScheduler = new FakeScheduler();
+    EmptyResponseUseCase anyUserCase = new EmptyResponseUseCase();
 
     EmptyOnSuccess onSuccessCallback = new EmptyOnSuccess();
 
@@ -165,7 +165,7 @@ public class UserCaseHandlerTest {
 
   @Test
   public void completeCallbackShouldBeCalledWithSuccessArgs() {
-    TestScheduler taskScheduler = new TestScheduler();
+    FakeScheduler taskScheduler = new FakeScheduler();
     AnyUserCase anyUserCase = new AnyUserCase();
 
     AnyOnSuccess onSuccessCallback = new AnyOnSuccess();
@@ -182,7 +182,7 @@ public class UserCaseHandlerTest {
 
   @Test
   public void completeCallbackShouldNotBeExecuteWhenNotMatchArgs() {
-    TestScheduler taskScheduler = new TestScheduler();
+    FakeScheduler taskScheduler = new FakeScheduler();
     AnyUserCase anyUserCase = new AnyUserCase();
 
     EmptyOnSuccess onSuccessCallback = new EmptyOnSuccess();
@@ -197,7 +197,7 @@ public class UserCaseHandlerTest {
     assertFalse(onSuccessCallback.isSuccess());
   }
 
-  class AnyOnSuccess implements OnSuccessCallback {
+  private class AnyOnSuccess implements OnSuccessCallback {
     private int value;
 
     @Success
@@ -210,7 +210,7 @@ public class UserCaseHandlerTest {
     }
   }
 
-  class EmptyOnSuccess implements OnSuccessCallback {
+  private class EmptyOnSuccess implements OnSuccessCallback {
     private boolean success = false;
 
     @Success
@@ -223,14 +223,14 @@ public class UserCaseHandlerTest {
     }
   }
 
-  class AnyUserCase extends RosieUseCase {
+  private class AnyUserCase extends RosieUseCase {
 
     AnyUserCase() {
     }
 
     @UserCase(name = "anyExecution")
     public void anyExecution() {
-      notifySuccesss(ANY_RETURN_VALUE);
+      notifySuccess(ANY_RETURN_VALUE);
     }
 
     @UserCase
@@ -239,7 +239,7 @@ public class UserCaseHandlerTest {
     }
   }
 
-  class AmbigousUserCase extends RosieUseCase {
+  private class AmbiguousUseCase extends RosieUseCase {
     @UserCase(name = "method1")
     public void method1(String arg1, int arg2) {
 
@@ -251,13 +251,13 @@ public class UserCaseHandlerTest {
     }
   }
 
-  private class NoUserCase extends RosieUseCase {
+  private class NoUseCase extends RosieUseCase {
   }
 
-  private class EmptyResponseUserCase extends RosieUseCase {
+  private class EmptyResponseUseCase extends RosieUseCase {
     @UserCase
     public void method2() {
-      notifySuccesss();
+      notifySuccess();
     }
   }
 }

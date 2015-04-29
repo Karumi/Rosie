@@ -22,7 +22,7 @@ import com.karumi.rosie.domain.usercase.UserCaseWrapper;
 /**
  * Scheduler to run the test sequencially
  */
-public class TestScheduler implements TaskScheduler {
+public class FakeScheduler implements TaskScheduler {
 
   private static final String TAG = "TestScheduler";
 

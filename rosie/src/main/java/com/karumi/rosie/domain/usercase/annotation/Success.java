@@ -22,7 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation mark success method to invoke when an user case has been finish without error
+ * This annotation mark success method to invoke when an user case has been finish without error.
  */
 @Retention(RetentionPolicy.RUNTIME) @Target(ElementType.METHOD)
 public @interface Success {
