@@ -63,6 +63,11 @@ public class UserCaseParams {
     }
 
     public Builder onSuccess(OnSuccessCallback onSuccessCallback) {
+      if (onSuccessCallback == null) {
+        throw new IllegalArgumentException(
+            "OnSuccessCallback is null. You can not invoke it with" + " null callback.");
+      }
+
       this.onSuccess = onSuccessCallback;
       return this;
     }

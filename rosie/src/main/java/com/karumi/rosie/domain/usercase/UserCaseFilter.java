@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * This class filter an use case based on the params. If something was wrong throws and error.
+ * This class filters a UseCase based on the params. If something was wrong trows an exception.
  */
 class UserCaseFilter {
 

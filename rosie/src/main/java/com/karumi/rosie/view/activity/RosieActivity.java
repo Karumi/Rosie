@@ -73,7 +73,6 @@ public class RosieActivity extends FragmentActivity {
               "Presenter must be accessible for this class. Change visibility to public");
         } else {
           try {
-            //TODO ADD CHECK TYPE
             com.karumi.rosie.view.presenter.Presenter presenter =
                 (com.karumi.rosie.view.presenter.Presenter) field.get(this);
             presenters.add(presenter);

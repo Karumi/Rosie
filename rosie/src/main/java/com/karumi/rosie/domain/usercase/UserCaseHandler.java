@@ -16,8 +16,6 @@
 
 package com.karumi.rosie.domain.usercase;
 
-import java.lang.reflect.Method;
-
 /**
  * this is the handler for user cases, in you want to invoke an user case you need call to this
  * class with a valid user case. A valid usercase is this one that have an @usercase annotation.
@@ -48,14 +46,10 @@ public class UserCaseHandler {
    */
   public void execute(RosieUseCase userCase, UserCaseParams userCaseParams) {
 
-    Method methodsFiltered = UserCaseFilter.filter(userCase, userCaseParams);
+    UserCaseFilter.filter(userCase, userCaseParams);
 
-    if (methodsFiltered != null) {
-      userCase.setOnSuccess(userCaseParams.getOnSuccessCallback());
-      UserCaseWrapper userCaseWrapper = new UserCaseWrapper(userCase, userCaseParams);
-      taskScheduler.execute(userCaseWrapper);
-    }
+    userCase.setOnSuccess(userCaseParams.getOnSuccessCallback());
+    UserCaseWrapper userCaseWrapper = new UserCaseWrapper(userCase, userCaseParams);
+    taskScheduler.execute(userCaseWrapper);
   }
-
-
 }

@@ -18,7 +18,7 @@ package com.karumi.rosie.domain.usercase;
 
 /**
  * Implements this interface for provide a system that can execute UserCases. You need implement
- * the method execute, and put the user case out from main thread.
+ * the method execute, and put the user case out of the main thread.
  */
 public interface TaskScheduler {
   void execute(UserCaseWrapper userCaseWrapper);
