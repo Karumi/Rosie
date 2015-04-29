@@ -36,7 +36,7 @@ public class UserCaseWrapperTest {
     assertEquals(2, anyUserCase.getArg2());
   }
 
-  private class AnyUserCase {
+  private class AnyUserCase extends RosieUseCase {
 
     private String arg1;
     private int arg2;

@@ -17,15 +17,17 @@
 package com.karumi.rosie.domain.usercase;
 
 import com.karumi.rosie.domain.usercase.annotation.UserCase;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * This class filter an use case based on the params. If something was wrong throws and error.
+ * This class filters a UseCase based on the params. If something was wrong trows an exception.
  */
 class UserCaseFilter {
+
 
   static Method filter(Object userCase, UserCaseParams userCaseParams) {
     List<Method> methodsFiltered = getAnnotatedUseCaseMethods(userCase);
@@ -47,6 +49,8 @@ class UserCaseFilter {
               + "Do you forget add the @UserCase annotation?");
     }
 
+
+
     if (methodsFiltered.size() > 1) {
       throw new IllegalArgumentException(
           "The target contains more than one usercases with the same signature. "
@@ -55,6 +59,7 @@ class UserCaseFilter {
 
     return methodsFiltered.get(0);
   }
+
 
   private static List<Method> getAnnotatedUseCaseMethods(Object target) {
     List<Method> userCaseMethods = new ArrayList<>();
@@ -70,6 +75,7 @@ class UserCaseFilter {
     }
     return userCaseMethods;
   }
+
 
   private static List<Method> getMethodMatchingArguments(UserCaseParams userCaseParams,
       List<Method> methodsFiltered) {
@@ -122,5 +128,34 @@ class UserCaseFilter {
     }
 
     return methodsFiltered;
+  }
+
+  public static Method filterValidMethodArgs(Object[] argsToSend, Method[] methods,
+      Class typeAnnotation) {
+
+    List<Method> methodsFiltered = new ArrayList<>();
+
+    for (Method method : methods) {
+      Annotation annotationValid = method.getAnnotation(typeAnnotation);
+      if (annotationValid != null) {
+        Class<?>[] parameters = method.getParameterTypes();
+        if (parameters.length == argsToSend.length) {
+          if (isValidArguments(parameters, argsToSend)) {
+            methodsFiltered.add(method);
+          }
+        }
+      }
+    }
+
+    if (methodsFiltered.isEmpty()) {
+      throw new RuntimeException("Not exist any method on this success with this signature");
+    }
+
+    if (methodsFiltered.size() > 1) {
+      throw new RuntimeException(
+          "This success has more than one method with this signature." + "Remove the ambiguity.");
+    }
+
+    return methodsFiltered.get(0);
   }
 }

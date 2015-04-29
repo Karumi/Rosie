@@ -16,9 +16,14 @@
 
 package com.karumi.rosie.domain.usercase;
 
+import com.karumi.rosie.domain.usercase.annotation.Success;
 import com.karumi.rosie.domain.usercase.annotation.UserCase;
+import com.karumi.rosie.domain.usercase.callback.OnSuccessCallback;
+import com.karumi.rosie.testutils.FakeScheduler;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -27,6 +32,8 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 
 public class UserCaseHandlerTest {
+
+  private static final int ANY_RETURN_VALUE = 2;
 
   @Test
   public void testExecuteAnyObject() throws Exception {
@@ -44,7 +51,7 @@ public class UserCaseHandlerTest {
   @Test
   public void testExecuteFailNotAnyUserCase() throws Exception {
     TaskScheduler taskScheduler = mock(TaskScheduler.class);
-    NoUserCase noUserCase = new NoUserCase();
+    NoUseCase noUserCase = new NoUseCase();
 
     UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
 
@@ -109,7 +116,7 @@ public class UserCaseHandlerTest {
   @Test
   public void testExecuteAmbigous() throws Exception {
     TaskScheduler taskScheduler = mock(TaskScheduler.class);
-    AmbigousUserCase ambigousUserCase = new AmbigousUserCase();
+    AmbiguousUseCase ambigousUserCase = new AmbiguousUseCase();
 
     UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
 
@@ -128,7 +135,7 @@ public class UserCaseHandlerTest {
   @Test
   public void testExecuteNoAmbigous() throws Exception {
     TaskScheduler taskScheduler = mock(TaskScheduler.class);
-    AmbigousUserCase ambigousUserCase = new AmbigousUserCase();
+    AmbiguousUseCase ambigousUserCase = new AmbiguousUseCase();
 
     UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
 
@@ -139,10 +146,91 @@ public class UserCaseHandlerTest {
     verify(taskScheduler, only()).execute(any(UserCaseWrapper.class));
   }
 
-  class AnyUserCase {
+  @Test
+  public void completeCallbackShouldBeCalledWithoutArgs() {
+    FakeScheduler taskScheduler = new FakeScheduler();
+    EmptyResponseUseCase anyUserCase = new EmptyResponseUseCase();
+
+    EmptyOnSuccess onSuccessCallback = new EmptyOnSuccess();
+
+    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
+
+    UserCaseParams userCaseParams =
+        new UserCaseParams.Builder().onSuccess(onSuccessCallback).build();
+
+    userCaseHandler.execute(anyUserCase, userCaseParams);
+
+    assertTrue(onSuccessCallback.isSuccess());
+  }
+
+  @Test
+  public void completeCallbackShouldBeCalledWithSuccessArgs() {
+    FakeScheduler taskScheduler = new FakeScheduler();
+    AnyUserCase anyUserCase = new AnyUserCase();
+
+    AnyOnSuccess onSuccessCallback = new AnyOnSuccess();
+
+    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
+
+    UserCaseParams userCaseParams =
+        new UserCaseParams.Builder().onSuccess(onSuccessCallback).build();
+
+    userCaseHandler.execute(anyUserCase, userCaseParams);
+
+    assertEquals(ANY_RETURN_VALUE, onSuccessCallback.getValue());
+  }
+
+  @Test
+  public void completeCallbackShouldNotBeExecuteWhenNotMatchArgs() {
+    FakeScheduler taskScheduler = new FakeScheduler();
+    AnyUserCase anyUserCase = new AnyUserCase();
+
+    EmptyOnSuccess onSuccessCallback = new EmptyOnSuccess();
+
+    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
+
+    UserCaseParams userCaseParams =
+        new UserCaseParams.Builder().onSuccess(onSuccessCallback).build();
+
+    userCaseHandler.execute(anyUserCase, userCaseParams);
+
+    assertFalse(onSuccessCallback.isSuccess());
+  }
+
+  private class AnyOnSuccess implements OnSuccessCallback {
+    private int value;
+
+    @Success
+    public void onSucess(int value) {
+      this.value = value;
+    }
+
+    public int getValue() {
+      return value;
+    }
+  }
+
+  private class EmptyOnSuccess implements OnSuccessCallback {
+    private boolean success = false;
+
+    @Success
+    public void onSucess() {
+      success = true;
+    }
+
+    public boolean isSuccess() {
+      return success;
+    }
+  }
+
+  private class AnyUserCase extends RosieUseCase {
+
+    AnyUserCase() {
+    }
+
     @UserCase(name = "anyExecution")
     public void anyExecution() {
-
+      notifySuccess(ANY_RETURN_VALUE);
     }
 
     @UserCase
@@ -151,7 +239,7 @@ public class UserCaseHandlerTest {
     }
   }
 
-  class AmbigousUserCase {
+  private class AmbiguousUseCase extends RosieUseCase {
     @UserCase(name = "method1")
     public void method1(String arg1, int arg2) {
 
@@ -163,6 +251,13 @@ public class UserCaseHandlerTest {
     }
   }
 
-  private class NoUserCase {
+  private class NoUseCase extends RosieUseCase {
+  }
+
+  private class EmptyResponseUseCase extends RosieUseCase {
+    @UserCase
+    public void method2() {
+      notifySuccess();
+    }
   }
 }

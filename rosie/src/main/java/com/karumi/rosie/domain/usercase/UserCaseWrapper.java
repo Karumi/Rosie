@@ -22,10 +22,10 @@ import java.lang.reflect.Method;
  * This class envolve the use case for invoke it.
  */
 public class UserCaseWrapper {
-  private final Object userCase;
+  private final RosieUseCase userCase;
   private final UserCaseParams userCaseParams;
 
-  public UserCaseWrapper(Object userCase, UserCaseParams userCaseParams) {
+  public UserCaseWrapper(RosieUseCase userCase, UserCaseParams userCaseParams) {
     this.userCase = userCase;
     this.userCaseParams = userCaseParams;
   }
