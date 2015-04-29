@@ -4,14 +4,14 @@
  * "Software"), to deal in the Software without restriction, including without limitation the
  * rights to use, copy, modify, merge, publish, distribute, sublicense,
  * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to
-  * do so, subject to the following conditions: The above copyright notice and this permission
-  * notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE
-  * IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-  * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * do so, subject to the following conditions: The above copyright notice and this permission
+ * notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE
+ * IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.karumi.rosie.domain.usercase;
@@ -24,27 +24,28 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * This class filter an usercase based on the params. If something was wrong throws and error.
+ * This class filter an use case based on the params. If something was wrong throws and error.
  */
 class UserCaseFilter {
 
-  public static Method filter(Object userCase, UserCaseParams userCaseParams) {
-    List<Method> methodsFiltered = filterValidUserCases(userCase);
+
+  static Method filter(Object userCase, UserCaseParams userCaseParams) {
+    List<Method> methodsFiltered = getAnnotatedUseCaseMethods(userCase);
     if (methodsFiltered.isEmpty()) {
       throw new IllegalArgumentException("This object doesn't contain any user case to execute."
           + "Do you forget add the @UserCase annotation?");
     }
 
-    methodsFiltered = filterValidUserCaseName(userCaseParams, methodsFiltered);
+    methodsFiltered = getMethodMatchingName(userCaseParams, methodsFiltered);
     if (methodsFiltered.isEmpty()) {
-      throw new IllegalArgumentException("the target doesn't contains any usercase with this name."
+      throw new IllegalArgumentException("The target doesn't contains any usercase with this name."
           + "Do you forget add the @UserCase annotation?");
     }
 
-    methodsFiltered = filterValidUserCaseArgs(userCaseParams, methodsFiltered);
+    methodsFiltered = getMethodMatchingArguments(userCaseParams, methodsFiltered);
     if (methodsFiltered.isEmpty()) {
       throw new IllegalArgumentException(
-          "the target doesn't contains any usercase with those args. "
+          "The target doesn't contains any usercase with those args. "
               + "Do you forget add the @UserCase annotation?");
     }
 
@@ -52,14 +53,15 @@ class UserCaseFilter {
 
     if (methodsFiltered.size() > 1) {
       throw new IllegalArgumentException(
-          "the target contains more than one usercases with the same signature. "
+          "The target contains more than one usercases with the same signature. "
               + "You can use 'name' property in @UserCase and invoke with param name");
     }
 
     return methodsFiltered.get(0);
   }
 
-  private static List<Method> filterValidUserCases(Object target) {
+
+  private static List<Method> getAnnotatedUseCaseMethods(Object target) {
     List<Method> userCaseMethods = new ArrayList<>();
 
     Method[] methods = target.getClass().getMethods();
@@ -74,7 +76,8 @@ class UserCaseFilter {
     return userCaseMethods;
   }
 
-  private static List<Method> filterValidUserCaseArgs(UserCaseParams userCaseParams,
+
+  private static List<Method> getMethodMatchingArguments(UserCaseParams userCaseParams,
       List<Method> methodsFiltered) {
 
     Object[] selectedArgs = userCaseParams.getArgs();
@@ -108,7 +111,7 @@ class UserCaseFilter {
     return true;
   }
 
-  private static List<Method> filterValidUserCaseName(UserCaseParams userCaseParams,
+  private static List<Method> getMethodMatchingName(UserCaseParams userCaseParams,
       List<Method> methodsFiltered) {
     String nameUserCase = userCaseParams.getUserCaseName();
     if (nameUserCase == null || nameUserCase.equals("")) {
