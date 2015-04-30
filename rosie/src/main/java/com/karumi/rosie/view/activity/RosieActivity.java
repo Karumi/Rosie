@@ -18,31 +18,77 @@ package com.karumi.rosie.view.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
+import android.view.ViewGroup;
 import butterknife.ButterKnife;
 import com.karumi.rosie.application.RosieApplication;
+import com.karumi.rosie.view.presenter.RosiePresenter;
+import com.karumi.rosie.view.presenter.PresenterLifeCycleHooker;
 import dagger.ObjectGraph;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  *
  */
 public class RosieActivity extends FragmentActivity {
 
-  Set<com.karumi.rosie.view.presenter.Presenter> presenters = new HashSet<>();
   private ObjectGraph activityScopeGraph;
+  private PresenterLifeCycleHooker presenterLifeCycleHooker = new PresenterLifeCycleHooker();
+  private boolean layoutSet = false;
 
+
+  /**
+   * Oncreate method is mandatory called for init rosie. Classes extending from RosieActivity
+   * should call {@link #setContentView(int)} or {@link #setContentView(View)} or {@link
+   * #setContentView(View, ViewGroup.LayoutParams)} before this method.
+   * call
+   * super.
+   * @param savedInstanceState
+   * @throws IllegalStateException if setContentView is not called before this method.
+   */
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    if (!layoutSet) {
+      throw new IllegalStateException("You need call setContentView(...) before call onCreate.");
+    }
+
     super.onCreate(savedInstanceState);
     injectActivityModules();
-    addPresenterAnnotated();
+    presenterLifeCycleHooker.addAnnotatedPresenter(getClass().getDeclaredFields(), this);
     ButterKnife.inject(this);
+    presenterLifeCycleHooker.initializePresenters();
+  }
+
+  @Override public void setContentView(int layoutResID) {
+    layoutSet = true;
+    super.setContentView(layoutResID);
+  }
+
+  @Override public void setContentView(View view) {
+    layoutSet = true;
+    super.setContentView(view);
+  }
+
+  @Override public void setContentView(View view, ViewGroup.LayoutParams params) {
+    layoutSet = true;
+    super.setContentView(view, params);
+  }
+
+  @Override protected void onResume() {
+    super.onResume();
+    presenterLifeCycleHooker.updatePresenters();
+  }
+
+  @Override protected void onPause() {
+    super.onPause();
+    presenterLifeCycleHooker.pausePresenters();
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    presenterLifeCycleHooker.destroyPresenters();
   }
 
   private void injectActivityModules() {
@@ -65,30 +111,7 @@ public class RosieActivity extends FragmentActivity {
     activityScopeGraph.inject(object);
   }
 
-  private void addPresenterAnnotated() {
-    for (Field field : getClass().getDeclaredFields()) {
-      if (field.isAnnotationPresent(com.karumi.rosie.view.presenter.annotation.Presenter.class)) {
-        if (!Modifier.isPublic(field.getModifiers())) {
-          throw new RuntimeException(
-              "Presenter must be accessible for this class. Change visibility to public");
-        } else {
-          try {
-            com.karumi.rosie.view.presenter.Presenter presenter =
-                (com.karumi.rosie.view.presenter.Presenter) field.get(this);
-            presenters.add(presenter);
-          } catch (IllegalAccessException e) {
-            IllegalStateException runtimeException = new IllegalStateException(
-                "the presenter " + field.getName() + " can not be access");
-            runtimeException.initCause(e);
-            throw runtimeException;
-          }
-        }
-      }
-    }
-  }
-
-  public void registerPresenter(com.karumi.rosie.view.presenter.Presenter presenter) {
-    //this method doesn't override the presenter
-    presenters.add(presenter);
+  protected void registerPresenter(RosiePresenter presenter) {
+    presenterLifeCycleHooker.registerPresenter(presenter);
   }
 }

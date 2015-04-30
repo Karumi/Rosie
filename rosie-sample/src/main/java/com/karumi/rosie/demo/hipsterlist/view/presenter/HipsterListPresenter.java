@@ -18,14 +18,14 @@ package com.karumi.rosie.demo.hipsterlist.view.presenter;
 
 import com.karumi.rosie.demo.hipsterlist.view.model.HipsterListViewModel;
 import com.karumi.rosie.demo.hipsterlist.view.model.HipsterViewModel;
-import com.karumi.rosie.view.presenter.Presenter;
+import com.karumi.rosie.view.presenter.RosiePresenter;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  */
-public class HipsterListPresenter extends Presenter {
+public class HipsterListPresenter extends RosiePresenter {
 
   private View view;
   ArrayList<HipsterViewModel> hipsters = new ArrayList<HipsterViewModel>();
@@ -60,6 +60,6 @@ public class HipsterListPresenter extends Presenter {
   }
 
   public interface View {
-    public void updateList();
+    void updateList();
   }
 }
