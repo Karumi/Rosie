@@ -26,12 +26,12 @@ public class PresenterLifeCycleHookerTest {
   @Test
   public void shouldCallAllRegisteredPresenersAreCalledWhenInitializateIsCalled() {
     PresenterLifeCycleHooker presenterLifeCycleHooker = new PresenterLifeCycleHooker();
-    Presenter anyPresenter1 = mock(Presenter.class);
-    Presenter anyPresenter2 = mock(Presenter.class);
+    RosiePresenter anyPresenter1 = mock(RosiePresenter.class);
+    RosiePresenter anyPresenter2 = mock(RosiePresenter.class);
     presenterLifeCycleHooker.registerPresenter(anyPresenter1);
     presenterLifeCycleHooker.registerPresenter(anyPresenter2);
 
-    presenterLifeCycleHooker.presentersInitialize();
+    presenterLifeCycleHooker.initializePresenters();
 
     verify(anyPresenter1).initialize();
     verify(anyPresenter2).initialize();
@@ -40,12 +40,12 @@ public class PresenterLifeCycleHookerTest {
   @Test
   public void shouldCallAllRegisteredPresenersAreCalledWhenUpdateIsCalled() {
     PresenterLifeCycleHooker presenterLifeCycleHooker = new PresenterLifeCycleHooker();
-    Presenter anyPresenter1 = mock(Presenter.class);
-    Presenter anyPresenter2 = mock(Presenter.class);
+    RosiePresenter anyPresenter1 = mock(RosiePresenter.class);
+    RosiePresenter anyPresenter2 = mock(RosiePresenter.class);
     presenterLifeCycleHooker.registerPresenter(anyPresenter1);
     presenterLifeCycleHooker.registerPresenter(anyPresenter2);
 
-    presenterLifeCycleHooker.presentersUpdate();
+    presenterLifeCycleHooker.updatePresenters();
 
     verify(anyPresenter1).update();
     verify(anyPresenter2).update();
@@ -54,12 +54,12 @@ public class PresenterLifeCycleHookerTest {
   @Test
   public void shouldCallAllRegisteredPresenersAreCalledWhenDestroyIsCalled() {
     PresenterLifeCycleHooker presenterLifeCycleHooker = new PresenterLifeCycleHooker();
-    Presenter anyPresenter1 = mock(Presenter.class);
-    Presenter anyPresenter2 = mock(Presenter.class);
+    RosiePresenter anyPresenter1 = mock(RosiePresenter.class);
+    RosiePresenter anyPresenter2 = mock(RosiePresenter.class);
     presenterLifeCycleHooker.registerPresenter(anyPresenter1);
     presenterLifeCycleHooker.registerPresenter(anyPresenter2);
 
-    presenterLifeCycleHooker.presentersDestroy();
+    presenterLifeCycleHooker.destroyPresenters();
 
     verify(anyPresenter1).destroy();
     verify(anyPresenter2).destroy();
@@ -68,12 +68,12 @@ public class PresenterLifeCycleHookerTest {
   @Test
   public void shouldCallAllRegisteredPresenersAreCalledWhenPauseIsCalled() {
     PresenterLifeCycleHooker presenterLifeCycleHooker = new PresenterLifeCycleHooker();
-    Presenter anyPresenter1 = mock(Presenter.class);
-    Presenter anyPresenter2 = mock(Presenter.class);
+    RosiePresenter anyPresenter1 = mock(RosiePresenter.class);
+    RosiePresenter anyPresenter2 = mock(RosiePresenter.class);
     presenterLifeCycleHooker.registerPresenter(anyPresenter1);
     presenterLifeCycleHooker.registerPresenter(anyPresenter2);
 
-    presenterLifeCycleHooker.presentersPause();
+    presenterLifeCycleHooker.pausePresenters();
 
     verify(anyPresenter1).pause();
     verify(anyPresenter2).pause();

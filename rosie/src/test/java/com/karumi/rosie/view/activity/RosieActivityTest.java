@@ -27,12 +27,12 @@ import static org.mockito.Mockito.verify;
 
 public class RosieActivityTest extends RobolectricTest {
 
-  @Test public void shouldPresenterInitializeOnActivityCreate() {
+  @Test public void shouldCallInitializePresenterWhenActivityCreate() {
     TestActivity testActivity = Robolectric.buildActivity(TestActivity.class).create().get();
     verify(testActivity.presenter, only()).initialize();
   }
 
-  @Test public void shouldPresenterUpdateOnActivityResume() {
+  @Test public void shouldCallUpdatePresenterWhenActivityResume() {
     TestActivity testActivity =
         Robolectric.buildActivity(TestActivity.class).create().resume().get();
 
@@ -40,7 +40,7 @@ public class RosieActivityTest extends RobolectricTest {
     verify(testActivity.presenter).update();
   }
 
-  @Test public void shouldPresenterPauseOnActivityPause() {
+  @Test public void shouldCallPausePresenterWhenActivityPause() {
     TestActivity testActivity =
         Robolectric.buildActivity(TestActivity.class).create().resume().pause().get();
     verify(testActivity.presenter).initialize();
@@ -48,7 +48,7 @@ public class RosieActivityTest extends RobolectricTest {
     verify(testActivity.presenter).pause();
   }
 
-  @Test public void shouldPresenterPauseAndRestartWhenActivityPauseAndRestart() {
+  @Test public void shouldCallPausePresenterAndRestartPresenterWhenActivityPauseAndRestart() {
     TestActivity testActivity =
         Robolectric.buildActivity(TestActivity.class).create().resume().pause().resume().get();
     verify(testActivity.presenter).initialize();
@@ -56,7 +56,7 @@ public class RosieActivityTest extends RobolectricTest {
     verify(testActivity.presenter).pause();
   }
 
-  @Test public void shouldPresenterDestroyOnActivityDestroy() {
+  @Test public void shouldCallDestroyPresenterWhenActivityDestroy() {
     TestActivity testActivity =
         Robolectric.buildActivity(TestActivity.class).create().destroy().get();
     verify(testActivity.presenter).initialize();

@@ -22,12 +22,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This class give access to the presenters and unify the access to this one.
+ * Analizes a class with Presenter annotations passed as parameter to obtain a list of Presenter
+ * instances to be linked to the source lifecycle.
  */
 public class PresenterLifeCycleHooker {
-  Set<Presenter> presenters = new HashSet<>();
+  private Set<RosiePresenter> presenters = new HashSet<>();
 
-  public void addPresentedAnnotated(Field[] declaredFields, Object source) {
+  public void addAnnotatedPresenter(Field[] declaredFields, Object source) {
     for (Field field : declaredFields) {
       if (field.isAnnotationPresent(com.karumi.rosie.view.presenter.annotation.Presenter.class)) {
         if (!Modifier.isPublic(field.getModifiers())) {
@@ -36,7 +37,7 @@ public class PresenterLifeCycleHooker {
 
         } else {
           try {
-            Presenter presenter = (Presenter) field.get(source);
+            RosiePresenter presenter = (RosiePresenter) field.get(source);
             presenters.add(presenter);
           } catch (IllegalAccessException e) {
             IllegalStateException runtimeException = new IllegalStateException(
@@ -49,32 +50,31 @@ public class PresenterLifeCycleHooker {
     }
   }
 
-  public void presentersInitialize() {
-    for (Presenter presenter : presenters) {
+  public void initializePresenters() {
+    for (RosiePresenter presenter : presenters) {
       presenter.initialize();
     }
   }
 
-  public void presentersUpdate() {
-    for (Presenter presenter : presenters) {
+  public void updatePresenters() {
+    for (RosiePresenter presenter : presenters) {
       presenter.update();
     }
   }
 
-  public void presentersPause() {
-    for (Presenter presenter : presenters) {
+  public void pausePresenters() {
+    for (RosiePresenter presenter : presenters) {
       presenter.pause();
     }
   }
 
-  public void presentersDestroy() {
-    for (Presenter presenter : presenters) {
+  public void destroyPresenters() {
+    for (RosiePresenter presenter : presenters) {
       presenter.destroy();
     }
   }
 
-  public void registerPresenter(com.karumi.rosie.view.presenter.Presenter presenter) {
-    //this method doesn't override the presenter
+  public void registerPresenter(RosiePresenter presenter) {
     presenters.add(presenter);
   }
 }

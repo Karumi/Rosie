@@ -17,6 +17,7 @@
 package com.karumi.rosie;
 
 import com.karumi.rosie.view.activity.RosieActivity;
+import com.karumi.rosie.view.presenter.RosiePresenter;
 import com.karumi.rosie.view.presenter.annotation.Presenter;
 import java.util.Arrays;
 import java.util.List;
@@ -24,15 +25,14 @@ import java.util.List;
 import static org.mockito.Mockito.mock;
 
 /**
- * Actity for run the tests
+ * Activity for run the tests
  */
 public class TestActivity extends RosieActivity {
-  TestActivity() {
+  public TestActivity() {
   }
 
   @Presenter
-  public com.karumi.rosie.view.presenter.Presenter presenter =
-      mock(com.karumi.rosie.view.presenter.Presenter.class);
+  public RosiePresenter presenter = mock(RosiePresenter.class);
 
   @Override protected List<Object> provideActivityScopeModules() {
     return Arrays.asList((Object) new TestModule());

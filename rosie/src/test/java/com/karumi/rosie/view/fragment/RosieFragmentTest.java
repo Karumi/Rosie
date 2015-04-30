@@ -18,6 +18,7 @@ package com.karumi.rosie.view.fragment;
 
 import com.karumi.rosie.RobolectricTest;
 import com.karumi.rosie.TestActivity;
+import com.karumi.rosie.view.presenter.RosiePresenter;
 import com.karumi.rosie.view.presenter.annotation.Presenter;
 import org.junit.Test;
 import org.robolectric.util.FragmentTestUtil;
@@ -28,7 +29,7 @@ import static org.mockito.Mockito.verify;
 public class RosieFragmentTest extends RobolectricTest {
 
   @Test
-  public void shouldPresenterInitializeWhenFragmentCreate() {
+  public void shouldCallInitializePresenterWhenFragmentCreate() {
 
     TestFragment testFragment = new TestFragment();
     FragmentTestUtil.startFragment(testFragment, TestActivity.class);
@@ -37,7 +38,7 @@ public class RosieFragmentTest extends RobolectricTest {
   }
 
   @Test
-  public void shouldPresenterUpdateWhenFragmentResume() {
+  public void shouldCallUpdatePresenterWhenFragmentResume() {
 
     TestFragment testFragment = new TestFragment();
     FragmentTestUtil.startFragment(testFragment, TestActivity.class);
@@ -47,7 +48,7 @@ public class RosieFragmentTest extends RobolectricTest {
   }
 
   @Test
-  public void shouldPresenterPauseWhenFragmentPause() {
+  public void shouldCallPausePresenterWhenFragmentPause() {
 
     TestFragment testFragment = new TestFragment();
     FragmentTestUtil.startFragment(testFragment, TestActivity.class);
@@ -59,7 +60,7 @@ public class RosieFragmentTest extends RobolectricTest {
   }
 
   @Test
-  public void shouldPresenterDestroyWhenFragmentDestroy() {
+  public void shouldCallDestroyPresenterWhenFragmentDestroy() {
 
     TestFragment testFragment = new TestFragment();
     FragmentTestUtil.startFragment(testFragment, TestActivity.class);
@@ -75,8 +76,8 @@ public class RosieFragmentTest extends RobolectricTest {
 
   public static class TestFragment extends RosieFragment {
     @Presenter
-    public com.karumi.rosie.view.presenter.Presenter presenter =
-        mock(com.karumi.rosie.view.presenter.Presenter.class);
+    public RosiePresenter presenter =
+        mock(RosiePresenter.class);
 
     public TestFragment() {
     }

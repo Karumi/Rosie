@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import butterknife.ButterKnife;
 import com.karumi.rosie.view.activity.RosieActivity;
-import com.karumi.rosie.view.presenter.Presenter;
+import com.karumi.rosie.view.presenter.RosiePresenter;
 import com.karumi.rosie.view.presenter.PresenterLifeCycleHooker;
 
 /**
@@ -14,7 +14,7 @@ import com.karumi.rosie.view.presenter.PresenterLifeCycleHooker;
  */
 public abstract class RosieFragment extends Fragment {
 
-  PresenterLifeCycleHooker presenterLifeCycleHooker = new PresenterLifeCycleHooker();
+  private PresenterLifeCycleHooker presenterLifeCycleHooker = new PresenterLifeCycleHooker();
 
   private boolean injected;
 
@@ -30,10 +30,10 @@ public abstract class RosieFragment extends Fragment {
     injectDependencies();
   }
 
-  protected void injectDependencies() {
+  private void injectDependencies() {
     if (!injected) {
       ((RosieActivity) getActivity()).inject(this);
-      presenterLifeCycleHooker.addPresentedAnnotated(getClass().getDeclaredFields(), this);
+      presenterLifeCycleHooker.addAnnotatedPresenter(getClass().getDeclaredFields(), this);
       injected = true;
     }
   }
@@ -45,26 +45,26 @@ public abstract class RosieFragment extends Fragment {
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    presenterLifeCycleHooker.presentersInitialize();
+    presenterLifeCycleHooker.initializePresenters();
   }
 
   @Override public void onResume() {
     super.onResume();
-    presenterLifeCycleHooker.presentersUpdate();
+    presenterLifeCycleHooker.updatePresenters();
   }
 
 
   @Override public void onPause() {
     super.onPause();
-    presenterLifeCycleHooker.presentersPause();
+    presenterLifeCycleHooker.pausePresenters();
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
-    presenterLifeCycleHooker.presentersDestroy();
+    presenterLifeCycleHooker.destroyPresenters();
   }
 
-  protected void registerPresenter(Presenter presenter) {
+  protected void registerPresenter(RosiePresenter presenter) {
     presenterLifeCycleHooker.registerPresenter(presenter);
   }
 }

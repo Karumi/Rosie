@@ -39,10 +39,6 @@ public class RosieRobolectricTestRunner extends RobolectricTestRunner {
         return MAX_SDK_SUPPORTED_BY_ROBOLECTRIC;
       }
 
-      //@Override
-      //public String getThemeRef(Class<? extends Activity> activityClass) {
-      //  return "@style/RoboAppTheme";
-      //}
     };
   }
 }
