@@ -1,15 +1,38 @@
+/*
+ * The MIT License (MIT) Copyright (c) 2014 karumi Permission is hereby granted, free of charge,
+ * to any person obtaining a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to
+ * do so, subject to the following conditions: The above copyright notice and this permission
+ * notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE
+ * IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package com.karumi.rosie.domain.usercase;
 
+import com.karumi.rosie.domain.usercase.callback.OnSuccessCallback;
+
 /**
- * Created by flipper83 on 21/04/15.
+ * The params value to execute with the user case.
  */
 public class UserCaseParams {
-  private String userCaseName = "";
-  private Object[] args;
+  private final static OnSuccessCallback EMPTY_SUCESS = new OnSuccessCallback() {
+  };
 
-  private UserCaseParams(String userCaseName, Object[] args) {
+  private final OnSuccessCallback onSuccessCallback;
+  private final String userCaseName;
+  private final Object[] args;
+
+  public UserCaseParams(String userCaseName, Object[] args, OnSuccessCallback onSuccess) {
     this.args = args;
     this.userCaseName = userCaseName;
+    this.onSuccessCallback = onSuccess;
   }
 
   String getUserCaseName() {
@@ -20,9 +43,14 @@ public class UserCaseParams {
     return args;
   }
 
+  public OnSuccessCallback getOnSuccessCallback() {
+    return onSuccessCallback;
+  }
+
   public static class Builder {
     private String userCaseName = "";
     private Object[] args;
+    private OnSuccessCallback onSuccess = EMPTY_SUCESS;
 
     public Builder name(String name) {
       userCaseName = name;
@@ -34,11 +62,21 @@ public class UserCaseParams {
       return this;
     }
 
+    public Builder onSuccess(OnSuccessCallback onSuccessCallback) {
+      if (onSuccessCallback == null) {
+        throw new IllegalArgumentException(
+            "OnSuccessCallback is null. You can not invoke it with" + " null callback.");
+      }
+
+      this.onSuccess = onSuccessCallback;
+      return this;
+    }
+
     public UserCaseParams build() {
       if (this.args == null) {
         args = new Object[0];
       }
-      return new UserCaseParams(userCaseName, args);
+      return new UserCaseParams(userCaseName, args, onSuccess);
     }
   }
 }

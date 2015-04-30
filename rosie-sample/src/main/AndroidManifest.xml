@@ -29,7 +29,6 @@
       android:label="@string/app_name"
       android:theme="@style/AppTheme"
       android:name="com.karumi.rosie.demo.base.application.DemoApplication"
-      tools:replace="android:name"
       >
     <activity
         android:name="com.karumi.rosie.demo.hipsterlist.view.activity.phone.HipsterListActivity"

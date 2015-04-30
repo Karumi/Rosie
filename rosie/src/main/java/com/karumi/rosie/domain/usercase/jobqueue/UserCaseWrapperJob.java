@@ -1,5 +1,3 @@
-
-
 /*
  * The MIT License (MIT) Copyright (c) 2014 karumi Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation files (the
@@ -16,27 +14,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-apply plugin: 'com.android.application'
+package com.karumi.rosie.domain.usercase.jobqueue;
 
-android {
-  compileSdkVersion 21
-  buildToolsVersion "22.0.1"
+import android.util.Log;
+import com.karumi.rosie.domain.usercase.UserCaseWrapper;
+import com.path.android.jobqueue.Job;
+import com.path.android.jobqueue.Params;
 
-  defaultConfig {
-    applicationId "com.karumi.rosie.demo"
-    minSdkVersion 19
-    targetSdkVersion 21
-    versionCode 1
-    versionName "1.0"
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+/**
+ * This class is an implementation of a job for android-priority-jobqueue. Manage the usercase inside
+ * the queue system.
+ */
+class UserCaseWrapperJob extends Job {
+  private static final int PRIORITY_NORMAL = 3;
+  private static final String TAG = "UserCaseWrapperJob";
+  private final UserCaseWrapper userCaseWrapper;
+
+  public UserCaseWrapperJob(UserCaseWrapper userCaseWrapper) {
+    super(new Params(PRIORITY_NORMAL));
+    this.userCaseWrapper = userCaseWrapper;
+  }
+
+  @Override public void onAdded() {
+
+  }
+
+  @Override public void onRun() throws Throwable {
+    try {
+      userCaseWrapper.execute();
+    } catch (Exception e) {
+      Log.d(TAG, "unhandled exception from the usercase", e);
     }
   }
-}
 
-dependencies {
-  compile project(':rosie')
-  compile 'com.squareup.picasso:picasso:2+'
-  provided 'com.squareup.dagger:dagger-compiler:1.+'
+  @Override protected void onCancel() {
+
+  }
+
+  @Override protected boolean shouldReRunOnThrowable(Throwable throwable) {
+    return false;
+  }
 }

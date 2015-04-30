@@ -1,4 +1,3 @@
-
 /*
  * The MIT License (MIT) Copyright (c) 2014 karumi Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software and associated documentation files (the
@@ -29,7 +28,7 @@ public class ClassUtilsTest {
   }
 
   @Test
-  public void testCanAssignTwoAnyObjectsWithHerenchy() throws Exception {
+  public void testCanAssignTwoAnyObjectsWithHierarchy() throws Exception {
     assertTrue(ClassUtils.canAssign(AnyClass.class, SonOfAnyClass.class));
   }
 
