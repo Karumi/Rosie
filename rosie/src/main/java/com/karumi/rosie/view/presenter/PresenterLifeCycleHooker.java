@@ -26,7 +26,7 @@ import java.util.Set;
  * instances to be linked to the source lifecycle.
  */
 public class PresenterLifeCycleHooker {
-  private Set<RosiePresenter> presenters = new HashSet<>();
+  private final Set<RosiePresenter> presenters = new HashSet<>();
 
   public void addAnnotatedPresenter(Field[] declaredFields, Object source) {
     for (Field field : declaredFields) {

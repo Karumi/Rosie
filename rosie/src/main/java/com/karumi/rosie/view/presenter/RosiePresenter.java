@@ -5,9 +5,6 @@ package com.karumi.rosie.view.presenter;
  * cycle.
  */
 public class RosiePresenter {
-  public RosiePresenter() {
-
-  }
 
   /**
    * This method has been called when the presenter must be initialize.

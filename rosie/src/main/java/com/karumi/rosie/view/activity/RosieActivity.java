@@ -36,7 +36,7 @@ public class RosieActivity extends FragmentActivity {
 
   private ObjectGraph activityScopeGraph;
   private PresenterLifeCycleHooker presenterLifeCycleHooker = new PresenterLifeCycleHooker();
-  private boolean layoutSetted = false;
+  private boolean layoutSet = false;
 
 
   /**
@@ -50,7 +50,7 @@ public class RosieActivity extends FragmentActivity {
    */
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    if (!layoutSetted) {
+    if (!layoutSet) {
       throw new IllegalStateException("You need call setContentView(...) before call onCreate.");
     }
 
@@ -62,17 +62,17 @@ public class RosieActivity extends FragmentActivity {
   }
 
   @Override public void setContentView(int layoutResID) {
-    layoutSetted = true;
+    layoutSet = true;
     super.setContentView(layoutResID);
   }
 
   @Override public void setContentView(View view) {
-    layoutSetted = true;
+    layoutSet = true;
     super.setContentView(view);
   }
 
   @Override public void setContentView(View view, ViewGroup.LayoutParams params) {
-    layoutSetted = true;
+    layoutSet = true;
     super.setContentView(view, params);
   }
 
