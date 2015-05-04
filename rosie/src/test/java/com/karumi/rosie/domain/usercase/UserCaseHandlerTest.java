@@ -19,6 +19,11 @@ package com.karumi.rosie.domain.usercase;
 import com.karumi.rosie.domain.usercase.annotation.Success;
 import com.karumi.rosie.domain.usercase.annotation.UserCase;
 import com.karumi.rosie.domain.usercase.callback.OnSuccessCallback;
+import com.karumi.rosie.domain.usercase.error.GenericError;
+import com.karumi.rosie.domain.usercase.error.GenericErrorDispacher;
+import com.karumi.rosie.domain.usercase.error.NetworkError;
+import com.karumi.rosie.domain.usercase.error.UseCaseErrorCallback;
+import com.karumi.rosie.domain.usercase.error.UseCaseInternalException;
 import com.karumi.rosie.testutils.FakeScheduler;
 import org.junit.Test;
 
@@ -29,6 +34,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 public class UserCaseHandlerTest {
@@ -197,6 +203,73 @@ public class UserCaseHandlerTest {
     assertFalse(onSuccessCallback.isSuccess());
   }
 
+  @Test
+  public void shouldCallErrorOnErrorWhenUserCaseInvokeAnError() {
+    FakeScheduler taskScheduler = new FakeScheduler();
+    ErrorUseCase errorUserCase = new ErrorUseCase();
+    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
+    UseCaseErrorCallback errorCallback = spy(useCaseErrorCallback);
+    UserCaseParams userCaseParams =
+        new UserCaseParams.Builder().name("customError").onError(errorCallback).build();
+
+    userCaseHandler.execute(errorUserCase, userCaseParams);
+
+    verify(errorCallback).onError(any(GenericError.class));
+  }
+
+  @Test
+  public void shouldCallErrorGenericErrorWhenUserCaseInvokeAnErrorAndDontExistSpecificCallback() {
+    FakeScheduler taskScheduler = new FakeScheduler();
+    ErrorUseCase errorUserCase = new ErrorUseCase();
+    GenericErrorDispacher errorDispacher = mock(GenericErrorDispacher.class);
+    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler, errorDispacher);
+    UserCaseParams userCaseParams = new UserCaseParams.Builder().name("customError").build();
+
+    userCaseHandler.execute(errorUserCase, userCaseParams);
+
+    verify(errorDispacher).notifyError(any(UseCaseInternalException.class));
+  }
+
+  @Test
+  public void
+  shouldCallErrorGenericErrorWhenUserCaseInvokeAnErrorAndTheCallbackDontHandleThisKindOfMethod() {
+    FakeScheduler taskScheduler = new FakeScheduler();
+    ErrorUseCase errorUserCase = new ErrorUseCase();
+    GenericErrorDispacher errorDispacher = mock(GenericErrorDispacher.class);
+    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler, errorDispacher);
+    UserCaseParams userCaseParams =
+        new UserCaseParams.Builder().name("customError").onError(specificErrorCallback).build();
+
+    userCaseHandler.execute(errorUserCase, userCaseParams);
+
+    verify(errorDispacher).notifyError(any(UseCaseInternalException.class));
+  }
+
+  @Test
+  public void shouldCallErrorGenericErrorWhenUserCaseThrowsAnException() {
+    FakeScheduler taskScheduler = new FakeScheduler();
+    ErrorUseCase errorUserCase = new ErrorUseCase();
+    GenericErrorDispacher errorDispacher = mock(GenericErrorDispacher.class);
+    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler, errorDispacher);
+    UserCaseParams userCaseParams = new UserCaseParams.Builder().name("launchException").build();
+
+    userCaseHandler.execute(errorUserCase, userCaseParams);
+
+    verify(errorDispacher).notifyError(any(Exception.class));
+  }
+
+  private UseCaseErrorCallback useCaseErrorCallback = new UseCaseErrorCallback<GenericError>() {
+
+    @Override public void onError(GenericError error) {
+    }
+  };
+
+  private UseCaseErrorCallback specificErrorCallback = new UseCaseErrorCallback<NetworkError>() {
+
+    @Override public void onError(NetworkError error) {
+    }
+  };
+
   private class AnyOnSuccess implements OnSuccessCallback {
     private int value;
 
@@ -258,6 +331,18 @@ public class UserCaseHandlerTest {
     @UserCase
     public void method2() {
       notifySuccess();
+    }
+  }
+
+  private class ErrorUseCase extends RosieUseCase {
+    @UserCase(name = "customError")
+    public void errorMethod() throws Exception {
+      notifyError(new GenericError("error network", new Exception()));
+    }
+
+    @UserCase(name = "launchException")
+    public void launchExceptionMethod() throws Exception {
+      throw new Exception("exception");
     }
   }
 }

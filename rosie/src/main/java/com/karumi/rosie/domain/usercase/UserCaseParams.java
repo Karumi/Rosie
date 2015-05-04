@@ -17,6 +17,7 @@
 package com.karumi.rosie.domain.usercase;
 
 import com.karumi.rosie.domain.usercase.callback.OnSuccessCallback;
+import com.karumi.rosie.domain.usercase.error.UseCaseErrorCallback;
 
 /**
  * The params value to execute with the user case.
@@ -28,11 +29,14 @@ public class UserCaseParams {
   private final OnSuccessCallback onSuccessCallback;
   private final String userCaseName;
   private final Object[] args;
+  private final UseCaseErrorCallback errorCallback;
 
-  public UserCaseParams(String userCaseName, Object[] args, OnSuccessCallback onSuccess) {
+  public UserCaseParams(String userCaseName, Object[] args, OnSuccessCallback onSuccess,
+      UseCaseErrorCallback errorCallback) {
     this.args = args;
     this.userCaseName = userCaseName;
     this.onSuccessCallback = onSuccess;
+    this.errorCallback = errorCallback;
   }
 
   String getUserCaseName() {
@@ -47,10 +51,15 @@ public class UserCaseParams {
     return onSuccessCallback;
   }
 
+  public UseCaseErrorCallback getErrorCallback() {
+    return errorCallback;
+  }
+
   public static class Builder {
     private String userCaseName = "";
     private Object[] args;
     private OnSuccessCallback onSuccess = EMPTY_SUCESS;
+    private UseCaseErrorCallback errorCallback;
 
     public Builder name(String name) {
       userCaseName = name;
@@ -72,11 +81,20 @@ public class UserCaseParams {
       return this;
     }
 
+    public Builder onError(UseCaseErrorCallback errorCallback) {
+      if (errorCallback == null) {
+        throw new IllegalArgumentException(
+            "UserCaseErrorCallback is null. You cannot set an empty onError.");
+      }
+      this.errorCallback = errorCallback;
+      return this;
+    }
+
     public UserCaseParams build() {
       if (this.args == null) {
         args = new Object[0];
       }
-      return new UserCaseParams(userCaseName, args, onSuccess);
+      return new UserCaseParams(userCaseName, args, onSuccess, errorCallback);
     }
   }
 }

@@ -14,40 +14,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase.jobqueue;
-
-import com.karumi.rosie.domain.usercase.UserCaseWrapper;
-import com.path.android.jobqueue.Job;
-import com.path.android.jobqueue.Params;
+package com.karumi.rosie.domain.usercase.error;
 
 /**
- * This class is an implementation of a job for android-priority-jobqueue. Manage the usercase
- * inside
- * the queue system.
+ * Created by flipper83 on 04/05/15.
  */
-class UserCaseWrapperJob extends Job {
-  private static final int PRIORITY_NORMAL = 3;
-  private static final String TAG = "UserCaseWrapperJob";
-  private final UserCaseWrapper userCaseWrapper;
-
-  public UserCaseWrapperJob(UserCaseWrapper userCaseWrapper) {
-    super(new Params(PRIORITY_NORMAL));
-    this.userCaseWrapper = userCaseWrapper;
-  }
-
-  @Override public void onAdded() {
-
-  }
-
-  @Override public void onRun() throws Throwable {
-    userCaseWrapper.execute();
-  }
-
-  @Override protected void onCancel() {
-
-  }
-
-  @Override protected boolean shouldReRunOnThrowable(Throwable throwable) {
-    return false;
+public class NetworkError extends DomainError {
+  public NetworkError(String s, Exception e) {
+    super();
   }
 }

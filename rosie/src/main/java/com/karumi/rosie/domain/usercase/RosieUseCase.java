@@ -18,6 +18,9 @@ package com.karumi.rosie.domain.usercase;
 
 import com.karumi.rosie.domain.usercase.annotation.Success;
 import com.karumi.rosie.domain.usercase.callback.OnSuccessCallback;
+import com.karumi.rosie.domain.usercase.error.DomainError;
+import com.karumi.rosie.domain.usercase.error.UseCaseErrorCallback;
+import com.karumi.rosie.domain.usercase.error.UseCaseInternalException;
 import java.lang.reflect.Method;
 
 /**
@@ -26,13 +29,14 @@ import java.lang.reflect.Method;
  */
 public class RosieUseCase {
   private OnSuccessCallback onSuccess;
+  private UseCaseErrorCallback useCaseErrorCallback;
 
   protected void notifySuccess(Object... values) {
 
     Method[] methodsArray = onSuccess.getClass().getMethods();
     if (methodsArray.length > 0) {
-      Method methodToInvoke = UserCaseFilter.filterValidMethodArgs(values, methodsArray,
-          Success.class);
+      Method methodToInvoke =
+          UserCaseFilter.filterValidMethodArgs(values, methodsArray, Success.class);
 
       try {
         methodToInvoke.invoke(onSuccess, values);
@@ -42,9 +46,24 @@ public class RosieUseCase {
     }
   }
 
+  protected void notifyError(DomainError domainError) throws UseCaseInternalException {
+
+    if (useCaseErrorCallback != null) {
+      try {
+        useCaseErrorCallback.onError(domainError);
+      } catch (IllegalArgumentException e) {
+        throw new UseCaseInternalException(domainError);
+      }
+    } else {
+      throw new UseCaseInternalException(domainError);
+    }
+  }
+
   void setOnSuccess(OnSuccessCallback onSuccess) {
     this.onSuccess = onSuccess;
   }
 
-
+  void setOnError(UseCaseErrorCallback useCaseErrorCallback) {
+    this.useCaseErrorCallback = useCaseErrorCallback;
+  }
 }

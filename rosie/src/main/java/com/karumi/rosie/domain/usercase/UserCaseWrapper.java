@@ -16,6 +16,7 @@
 
 package com.karumi.rosie.domain.usercase;
 
+import com.karumi.rosie.domain.usercase.error.GenericErrorDispacher;
 import java.lang.reflect.Method;
 
 /**
@@ -24,14 +25,27 @@ import java.lang.reflect.Method;
 public class UserCaseWrapper {
   private final RosieUseCase userCase;
   private final UserCaseParams userCaseParams;
+  private final GenericErrorDispacher errorDispacher;
 
-  public UserCaseWrapper(RosieUseCase userCase, UserCaseParams userCaseParams) {
+  public UserCaseWrapper(RosieUseCase userCase, UserCaseParams userCaseParams,
+      GenericErrorDispacher errorDispacher) {
     this.userCase = userCase;
     this.userCaseParams = userCaseParams;
+    this.errorDispacher = errorDispacher;
   }
 
-  public void execute() throws Exception {
-    Method methodToInvoke = UserCaseFilter.filter(userCase, userCaseParams);
-    methodToInvoke.invoke(userCase, userCaseParams.getArgs());
+  public void execute() {
+    try {
+      Method methodToInvoke = UserCaseFilter.filter(userCase, userCaseParams);
+      methodToInvoke.invoke(userCase, userCaseParams.getArgs());
+    } catch (Exception e) {
+      notifyError(e);
+    }
+  }
+
+  private void notifyError(Exception exception) {
+    if (errorDispacher != null) {
+      errorDispacher.notifyError(exception);
+    }
   }
 }

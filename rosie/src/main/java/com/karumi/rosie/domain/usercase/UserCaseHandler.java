@@ -16,17 +16,25 @@
 
 package com.karumi.rosie.domain.usercase;
 
+import com.karumi.rosie.domain.usercase.error.GenericErrorDispacher;
+
 /**
  * this is the handler for user cases, in you want to invoke an user case you need call to this
  * class with a valid user case. A valid usercase is this one that have an @usercase annotation.
  */
 public class UserCaseHandler {
+  private static final GenericErrorDispacher EMPTY_ERROR_DISPACHER = new GenericErrorDispacher();
   private final TaskScheduler taskScheduler;
+  private final GenericErrorDispacher errorDispacher;
 
   public UserCaseHandler(TaskScheduler taskScheduler) {
-    this.taskScheduler = taskScheduler;
+    this(taskScheduler, EMPTY_ERROR_DISPACHER);
   }
 
+  public UserCaseHandler(TaskScheduler taskScheduler, GenericErrorDispacher errorDispacher) {
+    this.taskScheduler = taskScheduler;
+    this.errorDispacher = errorDispacher;
+  }
   /**
    * Invoke an user case without arguments. This user case will invoke outside the main thread, and
    * the response come back on the main thread.
@@ -49,7 +57,8 @@ public class UserCaseHandler {
     UserCaseFilter.filter(userCase, userCaseParams);
 
     userCase.setOnSuccess(userCaseParams.getOnSuccessCallback());
-    UserCaseWrapper userCaseWrapper = new UserCaseWrapper(userCase, userCaseParams);
+    userCase.setOnError(userCaseParams.getErrorCallback());
+    UserCaseWrapper userCaseWrapper = new UserCaseWrapper(userCase, userCaseParams, errorDispacher);
     taskScheduler.execute(userCaseWrapper);
   }
 }

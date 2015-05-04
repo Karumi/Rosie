@@ -14,40 +14,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase.jobqueue;
-
-import com.karumi.rosie.domain.usercase.UserCaseWrapper;
-import com.path.android.jobqueue.Job;
-import com.path.android.jobqueue.Params;
+package com.karumi.rosie.domain.usercase.error;
 
 /**
- * This class is an implementation of a job for android-priority-jobqueue. Manage the usercase
- * inside
- * the queue system.
+ * Generic Error that is not handle for any error handler.
  */
-class UserCaseWrapperJob extends Job {
-  private static final int PRIORITY_NORMAL = 3;
-  private static final String TAG = "UserCaseWrapperJob";
-  private final UserCaseWrapper userCaseWrapper;
+public class GenericError extends DomainError{
+  private Exception cause;
+  private String description;
 
-  public UserCaseWrapperJob(UserCaseWrapper userCaseWrapper) {
-    super(new Params(PRIORITY_NORMAL));
-    this.userCaseWrapper = userCaseWrapper;
+  public GenericError(String description) {
+    this.description = description;
   }
 
-  @Override public void onAdded() {
-
+  public GenericError(String description, Exception cause) {
+    this(description);
+    this.cause = cause;
   }
 
-  @Override public void onRun() throws Throwable {
-    userCaseWrapper.execute();
+  public Exception getCause() {
+    return cause;
   }
 
-  @Override protected void onCancel() {
-
-  }
-
-  @Override protected boolean shouldReRunOnThrowable(Throwable throwable) {
-    return false;
+  public String getDescription() {
+    return description;
   }
 }

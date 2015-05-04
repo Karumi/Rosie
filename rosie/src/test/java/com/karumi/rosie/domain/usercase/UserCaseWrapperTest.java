@@ -28,7 +28,7 @@ public class UserCaseWrapperTest {
     AnyUserCase anyUserCase = new AnyUserCase();
     UserCaseParams argsParams = new UserCaseParams.Builder().args("anyValue", 2).build();
 
-    UserCaseWrapper userCaseWrapper = new UserCaseWrapper(anyUserCase, argsParams);
+    UserCaseWrapper userCaseWrapper = new UserCaseWrapper(anyUserCase, argsParams, null);
 
     userCaseWrapper.execute();
 
