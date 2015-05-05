@@ -11,7 +11,7 @@ import com.karumi.rosie.view.presenter.view.ErrorUi;
  */
 public class RosiePresenter {
 
-  private final UserCaseHandler userCaseHandler;
+  protected final UserCaseHandler userCaseHandler;
   protected ErrorUi errorUi;
 
   public RosiePresenter(UserCaseHandler userCaseHandler) {

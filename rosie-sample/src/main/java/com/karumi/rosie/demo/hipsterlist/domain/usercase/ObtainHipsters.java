@@ -14,26 +14,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.demo.hipsterlist.view;
+package com.karumi.rosie.demo.hipsterlist.domain.usercase;
 
-import com.karumi.rosie.demo.hipsterlist.view.activity.phone.HipsterListActivity;
-import com.karumi.rosie.demo.hipsterlist.view.presenter.HipsterListPresenter;
-import com.karumi.rosie.domain.usercase.UserCaseHandler;
-import dagger.Module;
-import dagger.Provides;
+import com.karumi.rosie.demo.hipsterlist.view.model.HipsterViewModel;
+import com.karumi.rosie.domain.usercase.RosieUseCase;
+import com.karumi.rosie.domain.usercase.annotation.UserCase;
+import com.karumi.rosie.domain.usercase.callback.OnSuccessCallback;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- *
+ * This UseCase provide hipsters from dummy data.
  */
-@Module(
-    library = true,
-    complete = false,
-    injects = { HipsterListActivity.class }
-)
-public class HipsterListViewModule {
+public class ObtainHipsters extends RosieUseCase{
 
-  @Provides
-  public HipsterListPresenter provideHipsterListPresenter(UserCaseHandler userCaseHandler) {
-    return new HipsterListPresenter(userCaseHandler);
+  @UserCase
+  public void obtain(){
+    HipsterViewModel hipsterTest = new HipsterViewModel();
+    hipsterTest.setName("Hipstotito Fernandez");
+    hipsterTest.setAvatarUrl(
+        "https://cdn0.iconfinder.com/data/icons/avatars-3/512/avatar_hipster_guy-512.png");
+    hipsterTest.setId("1");
+
+    List<HipsterViewModel> hipsterViewModels = new ArrayList<HipsterViewModel>();
+    hipsterViewModels.add(hipsterTest);
+
+    notifySuccess(hipsterViewModels);
   }
 }

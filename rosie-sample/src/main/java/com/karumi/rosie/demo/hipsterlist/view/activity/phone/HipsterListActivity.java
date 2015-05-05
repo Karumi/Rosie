@@ -50,30 +50,22 @@ public class HipsterListActivity extends RosieActivity implements HipsterListPre
   protected void onCreate(Bundle savedInstanceState) {
     setContentView(R.layout.activity_hipster_list);
     super.onCreate(savedInstanceState);
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
     presenter.setView(this);
-    presenter.obtainHipsters();
-    refreshData();
   }
 
-  private void refreshData() {
-    List<HipsterViewModel> hipsters = presenter.getHipsters();
-
+  private void refreshData(List<HipsterViewModel> hipsters) {
     if (feedAdapter == null) {
       transformationAvatar = new RoundAvatarTransformation();
-      feedAdapter = new FeedAdapter(getBaseContext(), hipsters, picasso, transformationAvatar);
+      feedAdapter = new FeedAdapter(getBaseContext(), hipsters, picasso,
+          transformationAvatar);
       listviewFeed.setAdapter(feedAdapter);
     } else {
       feedAdapter.notifyDataSetChanged();
     }
   }
 
-  @Override public void updateList() {
-    refreshData();
+  @Override public void updateList(List<HipsterViewModel> hipsters) {
+    refreshData(hipsters);
   }
 
   @Override protected List<Object> provideActivityScopeModules() {
