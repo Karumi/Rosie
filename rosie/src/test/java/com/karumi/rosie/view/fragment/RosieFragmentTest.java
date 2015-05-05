@@ -17,7 +17,7 @@
 package com.karumi.rosie.view.fragment;
 
 import com.karumi.rosie.RobolectricTest;
-import com.karumi.rosie.TestActivity;
+import com.karumi.rosie.doubles.TestActivity;
 import com.karumi.rosie.view.presenter.RosiePresenter;
 import com.karumi.rosie.view.presenter.annotation.Presenter;
 import org.junit.Test;

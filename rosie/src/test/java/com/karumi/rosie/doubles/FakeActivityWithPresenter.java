@@ -14,38 +14,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase;
+package com.karumi.rosie.doubles;
 
-import com.karumi.rosie.domain.usercase.error.GlobalErrorDispacher;
-import java.lang.reflect.Method;
+import android.os.Bundle;
+import android.view.View;
+import com.karumi.rosie.TestModule;
+import com.karumi.rosie.view.activity.RosieActivity;
+import com.karumi.rosie.view.presenter.annotation.Presenter;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.mockito.Mockito.mock;
 
 /**
- * This class envolve the use case for invoke it.
+ * Activity for run the tests
  */
-public class UserCaseWrapper {
-  private final RosieUseCase userCase;
-  private final UserCaseParams userCaseParams;
-  private final GlobalErrorDispacher errorDispacher;
+public class FakeActivityWithPresenter extends RosieActivity {
+  public FakePresenter.FakeUi uiView = mock(FakePresenter.FakeUi.class);
 
-  public UserCaseWrapper(RosieUseCase userCase, UserCaseParams userCaseParams,
-      GlobalErrorDispacher errorDispacher) {
-    this.userCase = userCase;
-    this.userCaseParams = userCaseParams;
-    this.errorDispacher = errorDispacher;
+  public FakeActivityWithPresenter() {
   }
 
-  public void execute() {
-    try {
-      Method methodToInvoke = UserCaseFilter.filter(userCase, userCaseParams);
-      methodToInvoke.invoke(userCase, userCaseParams.getArgs());
-    } catch (Exception e) {
-      notifyError(e);
-    }
+  @Override public void onCreate(Bundle savedInstanceState) {
+    setContentView(new View(getBaseContext()));
+    super.onCreate(savedInstanceState);
+    presenter.setUi(uiView);
   }
 
-  private void notifyError(Exception exception) {
-    if (errorDispacher != null) {
-      errorDispacher.notifyError(exception);
-    }
+  @Presenter
+  public FakePresenter presenter = new FakePresenter();
+
+  @Override protected List<Object> provideActivityScopeModules() {
+    return Arrays.asList((Object) new TestModule());
+  }
+
+  public void generateErrorOnPresenter() {
+    presenter.callErrorUseCase();
   }
 }

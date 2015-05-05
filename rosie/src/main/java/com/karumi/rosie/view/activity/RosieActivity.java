@@ -22,8 +22,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import butterknife.ButterKnife;
 import com.karumi.rosie.application.RosieApplication;
-import com.karumi.rosie.view.presenter.RosiePresenter;
+import com.karumi.rosie.domain.usercase.error.DomainError;
 import com.karumi.rosie.view.presenter.PresenterLifeCycleHooker;
+import com.karumi.rosie.view.presenter.RosiePresenter;
+import com.karumi.rosie.view.presenter.view.ErrorUi;
 import dagger.ObjectGraph;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,12 +34,11 @@ import java.util.List;
 /**
  *
  */
-public class RosieActivity extends FragmentActivity {
+public class RosieActivity extends FragmentActivity implements ErrorUi {
 
   private ObjectGraph activityScopeGraph;
   private PresenterLifeCycleHooker presenterLifeCycleHooker = new PresenterLifeCycleHooker();
   private boolean layoutSet = false;
-
 
   /**
    * Oncreate method is mandatory called for init rosie. Classes extending from RosieActivity
@@ -45,7 +46,7 @@ public class RosieActivity extends FragmentActivity {
    * #setContentView(View, ViewGroup.LayoutParams)} before this method.
    * call
    * super.
-   * @param savedInstanceState
+   *
    * @throws IllegalStateException if setContentView is not called before this method.
    */
   @Override
@@ -59,6 +60,7 @@ public class RosieActivity extends FragmentActivity {
     presenterLifeCycleHooker.addAnnotatedPresenter(getClass().getDeclaredFields(), this);
     ButterKnife.inject(this);
     presenterLifeCycleHooker.initializePresenters();
+    presenterLifeCycleHooker.setGlobalError(this);
   }
 
   @Override public void setContentView(int layoutResID) {
@@ -113,5 +115,8 @@ public class RosieActivity extends FragmentActivity {
 
   protected void registerPresenter(RosiePresenter presenter) {
     presenterLifeCycleHooker.registerPresenter(presenter);
+  }
+
+  @Override public void showGlobalError(DomainError domainError) {
   }
 }

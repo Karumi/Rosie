@@ -16,22 +16,23 @@
 
 package com.karumi.rosie.domain.usercase;
 
-import com.karumi.rosie.domain.usercase.error.GenericErrorDispacher;
+import com.karumi.rosie.domain.usercase.error.GlobalErrorDispacher;
+import com.karumi.rosie.domain.usercase.error.UseCaseErrorCallback;
 
 /**
  * this is the handler for user cases, in you want to invoke an user case you need call to this
  * class with a valid user case. A valid usercase is this one that have an @usercase annotation.
  */
 public class UserCaseHandler {
-  private static final GenericErrorDispacher EMPTY_ERROR_DISPACHER = new GenericErrorDispacher();
+  private static final GlobalErrorDispacher EMPTY_ERROR_DISPACHER = new GlobalErrorDispacher();
   private final TaskScheduler taskScheduler;
-  private final GenericErrorDispacher errorDispacher;
+  private final GlobalErrorDispacher errorDispacher;
 
   public UserCaseHandler(TaskScheduler taskScheduler) {
     this(taskScheduler, EMPTY_ERROR_DISPACHER);
   }
 
-  public UserCaseHandler(TaskScheduler taskScheduler, GenericErrorDispacher errorDispacher) {
+  public UserCaseHandler(TaskScheduler taskScheduler, GlobalErrorDispacher errorDispacher) {
     this.taskScheduler = taskScheduler;
     this.errorDispacher = errorDispacher;
   }
@@ -60,5 +61,13 @@ public class UserCaseHandler {
     userCase.setOnError(userCaseParams.getErrorCallback());
     UserCaseWrapper userCaseWrapper = new UserCaseWrapper(userCase, userCaseParams, errorDispacher);
     taskScheduler.execute(userCaseWrapper);
+  }
+
+  public void registerErrorGlobalCallback(UseCaseErrorCallback globalError) {
+    errorDispacher.registerCallback(globalError);
+  }
+
+  public void unregisterErrorGlobalCallback(UseCaseErrorCallback globalError) {
+    errorDispacher.unregisterCallback(globalError);
   }
 }

@@ -14,38 +14,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase;
+package com.karumi.rosie.view.presenter.view;
 
-import com.karumi.rosie.domain.usercase.error.GlobalErrorDispacher;
-import java.lang.reflect.Method;
+import com.karumi.rosie.domain.usercase.error.DomainError;
 
 /**
- * This class envolve the use case for invoke it.
+ * Ui interface that notify an unexpected error has happened on the presenter.
  */
-public class UserCaseWrapper {
-  private final RosieUseCase userCase;
-  private final UserCaseParams userCaseParams;
-  private final GlobalErrorDispacher errorDispacher;
-
-  public UserCaseWrapper(RosieUseCase userCase, UserCaseParams userCaseParams,
-      GlobalErrorDispacher errorDispacher) {
-    this.userCase = userCase;
-    this.userCaseParams = userCaseParams;
-    this.errorDispacher = errorDispacher;
-  }
-
-  public void execute() {
-    try {
-      Method methodToInvoke = UserCaseFilter.filter(userCase, userCaseParams);
-      methodToInvoke.invoke(userCase, userCaseParams.getArgs());
-    } catch (Exception e) {
-      notifyError(e);
-    }
-  }
-
-  private void notifyError(Exception exception) {
-    if (errorDispacher != null) {
-      errorDispacher.notifyError(exception);
-    }
-  }
+public interface ErrorUi {
+  void showGlobalError(DomainError domainError);
 }

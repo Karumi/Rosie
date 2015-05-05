@@ -17,11 +17,13 @@
 package com.karumi.rosie.view.activity;
 
 import com.karumi.rosie.RobolectricTest;
-import com.karumi.rosie.TestActivity;
+import com.karumi.rosie.doubles.FakeActivityWithPresenter;
+import com.karumi.rosie.doubles.FakeActivityWithPresenterNoHandleError;
+import com.karumi.rosie.doubles.TestActivity;
 import org.junit.Test;
 import org.robolectric.Robolectric;
 
-import static org.mockito.Mockito.only;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -29,7 +31,7 @@ public class RosieActivityTest extends RobolectricTest {
 
   @Test public void shouldCallInitializePresenterWhenActivityCreate() {
     TestActivity testActivity = Robolectric.buildActivity(TestActivity.class).create().get();
-    verify(testActivity.presenter, only()).initialize();
+    verify(testActivity.presenter, times(1)).initialize();
   }
 
   @Test public void shouldCallUpdatePresenterWhenActivityResume() {
@@ -61,5 +63,26 @@ public class RosieActivityTest extends RobolectricTest {
         Robolectric.buildActivity(TestActivity.class).create().destroy().get();
     verify(testActivity.presenter).initialize();
     verify(testActivity.presenter).destroy();
+  }
+
+  @Test public void shouldCallErrorWhenAnUserCaseLaunchAnGlobalError() {
+    FakeActivityWithPresenter fakeActivity =
+        Robolectric.buildActivity(FakeActivityWithPresenter.class).create().resume().get();
+
+    fakeActivity.generateErrorOnPresenter();
+
+    verify(fakeActivity.uiView).showFakeError();
+  }
+
+  @Test public void shouldCallErrorWhenAnUserCaseLaunchAGlobalErrorAndPresenterDontInterceptIt() {
+    FakeActivityWithPresenterNoHandleError fakeActivity =
+        Robolectric.buildActivity(FakeActivityWithPresenterNoHandleError.class)
+            .create()
+            .resume()
+            .get();
+
+    fakeActivity.generateErrorOnPresenter();
+
+    assertTrue(fakeActivity.isAnErrorHappend());
   }
 }

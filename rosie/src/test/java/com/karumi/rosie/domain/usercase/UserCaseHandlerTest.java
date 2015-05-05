@@ -20,7 +20,7 @@ import com.karumi.rosie.domain.usercase.annotation.Success;
 import com.karumi.rosie.domain.usercase.annotation.UserCase;
 import com.karumi.rosie.domain.usercase.callback.OnSuccessCallback;
 import com.karumi.rosie.domain.usercase.error.GenericError;
-import com.karumi.rosie.domain.usercase.error.GenericErrorDispacher;
+import com.karumi.rosie.domain.usercase.error.GlobalErrorDispacher;
 import com.karumi.rosie.domain.usercase.error.NetworkError;
 import com.karumi.rosie.domain.usercase.error.UseCaseErrorCallback;
 import com.karumi.rosie.domain.usercase.error.UseCaseInternalException;
@@ -221,7 +221,7 @@ public class UserCaseHandlerTest {
   public void shouldCallErrorGenericErrorWhenUserCaseInvokeAnErrorAndDontExistSpecificCallback() {
     FakeScheduler taskScheduler = new FakeScheduler();
     ErrorUseCase errorUserCase = new ErrorUseCase();
-    GenericErrorDispacher errorDispacher = mock(GenericErrorDispacher.class);
+    GlobalErrorDispacher errorDispacher = mock(GlobalErrorDispacher.class);
     UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler, errorDispacher);
     UserCaseParams userCaseParams = new UserCaseParams.Builder().name("customError").build();
 
@@ -235,7 +235,7 @@ public class UserCaseHandlerTest {
   shouldCallErrorGenericErrorWhenUserCaseInvokeAnErrorAndTheCallbackDontHandleThisKindOfMethod() {
     FakeScheduler taskScheduler = new FakeScheduler();
     ErrorUseCase errorUserCase = new ErrorUseCase();
-    GenericErrorDispacher errorDispacher = mock(GenericErrorDispacher.class);
+    GlobalErrorDispacher errorDispacher = mock(GlobalErrorDispacher.class);
     UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler, errorDispacher);
     UserCaseParams userCaseParams =
         new UserCaseParams.Builder().name("customError").onError(specificErrorCallback).build();
@@ -249,7 +249,7 @@ public class UserCaseHandlerTest {
   public void shouldCallErrorGenericErrorWhenUserCaseThrowsAnException() {
     FakeScheduler taskScheduler = new FakeScheduler();
     ErrorUseCase errorUserCase = new ErrorUseCase();
-    GenericErrorDispacher errorDispacher = mock(GenericErrorDispacher.class);
+    GlobalErrorDispacher errorDispacher = mock(GlobalErrorDispacher.class);
     UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler, errorDispacher);
     UserCaseParams userCaseParams = new UserCaseParams.Builder().name("launchException").build();
 

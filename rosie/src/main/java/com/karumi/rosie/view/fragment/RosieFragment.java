@@ -21,19 +21,20 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.view.View;
 import butterknife.ButterKnife;
+import com.karumi.rosie.domain.usercase.error.DomainError;
 import com.karumi.rosie.view.activity.RosieActivity;
-import com.karumi.rosie.view.presenter.RosiePresenter;
 import com.karumi.rosie.view.presenter.PresenterLifeCycleHooker;
+import com.karumi.rosie.view.presenter.RosiePresenter;
+import com.karumi.rosie.view.presenter.view.ErrorUi;
 
 /**
  * Base fragment which performs injection using the activity object graph of its parent.
  */
-public abstract class RosieFragment extends Fragment {
+public abstract class RosieFragment extends Fragment implements ErrorUi {
 
   private PresenterLifeCycleHooker presenterLifeCycleHooker = new PresenterLifeCycleHooker();
 
   private boolean injected;
-
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
@@ -62,13 +63,13 @@ public abstract class RosieFragment extends Fragment {
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     presenterLifeCycleHooker.initializePresenters();
+    presenterLifeCycleHooker.setGlobalError(this);
   }
 
   @Override public void onResume() {
     super.onResume();
     presenterLifeCycleHooker.updatePresenters();
   }
-
 
   @Override public void onPause() {
     super.onPause();
@@ -82,5 +83,9 @@ public abstract class RosieFragment extends Fragment {
 
   protected void registerPresenter(RosiePresenter presenter) {
     presenterLifeCycleHooker.registerPresenter(presenter);
+  }
+
+  @Override public void showGlobalError(DomainError domainError) {
+
   }
 }

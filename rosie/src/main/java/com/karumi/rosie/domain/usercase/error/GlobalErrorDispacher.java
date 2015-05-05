@@ -22,12 +22,12 @@ import java.util.List;
 /**
  *
  */
-public class GenericErrorDispacher {
+public class GlobalErrorDispacher {
 
   private ErrorFactory errorFactory;
   private List<UseCaseErrorCallback> errorCallbacks = new ArrayList<>();
 
-  public GenericErrorDispacher() {
+  public GlobalErrorDispacher() {
   }
 
   public void setErrorFactory(ErrorFactory errorFactory) {
