@@ -25,10 +25,13 @@ import com.karumi.rosie.domain.usercase.error.NetworkError;
 import com.karumi.rosie.domain.usercase.error.UseCaseErrorCallback;
 import com.karumi.rosie.domain.usercase.error.UseCaseInternalException;
 import com.karumi.rosie.testutils.FakeScheduler;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -187,6 +190,23 @@ public class UserCaseHandlerTest {
   }
 
   @Test
+  public void completeCallbackShouldBeCalledWithSuccessArgsAndDownCasting() {
+    FakeScheduler taskScheduler = new FakeScheduler();
+    AnyUserCase anyUserCase = new AnyUserCase();
+
+    AnyOnSuccessWithDowncast onSuccessCallback = new AnyOnSuccessWithDowncast();
+
+    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
+
+    UserCaseParams userCaseParams =
+        new UserCaseParams.Builder().name("downcastResponse").onSuccess(onSuccessCallback).build();
+
+    userCaseHandler.execute(anyUserCase, userCaseParams);
+
+    assertNotNull(onSuccessCallback.getValue());
+  }
+
+  @Test
   public void completeCallbackShouldNotBeExecuteWhenNotMatchArgs() {
     FakeScheduler taskScheduler = new FakeScheduler();
     AnyUserCase anyUserCase = new AnyUserCase();
@@ -283,6 +303,19 @@ public class UserCaseHandlerTest {
     }
   }
 
+  private class AnyOnSuccessWithDowncast implements OnSuccessCallback {
+    private List<String> value;
+
+    @Success
+    public void onSucess(List<String> value) {
+      this.value = value;
+    }
+
+    public List<String> getValue() {
+      return value;
+    }
+  }
+
   private class EmptyOnSuccess implements OnSuccessCallback {
     private boolean success = false;
 
@@ -304,6 +337,11 @@ public class UserCaseHandlerTest {
     @UserCase(name = "anyExecution")
     public void anyExecution() {
       notifySuccess(ANY_RETURN_VALUE);
+    }
+
+    @UserCase(name = "downcastResponse")
+    public void anyExecutionDowncast() {
+      notifySuccess(new ArrayList<String>());
     }
 
     @UserCase

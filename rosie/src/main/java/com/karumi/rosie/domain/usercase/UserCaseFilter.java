@@ -111,6 +111,17 @@ class UserCaseFilter {
     return true;
   }
 
+  private static boolean isValidArgumentsForReturn(Class<?>[] parameters, Object[] selectedArgs) {
+    for (int i = 0; i < parameters.length; i++) {
+      Class<?> targetClass = selectedArgs[i].getClass();
+      Class<?> parameterClass = parameters[i];
+      if (!ClassUtils.canAssign(parameterClass, targetClass)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   private static List<Method> getMethodMatchingName(UserCaseParams userCaseParams,
       List<Method> methodsFiltered) {
     String nameUserCase = userCaseParams.getUserCaseName();
@@ -140,7 +151,7 @@ class UserCaseFilter {
       if (annotationValid != null) {
         Class<?>[] parameters = method.getParameterTypes();
         if (parameters.length == argsToSend.length) {
-          if (isValidArguments(parameters, argsToSend)) {
+          if (isValidArgumentsForReturn(parameters, argsToSend)) {
             methodsFiltered.add(method);
           }
         }
