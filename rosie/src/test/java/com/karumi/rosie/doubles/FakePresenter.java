@@ -50,7 +50,7 @@ public class FakePresenter extends RosiePresenter {
   }
 
   @Override protected boolean onGlobalError(DomainError domainError) {
-    if(fakeUi != null) {
+    if (fakeUi != null) {
       fakeUi.showFakeError();
       return true;
     } else {

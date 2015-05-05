@@ -19,7 +19,7 @@ package com.karumi.rosie.domain.usercase.error;
 /**
  * Generic Error that is not handle for any error handler.
  */
-public class GenericError extends DomainError{
+public class GenericError extends DomainError {
   private Exception cause;
   private String description;
 
