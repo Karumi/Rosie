@@ -48,7 +48,7 @@ public class UserCaseHandlerTest {
   public void testExecuteAnyObject() throws Exception {
 
     TaskScheduler taskScheduler = mock(TaskScheduler.class);
-    AnyUserCase anyUserCase = new AnyUserCase();
+    EmptyUserCase anyUserCase = new EmptyUserCase();
 
     UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
 
@@ -182,7 +182,7 @@ public class UserCaseHandlerTest {
     UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
 
     UserCaseParams userCaseParams =
-        new UserCaseParams.Builder().onSuccess(onSuccessCallback).build();
+        new UserCaseParams.Builder().name("anyExecution").onSuccess(onSuccessCallback).build();
 
     userCaseHandler.execute(anyUserCase, userCaseParams);
 
@@ -216,7 +216,7 @@ public class UserCaseHandlerTest {
     UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
 
     UserCaseParams userCaseParams =
-        new UserCaseParams.Builder().onSuccess(onSuccessCallback).build();
+        new UserCaseParams.Builder().name("anyExecution").onSuccess(onSuccessCallback).build();
 
     userCaseHandler.execute(anyUserCase, userCaseParams);
 
@@ -348,6 +348,18 @@ public class UserCaseHandlerTest {
     public void methodWithArgs(String arg1, int arg2) {
 
     }
+  }
+
+  private class EmptyUserCase extends RosieUseCase {
+
+    EmptyUserCase() {
+    }
+
+    @UserCase
+    public void anyExecution() {
+
+    }
+
   }
 
   private class AmbiguousUseCase extends RosieUseCase {
