@@ -16,7 +16,7 @@
 
 package com.karumi.rosie.domain.usercase;
 
-import com.karumi.rosie.domain.usercase.error.GlobalErrorDispacher;
+import com.karumi.rosie.domain.usercase.error.GlobalErrorDispatcher;
 import java.lang.reflect.Method;
 
 /**
@@ -25,10 +25,10 @@ import java.lang.reflect.Method;
 public class UserCaseWrapper {
   private final RosieUseCase userCase;
   private final UserCaseParams userCaseParams;
-  private final GlobalErrorDispacher errorDispacher;
+  private final GlobalErrorDispatcher errorDispacher;
 
   public UserCaseWrapper(RosieUseCase userCase, UserCaseParams userCaseParams,
-      GlobalErrorDispacher errorDispacher) {
+      GlobalErrorDispatcher errorDispacher) {
     this.userCase = userCase;
     this.userCaseParams = userCaseParams;
     this.errorDispacher = errorDispacher;

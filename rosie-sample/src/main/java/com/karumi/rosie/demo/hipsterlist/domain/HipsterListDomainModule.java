@@ -14,13 +14,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase.error;
+package com.karumi.rosie.demo.hipsterlist.domain;
+
+import com.karumi.rosie.demo.hipsterlist.domain.usercase.ObtainHipsters;
+import dagger.Module;
+import dagger.Provides;
 
 /**
- * Created by flipper83 on 04/05/15.
+ * Provide domain object for the listDomainModule.
  */
-public class NetworkError extends DomainError {
-  public NetworkError(String s, Exception e) {
-    super();
+@Module(
+    complete = false,
+    library = true
+)
+public class HipsterListDomainModule {
+
+  @Provides
+  public ObtainHipsters provideObtainHipsters() {
+    return new ObtainHipsters();
   }
 }

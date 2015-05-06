@@ -17,15 +17,10 @@
 package com.karumi.rosie.domain.usercase.error;
 
 /**
- * Provides Error instances given an Exception passed as argument.
+ * Represents an exception when invoke a method and this does not exist.
  */
-public abstract class ErrorFactory {
-  public abstract Error create(Exception exception);
-
-  public Error createInternalException(Exception exception) {
-    if (exception instanceof ErrorNotHandledException) {
-      return ((ErrorNotHandledException) exception).getError();
-    }
-    return new GenericError("Generic Error", exception);
+public class MethodNotFoundException extends RuntimeException {
+  public MethodNotFoundException(String description) {
+    super(description);
   }
 }

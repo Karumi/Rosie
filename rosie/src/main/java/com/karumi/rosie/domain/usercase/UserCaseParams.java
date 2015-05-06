@@ -23,24 +23,21 @@ import com.karumi.rosie.domain.usercase.error.UseCaseErrorCallback;
  * The params value to execute with the user case.
  */
 public class UserCaseParams {
-  private final static OnSuccessCallback EMPTY_SUCESS = new OnSuccessCallback() {
-  };
-
   private final OnSuccessCallback onSuccessCallback;
-  private final String userCaseName;
+  private final String useCaseName;
   private final Object[] args;
   private final UseCaseErrorCallback errorCallback;
 
-  public UserCaseParams(String userCaseName, Object[] args, OnSuccessCallback onSuccess,
+  public UserCaseParams(String useCaseName, Object[] args, OnSuccessCallback onSuccess,
       UseCaseErrorCallback errorCallback) {
     this.args = args;
-    this.userCaseName = userCaseName;
+    this.useCaseName = useCaseName;
     this.onSuccessCallback = onSuccess;
     this.errorCallback = errorCallback;
   }
 
-  String getUserCaseName() {
-    return userCaseName;
+  String getUseCaseName() {
+    return useCaseName;
   }
 
   Object[] getArgs() {
@@ -56,13 +53,16 @@ public class UserCaseParams {
   }
 
   public static class Builder {
-    private String userCaseName = "";
+    private final static OnSuccessCallback EMPTY_SUCESS = new OnSuccessCallback() {
+    };
+
+    private String useCaseName = "";
     private Object[] args;
     private OnSuccessCallback onSuccess = EMPTY_SUCESS;
     private UseCaseErrorCallback errorCallback;
 
-    public Builder name(String name) {
-      userCaseName = name;
+    public Builder useCaseName(String name) {
+      useCaseName = name;
       return this;
     }
 
@@ -84,7 +84,7 @@ public class UserCaseParams {
     public Builder onError(UseCaseErrorCallback errorCallback) {
       if (errorCallback == null) {
         throw new IllegalArgumentException(
-            "UserCaseErrorCallback is null. You cannot set an empty onError.");
+            "The errorCallback used is null, you can't use a null instance as onError callback.");
       }
       this.errorCallback = errorCallback;
       return this;
@@ -94,7 +94,7 @@ public class UserCaseParams {
       if (this.args == null) {
         args = new Object[0];
       }
-      return new UserCaseParams(userCaseName, args, onSuccess, errorCallback);
+      return new UserCaseParams(useCaseName, args, onSuccess, errorCallback);
     }
   }
 }

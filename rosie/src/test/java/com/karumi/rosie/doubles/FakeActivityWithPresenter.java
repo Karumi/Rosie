@@ -26,9 +26,6 @@ import java.util.List;
 
 import static org.mockito.Mockito.mock;
 
-/**
- * Activity for run the tests
- */
 public class FakeActivityWithPresenter extends RosieActivity {
   public FakePresenter.FakeUi uiView = mock(FakePresenter.FakeUi.class);
 

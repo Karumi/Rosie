@@ -24,13 +24,13 @@ import java.util.List;
  */
 public class HipsterListViewModel {
 
-  private List<HipsterViewModel> hipsters = new ArrayList<HipsterViewModel>();
+  private List<Hipster> hipsters = new ArrayList<Hipster>();
 
-  public List<HipsterViewModel> getHipsters() {
+  public List<Hipster> getHipsters() {
     return hipsters;
   }
 
-  public void setHipsters(List<HipsterViewModel> hipsters) {
+  public void setHipsters(List<Hipster> hipsters) {
     this.hipsters = hipsters;
   }
 }

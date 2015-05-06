@@ -19,7 +19,7 @@ package com.karumi.rosie.domain.usercase.error;
 /**
  * this callback must be inoked when an error happend inside of a user case.
  */
-public interface UseCaseErrorCallback<T extends DomainError> {
+public interface UseCaseErrorCallback<T extends Error> {
   void onError(T error);
 }
 

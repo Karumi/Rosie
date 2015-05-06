@@ -19,15 +19,11 @@ package com.karumi.rosie.doubles;
 import android.os.Bundle;
 import android.view.View;
 import com.karumi.rosie.TestModule;
-import com.karumi.rosie.domain.usercase.error.DomainError;
 import com.karumi.rosie.view.activity.RosieActivity;
 import com.karumi.rosie.view.presenter.annotation.Presenter;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Activity for run the tests
- */
 public class FakeActivityWithPresenterNoHandleError extends RosieActivity {
 
   private boolean error = false;
@@ -51,8 +47,8 @@ public class FakeActivityWithPresenterNoHandleError extends RosieActivity {
     presenter.callErrorUseCase();
   }
 
-  @Override public void showGlobalError(DomainError domainError) {
-    error = true;
+  @Override public void showGlobalError(com.karumi.rosie.domain.usercase.error.Error error) {
+    this.error = true;
   }
 
   public boolean isAnErrorHappend() {

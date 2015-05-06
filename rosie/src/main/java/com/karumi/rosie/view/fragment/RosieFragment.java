@@ -21,16 +21,15 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.view.View;
 import butterknife.ButterKnife;
-import com.karumi.rosie.domain.usercase.error.DomainError;
 import com.karumi.rosie.view.activity.RosieActivity;
 import com.karumi.rosie.view.presenter.PresenterLifeCycleHooker;
 import com.karumi.rosie.view.presenter.RosiePresenter;
-import com.karumi.rosie.view.presenter.view.ErrorUi;
+import com.karumi.rosie.view.presenter.view.ErrorView;
 
 /**
  * Base fragment which performs injection using the activity object graph of its parent.
  */
-public abstract class RosieFragment extends Fragment implements ErrorUi {
+public abstract class RosieFragment extends Fragment implements ErrorView {
 
   private PresenterLifeCycleHooker presenterLifeCycleHooker = new PresenterLifeCycleHooker();
 
@@ -85,7 +84,7 @@ public abstract class RosieFragment extends Fragment implements ErrorUi {
     presenterLifeCycleHooker.registerPresenter(presenter);
   }
 
-  @Override public void showGlobalError(DomainError domainError) {
+  @Override public void showGlobalError(com.karumi.rosie.domain.usercase.error.Error error) {
 
   }
 }

@@ -1,9 +1,9 @@
 package com.karumi.rosie.view.presenter;
 
 import com.karumi.rosie.domain.usercase.UserCaseHandler;
-import com.karumi.rosie.domain.usercase.error.DomainError;
-import com.karumi.rosie.domain.usercase.error.UseCaseErrorCallback;
-import com.karumi.rosie.view.presenter.view.ErrorUi;
+import com.karumi.rosie.domain.usercase.error.*;
+import com.karumi.rosie.domain.usercase.error.Error;
+import com.karumi.rosie.view.presenter.view.ErrorView;
 
 /**
  * All Presenters must extends from this one. Add accessor methods to manage the presenter life
@@ -11,8 +11,8 @@ import com.karumi.rosie.view.presenter.view.ErrorUi;
  */
 public class RosiePresenter {
 
-  protected final UserCaseHandler userCaseHandler;
-  protected ErrorUi errorUi;
+  private final UserCaseHandler userCaseHandler;
+  private ErrorView errorView;
 
   public RosiePresenter(UserCaseHandler userCaseHandler) {
     this.userCaseHandler = userCaseHandler;
@@ -30,7 +30,7 @@ public class RosiePresenter {
    */
   public void update() {
     if (globalError != null) {
-      userCaseHandler.registerErrorGlobalCallback(globalError);
+      userCaseHandler.registerGlobalErrorCallback(globalError);
     }
   }
 
@@ -39,7 +39,7 @@ public class RosiePresenter {
    */
   public void pause() {
     if (globalError != null) {
-      userCaseHandler.unregisterErrorGlobalCallback(globalError);
+      userCaseHandler.unregisterGlobalErrorCallback(globalError);
     }
   }
 
@@ -50,27 +50,31 @@ public class RosiePresenter {
 
   }
 
-  public void setErrorUi(ErrorUi errorUi) {
-    this.errorUi = errorUi;
+  void setErrorView(ErrorView errorView) {
+    this.errorView = errorView;
   }
 
   /**
    * notifies that an unexpected error has happened.
    *
-   * @param domainError the error.
+   * @param error the error.
    * @return true if the error must be consume.
    */
-  protected boolean onGlobalError(DomainError domainError) {
+  protected boolean onGlobalError(Error error) {
     return false;
   }
 
   private UseCaseErrorCallback globalError = new UseCaseErrorCallback() {
-    @Override public void onError(DomainError error) {
+    @Override public void onError(com.karumi.rosie.domain.usercase.error.Error error) {
       if (!onGlobalError(error)) {
-        if (errorUi != null) {
-          errorUi.showGlobalError(error);
+        if (errorView != null) {
+          errorView.showGlobalError(error);
         }
       }
     }
   };
+
+  protected UserCaseHandler getUserCaseHandler() {
+    return userCaseHandler;
+  }
 }

@@ -14,37 +14,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.demo.hipsterlist.view.model;
+package com.karumi.rosie.view.presenter.view;
 
 /**
- *
+ * Ui interface that notify an unexpected error has happened on the presenter.
  */
-public class HipsterViewModel {
-  private String id;
-  private String name;
-  private String avatarUrl;
-
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getAvatarUrl() {
-    return avatarUrl;
-  }
-
-  public void setAvatarUrl(String avatarUrl) {
-    this.avatarUrl = avatarUrl;
-  }
+public interface ErrorView {
+  void showGlobalError(com.karumi.rosie.domain.usercase.error.Error error);
 }

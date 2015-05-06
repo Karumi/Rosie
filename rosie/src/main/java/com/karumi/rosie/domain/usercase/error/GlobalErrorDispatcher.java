@@ -22,26 +22,29 @@ import java.util.List;
 /**
  *
  */
-public class GlobalErrorDispacher {
+public class GlobalErrorDispatcher {
 
   private ErrorFactory errorFactory;
   private List<UseCaseErrorCallback> errorCallbacks = new ArrayList<>();
 
-  public GlobalErrorDispacher() {
+  public GlobalErrorDispatcher() {
   }
 
   public void setErrorFactory(ErrorFactory errorFactory) {
+    if (errorFactory == null) {
+      throw new IllegalArgumentException("errorFactory can not be null");
+    }
     this.errorFactory = errorFactory;
   }
 
   public void notifyError(Exception exception) {
-    DomainError domainError = createError(exception);
-    notifyError(domainError);
+    Error error = createError(exception);
+    notifyError(error);
   }
 
-  private void notifyError(DomainError domainError) {
+  private void notifyError(Error error) {
     for (UseCaseErrorCallback errorCallback : errorCallbacks) {
-      errorCallback.onError(domainError);
+      errorCallback.onError(error);
     }
   }
 
@@ -53,22 +56,20 @@ public class GlobalErrorDispacher {
     errorCallbacks.remove(useCaseErrorCallback);
   }
 
-  private DomainError createError(Exception exception) {
-    DomainError domainError = null;
+  private Error createError(Exception exception) {
+    Error error = null;
     if (errorFactory != null) {
-      domainError = errorFactory.create(exception);
+      error = errorFactory.create(exception);
 
-      if (domainError == null) {
-        domainError = errorFactory.createInternalException(exception);
+      if (error == null) {
+        error = errorFactory.createInternalException(exception);
       }
     }
 
-
-
-    if (domainError == null) {
-      domainError = new GenericError("Generic Error", exception);
+    if (error == null) {
+      error = new GenericError("Generic Error", exception);
     }
 
-    return domainError;
+    return error;
   }
 }

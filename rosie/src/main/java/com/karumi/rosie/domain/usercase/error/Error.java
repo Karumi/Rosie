@@ -14,13 +14,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.view.presenter.view;
-
-import com.karumi.rosie.domain.usercase.error.DomainError;
+package com.karumi.rosie.domain.usercase.error;
 
 /**
- * Ui interface that notify an unexpected error has happened on the presenter.
+ * Base class that works to restrict the classes that onError can allow.
  */
-public interface ErrorUi {
-  void showGlobalError(DomainError domainError);
+public class Error {
 }

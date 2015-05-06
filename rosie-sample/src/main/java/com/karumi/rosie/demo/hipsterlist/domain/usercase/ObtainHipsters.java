@@ -16,29 +16,28 @@
 
 package com.karumi.rosie.demo.hipsterlist.domain.usercase;
 
-import com.karumi.rosie.demo.hipsterlist.view.model.HipsterViewModel;
+import com.karumi.rosie.demo.hipsterlist.view.model.Hipster;
 import com.karumi.rosie.domain.usercase.RosieUseCase;
 import com.karumi.rosie.domain.usercase.annotation.UserCase;
-import com.karumi.rosie.domain.usercase.callback.OnSuccessCallback;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * This UseCase provide hipsters from dummy data.
  */
-public class ObtainHipsters extends RosieUseCase{
+public class ObtainHipsters extends RosieUseCase {
 
   @UserCase
-  public void obtain(){
-    HipsterViewModel hipsterTest = new HipsterViewModel();
-    hipsterTest.setName("Hipstotito Fernandez");
-    hipsterTest.setAvatarUrl(
+  public void obtain() {
+    Hipster hipster = new Hipster();
+    hipster.setName("Hipstotito Fernandez");
+    hipster.setAvatarUrl(
         "https://cdn0.iconfinder.com/data/icons/avatars-3/512/avatar_hipster_guy-512.png");
-    hipsterTest.setId("1");
+    hipster.setId("1");
 
-    List<HipsterViewModel> hipsterViewModels = new ArrayList<HipsterViewModel>();
-    hipsterViewModels.add(hipsterTest);
+    List<Hipster> hipsters = new ArrayList<Hipster>();
+    hipsters.add(hipster);
 
-    notifySuccess(hipsterViewModels);
+    notifySuccess(hipsters);
   }
 }

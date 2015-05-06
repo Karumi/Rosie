@@ -14,18 +14,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase.error;
+package com.karumi.rosie.demo.hipsterlist.view.model;
 
 /**
- * Provides Error instances given an Exception passed as argument.
+ *
  */
-public abstract class ErrorFactory {
-  public abstract Error create(Exception exception);
+public class Hipster {
+  private String id;
+  private String name;
+  private String avatarUrl;
 
-  public Error createInternalException(Exception exception) {
-    if (exception instanceof ErrorNotHandledException) {
-      return ((ErrorNotHandledException) exception).getError();
-    }
-    return new GenericError("Generic Error", exception);
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getAvatarUrl() {
+    return avatarUrl;
+  }
+
+  public void setAvatarUrl(String avatarUrl) {
+    this.avatarUrl = avatarUrl;
   }
 }

@@ -18,10 +18,6 @@ package com.karumi.rosie.demo.base.application;
 
 import android.content.Context;
 import com.karumi.rosie.daggerutils.ForApplication;
-import com.karumi.rosie.domain.usercase.TaskScheduler;
-import com.karumi.rosie.domain.usercase.UserCaseHandler;
-import com.karumi.rosie.domain.usercase.jobqueue.TaskSchedulerJobQueue;
-import com.path.android.jobqueue.JobManager;
 import com.squareup.picasso.Picasso;
 import dagger.Module;
 import dagger.Provides;
@@ -40,18 +36,4 @@ public class GlobalDemoAndroidModule {
     return Picasso.with(context);
   }
 
-  @Provides @Singleton
-  public UserCaseHandler provideUserCaseHandler(TaskScheduler taskScheduler){
-    return new UserCaseHandler(taskScheduler);
-  }
-
-  @Provides @Singleton
-  public TaskScheduler provideTaskScheduler(JobManager jobManager) {
-    return new TaskSchedulerJobQueue(jobManager);
-  }
-
-  @Provides @Singleton
-  public JobManager provideJobManager(@ForApplication Context context) {
-    return new JobManager(context);
-  }
 }

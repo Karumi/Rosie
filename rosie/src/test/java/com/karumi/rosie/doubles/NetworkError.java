@@ -14,20 +14,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase.error;
+package com.karumi.rosie.doubles;
 
 /**
- * This is an exception that contains a domain error that has been sended but not received for the
- * error callback, and send it to the generic error handler.
+ * Double that emulate an network error
  */
-public class UseCaseInternalException extends Exception {
-  private final DomainError domainError;
-
-  public UseCaseInternalException(DomainError domainError) {
-    this.domainError = domainError;
-  }
-
-  public DomainError getDomainError() {
-    return domainError;
+public class NetworkError extends com.karumi.rosie.domain.usercase.error.Error {
+  public NetworkError() {
+    super();
   }
 }

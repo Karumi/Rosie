@@ -21,9 +21,7 @@ import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
 
 /**
- * This class is an implementation of a job for android-priority-jobqueue. Manage the usercase
- * inside
- * the queue system.
+ * Job extension created to be able to execute a use case using android-priority-job-queue.
  */
 class UserCaseWrapperJob extends Job {
   private static final int PRIORITY_NORMAL = 3;

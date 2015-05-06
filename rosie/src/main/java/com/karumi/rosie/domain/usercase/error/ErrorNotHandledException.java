@@ -17,7 +17,17 @@
 package com.karumi.rosie.domain.usercase.error;
 
 /**
- * Base class that works to restrict the classes that onError can allow.
+ * This is an exception that contains a domain error that has been sended but not received for the
+ * error callback, and send it to the generic error handler.
  */
-public class DomainError {
+public class ErrorNotHandledException extends Exception {
+  private final Error error;
+
+  public ErrorNotHandledException(Error error) {
+    this.error = error;
+  }
+
+  public Error getError() {
+    return error;
+  }
 }

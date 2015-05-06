@@ -17,7 +17,7 @@
 package com.karumi.rosie.demo.hipsterlist.view.presenter;
 
 import com.karumi.rosie.demo.hipsterlist.domain.usercase.ObtainHipsters;
-import com.karumi.rosie.demo.hipsterlist.view.model.HipsterViewModel;
+import com.karumi.rosie.demo.hipsterlist.view.model.Hipster;
 import com.karumi.rosie.domain.usercase.UserCaseHandler;
 import com.karumi.rosie.domain.usercase.UserCaseParams;
 import com.karumi.rosie.domain.usercase.annotation.Success;
@@ -31,11 +31,13 @@ import java.util.List;
  */
 public class HipsterListPresenter extends RosiePresenter {
 
+  private final ObtainHipsters obtainHipsters;
   private View view;
-  ArrayList<HipsterViewModel> hipsters = new ArrayList<HipsterViewModel>();
+  private ArrayList<Hipster> hipsters = new ArrayList<Hipster>();
 
-  public HipsterListPresenter(UserCaseHandler userCaseHandler) {
+  public HipsterListPresenter(UserCaseHandler userCaseHandler, ObtainHipsters obtainHipsters) {
     super(userCaseHandler);
+    this.obtainHipsters = obtainHipsters;
   }
 
   public void setView(View view) {
@@ -48,23 +50,24 @@ public class HipsterListPresenter extends RosiePresenter {
   }
 
   private void obtainHipsters() {
-    ObtainHipsters obtainHipsters = new ObtainHipsters();
     UserCaseParams params = new UserCaseParams.Builder()
         .onSuccess(successCallback).build();
+
+    UserCaseHandler userCaseHandler = getUserCaseHandler();
     userCaseHandler.execute(obtainHipsters, params);
   }
 
-  OnSuccessCallback successCallback = new OnSuccessCallback() {
+  private OnSuccessCallback successCallback = new OnSuccessCallback() {
     @Success
-    public void success(List<HipsterViewModel> hipsterViewModels) {
-      hipsters.clear();
-      hipsters.addAll(hipsterViewModels);
+    public void success(List<Hipster> hipsters) {
+      HipsterListPresenter.this.hipsters.clear();
+      HipsterListPresenter.this.hipsters.addAll(hipsters);
 
-      view.updateList(hipsters);
+      view.updateList(HipsterListPresenter.this.hipsters);
     }
   };
 
   public interface View {
-    void updateList(List<HipsterViewModel> hipsters);
+    void updateList(List<Hipster> hipsters);
   }
 }

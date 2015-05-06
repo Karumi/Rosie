@@ -30,8 +30,8 @@ import static org.mockito.Mockito.mock;
 /**
  * Activity for run the tests
  */
-public class TestActivity extends RosieActivity {
-  public TestActivity() {
+public class FakeActivity extends RosieActivity {
+  public FakeActivity() {
   }
 
   @Override public void onCreate(Bundle savedInstanceState) {
