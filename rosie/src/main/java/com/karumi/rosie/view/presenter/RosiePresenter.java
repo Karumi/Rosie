@@ -1,8 +1,8 @@
 package com.karumi.rosie.view.presenter;
 
 import com.karumi.rosie.domain.usercase.UserCaseHandler;
-import com.karumi.rosie.domain.usercase.error.*;
 import com.karumi.rosie.domain.usercase.error.Error;
+import com.karumi.rosie.domain.usercase.error.UseCaseErrorCallback;
 import com.karumi.rosie.view.presenter.view.ErrorView;
 
 /**

@@ -26,9 +26,6 @@ import com.karumi.rosie.view.presenter.RosiePresenter;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- */
 public class HipsterListPresenter extends RosiePresenter {
 
   private final ObtainHipsters obtainHipsters;

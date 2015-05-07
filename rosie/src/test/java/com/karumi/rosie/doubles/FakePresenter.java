@@ -19,7 +19,7 @@ package com.karumi.rosie.doubles;
 import com.karumi.rosie.domain.usercase.RosieUseCase;
 import com.karumi.rosie.domain.usercase.UserCaseHandler;
 import com.karumi.rosie.domain.usercase.annotation.UserCase;
-import com.karumi.rosie.domain.usercase.error.*;
+import com.karumi.rosie.domain.usercase.error.GenericError;
 import com.karumi.rosie.testutils.FakeScheduler;
 import com.karumi.rosie.view.presenter.RosiePresenter;
 

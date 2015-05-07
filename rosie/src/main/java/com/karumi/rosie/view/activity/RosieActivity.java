@@ -31,7 +31,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * This is base activity for all activities that want to use Rosie Capacities.
+ * BaseActivity created to implement some common functionality to activities using this library. All
+ * activities in this project should extend from this one.
  */
 public class RosieActivity extends FragmentActivity implements ErrorView {
 
@@ -57,7 +58,7 @@ public class RosieActivity extends FragmentActivity implements ErrorView {
     presenterLifeCycleHooker.addAnnotatedPresenter(getClass().getDeclaredFields(), this);
     ButterKnife.inject(this);
     presenterLifeCycleHooker.initializePresenters();
-    presenterLifeCycleHooker.setGlobalError(this);
+    presenterLifeCycleHooker.setErrorView(this);
   }
 
   @Override public void setContentView(int layoutResID) {

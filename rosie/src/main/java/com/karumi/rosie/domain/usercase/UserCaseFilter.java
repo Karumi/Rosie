@@ -138,8 +138,7 @@ class UserCaseFilter {
     return methodsFiltered;
   }
 
-  static Method filterValidMethodArgs(Object[] argsToSend, Method[] methods,
-      Class typeAnnotation) {
+  static Method filterValidMethodArgs(Object[] argsToSend, Method[] methods, Class typeAnnotation) {
 
     List<Method> methodsFiltered = new ArrayList<>();
 
@@ -161,7 +160,7 @@ class UserCaseFilter {
 
     if (methodsFiltered.size() > 1) {
       throw new RuntimeException(
-          "This success has more than one method with this signature." + "Remove the ambiguity.");
+          "This success has more than one method with this signature. Remove the ambiguity.");
     }
 
     return methodsFiltered.get(0);

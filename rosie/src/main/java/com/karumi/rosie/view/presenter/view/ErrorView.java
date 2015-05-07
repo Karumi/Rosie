@@ -17,7 +17,7 @@
 package com.karumi.rosie.view.presenter.view;
 
 /**
- * Ui interface that notify an unexpected error has happened on the presenter.
+ * Represents all the actions you can perform to notify an error to the user interface.
  */
 public interface ErrorView {
   void showGlobalError(com.karumi.rosie.domain.usercase.error.Error error);

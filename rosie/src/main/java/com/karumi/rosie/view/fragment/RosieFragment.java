@@ -62,7 +62,7 @@ public abstract class RosieFragment extends Fragment implements ErrorView {
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     presenterLifeCycleHooker.initializePresenters();
-    presenterLifeCycleHooker.setGlobalError(this);
+    presenterLifeCycleHooker.setErrorView(this);
   }
 
   @Override public void onResume() {

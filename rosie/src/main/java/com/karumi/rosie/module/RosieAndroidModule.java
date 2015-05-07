@@ -48,7 +48,7 @@ public class RosieAndroidModule {
   }
 
   @Provides @Singleton
-  public UserCaseHandler provideUserCaseHandler(TaskScheduler taskScheduler){
+  public UserCaseHandler provideUserCaseHandler(TaskScheduler taskScheduler) {
     return new UserCaseHandler(taskScheduler);
   }
 

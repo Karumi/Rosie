@@ -16,9 +16,6 @@
 
 package com.karumi.rosie.demo.hipsterlist.view.model;
 
-/**
- *
- */
 public class Hipster {
   private String id;
   private String name;

@@ -51,7 +51,7 @@ public class PresenterLifeCycleHooker {
     }
   }
 
-  public void setGlobalError(ErrorView errorView) {
+  public void setErrorView(ErrorView errorView) {
     for (RosiePresenter presenter : presenters) {
       presenter.setErrorView(errorView);
     }
