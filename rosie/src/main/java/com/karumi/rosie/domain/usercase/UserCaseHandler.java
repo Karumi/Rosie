@@ -16,7 +16,7 @@
 
 package com.karumi.rosie.domain.usercase;
 
-import com.karumi.rosie.domain.usercase.error.GlobalErrorDispatcher;
+import com.karumi.rosie.domain.usercase.error.ErrorHandler;
 import com.karumi.rosie.domain.usercase.error.UseCaseErrorCallback;
 
 /**
@@ -25,17 +25,17 @@ import com.karumi.rosie.domain.usercase.error.UseCaseErrorCallback;
  * a callback.
  */
 public class UserCaseHandler {
-  private static final GlobalErrorDispatcher EMPTY_ERROR_DISPACHER = new GlobalErrorDispatcher();
+  private static final ErrorHandler EMPTY_ERROR_HANDLER = new ErrorHandler();
   private final TaskScheduler taskScheduler;
-  private final GlobalErrorDispatcher errorDispatcher;
+  private final ErrorHandler errorHandler;
 
   public UserCaseHandler(TaskScheduler taskScheduler) {
-    this(taskScheduler, EMPTY_ERROR_DISPACHER);
+    this(taskScheduler, EMPTY_ERROR_HANDLER);
   }
 
-  public UserCaseHandler(TaskScheduler taskScheduler, GlobalErrorDispatcher errorDispatcher) {
+  public UserCaseHandler(TaskScheduler taskScheduler, ErrorHandler errorHandler) {
     this.taskScheduler = taskScheduler;
-    this.errorDispatcher = errorDispatcher;
+    this.errorHandler = errorHandler;
   }
 
   /**
@@ -52,7 +52,7 @@ public class UserCaseHandler {
    * Given a class configured with UseCase annotation executes the annotated
    * method out of the UI thread and return the response, if needed it, over the UI thread.
    *
-   * @param userCase the user case to invoke.
+   * @param useCase the user case to invoke.
    * @param userCaseParams params to use on the invokation.
    */
   public void execute(RosieUseCase useCase, UserCaseParams userCaseParams) {
@@ -60,15 +60,15 @@ public class UserCaseHandler {
 
     useCase.setOnSuccess(userCaseParams.getOnSuccessCallback());
     useCase.setOnError(userCaseParams.getErrorCallback());
-    UserCaseWrapper userCaseWrapper = new UserCaseWrapper(useCase, userCaseParams, errorDispatcher);
+    UserCaseWrapper userCaseWrapper = new UserCaseWrapper(useCase, userCaseParams, errorHandler);
     taskScheduler.execute(userCaseWrapper);
   }
 
   public void registerGlobalErrorCallback(UseCaseErrorCallback globalError) {
-    errorDispatcher.registerCallback(globalError);
+    errorHandler.registerCallback(globalError);
   }
 
   public void unregisterGlobalErrorCallback(UseCaseErrorCallback globalError) {
-    errorDispatcher.unregisterCallback(globalError);
+    errorHandler.unregisterCallback(globalError);
   }
 }

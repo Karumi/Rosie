@@ -20,8 +20,8 @@ import com.karumi.rosie.domain.usercase.annotation.Success;
 import com.karumi.rosie.domain.usercase.annotation.UserCase;
 import com.karumi.rosie.domain.usercase.callback.OnSuccessCallback;
 import com.karumi.rosie.domain.usercase.error.Error;
+import com.karumi.rosie.domain.usercase.error.ErrorHandler;
 import com.karumi.rosie.domain.usercase.error.ErrorNotHandledException;
-import com.karumi.rosie.domain.usercase.error.GlobalErrorDispatcher;
 import com.karumi.rosie.domain.usercase.error.UseCaseErrorCallback;
 import com.karumi.rosie.doubles.NetworkError;
 import com.karumi.rosie.testutils.FakeScheduler;
@@ -221,46 +221,46 @@ public class UserCaseHandlerTest {
   }
 
   @Test
-  public void shouldCallErrorGenericErrorWhenUserCaseInvokeAnErrorAndDontExistSpecificCallback() {
+  public void shouldCallErrorHandlerWhenUserCaseInvokeAnErrorAndDontExistSpecificCallback() {
     FakeScheduler taskScheduler = new FakeScheduler();
     ErrorUseCase errorUserCase = new ErrorUseCase();
-    GlobalErrorDispatcher errorDispatcher = mock(GlobalErrorDispatcher.class);
-    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler, errorDispatcher);
+    ErrorHandler errorHandler = mock(ErrorHandler.class);
+    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler, errorHandler);
     UserCaseParams userCaseParams = new UserCaseParams.Builder().useCaseName("customError").build();
 
     userCaseHandler.execute(errorUserCase, userCaseParams);
 
-    verify(errorDispatcher).notifyError(any(ErrorNotHandledException.class));
+    verify(errorHandler).notifyError(any(ErrorNotHandledException.class));
   }
 
   @Test
   public void
-  shouldCallErrorGenericErrorWhenUserCaseInvokeAnErrorAndTheCallbackDontHandleThisKindOfMethod() {
+  shouldCallErrorHandlerErrorWhenUserCaseInvokeAnErrorAndTheCallbackDontHandleThisKindOfMethod() {
     FakeScheduler taskScheduler = new FakeScheduler();
     ErrorUseCase errorUserCase = new ErrorUseCase();
-    GlobalErrorDispatcher errorDispacher = mock(GlobalErrorDispatcher.class);
-    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler, errorDispacher);
+    ErrorHandler errorHandler = mock(ErrorHandler.class);
+    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler, errorHandler);
     UserCaseParams userCaseParams = new UserCaseParams.Builder().useCaseName("customError")
         .onError(specificErrorCallback)
         .build();
 
     userCaseHandler.execute(errorUserCase, userCaseParams);
 
-    verify(errorDispacher).notifyError(any(ErrorNotHandledException.class));
+    verify(errorHandler).notifyError(any(ErrorNotHandledException.class));
   }
 
   @Test
-  public void shouldCallErrorGenericErrorWhenUserCaseThrowsAnException() {
+  public void shouldCallErrorHandlerErrorWhenUserCaseThrowsAnException() {
     FakeScheduler taskScheduler = new FakeScheduler();
     ErrorUseCase errorUserCase = new ErrorUseCase();
-    GlobalErrorDispatcher errorDispacher = mock(GlobalErrorDispatcher.class);
-    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler, errorDispacher);
+    ErrorHandler errorHandler = mock(ErrorHandler.class);
+    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler, errorHandler);
     UserCaseParams userCaseParams =
         new UserCaseParams.Builder().useCaseName("launchException").build();
 
     userCaseHandler.execute(errorUserCase, userCaseParams);
 
-    verify(errorDispacher).notifyError(any(Exception.class));
+    verify(errorHandler).notifyError(any(Exception.class));
   }
 
   private UseCaseErrorCallback useCaseErrorCallback = new UseCaseErrorCallback<Error>() {

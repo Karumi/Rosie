@@ -19,12 +19,12 @@ package com.karumi.rosie.domain.usercase.error;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GlobalErrorDispatcher {
+public class ErrorHandler {
 
   private ErrorFactory errorFactory;
   private List<UseCaseErrorCallback> errorCallbacks = new ArrayList<>();
 
-  public GlobalErrorDispatcher() {
+  public ErrorHandler() {
   }
 
   public void setErrorFactory(ErrorFactory errorFactory) {
