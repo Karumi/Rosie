@@ -20,4 +20,26 @@ package com.karumi.rosie.domain.usercase.error;
  * Base class that works to restrict the classes that onError can allow.
  */
 public class Error {
+  private Exception cause;
+  private String description = "";
+
+  public Error() {
+  }
+
+  public Error(String description) {
+    this.description = description;
+  }
+
+  public Error(String description, Exception cause) {
+    this(description);
+    this.cause = cause;
+  }
+
+  public Exception getCause() {
+    return cause;
+  }
+
+  public String getDescription() {
+    return description;
+  }
 }

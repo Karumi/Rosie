@@ -19,8 +19,8 @@ package com.karumi.rosie.domain.usercase;
 import com.karumi.rosie.domain.usercase.annotation.Success;
 import com.karumi.rosie.domain.usercase.annotation.UserCase;
 import com.karumi.rosie.domain.usercase.callback.OnSuccessCallback;
+import com.karumi.rosie.domain.usercase.error.Error;
 import com.karumi.rosie.domain.usercase.error.ErrorNotHandledException;
-import com.karumi.rosie.domain.usercase.error.GenericError;
 import com.karumi.rosie.domain.usercase.error.GlobalErrorDispatcher;
 import com.karumi.rosie.domain.usercase.error.UseCaseErrorCallback;
 import com.karumi.rosie.doubles.NetworkError;
@@ -177,7 +177,7 @@ public class UserCaseHandlerTest {
   }
 
   @Test
-  public void completeCallbackShouldBeCalledWithSuccessArgsAndDownCasting() {
+  public void onSuccessCallbackShouldBeCalledWithSuccessArgsAndDowncastingResponse() {
     FakeScheduler taskScheduler = new FakeScheduler();
     AnyUserCase anyUserCase = new AnyUserCase();
     AnyOnSuccessWithDowncast onSuccessCallback = new AnyOnSuccessWithDowncast();
@@ -217,20 +217,20 @@ public class UserCaseHandlerTest {
 
     userCaseHandler.execute(errorUserCase, userCaseParams);
 
-    verify(errorCallback).onError(any(GenericError.class));
+    verify(errorCallback).onError(any(Error.class));
   }
 
   @Test
   public void shouldCallErrorGenericErrorWhenUserCaseInvokeAnErrorAndDontExistSpecificCallback() {
     FakeScheduler taskScheduler = new FakeScheduler();
     ErrorUseCase errorUserCase = new ErrorUseCase();
-    GlobalErrorDispatcher errorDispacher = mock(GlobalErrorDispatcher.class);
-    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler, errorDispacher);
+    GlobalErrorDispatcher errorDispatcher = mock(GlobalErrorDispatcher.class);
+    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler, errorDispatcher);
     UserCaseParams userCaseParams = new UserCaseParams.Builder().useCaseName("customError").build();
 
     userCaseHandler.execute(errorUserCase, userCaseParams);
 
-    verify(errorDispacher).notifyError(any(ErrorNotHandledException.class));
+    verify(errorDispatcher).notifyError(any(ErrorNotHandledException.class));
   }
 
   @Test
@@ -263,9 +263,9 @@ public class UserCaseHandlerTest {
     verify(errorDispacher).notifyError(any(Exception.class));
   }
 
-  private UseCaseErrorCallback useCaseErrorCallback = new UseCaseErrorCallback<GenericError>() {
+  private UseCaseErrorCallback useCaseErrorCallback = new UseCaseErrorCallback<Error>() {
 
-    @Override public void onError(GenericError error) {
+    @Override public void onError(Error error) {
     }
   };
 
@@ -371,7 +371,7 @@ public class UserCaseHandlerTest {
   private class ErrorUseCase extends RosieUseCase {
     @UserCase(name = "customError")
     public void errorMethod() throws Exception {
-      notifyError(new GenericError("error network", new Exception()));
+      notifyError(new Error("error network", new Exception()));
     }
 
     @UserCase(name = "launchException")

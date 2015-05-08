@@ -19,9 +19,6 @@ package com.karumi.rosie.domain.usercase.error;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- */
 public class GlobalErrorDispatcher {
 
   private ErrorFactory errorFactory;
@@ -67,7 +64,7 @@ public class GlobalErrorDispatcher {
     }
 
     if (error == null) {
-      error = new GenericError("Generic Error", exception);
+      error = new Error("Generic Error", exception);
     }
 
     return error;

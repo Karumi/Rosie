@@ -25,6 +25,7 @@ import com.karumi.rosie.domain.usercase.callback.OnSuccessCallback;
 import com.karumi.rosie.view.presenter.RosiePresenter;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 
 public class HipsterListPresenter extends RosiePresenter {
 
@@ -32,6 +33,7 @@ public class HipsterListPresenter extends RosiePresenter {
   private View view;
   private ArrayList<Hipster> hipsters = new ArrayList<Hipster>();
 
+  @Inject
   public HipsterListPresenter(UserCaseHandler userCaseHandler, ObtainHipsters obtainHipsters) {
     super(userCaseHandler);
     this.obtainHipsters = obtainHipsters;

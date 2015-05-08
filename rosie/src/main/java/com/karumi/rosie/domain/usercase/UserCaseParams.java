@@ -40,7 +40,7 @@ public class UserCaseParams {
     return useCaseName;
   }
 
-  Object[] getArgs() {
+  public Object[] getArgs() {
     return args;
   }
 
@@ -53,12 +53,12 @@ public class UserCaseParams {
   }
 
   public static class Builder {
-    private final static OnSuccessCallback EMPTY_SUCESS = new OnSuccessCallback() {
+    private final static OnSuccessCallback EMPTY_SUCCESS = new OnSuccessCallback() {
     };
 
     private String useCaseName = "";
     private Object[] args;
-    private OnSuccessCallback onSuccess = EMPTY_SUCESS;
+    private OnSuccessCallback onSuccess = EMPTY_SUCCESS;
     private UseCaseErrorCallback errorCallback;
 
     public Builder useCaseName(String name) {

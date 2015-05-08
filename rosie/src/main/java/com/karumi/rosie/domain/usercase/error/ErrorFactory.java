@@ -26,6 +26,6 @@ public abstract class ErrorFactory {
     if (exception instanceof ErrorNotHandledException) {
       return ((ErrorNotHandledException) exception).getError();
     }
-    return new GenericError("Generic Error", exception);
+    return new Error("Generic Error", exception);
   }
 }
