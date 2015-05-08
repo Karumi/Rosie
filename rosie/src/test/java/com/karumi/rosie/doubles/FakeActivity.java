@@ -14,8 +14,11 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie;
+package com.karumi.rosie.doubles;
 
+import android.os.Bundle;
+import android.view.View;
+import com.karumi.rosie.TestModule;
 import com.karumi.rosie.view.activity.RosieActivity;
 import com.karumi.rosie.view.presenter.RosiePresenter;
 import com.karumi.rosie.view.presenter.annotation.Presenter;
@@ -27,8 +30,13 @@ import static org.mockito.Mockito.mock;
 /**
  * Activity for run the tests
  */
-public class TestActivity extends RosieActivity {
-  public TestActivity() {
+public class FakeActivity extends RosieActivity {
+  public FakeActivity() {
+  }
+
+  @Override public void onCreate(Bundle savedInstanceState) {
+    setContentView(new View(getBaseContext()));
+    super.onCreate(savedInstanceState);
   }
 
   @Presenter

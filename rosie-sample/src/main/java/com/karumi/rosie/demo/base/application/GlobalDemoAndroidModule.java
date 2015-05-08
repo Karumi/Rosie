@@ -35,4 +35,5 @@ public class GlobalDemoAndroidModule {
   public Picasso providePicasso(@ForApplication Context context) {
     return Picasso.with(context);
   }
+
 }

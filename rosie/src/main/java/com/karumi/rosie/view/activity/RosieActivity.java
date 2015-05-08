@@ -22,30 +22,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import butterknife.ButterKnife;
 import com.karumi.rosie.application.RosieApplication;
-import com.karumi.rosie.view.presenter.RosiePresenter;
 import com.karumi.rosie.view.presenter.PresenterLifeCycleHooker;
+import com.karumi.rosie.view.presenter.RosiePresenter;
+import com.karumi.rosie.view.presenter.view.ErrorView;
 import dagger.ObjectGraph;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
- *
+ * BaseActivity created to implement some common functionality to activities using this library. All
+ * activities in this project should extend from this one.
  */
-public class RosieActivity extends FragmentActivity {
+public class RosieActivity extends FragmentActivity implements ErrorView {
 
   private ObjectGraph activityScopeGraph;
   private PresenterLifeCycleHooker presenterLifeCycleHooker = new PresenterLifeCycleHooker();
   private boolean layoutSet = false;
 
-
   /**
-   * Oncreate method is mandatory called for init rosie. Classes extending from RosieActivity
-   * should call {@link #setContentView(int)} or {@link #setContentView(View)} or {@link
-   * #setContentView(View, ViewGroup.LayoutParams)} before this method.
-   * call
-   * super.
-   * @param savedInstanceState
+   * onCreate method is mandatory called for init rosie. Classes extending from RosieActivity
+   * should call {@link #setContentView(int)}, {@link #setContentView(View)} or {@link
+   * #setContentView(View, ViewGroup.LayoutParams)} before this method calls super.
+   *
    * @throws IllegalStateException if setContentView is not called before this method.
    */
   @Override
@@ -59,6 +58,7 @@ public class RosieActivity extends FragmentActivity {
     presenterLifeCycleHooker.addAnnotatedPresenter(getClass().getDeclaredFields(), this);
     ButterKnife.inject(this);
     presenterLifeCycleHooker.initializePresenters();
+    presenterLifeCycleHooker.setErrorView(this);
   }
 
   @Override public void setContentView(int layoutResID) {
@@ -113,5 +113,8 @@ public class RosieActivity extends FragmentActivity {
 
   protected void registerPresenter(RosiePresenter presenter) {
     presenterLifeCycleHooker.registerPresenter(presenter);
+  }
+
+  @Override public void showGlobalError(com.karumi.rosie.domain.usercase.error.Error error) {
   }
 }

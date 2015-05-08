@@ -14,38 +14,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase;
-
-import com.karumi.rosie.domain.usercase.error.ErrorHandler;
-import java.lang.reflect.Method;
+package com.karumi.rosie.doubles;
 
 /**
- * This class envolve the use case for invoke it.
+ * Double that emulate an network error
  */
-public class UserCaseWrapper {
-  private final RosieUseCase userCase;
-  private final UserCaseParams userCaseParams;
-  private final ErrorHandler errorHandler;
-
-  public UserCaseWrapper(RosieUseCase userCase, UserCaseParams userCaseParams,
-      ErrorHandler errorHandler) {
-    this.userCase = userCase;
-    this.userCaseParams = userCaseParams;
-    this.errorHandler = errorHandler;
-  }
-
-  public void execute() {
-    try {
-      Method methodToInvoke = UserCaseFilter.filter(userCase, userCaseParams);
-      methodToInvoke.invoke(userCase, userCaseParams.getArgs());
-    } catch (Exception e) {
-      notifyError(e);
-    }
-  }
-
-  private void notifyError(Exception exception) {
-    if (errorHandler != null) {
-      errorHandler.notifyError(exception);
-    }
+public class NetworkError extends com.karumi.rosie.domain.usercase.error.Error {
+  public NetworkError() {
+    super();
   }
 }

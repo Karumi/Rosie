@@ -14,38 +14,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase;
-
-import com.karumi.rosie.domain.usercase.error.ErrorHandler;
-import java.lang.reflect.Method;
+package com.karumi.rosie.domain.usercase.error;
 
 /**
- * This class envolve the use case for invoke it.
+ * This is an exception that contains a domain error that has been sended but not received for the
+ * error callback, and send it to the generic error handler.
  */
-public class UserCaseWrapper {
-  private final RosieUseCase userCase;
-  private final UserCaseParams userCaseParams;
-  private final ErrorHandler errorHandler;
+public class ErrorNotHandledException extends Exception {
+  private final Error error;
 
-  public UserCaseWrapper(RosieUseCase userCase, UserCaseParams userCaseParams,
-      ErrorHandler errorHandler) {
-    this.userCase = userCase;
-    this.userCaseParams = userCaseParams;
-    this.errorHandler = errorHandler;
+  public ErrorNotHandledException(Error error) {
+    this.error = error;
   }
 
-  public void execute() {
-    try {
-      Method methodToInvoke = UserCaseFilter.filter(userCase, userCaseParams);
-      methodToInvoke.invoke(userCase, userCaseParams.getArgs());
-    } catch (Exception e) {
-      notifyError(e);
-    }
-  }
-
-  private void notifyError(Exception exception) {
-    if (errorHandler != null) {
-      errorHandler.notifyError(exception);
-    }
+  public Error getError() {
+    return error;
   }
 }

@@ -14,38 +14,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase;
+package com.karumi.rosie.demo.hipsterlist.domain.usercase;
 
-import com.karumi.rosie.domain.usercase.error.ErrorHandler;
-import java.lang.reflect.Method;
+import com.karumi.rosie.demo.hipsterlist.view.model.Hipster;
+import com.karumi.rosie.domain.usercase.RosieUseCase;
+import com.karumi.rosie.domain.usercase.annotation.UserCase;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * This class envolve the use case for invoke it.
+ * This UseCase provide hipsters from dummy data.
  */
-public class UserCaseWrapper {
-  private final RosieUseCase userCase;
-  private final UserCaseParams userCaseParams;
-  private final ErrorHandler errorHandler;
+public class ObtainHipsters extends RosieUseCase {
 
-  public UserCaseWrapper(RosieUseCase userCase, UserCaseParams userCaseParams,
-      ErrorHandler errorHandler) {
-    this.userCase = userCase;
-    this.userCaseParams = userCaseParams;
-    this.errorHandler = errorHandler;
-  }
+  @UserCase
+  public void obtain() {
+    Hipster hipster = new Hipster();
+    hipster.setName("Hipstotito Fernandez");
+    hipster.setAvatarUrl(
+        "https://cdn0.iconfinder.com/data/icons/avatars-3/512/avatar_hipster_guy-512.png");
+    hipster.setId("1");
 
-  public void execute() {
-    try {
-      Method methodToInvoke = UserCaseFilter.filter(userCase, userCaseParams);
-      methodToInvoke.invoke(userCase, userCaseParams.getArgs());
-    } catch (Exception e) {
-      notifyError(e);
-    }
-  }
+    List<Hipster> hipsters = new ArrayList<Hipster>();
+    hipsters.add(hipster);
 
-  private void notifyError(Exception exception) {
-    if (errorHandler != null) {
-      errorHandler.notifyError(exception);
-    }
+    notifySuccess(hipsters);
   }
 }

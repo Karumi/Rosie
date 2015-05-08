@@ -16,50 +16,57 @@
 
 package com.karumi.rosie.demo.hipsterlist.view.presenter;
 
-import com.karumi.rosie.demo.hipsterlist.view.model.HipsterListViewModel;
-import com.karumi.rosie.demo.hipsterlist.view.model.HipsterViewModel;
+import com.karumi.rosie.demo.hipsterlist.domain.usercase.ObtainHipsters;
+import com.karumi.rosie.demo.hipsterlist.view.model.Hipster;
+import com.karumi.rosie.domain.usercase.UserCaseHandler;
+import com.karumi.rosie.domain.usercase.UserCaseParams;
+import com.karumi.rosie.domain.usercase.annotation.Success;
+import com.karumi.rosie.domain.usercase.callback.OnSuccessCallback;
 import com.karumi.rosie.view.presenter.RosiePresenter;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 
-/**
- *
- */
 public class HipsterListPresenter extends RosiePresenter {
 
+  private final ObtainHipsters obtainHipsters;
   private View view;
-  ArrayList<HipsterViewModel> hipsters = new ArrayList<HipsterViewModel>();
+  private ArrayList<Hipster> hipsters = new ArrayList<Hipster>();
 
-  public HipsterListPresenter() {
-    super();
+  @Inject
+  public HipsterListPresenter(UserCaseHandler userCaseHandler, ObtainHipsters obtainHipsters) {
+    super(userCaseHandler);
+    this.obtainHipsters = obtainHipsters;
   }
 
   public void setView(View view) {
     this.view = view;
   }
 
-  public void obtainHipsters() {
-    HipsterListViewModel hipsterListViewModel = new HipsterListViewModel();
-    HipsterViewModel hipsterTest = new HipsterViewModel();
-    hipsterTest.setName("Hipstotito Fernandez");
-    hipsterTest.setAvatarUrl(
-        "https://cdn0.iconfinder.com/data/icons/avatars-3/512/avatar_hipster_guy-512.png");
-    hipsterTest.setId("1");
-
-    ArrayList<HipsterViewModel> hipsterViewModels = new ArrayList<HipsterViewModel>();
-    hipsterViewModels.add(hipsterTest);
-    hipsterListViewModel.setHipsters(hipsterViewModels);
-
-    hipsters.clear();
-    hipsters.addAll(hipsterListViewModel.getHipsters());
-    view.updateList();
+  @Override public void update() {
+    super.update();
+    obtainHipsters();
   }
 
-  public List<HipsterViewModel> getHipsters() {
-    return hipsters;
+  private void obtainHipsters() {
+    UserCaseParams params = new UserCaseParams.Builder()
+        .onSuccess(successCallback).build();
+
+    UserCaseHandler userCaseHandler = getUserCaseHandler();
+    userCaseHandler.execute(obtainHipsters, params);
   }
+
+  private OnSuccessCallback successCallback = new OnSuccessCallback() {
+    @Success
+    public void success(List<Hipster> hipsters) {
+      HipsterListPresenter.this.hipsters.clear();
+      HipsterListPresenter.this.hipsters.addAll(hipsters);
+
+      view.updateList(HipsterListPresenter.this.hipsters);
+    }
+  };
 
   public interface View {
-    void updateList();
+    void updateList(List<Hipster> hipsters);
   }
 }

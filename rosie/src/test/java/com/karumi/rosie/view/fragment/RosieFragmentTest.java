@@ -17,7 +17,7 @@
 package com.karumi.rosie.view.fragment;
 
 import com.karumi.rosie.RobolectricTest;
-import com.karumi.rosie.TestActivity;
+import com.karumi.rosie.doubles.FakeActivity;
 import com.karumi.rosie.view.presenter.RosiePresenter;
 import com.karumi.rosie.view.presenter.annotation.Presenter;
 import org.junit.Test;
@@ -32,7 +32,7 @@ public class RosieFragmentTest extends RobolectricTest {
   public void shouldCallInitializePresenterWhenFragmentCreate() {
 
     TestFragment testFragment = new TestFragment();
-    FragmentTestUtil.startFragment(testFragment, TestActivity.class);
+    FragmentTestUtil.startFragment(testFragment, FakeActivity.class);
 
     verify(testFragment.presenter).initialize();
   }
@@ -41,7 +41,7 @@ public class RosieFragmentTest extends RobolectricTest {
   public void shouldCallUpdatePresenterWhenFragmentResume() {
 
     TestFragment testFragment = new TestFragment();
-    FragmentTestUtil.startFragment(testFragment, TestActivity.class);
+    FragmentTestUtil.startFragment(testFragment, FakeActivity.class);
 
     verify(testFragment.presenter).initialize();
     verify(testFragment.presenter).update();
@@ -51,7 +51,7 @@ public class RosieFragmentTest extends RobolectricTest {
   public void shouldCallPausePresenterWhenFragmentPause() {
 
     TestFragment testFragment = new TestFragment();
-    FragmentTestUtil.startFragment(testFragment, TestActivity.class);
+    FragmentTestUtil.startFragment(testFragment, FakeActivity.class);
     testFragment.onPause();
 
     verify(testFragment.presenter).initialize();
@@ -63,7 +63,7 @@ public class RosieFragmentTest extends RobolectricTest {
   public void shouldCallDestroyPresenterWhenFragmentDestroy() {
 
     TestFragment testFragment = new TestFragment();
-    FragmentTestUtil.startFragment(testFragment, TestActivity.class);
+    FragmentTestUtil.startFragment(testFragment, FakeActivity.class);
     testFragment.onPause();
     testFragment.onDestroy();
 

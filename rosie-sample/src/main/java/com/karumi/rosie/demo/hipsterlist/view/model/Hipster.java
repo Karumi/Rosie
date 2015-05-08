@@ -14,38 +14,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase;
+package com.karumi.rosie.demo.hipsterlist.view.model;
 
-import com.karumi.rosie.domain.usercase.error.ErrorHandler;
-import java.lang.reflect.Method;
+public class Hipster {
+  private String id;
+  private String name;
+  private String avatarUrl;
 
-/**
- * This class envolve the use case for invoke it.
- */
-public class UserCaseWrapper {
-  private final RosieUseCase userCase;
-  private final UserCaseParams userCaseParams;
-  private final ErrorHandler errorHandler;
-
-  public UserCaseWrapper(RosieUseCase userCase, UserCaseParams userCaseParams,
-      ErrorHandler errorHandler) {
-    this.userCase = userCase;
-    this.userCaseParams = userCaseParams;
-    this.errorHandler = errorHandler;
+  public String getId() {
+    return id;
   }
 
-  public void execute() {
-    try {
-      Method methodToInvoke = UserCaseFilter.filter(userCase, userCaseParams);
-      methodToInvoke.invoke(userCase, userCaseParams.getArgs());
-    } catch (Exception e) {
-      notifyError(e);
-    }
+  public void setId(String id) {
+    this.id = id;
   }
 
-  private void notifyError(Exception exception) {
-    if (errorHandler != null) {
-      errorHandler.notifyError(exception);
-    }
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getAvatarUrl() {
+    return avatarUrl;
+  }
+
+  public void setAvatarUrl(String avatarUrl) {
+    this.avatarUrl = avatarUrl;
   }
 }

@@ -14,38 +14,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase;
-
-import com.karumi.rosie.domain.usercase.error.ErrorHandler;
-import java.lang.reflect.Method;
+package com.karumi.rosie.domain.usercase.error;
 
 /**
- * This class envolve the use case for invoke it.
+ * Provides Error instances given an Exception passed as argument.
  */
-public class UserCaseWrapper {
-  private final RosieUseCase userCase;
-  private final UserCaseParams userCaseParams;
-  private final ErrorHandler errorHandler;
+public abstract class ErrorFactory {
+  public abstract Error create(Exception exception);
 
-  public UserCaseWrapper(RosieUseCase userCase, UserCaseParams userCaseParams,
-      ErrorHandler errorHandler) {
-    this.userCase = userCase;
-    this.userCaseParams = userCaseParams;
-    this.errorHandler = errorHandler;
-  }
-
-  public void execute() {
-    try {
-      Method methodToInvoke = UserCaseFilter.filter(userCase, userCaseParams);
-      methodToInvoke.invoke(userCase, userCaseParams.getArgs());
-    } catch (Exception e) {
-      notifyError(e);
+  public Error createInternalException(Exception exception) {
+    if (exception instanceof ErrorNotHandledException) {
+      return ((ErrorNotHandledException) exception).getError();
     }
-  }
-
-  private void notifyError(Exception exception) {
-    if (errorHandler != null) {
-      errorHandler.notifyError(exception);
-    }
+    return new Error("Generic Error", exception);
   }
 }

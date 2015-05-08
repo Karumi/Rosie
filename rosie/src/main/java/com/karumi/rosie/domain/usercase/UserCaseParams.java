@@ -17,29 +17,30 @@
 package com.karumi.rosie.domain.usercase;
 
 import com.karumi.rosie.domain.usercase.callback.OnSuccessCallback;
+import com.karumi.rosie.domain.usercase.error.UseCaseErrorCallback;
 
 /**
  * The params value to execute with the user case.
  */
 public class UserCaseParams {
-  private final static OnSuccessCallback EMPTY_SUCESS = new OnSuccessCallback() {
-  };
-
   private final OnSuccessCallback onSuccessCallback;
-  private final String userCaseName;
+  private final String useCaseName;
   private final Object[] args;
+  private final UseCaseErrorCallback errorCallback;
 
-  public UserCaseParams(String userCaseName, Object[] args, OnSuccessCallback onSuccess) {
+  public UserCaseParams(String useCaseName, Object[] args, OnSuccessCallback onSuccess,
+      UseCaseErrorCallback errorCallback) {
     this.args = args;
-    this.userCaseName = userCaseName;
+    this.useCaseName = useCaseName;
     this.onSuccessCallback = onSuccess;
+    this.errorCallback = errorCallback;
   }
 
-  String getUserCaseName() {
-    return userCaseName;
+  String getUseCaseName() {
+    return useCaseName;
   }
 
-  Object[] getArgs() {
+  public Object[] getArgs() {
     return args;
   }
 
@@ -47,13 +48,21 @@ public class UserCaseParams {
     return onSuccessCallback;
   }
 
-  public static class Builder {
-    private String userCaseName = "";
-    private Object[] args;
-    private OnSuccessCallback onSuccess = EMPTY_SUCESS;
+  public UseCaseErrorCallback getErrorCallback() {
+    return errorCallback;
+  }
 
-    public Builder name(String name) {
-      userCaseName = name;
+  public static class Builder {
+    private final static OnSuccessCallback EMPTY_SUCCESS = new OnSuccessCallback() {
+    };
+
+    private String useCaseName = "";
+    private Object[] args;
+    private OnSuccessCallback onSuccess = EMPTY_SUCCESS;
+    private UseCaseErrorCallback errorCallback;
+
+    public Builder useCaseName(String name) {
+      useCaseName = name;
       return this;
     }
 
@@ -72,11 +81,20 @@ public class UserCaseParams {
       return this;
     }
 
+    public Builder onError(UseCaseErrorCallback errorCallback) {
+      if (errorCallback == null) {
+        throw new IllegalArgumentException(
+            "The errorCallback used is null, you can't use a null instance as onError callback.");
+      }
+      this.errorCallback = errorCallback;
+      return this;
+    }
+
     public UserCaseParams build() {
       if (this.args == null) {
         args = new Object[0];
       }
-      return new UserCaseParams(userCaseName, args, onSuccess);
+      return new UserCaseParams(useCaseName, args, onSuccess, errorCallback);
     }
   }
 }

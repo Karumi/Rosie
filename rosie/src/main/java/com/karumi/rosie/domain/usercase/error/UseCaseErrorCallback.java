@@ -14,37 +14,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.demo.hipsterlist.view.model;
+package com.karumi.rosie.domain.usercase.error;
 
 /**
- *
+ * This callback must be inoked when an error happend inside of a user case.
  */
-public class HipsterViewModel {
-  private String id;
-  private String name;
-  private String avatarUrl;
-
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getAvatarUrl() {
-    return avatarUrl;
-  }
-
-  public void setAvatarUrl(String avatarUrl) {
-    this.avatarUrl = avatarUrl;
-  }
+public interface UseCaseErrorCallback<T extends Error> {
+  void onError(T error);
 }
+

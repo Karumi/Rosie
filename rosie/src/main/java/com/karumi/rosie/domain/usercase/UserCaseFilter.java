@@ -17,6 +17,7 @@
 package com.karumi.rosie.domain.usercase;
 
 import com.karumi.rosie.domain.usercase.annotation.UserCase;
+import com.karumi.rosie.domain.usercase.error.MethodNotFoundException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -24,10 +25,10 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * This class filters a UseCase based on the params. If something was wrong trows an exception.
+ * Filters a UseCase instance based on the class structure to find the UseCase method configured to
+ * be executed.
  */
 class UserCaseFilter {
-
 
   static Method filter(Object userCase, UserCaseParams userCaseParams) {
     List<Method> methodsFiltered = getAnnotatedUseCaseMethods(userCase);
@@ -49,8 +50,6 @@ class UserCaseFilter {
               + "Do you forget add the @UserCase annotation?");
     }
 
-
-
     if (methodsFiltered.size() > 1) {
       throw new IllegalArgumentException(
           "The target contains more than one usercases with the same signature. "
@@ -59,7 +58,6 @@ class UserCaseFilter {
 
     return methodsFiltered.get(0);
   }
-
 
   private static List<Method> getAnnotatedUseCaseMethods(Object target) {
     List<Method> userCaseMethods = new ArrayList<>();
@@ -76,7 +74,6 @@ class UserCaseFilter {
     return userCaseMethods;
   }
 
-
   private static List<Method> getMethodMatchingArguments(UserCaseParams userCaseParams,
       List<Method> methodsFiltered) {
 
@@ -89,7 +86,7 @@ class UserCaseFilter {
 
       Class<?>[] parameters = method.getParameterTypes();
       if (parameters.length == selectedArgs.length) {
-        if (!isValidArguments(parameters, selectedArgs)) {
+        if (!hasValidArguments(parameters, selectedArgs)) {
           iteratorMethods.remove();
         }
       } else {
@@ -100,7 +97,7 @@ class UserCaseFilter {
     return methodsFiltered;
   }
 
-  private static boolean isValidArguments(Class<?>[] parameters, Object[] selectedArgs) {
+  private static boolean hasValidArguments(Class<?>[] parameters, Object[] selectedArgs) {
     for (int i = 0; i < parameters.length; i++) {
       Class<?> targetClass = selectedArgs[i].getClass();
       Class<?> parameterClass = parameters[i];
@@ -111,10 +108,21 @@ class UserCaseFilter {
     return true;
   }
 
+  private static boolean hasValidArgumentsForReturn(Class<?>[] parameters, Object[] selectedArgs) {
+    for (int i = 0; i < parameters.length; i++) {
+      Class<?> targetClass = selectedArgs[i].getClass();
+      Class<?> parameterClass = parameters[i];
+      if (!ClassUtils.canAssign(parameterClass, targetClass)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   private static List<Method> getMethodMatchingName(UserCaseParams userCaseParams,
       List<Method> methodsFiltered) {
-    String nameUserCase = userCaseParams.getUserCaseName();
-    if (nameUserCase == null || nameUserCase.equals("")) {
+    String nameUseCase = userCaseParams.getUseCaseName();
+    if (nameUseCase == null || nameUseCase.equals("")) {
       return methodsFiltered;
     }
 
@@ -122,7 +130,7 @@ class UserCaseFilter {
     while (iteratorMethods.hasNext()) {
       Method method = iteratorMethods.next();
       UserCase annotation = method.getAnnotation(UserCase.class);
-      if (!(annotation.name().equals(nameUserCase))) {
+      if (!(annotation.name().equals(nameUseCase))) {
         iteratorMethods.remove();
       }
     }
@@ -130,8 +138,7 @@ class UserCaseFilter {
     return methodsFiltered;
   }
 
-  public static Method filterValidMethodArgs(Object[] argsToSend, Method[] methods,
-      Class typeAnnotation) {
+  static Method filterValidMethodArgs(Object[] argsToSend, Method[] methods, Class typeAnnotation) {
 
     List<Method> methodsFiltered = new ArrayList<>();
 
@@ -140,7 +147,7 @@ class UserCaseFilter {
       if (annotationValid != null) {
         Class<?>[] parameters = method.getParameterTypes();
         if (parameters.length == argsToSend.length) {
-          if (isValidArguments(parameters, argsToSend)) {
+          if (hasValidArgumentsForReturn(parameters, argsToSend)) {
             methodsFiltered.add(method);
           }
         }
@@ -148,12 +155,12 @@ class UserCaseFilter {
     }
 
     if (methodsFiltered.isEmpty()) {
-      throw new RuntimeException("Not exist any method on this success with this signature");
+      throw new MethodNotFoundException("Not exist any method on this success with this signature");
     }
 
     if (methodsFiltered.size() > 1) {
       throw new RuntimeException(
-          "This success has more than one method with this signature." + "Remove the ambiguity.");
+          "This success has more than one method with this signature. Remove the ambiguity.");
     }
 
     return methodsFiltered.get(0);

@@ -17,9 +17,7 @@
 package com.karumi.rosie.demo.hipsterlist.view;
 
 import com.karumi.rosie.demo.hipsterlist.view.activity.phone.HipsterListActivity;
-import com.karumi.rosie.demo.hipsterlist.view.presenter.HipsterListPresenter;
 import dagger.Module;
-import dagger.Provides;
 
 /**
  *
@@ -31,8 +29,4 @@ import dagger.Provides;
 )
 public class HipsterListViewModule {
 
-  @Provides
-  public HipsterListPresenter provideHipsterListPresenter() {
-    return new HipsterListPresenter();
-  }
 }

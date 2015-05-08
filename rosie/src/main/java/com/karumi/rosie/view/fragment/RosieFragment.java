@@ -22,18 +22,18 @@ import android.os.Bundle;
 import android.view.View;
 import butterknife.ButterKnife;
 import com.karumi.rosie.view.activity.RosieActivity;
-import com.karumi.rosie.view.presenter.RosiePresenter;
 import com.karumi.rosie.view.presenter.PresenterLifeCycleHooker;
+import com.karumi.rosie.view.presenter.RosiePresenter;
+import com.karumi.rosie.view.presenter.view.ErrorView;
 
 /**
  * Base fragment which performs injection using the activity object graph of its parent.
  */
-public abstract class RosieFragment extends Fragment {
+public abstract class RosieFragment extends Fragment implements ErrorView {
 
   private PresenterLifeCycleHooker presenterLifeCycleHooker = new PresenterLifeCycleHooker();
 
   private boolean injected;
-
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
@@ -62,13 +62,13 @@ public abstract class RosieFragment extends Fragment {
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     presenterLifeCycleHooker.initializePresenters();
+    presenterLifeCycleHooker.setErrorView(this);
   }
 
   @Override public void onResume() {
     super.onResume();
     presenterLifeCycleHooker.updatePresenters();
   }
-
 
   @Override public void onPause() {
     super.onPause();
@@ -82,5 +82,9 @@ public abstract class RosieFragment extends Fragment {
 
   protected void registerPresenter(RosiePresenter presenter) {
     presenterLifeCycleHooker.registerPresenter(presenter);
+  }
+
+  @Override public void showGlobalError(com.karumi.rosie.domain.usercase.error.Error error) {
+
   }
 }

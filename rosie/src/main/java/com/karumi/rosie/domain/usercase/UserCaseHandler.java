@@ -16,40 +16,59 @@
 
 package com.karumi.rosie.domain.usercase;
 
+import com.karumi.rosie.domain.usercase.error.ErrorHandler;
+import com.karumi.rosie.domain.usercase.error.UseCaseErrorCallback;
+
 /**
- * this is the handler for user cases, in you want to invoke an user case you need call to this
- * class with a valid user case. A valid usercase is this one that have an @usercase annotation.
+ * Invoke methods annotated with UseCase annotation. The RosieUseCase instance will be executed out
+ * of the Android main thread and the result of the operation will be provided asynchronously using
+ * a callback.
  */
 public class UserCaseHandler {
+  private static final ErrorHandler EMPTY_ERROR_HANDLER = new ErrorHandler();
   private final TaskScheduler taskScheduler;
+  private final ErrorHandler errorHandler;
 
   public UserCaseHandler(TaskScheduler taskScheduler) {
+    this(taskScheduler, EMPTY_ERROR_HANDLER);
+  }
+
+  public UserCaseHandler(TaskScheduler taskScheduler, ErrorHandler errorHandler) {
     this.taskScheduler = taskScheduler;
+    this.errorHandler = errorHandler;
   }
 
   /**
    * Invoke an user case without arguments. This user case will invoke outside the main thread, and
-   * the response come back on the main thread.
+   * the response comes back to the main thread.
    *
-   * @param userCase the user case to invoke.
+   * @param useCase the user case to invoke.
    */
-  public void execute(RosieUseCase userCase) {
-    execute(userCase, (new UserCaseParams.Builder()).build());
+  public void execute(RosieUseCase useCase) {
+    execute(useCase, (new UserCaseParams.Builder()).build());
   }
 
   /**
    * Given a class configured with UseCase annotation executes the annotated
    * method out of the UI thread and return the response, if needed it, over the UI thread.
    *
-   * @param userCase the user case to invoke.
+   * @param useCase the user case to invoke.
    * @param userCaseParams params to use on the invokation.
    */
-  public void execute(RosieUseCase userCase, UserCaseParams userCaseParams) {
+  public void execute(RosieUseCase useCase, UserCaseParams userCaseParams) {
+    UserCaseFilter.filter(useCase, userCaseParams);
 
-    UserCaseFilter.filter(userCase, userCaseParams);
-
-    userCase.setOnSuccess(userCaseParams.getOnSuccessCallback());
-    UserCaseWrapper userCaseWrapper = new UserCaseWrapper(userCase, userCaseParams);
+    useCase.setOnSuccess(userCaseParams.getOnSuccessCallback());
+    useCase.setOnError(userCaseParams.getErrorCallback());
+    UserCaseWrapper userCaseWrapper = new UserCaseWrapper(useCase, userCaseParams, errorHandler);
     taskScheduler.execute(userCaseWrapper);
+  }
+
+  public void registerGlobalErrorCallback(UseCaseErrorCallback globalError) {
+    errorHandler.registerCallback(globalError);
+  }
+
+  public void unregisterGlobalErrorCallback(UseCaseErrorCallback globalError) {
+    errorHandler.unregisterCallback(globalError);
   }
 }

@@ -24,7 +24,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.demo.rosie.R;
-import com.karumi.rosie.demo.hipsterlist.view.model.HipsterViewModel;
+import com.karumi.rosie.demo.hipsterlist.view.model.Hipster;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 import java.util.List;
@@ -34,11 +34,11 @@ import java.util.List;
  */
 public class FeedAdapter extends BaseAdapter {
   private final Context context;
-  private final List<HipsterViewModel> hipsters;
+  private final List<Hipster> hipsters;
   private final Picasso picasso;
   private final Transformation transformation;
 
-  public FeedAdapter(Context context, List<HipsterViewModel> hipsters, Picasso picasso,
+  public FeedAdapter(Context context, List<Hipster> hipsters, Picasso picasso,
       Transformation transformation) {
     this.context = context;
     this.hipsters = hipsters;
@@ -51,8 +51,8 @@ public class FeedAdapter extends BaseAdapter {
   }
 
   @Override public Object getItem(int position) {
-    HipsterViewModel hipsterViewModel = hipsters.get(position);
-    return hipsterViewModel;
+    Hipster hipster = hipsters.get(position);
+    return hipster;
   }
 
   @Override public long getItemId(int position) {
@@ -67,12 +67,12 @@ public class FeedAdapter extends BaseAdapter {
     ImageView avatarView = (ImageView) convertView.findViewById(R.id.iv_avatar);
     TextView nameTitleView = (TextView) convertView.findViewById(R.id.tv_hipster_name);
 
-    HipsterViewModel hipsterViewModel = hipsters.get(position);
+    Hipster hipster = hipsters.get(position);
 
-    nameTitleView.setText(hipsterViewModel.getName());
+    nameTitleView.setText(hipster.getName());
 
-    if (hipsterViewModel.getAvatarUrl() != null) {
-      picasso.load(hipsterViewModel.getAvatarUrl())
+    if (hipster.getAvatarUrl() != null) {
+      picasso.load(hipster.getAvatarUrl())
           .fit()
           .centerCrop()
           .placeholder(R.drawable.placeholder)

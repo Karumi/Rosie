@@ -21,9 +21,10 @@ import android.widget.ListView;
 import butterknife.InjectView;
 import com.demo.rosie.R;
 import com.karumi.rosie.demo.base.view.transformation.RoundAvatarTransformation;
+import com.karumi.rosie.demo.hipsterlist.domain.HipsterListDomainModule;
 import com.karumi.rosie.demo.hipsterlist.view.HipsterListViewModule;
 import com.karumi.rosie.demo.hipsterlist.view.adapter.FeedAdapter;
-import com.karumi.rosie.demo.hipsterlist.view.model.HipsterViewModel;
+import com.karumi.rosie.demo.hipsterlist.view.model.Hipster;
 import com.karumi.rosie.demo.hipsterlist.view.presenter.HipsterListPresenter;
 import com.karumi.rosie.view.activity.RosieActivity;
 import com.karumi.rosie.view.presenter.annotation.Presenter;
@@ -42,7 +43,7 @@ public class HipsterListActivity extends RosieActivity implements HipsterListPre
   @Inject Picasso picasso;
   private Transformation transformationAvatar;
 
-  @InjectView(R.id.lv_feed) ListView listviewFeed;
+  @InjectView(R.id.lv_feed) ListView listViewFeed;
 
   private FeedAdapter feedAdapter;
 
@@ -50,33 +51,24 @@ public class HipsterListActivity extends RosieActivity implements HipsterListPre
   protected void onCreate(Bundle savedInstanceState) {
     setContentView(R.layout.activity_hipster_list);
     super.onCreate(savedInstanceState);
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
     presenter.setView(this);
-    presenter.obtainHipsters();
-    refreshData();
   }
 
-  private void refreshData() {
-    List<HipsterViewModel> hipsters = presenter.getHipsters();
-
+  private void refreshData(List<Hipster> hipsters) {
     if (feedAdapter == null) {
       transformationAvatar = new RoundAvatarTransformation();
       feedAdapter = new FeedAdapter(getBaseContext(), hipsters, picasso, transformationAvatar);
-      listviewFeed.setAdapter(feedAdapter);
+      listViewFeed.setAdapter(feedAdapter);
     } else {
       feedAdapter.notifyDataSetChanged();
     }
   }
 
-  @Override public void updateList() {
-    refreshData();
+  @Override public void updateList(List<Hipster> hipsters) {
+    refreshData(hipsters);
   }
 
   @Override protected List<Object> provideActivityScopeModules() {
-    return Arrays.asList((Object) new HipsterListViewModule());
+    return Arrays.asList(new HipsterListViewModule(), new HipsterListDomainModule());
   }
 }
