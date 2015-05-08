@@ -14,20 +14,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase.error;
+package com.karumi.rosie.domain.usecase.jobqueue;
+
+import com.karumi.rosie.domain.usecase.TaskScheduler;
+import com.karumi.rosie.domain.usecase.UseCaseWrapper;
+import com.path.android.jobqueue.JobManager;
 
 /**
- * This is an exception that contains a domain error that has been sended but not received for the
- * error callback, and send it to the generic error handler.
+ * This is an implementation for a TaskScheduler based on android-priority-jobqueue
  */
-public class ErrorNotHandledException extends Exception {
-  private final Error error;
+public class TaskSchedulerJobQueue implements TaskScheduler {
+  private final JobManager jobManager;
 
-  public ErrorNotHandledException(Error error) {
-    this.error = error;
+  public TaskSchedulerJobQueue(JobManager jobManager) {
+    this.jobManager = jobManager;
   }
 
-  public Error getError() {
-    return error;
+  @Override public void execute(UseCaseWrapper useCaseWrapper) {
+    UseCaseWrapperJob useCaseWrapperJob = new UseCaseWrapperJob(useCaseWrapper);
+    jobManager.addJobInBackground(useCaseWrapperJob);
   }
 }

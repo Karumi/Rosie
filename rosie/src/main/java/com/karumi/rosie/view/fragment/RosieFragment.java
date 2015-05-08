@@ -84,7 +84,7 @@ public abstract class RosieFragment extends Fragment implements ErrorView {
     presenterLifeCycleHooker.registerPresenter(presenter);
   }
 
-  @Override public void showGlobalError(com.karumi.rosie.domain.usercase.error.Error error) {
+  @Override public void showGlobalError(com.karumi.rosie.domain.usecase.error.Error error) {
 
   }
 }

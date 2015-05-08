@@ -14,24 +14,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase.jobqueue;
+package com.karumi.rosie.domain.usecase.jobqueue;
 
-import com.karumi.rosie.domain.usercase.TaskScheduler;
-import com.karumi.rosie.domain.usercase.UserCaseWrapper;
-import com.path.android.jobqueue.JobManager;
+import com.karumi.rosie.domain.usecase.UseCaseWrapper;
+import com.path.android.jobqueue.Job;
+import com.path.android.jobqueue.Params;
 
 /**
- * This is an implementation for a TaskScheduler based on android-priority-jobqueue
+ * Job extension created to be able to execute a use case using android-priority-job-queue.
  */
-public class TaskSchedulerJobQueue implements TaskScheduler {
-  private final JobManager jobManager;
+class UseCaseWrapperJob extends Job {
+  private static final int PRIORITY_NORMAL = 3;
+  private static final String TAG = "UseCaseWrapperJob";
+  private final UseCaseWrapper useCaseWrapper;
 
-  public TaskSchedulerJobQueue(JobManager jobManager) {
-    this.jobManager = jobManager;
+  public UseCaseWrapperJob(UseCaseWrapper useCaseWrapper) {
+    super(new Params(PRIORITY_NORMAL));
+    this.useCaseWrapper = useCaseWrapper;
   }
 
-  @Override public void execute(UserCaseWrapper userCaseWrapper) {
-    UserCaseWrapperJob userCaseWrapperJob = new UserCaseWrapperJob(userCaseWrapper);
-    jobManager.addJobInBackground(userCaseWrapperJob);
+  @Override public void onAdded() {
+
+  }
+
+  @Override public void onRun() throws Throwable {
+    useCaseWrapper.execute();
+  }
+
+  @Override protected void onCancel() {
+
+  }
+
+  @Override protected boolean shouldReRunOnThrowable(Throwable throwable) {
+    return false;
   }
 }

@@ -14,48 +14,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase;
+package com.karumi.rosie.domain.usecase.annotation;
 
-import com.karumi.rosie.domain.usercase.annotation.UserCase;
-import org.junit.Test;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import static org.junit.Assert.assertEquals;
-
-public class UserCaseWrapperTest {
-
-  @Test
-  public void testExecuteWithArgs() throws Exception {
-    AnyUserCase anyUserCase = new AnyUserCase();
-    UserCaseParams argsParams = new UserCaseParams.Builder().args("anyValue", 2).build();
-
-    UserCaseWrapper userCaseWrapper = new UserCaseWrapper(anyUserCase, argsParams, null);
-
-    userCaseWrapper.execute();
-
-    assertEquals("anyValue", anyUserCase.getArg1());
-    assertEquals(2, anyUserCase.getArg2());
-  }
-
-  private class AnyUserCase extends RosieUseCase {
-
-    private String arg1;
-    private int arg2;
-
-    AnyUserCase() {
-    }
-
-    @UserCase
-    public void methodWithArgs(String arg1, int arg2) {
-      this.arg1 = arg1;
-      this.arg2 = arg2;
-    }
-
-    private String getArg1() {
-      return arg1;
-    }
-
-    private int getArg2() {
-      return arg2;
-    }
-  }
+/**
+ *
+ */
+@Retention(RetentionPolicy.RUNTIME) @Target(ElementType.METHOD)
+public @interface UseCase {
+  String name() default "";
 }

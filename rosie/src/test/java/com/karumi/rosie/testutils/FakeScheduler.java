@@ -16,8 +16,8 @@
 
 package com.karumi.rosie.testutils;
 
-import com.karumi.rosie.domain.usercase.TaskScheduler;
-import com.karumi.rosie.domain.usercase.UserCaseWrapper;
+import com.karumi.rosie.domain.usecase.TaskScheduler;
+import com.karumi.rosie.domain.usecase.UseCaseWrapper;
 
 /**
  * Scheduler to run the test sequencially
@@ -26,9 +26,9 @@ public class FakeScheduler implements TaskScheduler {
 
   private static final String TAG = "TestScheduler";
 
-  @Override public void execute(UserCaseWrapper userCaseWrapper) {
+  @Override public void execute(UseCaseWrapper useCaseWrapper) {
     try {
-      userCaseWrapper.execute();
+      useCaseWrapper.execute();
     } catch (Exception e) {
       //avoid exceptions for test scheduler
     }

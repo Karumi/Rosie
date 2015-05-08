@@ -14,12 +14,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase;
+package com.karumi.rosie.domain.usecase.error;
 
 /**
- * Implements this interface for provide a system that can execute UserCases. You need implement
- * the method execute, and put the user case out of the main thread.
+ * Represents an exception when invoke a method and this does not exist.
  */
-public interface TaskScheduler {
-  void execute(UserCaseWrapper userCaseWrapper);
+public class MethodNotFoundException extends RuntimeException {
+  public MethodNotFoundException(String description) {
+    super(description);
+  }
 }

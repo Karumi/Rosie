@@ -14,30 +14,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.demo.hipsterlist.domain.usercase;
-
-import com.karumi.rosie.demo.hipsterlist.view.model.Hipster;
-import com.karumi.rosie.domain.usercase.RosieUseCase;
-import com.karumi.rosie.domain.usercase.annotation.UserCase;
-import java.util.ArrayList;
-import java.util.List;
+package com.karumi.rosie.domain.usecase;
 
 /**
- * This UseCase provide hipsters from dummy data.
+ * Implements this interface for provide a system that can execute Use Cases. You need implement
+ * the method execute, and put the use case out of the main thread.
  */
-public class ObtainHipsters extends RosieUseCase {
-
-  @UserCase
-  public void obtain() {
-    Hipster hipster = new Hipster();
-    hipster.setName("Hipstotito Fernandez");
-    hipster.setAvatarUrl(
-        "https://cdn0.iconfinder.com/data/icons/avatars-3/512/avatar_hipster_guy-512.png");
-    hipster.setId("1");
-
-    List<Hipster> hipsters = new ArrayList<Hipster>();
-    hipsters.add(hipster);
-
-    notifySuccess(hipsters);
-  }
+public interface TaskScheduler {
+  void execute(UseCaseWrapper useCaseWrapper);
 }

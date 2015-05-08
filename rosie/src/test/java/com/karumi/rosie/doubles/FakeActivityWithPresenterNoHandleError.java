@@ -47,7 +47,7 @@ public class FakeActivityWithPresenterNoHandleError extends RosieActivity {
     presenter.callErrorUseCase();
   }
 
-  @Override public void showGlobalError(com.karumi.rosie.domain.usercase.error.Error error) {
+  @Override public void showGlobalError(com.karumi.rosie.domain.usecase.error.Error error) {
     this.error = true;
   }
 

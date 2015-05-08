@@ -14,7 +14,7 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase.callback;
+package com.karumi.rosie.domain.usecase.callback;
 
 /**
  * Callback invoked when the UseCase has finished as expected.

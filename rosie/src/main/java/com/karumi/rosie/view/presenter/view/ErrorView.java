@@ -17,8 +17,8 @@
 package com.karumi.rosie.view.presenter.view;
 
 /**
- * Represents all the actions you can perform to notify an error to the user interface.
+ * Represents all the actions you can perform to notify an error to the use interface.
  */
 public interface ErrorView {
-  void showGlobalError(com.karumi.rosie.domain.usercase.error.Error error);
+  void showGlobalError(com.karumi.rosie.domain.usecase.error.Error error);
 }

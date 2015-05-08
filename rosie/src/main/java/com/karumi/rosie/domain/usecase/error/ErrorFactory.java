@@ -14,37 +14,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase;
+package com.karumi.rosie.domain.usecase.error;
 
-import org.junit.Test;
+/**
+ * Provides Error instances given an Exception passed as argument.
+ */
+public abstract class ErrorFactory {
+  public abstract Error create(Exception exception);
 
-import static org.junit.Assert.assertTrue;
-
-public class ClassUtilsTest {
-
-  @Test
-  public void testCanAssignTwoAnyObjects() throws Exception {
-    assertTrue(ClassUtils.canAssign(String.class, String.class));
-  }
-
-  @Test
-  public void testCanAssignTwoAnyObjectsWithHierarchy() throws Exception {
-    assertTrue(ClassUtils.canAssign(AnyClass.class, SonOfAnyClass.class));
-  }
-
-  @Test
-  public void testCanAssignTwoObjectsWithAPrimitiveObject() throws Exception {
-    assertTrue(ClassUtils.canAssign(int.class, Integer.class));
-  }
-
-  @Test
-  public void testCanAssignTwoObjectsWithAPrimitiveObjectBase() throws Exception {
-    assertTrue(ClassUtils.canAssign(Integer.class, int.class));
-  }
-
-  private class AnyClass {
-  }
-
-  private class SonOfAnyClass extends AnyClass {
+  public Error createInternalException(Exception exception) {
+    if (exception instanceof ErrorNotHandledException) {
+      return ((ErrorNotHandledException) exception).getError();
+    }
+    return new Error("Generic Error", exception);
   }
 }

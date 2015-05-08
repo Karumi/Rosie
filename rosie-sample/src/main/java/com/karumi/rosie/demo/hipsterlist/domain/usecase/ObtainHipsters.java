@@ -14,13 +14,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase.error;
+package com.karumi.rosie.demo.hipsterlist.domain.usecase;
+
+import com.karumi.rosie.demo.hipsterlist.view.model.Hipster;
+import com.karumi.rosie.domain.usecase.RosieUseCase;
+import com.karumi.rosie.domain.usecase.annotation.UseCase;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Represents an exception when invoke a method and this does not exist.
+ * This UseCase provide hipsters from dummy data.
  */
-public class MethodNotFoundException extends RuntimeException {
-  public MethodNotFoundException(String description) {
-    super(description);
+public class ObtainHipsters extends RosieUseCase {
+
+  @UseCase
+  public void obtain() {
+    Hipster hipster = new Hipster();
+    hipster.setName("Hipstotito Fernandez");
+    hipster.setAvatarUrl(
+        "https://cdn0.iconfinder.com/data/icons/avatars-3/512/avatar_hipster_guy-512.png");
+    hipster.setId("1");
+
+    List<Hipster> hipsters = new ArrayList<Hipster>();
+    hipsters.add(hipster);
+
+    notifySuccess(hipsters);
   }
 }

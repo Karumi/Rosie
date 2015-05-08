@@ -14,12 +14,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase.error;
+package com.karumi.rosie.domain.usecase.error;
 
 /**
- * This callback must be inoked when an error happend inside of a user case.
+ * This is an exception that contains a domain error that has been sended but not received for the
+ * error callback, and send it to the generic error handler.
  */
-public interface UseCaseErrorCallback<T extends Error> {
-  void onError(T error);
-}
+public class ErrorNotHandledException extends Exception {
+  private final Error error;
 
+  public ErrorNotHandledException(Error error) {
+    this.error = error;
+  }
+
+  public Error getError() {
+    return error;
+  }
+}

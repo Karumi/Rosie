@@ -14,38 +14,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase.jobqueue;
+package com.karumi.rosie.domain.usecase;
 
-import com.karumi.rosie.domain.usercase.UserCaseWrapper;
-import com.path.android.jobqueue.Job;
-import com.path.android.jobqueue.Params;
+import com.karumi.rosie.domain.usecase.error.ErrorHandler;
+import java.lang.reflect.Method;
 
 /**
- * Job extension created to be able to execute a use case using android-priority-job-queue.
+ * This class envolve the use case for invoke it.
  */
-class UserCaseWrapperJob extends Job {
-  private static final int PRIORITY_NORMAL = 3;
-  private static final String TAG = "UserCaseWrapperJob";
-  private final UserCaseWrapper userCaseWrapper;
+public class UseCaseWrapper {
+  private final RosieUseCase useCase;
+  private final UseCaseParams useCaseParams;
+  private final ErrorHandler errorHandler;
 
-  public UserCaseWrapperJob(UserCaseWrapper userCaseWrapper) {
-    super(new Params(PRIORITY_NORMAL));
-    this.userCaseWrapper = userCaseWrapper;
+  public UseCaseWrapper(RosieUseCase useCase, UseCaseParams useCaseParams,
+      ErrorHandler errorHandler) {
+    this.useCase = useCase;
+    this.useCaseParams = useCaseParams;
+    this.errorHandler = errorHandler;
   }
 
-  @Override public void onAdded() {
-
+  public void execute() {
+    try {
+      Method methodToInvoke = UseCaseFilter.filter(useCase, useCaseParams);
+      methodToInvoke.invoke(useCase, useCaseParams.getArgs());
+    } catch (Exception e) {
+      notifyError(e);
+    }
   }
 
-  @Override public void onRun() throws Throwable {
-    userCaseWrapper.execute();
-  }
-
-  @Override protected void onCancel() {
-
-  }
-
-  @Override protected boolean shouldReRunOnThrowable(Throwable throwable) {
-    return false;
+  private void notifyError(Exception exception) {
+    if (errorHandler != null) {
+      errorHandler.notifyError(exception);
+    }
   }
 }

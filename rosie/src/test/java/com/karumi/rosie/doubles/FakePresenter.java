@@ -16,10 +16,10 @@
 
 package com.karumi.rosie.doubles;
 
-import com.karumi.rosie.domain.usercase.RosieUseCase;
-import com.karumi.rosie.domain.usercase.UserCaseHandler;
-import com.karumi.rosie.domain.usercase.annotation.UserCase;
-import com.karumi.rosie.domain.usercase.error.GenericError;
+import com.karumi.rosie.domain.usecase.RosieUseCase;
+import com.karumi.rosie.domain.usecase.UseCaseHandler;
+import com.karumi.rosie.domain.usecase.annotation.UseCase;
+import com.karumi.rosie.domain.usecase.error.Error;
 import com.karumi.rosie.testutils.FakeScheduler;
 import com.karumi.rosie.view.presenter.RosiePresenter;
 
@@ -27,28 +27,28 @@ import com.karumi.rosie.view.presenter.RosiePresenter;
  * Double presenter to use on some tests.
  */
 public class FakePresenter extends RosiePresenter {
-  private UserCaseHandler userCaseHandler;
+  private UseCaseHandler useCaseHandler;
   private FakeUi fakeUi;
 
   public FakePresenter() {
-    this(new UserCaseHandler(new FakeScheduler()));
+    this(new UseCaseHandler(new FakeScheduler()));
   }
 
-  public FakePresenter(UserCaseHandler userCaseHandler) {
-    super(userCaseHandler);
-    this.userCaseHandler = userCaseHandler;
+  public FakePresenter(UseCaseHandler useCaseHandler) {
+    super(useCaseHandler);
+    this.useCaseHandler = useCaseHandler;
   }
 
   public void callErrorUseCase() {
-    ErrorUserCase errorUserCase = new ErrorUserCase();
-    userCaseHandler.execute(errorUserCase);
+    ErrorUseCase errorUseCase = new ErrorUseCase();
+    useCaseHandler.execute(errorUseCase);
   }
 
   public void setUi(FakeUi fakeUi) {
     this.fakeUi = fakeUi;
   }
 
-  @Override protected boolean onGlobalError(com.karumi.rosie.domain.usercase.error.Error error) {
+  @Override protected boolean onGlobalError(com.karumi.rosie.domain.usecase.error.Error error) {
     if (fakeUi != null) {
       fakeUi.showFakeError();
       return true;
@@ -61,11 +61,11 @@ public class FakePresenter extends RosiePresenter {
     void showFakeError();
   }
 
-  public class ErrorUserCase extends RosieUseCase {
+  public class ErrorUseCase extends RosieUseCase {
 
-    @UserCase
+    @UseCase
     public void excuteError() throws Exception {
-      notifyError(new GenericError("error"));
+      notifyError(new Error("error"));
     }
   }
 }

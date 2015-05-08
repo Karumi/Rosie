@@ -16,7 +16,7 @@
 
 package com.karumi.rosie.demo.hipsterlist.domain;
 
-import com.karumi.rosie.demo.hipsterlist.domain.usercase.ObtainHipsters;
+import com.karumi.rosie.demo.hipsterlist.domain.usecase.ObtainHipsters;
 import dagger.Module;
 import dagger.Provides;
 
