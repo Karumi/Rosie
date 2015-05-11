@@ -16,12 +16,12 @@
 
 package com.karumi.rosie.demo.hipsterlist.view.presenter;
 
-import com.karumi.rosie.demo.hipsterlist.domain.usercase.ObtainHipsters;
+import com.karumi.rosie.demo.hipsterlist.domain.usecase.ObtainHipsters;
 import com.karumi.rosie.demo.hipsterlist.view.model.Hipster;
-import com.karumi.rosie.domain.usercase.UserCaseHandler;
-import com.karumi.rosie.domain.usercase.UserCaseParams;
-import com.karumi.rosie.domain.usercase.annotation.Success;
-import com.karumi.rosie.domain.usercase.callback.OnSuccessCallback;
+import com.karumi.rosie.domain.usecase.UseCaseHandler;
+import com.karumi.rosie.domain.usecase.UseCaseParams;
+import com.karumi.rosie.domain.usecase.annotation.Success;
+import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
 import com.karumi.rosie.view.presenter.RosiePresenter;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +34,8 @@ public class HipsterListPresenter extends RosiePresenter {
   private ArrayList<Hipster> hipsters = new ArrayList<Hipster>();
 
   @Inject
-  public HipsterListPresenter(UserCaseHandler userCaseHandler, ObtainHipsters obtainHipsters) {
-    super(userCaseHandler);
+  public HipsterListPresenter(UseCaseHandler useCaseHandler, ObtainHipsters obtainHipsters) {
+    super(useCaseHandler);
     this.obtainHipsters = obtainHipsters;
   }
 
@@ -49,11 +49,11 @@ public class HipsterListPresenter extends RosiePresenter {
   }
 
   private void obtainHipsters() {
-    UserCaseParams params = new UserCaseParams.Builder()
+    UseCaseParams params = new UseCaseParams.Builder()
         .onSuccess(successCallback).build();
 
-    UserCaseHandler userCaseHandler = getUserCaseHandler();
-    userCaseHandler.execute(obtainHipsters, params);
+    UseCaseHandler useCaseHandler = getUseCaseHandler();
+    useCaseHandler.execute(obtainHipsters, params);
   }
 
   private OnSuccessCallback successCallback = new OnSuccessCallback() {

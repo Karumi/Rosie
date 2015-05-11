@@ -14,18 +14,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase.error;
+package com.karumi.rosie.domain.usecase.error;
 
 /**
- * Provides Error instances given an Exception passed as argument.
+ * This callback must be invoked when an error happens inside of a use case.
  */
-public abstract class ErrorFactory {
-  public abstract Error create(Exception exception);
-
-  public Error createInternalException(Exception exception) {
-    if (exception instanceof ErrorNotHandledException) {
-      return ((ErrorNotHandledException) exception).getError();
-    }
-    return new Error("Generic Error", exception);
-  }
+public interface UseCaseErrorCallback<T extends Error> {
+  void onError(T error);
 }
+

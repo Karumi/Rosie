@@ -14,17 +14,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase.annotation;
+package com.karumi.rosie.domain.usecase;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.junit.Test;
 
-/**
- *
- */
-@Retention(RetentionPolicy.RUNTIME) @Target(ElementType.METHOD)
-public @interface UserCase {
-  String name() default "";
+import static org.junit.Assert.assertTrue;
+
+public class ClassUtilsTest {
+
+  @Test
+  public void testCanAssignTwoAnyObjects() throws Exception {
+    assertTrue(ClassUtils.canAssign(String.class, String.class));
+  }
+
+  @Test
+  public void testCanAssignTwoAnyObjectsWithHierarchy() throws Exception {
+    assertTrue(ClassUtils.canAssign(AnyClass.class, SonOfAnyClass.class));
+  }
+
+  @Test
+  public void testCanAssignTwoObjectsWithAPrimitiveObject() throws Exception {
+    assertTrue(ClassUtils.canAssign(int.class, Integer.class));
+  }
+
+  @Test
+  public void testCanAssignTwoObjectsWithAPrimitiveObjectBase() throws Exception {
+    assertTrue(ClassUtils.canAssign(Integer.class, int.class));
+  }
+
+  private class AnyClass {
+  }
+
+  private class SonOfAnyClass extends AnyClass {
+  }
 }

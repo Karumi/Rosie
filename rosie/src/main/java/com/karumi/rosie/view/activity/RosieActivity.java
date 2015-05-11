@@ -115,6 +115,6 @@ public class RosieActivity extends FragmentActivity implements ErrorView {
     presenterLifeCycleHooker.registerPresenter(presenter);
   }
 
-  @Override public void showGlobalError(com.karumi.rosie.domain.usercase.error.Error error) {
+  @Override public void showGlobalError(com.karumi.rosie.domain.usecase.error.Error error) {
   }
 }

@@ -1,8 +1,8 @@
 package com.karumi.rosie.view.presenter;
 
-import com.karumi.rosie.domain.usercase.UserCaseHandler;
-import com.karumi.rosie.domain.usercase.error.Error;
-import com.karumi.rosie.domain.usercase.error.UseCaseErrorCallback;
+import com.karumi.rosie.domain.usecase.UseCaseHandler;
+import com.karumi.rosie.domain.usecase.error.Error;
+import com.karumi.rosie.domain.usecase.error.UseCaseErrorCallback;
 import com.karumi.rosie.view.presenter.view.ErrorView;
 
 /**
@@ -11,11 +11,11 @@ import com.karumi.rosie.view.presenter.view.ErrorView;
  */
 public class RosiePresenter {
 
-  private final UserCaseHandler userCaseHandler;
+  private final UseCaseHandler useCaseHandler;
   private ErrorView errorView;
 
-  public RosiePresenter(UserCaseHandler userCaseHandler) {
-    this.userCaseHandler = userCaseHandler;
+  public RosiePresenter(UseCaseHandler useCaseHandler) {
+    this.useCaseHandler = useCaseHandler;
   }
 
   /**
@@ -30,7 +30,7 @@ public class RosiePresenter {
    */
   public void update() {
     if (globalError != null) {
-      userCaseHandler.registerGlobalErrorCallback(globalError);
+      useCaseHandler.registerGlobalErrorCallback(globalError);
     }
   }
 
@@ -39,7 +39,7 @@ public class RosiePresenter {
    */
   public void pause() {
     if (globalError != null) {
-      userCaseHandler.unregisterGlobalErrorCallback(globalError);
+      useCaseHandler.unregisterGlobalErrorCallback(globalError);
     }
   }
 
@@ -65,7 +65,7 @@ public class RosiePresenter {
   }
 
   private UseCaseErrorCallback globalError = new UseCaseErrorCallback() {
-    @Override public void onError(com.karumi.rosie.domain.usercase.error.Error error) {
+    @Override public void onError(com.karumi.rosie.domain.usecase.error.Error error) {
       if (!onGlobalError(error)) {
         if (errorView != null) {
           errorView.showGlobalError(error);
@@ -74,7 +74,7 @@ public class RosiePresenter {
     }
   };
 
-  protected UserCaseHandler getUserCaseHandler() {
-    return userCaseHandler;
+  protected UseCaseHandler getUseCaseHandler() {
+    return useCaseHandler;
   }
 }

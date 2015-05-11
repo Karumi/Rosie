@@ -14,15 +14,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase;
+package com.karumi.rosie.domain.usecase;
 
-import com.karumi.rosie.domain.usercase.annotation.Success;
-import com.karumi.rosie.domain.usercase.annotation.UserCase;
-import com.karumi.rosie.domain.usercase.callback.OnSuccessCallback;
-import com.karumi.rosie.domain.usercase.error.Error;
-import com.karumi.rosie.domain.usercase.error.ErrorHandler;
-import com.karumi.rosie.domain.usercase.error.ErrorNotHandledException;
-import com.karumi.rosie.domain.usercase.error.UseCaseErrorCallback;
+import com.karumi.rosie.domain.usecase.annotation.Success;
+import com.karumi.rosie.domain.usecase.annotation.UseCase;
+import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
+import com.karumi.rosie.domain.usecase.error.Error;
+import com.karumi.rosie.domain.usecase.error.ErrorHandler;
+import com.karumi.rosie.domain.usecase.error.ErrorNotHandledException;
+import com.karumi.rosie.domain.usecase.error.UseCaseErrorCallback;
 import com.karumi.rosie.doubles.NetworkError;
 import com.karumi.rosie.testutils.FakeScheduler;
 import java.util.ArrayList;
@@ -40,123 +40,123 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-public class UserCaseHandlerTest {
+public class UseCaseHandlerTest {
 
   private static final int ANY_RETURN_VALUE = 2;
 
   @Test
   public void testExecuteAnyObject() throws Exception {
     TaskScheduler taskScheduler = mock(TaskScheduler.class);
-    EmptyUserCase anyUserCase = new EmptyUserCase();
-    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
+    EmptyUseCase anyUseCase = new EmptyUseCase();
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
 
-    userCaseHandler.execute(anyUserCase);
+    useCaseHandler.execute(anyUseCase);
 
-    verify(taskScheduler, only()).execute(any(UserCaseWrapper.class));
+    verify(taskScheduler, only()).execute(any(UseCaseWrapper.class));
   }
 
   @Test
-  public void testExecuteFailNotAnyUserCase() throws Exception {
+  public void testExecuteFailNotAnyUseCase() throws Exception {
     TaskScheduler taskScheduler = mock(TaskScheduler.class);
-    NoUseCase noUserCase = new NoUseCase();
-    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
+    NoUseCase noUseCase = new NoUseCase();
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
 
     boolean exception = false;
     try {
-      userCaseHandler.execute(noUserCase);
+      useCaseHandler.execute(noUseCase);
     } catch (IllegalArgumentException e) {
       exception = true;
     }
 
     assertTrue(exception);
-    verify(taskScheduler, never()).execute(any(UserCaseWrapper.class));
+    verify(taskScheduler, never()).execute(any(UseCaseWrapper.class));
   }
 
   @Test
   public void testExecuteWithMethodName() throws Exception {
     TaskScheduler taskScheduler = mock(TaskScheduler.class);
-    AnyUserCase anyUserCase = new AnyUserCase();
-    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
-    UserCaseParams params = new UserCaseParams.Builder().useCaseName("anyExecution").build();
+    AnyUseCase anyUseCase = new AnyUseCase();
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
+    UseCaseParams params = new UseCaseParams.Builder().useCaseName("anyExecution").build();
 
-    userCaseHandler.execute(anyUserCase, params);
+    useCaseHandler.execute(anyUseCase, params);
 
-    verify(taskScheduler, only()).execute(any(UserCaseWrapper.class));
+    verify(taskScheduler, only()).execute(any(UseCaseWrapper.class));
   }
 
   @Test
   public void testExecuteFailsWithWrongMethodName() throws Exception {
     TaskScheduler taskScheduler = mock(TaskScheduler.class);
-    AnyUserCase anyUserCase = new AnyUserCase();
-    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
-    UserCaseParams params = new UserCaseParams.Builder().useCaseName("noExistMethod").build();
+    AnyUseCase anyUseCase = new AnyUseCase();
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
+    UseCaseParams params = new UseCaseParams.Builder().useCaseName("noExistMethod").build();
 
     boolean error = false;
     try {
-      userCaseHandler.execute(anyUserCase, params);
+      useCaseHandler.execute(anyUseCase, params);
     } catch (IllegalArgumentException e) {
       error = true;
     }
 
     assertTrue(error);
-    verify(taskScheduler, never()).execute(any(UserCaseWrapper.class));
+    verify(taskScheduler, never()).execute(any(UseCaseWrapper.class));
   }
 
   @Test
   public void testExecuteWithArgs() throws Exception {
     TaskScheduler taskScheduler = mock(TaskScheduler.class);
-    AnyUserCase anyUserCase = new AnyUserCase();
-    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
+    AnyUseCase anyUseCase = new AnyUseCase();
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
     String anyArg1 = "param1";
     int anyArg2 = 2;
-    UserCaseParams paramsWithArgs = new UserCaseParams.Builder().args(anyArg1, anyArg2).build();
+    UseCaseParams paramsWithArgs = new UseCaseParams.Builder().args(anyArg1, anyArg2).build();
 
-    userCaseHandler.execute(anyUserCase, paramsWithArgs);
+    useCaseHandler.execute(anyUseCase, paramsWithArgs);
 
-    verify(taskScheduler, only()).execute(any(UserCaseWrapper.class));
+    verify(taskScheduler, only()).execute(any(UseCaseWrapper.class));
   }
 
   @Test
   public void testExecuteAmbigous() throws Exception {
     TaskScheduler taskScheduler = mock(TaskScheduler.class);
-    AmbiguousUseCase ambigousUserCase = new AmbiguousUseCase();
-    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
+    AmbiguousUseCase ambigousUseCase = new AmbiguousUseCase();
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
 
     boolean exception = false;
     try {
-      UserCaseParams ambiguousParams = new UserCaseParams.Builder().args("anyString", 2).build();
-      userCaseHandler.execute(ambigousUserCase, ambiguousParams);
+      UseCaseParams ambiguousParams = new UseCaseParams.Builder().args("anyString", 2).build();
+      useCaseHandler.execute(ambigousUseCase, ambiguousParams);
     } catch (IllegalArgumentException e) {
       exception = true;
     }
 
     assertTrue(exception);
-    verify(taskScheduler, never()).execute(any(UserCaseWrapper.class));
+    verify(taskScheduler, never()).execute(any(UseCaseWrapper.class));
   }
 
   @Test
   public void testExecuteNoAmbigous() throws Exception {
     TaskScheduler taskScheduler = mock(TaskScheduler.class);
-    AmbiguousUseCase ambigousUserCase = new AmbiguousUseCase();
-    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
-    UserCaseParams ambiguousParams =
-        new UserCaseParams.Builder().args("anyString", 2).useCaseName("method1").build();
+    AmbiguousUseCase ambigousUseCase = new AmbiguousUseCase();
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
+    UseCaseParams ambiguousParams =
+        new UseCaseParams.Builder().args("anyString", 2).useCaseName("method1").build();
 
-    userCaseHandler.execute(ambigousUserCase, ambiguousParams);
+    useCaseHandler.execute(ambigousUseCase, ambiguousParams);
 
-    verify(taskScheduler, only()).execute(any(UserCaseWrapper.class));
+    verify(taskScheduler, only()).execute(any(UseCaseWrapper.class));
   }
 
   @Test
   public void onSuccessCallbackShouldBeCalledWithSuccessArgs() {
     FakeScheduler taskScheduler = new FakeScheduler();
-    EmptyResponseUseCase anyUserCase = new EmptyResponseUseCase();
+    EmptyResponseUseCase anyUseCase = new EmptyResponseUseCase();
     EmptyOnSuccess onSuccessCallback = new EmptyOnSuccess();
-    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
-    UserCaseParams userCaseParams =
-        new UserCaseParams.Builder().onSuccess(onSuccessCallback).build();
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
+    UseCaseParams useCaseParams =
+        new UseCaseParams.Builder().onSuccess(onSuccessCallback).build();
 
-    userCaseHandler.execute(anyUserCase, userCaseParams);
+    useCaseHandler.execute(anyUseCase, useCaseParams);
 
     assertTrue(onSuccessCallback.isSuccess());
   }
@@ -164,14 +164,14 @@ public class UserCaseHandlerTest {
   @Test
   public void completeCallbackShouldBeCalledWithSuccessArgs() {
     FakeScheduler taskScheduler = new FakeScheduler();
-    AnyUserCase anyUserCase = new AnyUserCase();
+    AnyUseCase anyUseCase = new AnyUseCase();
     AnyOnSuccess onSuccessCallback = new AnyOnSuccess();
-    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
-    UserCaseParams userCaseParams = new UserCaseParams.Builder().useCaseName("anyExecution")
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
+    UseCaseParams useCaseParams = new UseCaseParams.Builder().useCaseName("anyExecution")
         .onSuccess(onSuccessCallback)
         .build();
 
-    userCaseHandler.execute(anyUserCase, userCaseParams);
+    useCaseHandler.execute(anyUseCase, useCaseParams);
 
     assertEquals(ANY_RETURN_VALUE, onSuccessCallback.getValue());
   }
@@ -179,14 +179,14 @@ public class UserCaseHandlerTest {
   @Test
   public void onSuccessCallbackShouldBeCalledWithSuccessArgsAndDowncastingResponse() {
     FakeScheduler taskScheduler = new FakeScheduler();
-    AnyUserCase anyUserCase = new AnyUserCase();
+    AnyUseCase anyUseCase = new AnyUseCase();
     AnyOnSuccessWithDowncast onSuccessCallback = new AnyOnSuccessWithDowncast();
-    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
-    UserCaseParams userCaseParams = new UserCaseParams.Builder().useCaseName("downcastResponse")
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
+    UseCaseParams useCaseParams = new UseCaseParams.Builder().useCaseName("downcastResponse")
         .onSuccess(onSuccessCallback)
         .build();
 
-    userCaseHandler.execute(anyUserCase, userCaseParams);
+    useCaseHandler.execute(anyUseCase, useCaseParams);
 
     assertNotNull(onSuccessCallback.getValue());
   }
@@ -194,71 +194,70 @@ public class UserCaseHandlerTest {
   @Test
   public void completeCallbackShouldNotBeExecuteWhenNotMatchArgs() {
     FakeScheduler taskScheduler = new FakeScheduler();
-    AnyUserCase anyUserCase = new AnyUserCase();
+    AnyUseCase anyUseCase = new AnyUseCase();
     EmptyOnSuccess onSuccessCallback = new EmptyOnSuccess();
-    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
-    UserCaseParams userCaseParams = new UserCaseParams.Builder().useCaseName("anyExecution")
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
+    UseCaseParams useCaseParams = new UseCaseParams.Builder().useCaseName("anyExecution")
         .onSuccess(onSuccessCallback)
         .build();
 
-    userCaseHandler.execute(anyUserCase, userCaseParams);
+    useCaseHandler.execute(anyUseCase, useCaseParams);
 
     assertFalse(onSuccessCallback.isSuccess());
   }
 
   @Test
-  public void shouldCallErrorOnErrorWhenUserCaseInvokeAnError() {
+  public void shouldCallErrorOnErrorWhenUseCaseInvokeAnError() {
     FakeScheduler taskScheduler = new FakeScheduler();
-    ErrorUseCase errorUserCase = new ErrorUseCase();
-    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler);
+    ErrorUseCase errorUseCase = new ErrorUseCase();
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
     UseCaseErrorCallback errorCallback = spy(useCaseErrorCallback);
-    UserCaseParams userCaseParams =
-        new UserCaseParams.Builder().useCaseName("customError").onError(errorCallback).build();
+    UseCaseParams useCaseParams =
+        new UseCaseParams.Builder().useCaseName("customError").onError(errorCallback).build();
 
-    userCaseHandler.execute(errorUserCase, userCaseParams);
+    useCaseHandler.execute(errorUseCase, useCaseParams);
 
     verify(errorCallback).onError(any(Error.class));
   }
 
   @Test
-  public void shouldCallErrorHandlerWhenUserCaseInvokeAnErrorAndDontExistSpecificCallback() {
+  public void shouldCallErrorHandlerWhenUseCaseInvokeAnErrorAndDontExistSpecificCallback() {
     FakeScheduler taskScheduler = new FakeScheduler();
-    ErrorUseCase errorUserCase = new ErrorUseCase();
+    ErrorUseCase errorUseCase = new ErrorUseCase();
     ErrorHandler errorHandler = mock(ErrorHandler.class);
-    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler, errorHandler);
-    UserCaseParams userCaseParams = new UserCaseParams.Builder().useCaseName("customError").build();
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler, errorHandler);
+    UseCaseParams useCaseParams = new UseCaseParams.Builder().useCaseName("customError").build();
 
-    userCaseHandler.execute(errorUserCase, userCaseParams);
+    useCaseHandler.execute(errorUseCase, useCaseParams);
 
     verify(errorHandler).notifyError(any(ErrorNotHandledException.class));
   }
 
   @Test
-  public void
-  shouldCallErrorHandlerErrorWhenUserCaseInvokeAnErrorAndTheCallbackDontHandleThisKindOfMethod() {
+  public void shouldCallErrorHandlerErrorWhenUseCaseInvokeAnErrorAndTheCallbackDontHandleThisKindOfMethod() {
     FakeScheduler taskScheduler = new FakeScheduler();
-    ErrorUseCase errorUserCase = new ErrorUseCase();
+    ErrorUseCase errorUseCase = new ErrorUseCase();
     ErrorHandler errorHandler = mock(ErrorHandler.class);
-    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler, errorHandler);
-    UserCaseParams userCaseParams = new UserCaseParams.Builder().useCaseName("customError")
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler, errorHandler);
+    UseCaseParams useCaseParams = new UseCaseParams.Builder().useCaseName("customError")
         .onError(specificErrorCallback)
         .build();
 
-    userCaseHandler.execute(errorUserCase, userCaseParams);
+    useCaseHandler.execute(errorUseCase, useCaseParams);
 
     verify(errorHandler).notifyError(any(ErrorNotHandledException.class));
   }
 
   @Test
-  public void shouldCallErrorHandlerErrorWhenUserCaseThrowsAnException() {
+  public void shouldCallErrorHandlerErrorWhenUseCaseThrowsAnException() {
     FakeScheduler taskScheduler = new FakeScheduler();
-    ErrorUseCase errorUserCase = new ErrorUseCase();
+    ErrorUseCase errorUseCase = new ErrorUseCase();
     ErrorHandler errorHandler = mock(ErrorHandler.class);
-    UserCaseHandler userCaseHandler = new UserCaseHandler(taskScheduler, errorHandler);
-    UserCaseParams userCaseParams =
-        new UserCaseParams.Builder().useCaseName("launchException").build();
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler, errorHandler);
+    UseCaseParams useCaseParams =
+        new UseCaseParams.Builder().useCaseName("launchException").build();
 
-    userCaseHandler.execute(errorUserCase, userCaseParams);
+    useCaseHandler.execute(errorUseCase, useCaseParams);
 
     verify(errorHandler).notifyError(any(Exception.class));
   }
@@ -314,45 +313,45 @@ public class UserCaseHandlerTest {
     }
   }
 
-  private class AnyUserCase extends RosieUseCase {
+  private class AnyUseCase extends RosieUseCase {
 
-    AnyUserCase() {
+    AnyUseCase() {
     }
 
-    @UserCase(name = "anyExecution")
+    @UseCase(name = "anyExecution")
     public void anyExecution() {
       notifySuccess(ANY_RETURN_VALUE);
     }
 
-    @UserCase(name = "downcastResponse")
+    @UseCase(name = "downcastResponse")
     public void anyExecutionDowncast() {
       notifySuccess(new ArrayList<String>());
     }
 
-    @UserCase
+    @UseCase
     public void methodWithArgs(String arg1, int arg2) {
 
     }
   }
 
-  private class EmptyUserCase extends RosieUseCase {
+  private class EmptyUseCase extends RosieUseCase {
 
-    EmptyUserCase() {
+    EmptyUseCase() {
     }
 
-    @UserCase
+    @UseCase
     public void anyExecution() {
 
     }
   }
 
   private class AmbiguousUseCase extends RosieUseCase {
-    @UserCase(name = "method1")
+    @UseCase(name = "method1")
     public void method1(String arg1, int arg2) {
 
     }
 
-    @UserCase
+    @UseCase
     public void method2(String arg1, int arg2) {
 
     }
@@ -362,19 +361,19 @@ public class UserCaseHandlerTest {
   }
 
   private class EmptyResponseUseCase extends RosieUseCase {
-    @UserCase
+    @UseCase
     public void method2() {
       notifySuccess();
     }
   }
 
   private class ErrorUseCase extends RosieUseCase {
-    @UserCase(name = "customError")
+    @UseCase(name = "customError")
     public void errorMethod() throws Exception {
       notifyError(new Error("error network", new Exception()));
     }
 
-    @UserCase(name = "launchException")
+    @UseCase(name = "launchException")
     public void launchExceptionMethod() throws Exception {
       throw new Exception("exception");
     }

@@ -14,38 +14,48 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase;
+package com.karumi.rosie.domain.usecase;
 
-import com.karumi.rosie.domain.usercase.error.ErrorHandler;
-import java.lang.reflect.Method;
+import com.karumi.rosie.domain.usecase.annotation.UseCase;
+import org.junit.Test;
 
-/**
- * This class envolve the use case for invoke it.
- */
-public class UserCaseWrapper {
-  private final RosieUseCase userCase;
-  private final UserCaseParams userCaseParams;
-  private final ErrorHandler errorHandler;
+import static org.junit.Assert.assertEquals;
 
-  public UserCaseWrapper(RosieUseCase userCase, UserCaseParams userCaseParams,
-      ErrorHandler errorHandler) {
-    this.userCase = userCase;
-    this.userCaseParams = userCaseParams;
-    this.errorHandler = errorHandler;
+public class UseCaseWrapperTest {
+
+  @Test
+  public void testExecuteWithArgs() throws Exception {
+    AnyUseCase anyUseCase = new AnyUseCase();
+    UseCaseParams argsParams = new UseCaseParams.Builder().args("anyValue", 2).build();
+
+    UseCaseWrapper useCaseWrapper = new UseCaseWrapper(anyUseCase, argsParams, null);
+
+    useCaseWrapper.execute();
+
+    assertEquals("anyValue", anyUseCase.getArg1());
+    assertEquals(2, anyUseCase.getArg2());
   }
 
-  public void execute() {
-    try {
-      Method methodToInvoke = UserCaseFilter.filter(userCase, userCaseParams);
-      methodToInvoke.invoke(userCase, userCaseParams.getArgs());
-    } catch (Exception e) {
-      notifyError(e);
+  private class AnyUseCase extends RosieUseCase {
+
+    private String arg1;
+    private int arg2;
+
+    AnyUseCase() {
     }
-  }
 
-  private void notifyError(Exception exception) {
-    if (errorHandler != null) {
-      errorHandler.notifyError(exception);
+    @UseCase
+    public void methodWithArgs(String arg1, int arg2) {
+      this.arg1 = arg1;
+      this.arg2 = arg2;
+    }
+
+    private String getArg1() {
+      return arg1;
+    }
+
+    private int getArg2() {
+      return arg2;
     }
   }
 }

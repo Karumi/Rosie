@@ -14,12 +14,13 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase;
+package com.karumi.rosie.domain.usecase;
 
-import com.karumi.rosie.domain.usercase.annotation.Success;
-import com.karumi.rosie.domain.usercase.callback.OnSuccessCallback;
-import com.karumi.rosie.domain.usercase.error.ErrorNotHandledException;
-import com.karumi.rosie.domain.usercase.error.UseCaseErrorCallback;
+import com.karumi.rosie.domain.usecase.annotation.Success;
+import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
+import com.karumi.rosie.domain.usecase.error.Error;
+import com.karumi.rosie.domain.usecase.error.ErrorNotHandledException;
+import com.karumi.rosie.domain.usecase.error.UseCaseErrorCallback;
 import java.lang.reflect.Method;
 
 /**
@@ -42,7 +43,7 @@ public class RosieUseCase {
     Method[] methodsArray = onSuccess.getClass().getMethods();
     if (methodsArray.length > 0) {
       Method methodToInvoke =
-          UserCaseFilter.filterValidMethodArgs(values, methodsArray, Success.class);
+          UseCaseFilter.filterValidMethodArgs(values, methodsArray, Success.class);
 
       try {
         methodToInvoke.invoke(onSuccess, values);
@@ -60,8 +61,7 @@ public class RosieUseCase {
    * @throws ErrorNotHandledException this exception launch when the specific error is not
    * handled. You don't need manage this exception UseCaseHandler do it for you.
    */
-  protected void notifyError(com.karumi.rosie.domain.usercase.error.Error error)
-      throws ErrorNotHandledException {
+  protected void notifyError(Error error) throws ErrorNotHandledException {
 
     if (useCaseErrorCallback != null) {
       try {

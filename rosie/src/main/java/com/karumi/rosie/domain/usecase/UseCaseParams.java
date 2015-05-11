@@ -14,21 +14,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase;
+package com.karumi.rosie.domain.usecase;
 
-import com.karumi.rosie.domain.usercase.callback.OnSuccessCallback;
-import com.karumi.rosie.domain.usercase.error.UseCaseErrorCallback;
+import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
+import com.karumi.rosie.domain.usecase.error.UseCaseErrorCallback;
 
 /**
- * The params value to execute with the user case.
+ * The params value to execute with the use case.
  */
-public class UserCaseParams {
+public class UseCaseParams {
   private final OnSuccessCallback onSuccessCallback;
   private final String useCaseName;
   private final Object[] args;
   private final UseCaseErrorCallback errorCallback;
 
-  public UserCaseParams(String useCaseName, Object[] args, OnSuccessCallback onSuccess,
+  public UseCaseParams(String useCaseName, Object[] args, OnSuccessCallback onSuccess,
       UseCaseErrorCallback errorCallback) {
     this.args = args;
     this.useCaseName = useCaseName;
@@ -90,11 +90,11 @@ public class UserCaseParams {
       return this;
     }
 
-    public UserCaseParams build() {
+    public UseCaseParams build() {
       if (this.args == null) {
         args = new Object[0];
       }
-      return new UserCaseParams(useCaseName, args, onSuccess, errorCallback);
+      return new UseCaseParams(useCaseName, args, onSuccess, errorCallback);
     }
   }
 }

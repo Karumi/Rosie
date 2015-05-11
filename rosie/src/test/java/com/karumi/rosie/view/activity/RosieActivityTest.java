@@ -65,7 +65,7 @@ public class RosieActivityTest extends RobolectricTest {
     verify(fakeActivity.presenter).destroy();
   }
 
-  @Test public void shouldCallErrorWhenAnUserCaseLaunchAnGlobalError() {
+  @Test public void shouldCallErrorWhenAnUseCaseLaunchAnGlobalError() {
     FakeActivityWithPresenter fakeActivity =
         Robolectric.buildActivity(FakeActivityWithPresenter.class).create().resume().get();
 
@@ -74,7 +74,7 @@ public class RosieActivityTest extends RobolectricTest {
     verify(fakeActivity.uiView).showFakeError();
   }
 
-  @Test public void shouldCallErrorWhenAnUserCaseLaunchAGlobalErrorAndPresenterDontInterceptIt() {
+  @Test public void shouldCallErrorWhenAnUseCaseLaunchAGlobalErrorAndPresenterDontInterceptIt() {
     FakeActivityWithPresenterNoHandleError fakeActivity =
         Robolectric.buildActivity(FakeActivityWithPresenterNoHandleError.class)
             .create()

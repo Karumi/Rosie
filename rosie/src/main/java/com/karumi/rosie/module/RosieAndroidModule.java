@@ -19,9 +19,9 @@ package com.karumi.rosie.module;
 import android.app.Application;
 import android.content.Context;
 import com.karumi.rosie.daggerutils.ForApplication;
-import com.karumi.rosie.domain.usercase.TaskScheduler;
-import com.karumi.rosie.domain.usercase.UserCaseHandler;
-import com.karumi.rosie.domain.usercase.jobqueue.TaskSchedulerJobQueue;
+import com.karumi.rosie.domain.usecase.TaskScheduler;
+import com.karumi.rosie.domain.usecase.UseCaseHandler;
+import com.karumi.rosie.domain.usecase.jobqueue.TaskSchedulerJobQueue;
 import com.path.android.jobqueue.JobManager;
 import dagger.Module;
 import dagger.Provides;
@@ -48,8 +48,8 @@ public class RosieAndroidModule {
   }
 
   @Provides @Singleton
-  public UserCaseHandler provideUserCaseHandler(TaskScheduler taskScheduler) {
-    return new UserCaseHandler(taskScheduler);
+  public UseCaseHandler provideUseCaseHandler(TaskScheduler taskScheduler) {
+    return new UseCaseHandler(taskScheduler);
   }
 
   @Provides @Singleton

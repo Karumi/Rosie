@@ -14,54 +14,54 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase;
+package com.karumi.rosie.domain.usecase;
 
-import com.karumi.rosie.domain.usercase.error.ErrorHandler;
-import com.karumi.rosie.domain.usercase.error.UseCaseErrorCallback;
+import com.karumi.rosie.domain.usecase.error.ErrorHandler;
+import com.karumi.rosie.domain.usecase.error.UseCaseErrorCallback;
 
 /**
  * Invoke methods annotated with UseCase annotation. The RosieUseCase instance will be executed out
  * of the Android main thread and the result of the operation will be provided asynchronously using
  * a callback.
  */
-public class UserCaseHandler {
+public class UseCaseHandler {
   private static final ErrorHandler EMPTY_ERROR_HANDLER = new ErrorHandler();
   private final TaskScheduler taskScheduler;
   private final ErrorHandler errorHandler;
 
-  public UserCaseHandler(TaskScheduler taskScheduler) {
+  public UseCaseHandler(TaskScheduler taskScheduler) {
     this(taskScheduler, EMPTY_ERROR_HANDLER);
   }
 
-  public UserCaseHandler(TaskScheduler taskScheduler, ErrorHandler errorHandler) {
+  public UseCaseHandler(TaskScheduler taskScheduler, ErrorHandler errorHandler) {
     this.taskScheduler = taskScheduler;
     this.errorHandler = errorHandler;
   }
 
   /**
-   * Invoke an user case without arguments. This user case will invoke outside the main thread, and
+   * Invoke an use case without arguments. This use case will invoke outside the main thread, and
    * the response comes back to the main thread.
    *
-   * @param useCase the user case to invoke.
+   * @param useCase the use case to invoke.
    */
   public void execute(RosieUseCase useCase) {
-    execute(useCase, (new UserCaseParams.Builder()).build());
+    execute(useCase, (new UseCaseParams.Builder()).build());
   }
 
   /**
    * Given a class configured with UseCase annotation executes the annotated
    * method out of the UI thread and return the response, if needed it, over the UI thread.
    *
-   * @param useCase the user case to invoke.
-   * @param userCaseParams params to use on the invokation.
+   * @param useCase the use case to invoke.
+   * @param useCaseParams params to use on the invocation.
    */
-  public void execute(RosieUseCase useCase, UserCaseParams userCaseParams) {
-    UserCaseFilter.filter(useCase, userCaseParams);
+  public void execute(RosieUseCase useCase, UseCaseParams useCaseParams) {
+    UseCaseFilter.filter(useCase, useCaseParams);
 
-    useCase.setOnSuccess(userCaseParams.getOnSuccessCallback());
-    useCase.setOnError(userCaseParams.getErrorCallback());
-    UserCaseWrapper userCaseWrapper = new UserCaseWrapper(useCase, userCaseParams, errorHandler);
-    taskScheduler.execute(userCaseWrapper);
+    useCase.setOnSuccess(useCaseParams.getOnSuccessCallback());
+    useCase.setOnError(useCaseParams.getErrorCallback());
+    UseCaseWrapper useCaseWrapper = new UseCaseWrapper(useCase, useCaseParams, errorHandler);
+    taskScheduler.execute(useCaseWrapper);
   }
 
   public void registerGlobalErrorCallback(UseCaseErrorCallback globalError) {

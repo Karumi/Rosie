@@ -14,10 +14,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usercase;
+package com.karumi.rosie.domain.usecase;
 
-import com.karumi.rosie.domain.usercase.annotation.UserCase;
-import com.karumi.rosie.domain.usercase.error.MethodNotFoundException;
+import com.karumi.rosie.domain.usecase.annotation.UseCase;
+import com.karumi.rosie.domain.usecase.error.MethodNotFoundException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -28,56 +28,56 @@ import java.util.List;
  * Filters a UseCase instance based on the class structure to find the UseCase method configured to
  * be executed.
  */
-class UserCaseFilter {
+class UseCaseFilter {
 
-  static Method filter(Object userCase, UserCaseParams userCaseParams) {
-    List<Method> methodsFiltered = getAnnotatedUseCaseMethods(userCase);
+  static Method filter(Object useCase, UseCaseParams useCaseParams) {
+    List<Method> methodsFiltered = getAnnotatedUseCaseMethods(useCase);
     if (methodsFiltered.isEmpty()) {
-      throw new IllegalArgumentException("This object doesn't contain any user case to execute."
-          + "Do you forget add the @UserCase annotation?");
+      throw new IllegalArgumentException("This object doesn't contain any use case to execute."
+          + "Do you forget add the @UseCase annotation?");
     }
 
-    methodsFiltered = getMethodMatchingName(userCaseParams, methodsFiltered);
+    methodsFiltered = getMethodMatchingName(useCaseParams, methodsFiltered);
     if (methodsFiltered.isEmpty()) {
-      throw new IllegalArgumentException("The target doesn't contains any usercase with this name."
-          + "Do you forget add the @UserCase annotation?");
+      throw new IllegalArgumentException("The target doesn't contains any use case with this name."
+          + "Do you forget add the @UseCase annotation?");
     }
 
-    methodsFiltered = getMethodMatchingArguments(userCaseParams, methodsFiltered);
+    methodsFiltered = getMethodMatchingArguments(useCaseParams, methodsFiltered);
     if (methodsFiltered.isEmpty()) {
       throw new IllegalArgumentException(
-          "The target doesn't contains any usercase with those args. "
-              + "Do you forget add the @UserCase annotation?");
+          "The target doesn't contains any use case with those args. "
+              + "Do you forget add the @UseCase annotation?");
     }
 
     if (methodsFiltered.size() > 1) {
       throw new IllegalArgumentException(
-          "The target contains more than one usercases with the same signature. "
-              + "You can use 'name' property in @UserCase and invoke with param name");
+          "The target contains more than one use cases with the same signature. "
+              + "You can use 'name' property in @UseCase and invoke with param name");
     }
 
     return methodsFiltered.get(0);
   }
 
   private static List<Method> getAnnotatedUseCaseMethods(Object target) {
-    List<Method> userCaseMethods = new ArrayList<>();
+    List<Method> useCaseMethods = new ArrayList<>();
 
     Method[] methods = target.getClass().getMethods();
     for (Method method : methods) {
-      com.karumi.rosie.domain.usercase.annotation.UserCase userCaseMethod =
-          method.getAnnotation(com.karumi.rosie.domain.usercase.annotation.UserCase.class);
+      UseCase useCaseMethod =
+          method.getAnnotation(UseCase.class);
 
-      if (userCaseMethod != null) {
-        userCaseMethods.add(method);
+      if (useCaseMethod != null) {
+        useCaseMethods.add(method);
       }
     }
-    return userCaseMethods;
+    return useCaseMethods;
   }
 
-  private static List<Method> getMethodMatchingArguments(UserCaseParams userCaseParams,
+  private static List<Method> getMethodMatchingArguments(UseCaseParams useCaseParams,
       List<Method> methodsFiltered) {
 
-    Object[] selectedArgs = userCaseParams.getArgs();
+    Object[] selectedArgs = useCaseParams.getArgs();
 
     Iterator<Method> iteratorMethods = methodsFiltered.iterator();
 
@@ -119,9 +119,9 @@ class UserCaseFilter {
     return true;
   }
 
-  private static List<Method> getMethodMatchingName(UserCaseParams userCaseParams,
+  private static List<Method> getMethodMatchingName(UseCaseParams useCaseParams,
       List<Method> methodsFiltered) {
-    String nameUseCase = userCaseParams.getUseCaseName();
+    String nameUseCase = useCaseParams.getUseCaseName();
     if (nameUseCase == null || nameUseCase.equals("")) {
       return methodsFiltered;
     }
@@ -129,7 +129,7 @@ class UserCaseFilter {
     Iterator<Method> iteratorMethods = methodsFiltered.iterator();
     while (iteratorMethods.hasNext()) {
       Method method = iteratorMethods.next();
-      UserCase annotation = method.getAnnotation(UserCase.class);
+      UseCase annotation = method.getAnnotation(UseCase.class);
       if (!(annotation.name().equals(nameUseCase))) {
         iteratorMethods.remove();
       }
