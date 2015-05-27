@@ -21,6 +21,7 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.view.View;
 import butterknife.ButterKnife;
+import com.karumi.rosie.domain.usecase.error.Error;
 import com.karumi.rosie.view.activity.RosieActivity;
 import com.karumi.rosie.view.presenter.PresenterLifeCycleHooker;
 import com.karumi.rosie.view.presenter.RosiePresenter;
@@ -35,8 +36,7 @@ public abstract class RosieFragment extends Fragment implements ErrorView {
 
   private boolean injected;
 
-  @Override
-  public void onActivityCreated(Bundle savedInstanceState) {
+  @Override public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     injectDependencies();
   }
@@ -84,7 +84,7 @@ public abstract class RosieFragment extends Fragment implements ErrorView {
     presenterLifeCycleHooker.registerPresenter(presenter);
   }
 
-  @Override public void showGlobalError(com.karumi.rosie.domain.usecase.error.Error error) {
+  @Override public void showError(Error error) {
 
   }
 }

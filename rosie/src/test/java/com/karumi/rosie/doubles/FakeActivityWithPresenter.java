@@ -38,10 +38,9 @@ public class FakeActivityWithPresenter extends RosieActivity {
     presenter.setUi(uiView);
   }
 
-  @Presenter
-  public FakePresenter presenter = new FakePresenter();
+  @Presenter public FakePresenter presenter = new FakePresenter();
 
-  @Override protected List<Object> provideActivityScopeModules() {
+  @Override protected List<Object> getActivityScopeModules() {
     return Arrays.asList((Object) new TestModule());
   }
 

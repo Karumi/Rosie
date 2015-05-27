@@ -68,7 +68,7 @@ public class HipsterListActivity extends RosieActivity implements HipsterListPre
     refreshData(hipsters);
   }
 
-  @Override protected List<Object> provideActivityScopeModules() {
+  @Override protected List<Object> getActivityScopeModules() {
     return Arrays.asList(new HipsterListViewModule(), new HipsterListDomainModule());
   }
 }

@@ -42,7 +42,7 @@ public class FakeActivity extends RosieActivity {
   @Presenter
   public RosiePresenter presenter = mock(RosiePresenter.class);
 
-  @Override protected List<Object> provideActivityScopeModules() {
+  @Override protected List<Object> getActivityScopeModules() {
     return Arrays.asList((Object) new TestModule());
   }
 }

@@ -19,6 +19,7 @@ package com.karumi.rosie.doubles;
 import android.os.Bundle;
 import android.view.View;
 import com.karumi.rosie.TestModule;
+import com.karumi.rosie.domain.usecase.error.Error;
 import com.karumi.rosie.view.activity.RosieActivity;
 import com.karumi.rosie.view.presenter.annotation.Presenter;
 import java.util.Arrays;
@@ -36,10 +37,9 @@ public class FakeActivityWithPresenterNoHandleError extends RosieActivity {
     super.onCreate(savedInstanceState);
   }
 
-  @Presenter
-  public FakePresenter presenter = new FakePresenter();
+  @Presenter public FakePresenter presenter = new FakePresenter();
 
-  @Override protected List<Object> provideActivityScopeModules() {
+  @Override protected List<Object> getActivityScopeModules() {
     return Arrays.asList((Object) new TestModule());
   }
 
@@ -47,7 +47,7 @@ public class FakeActivityWithPresenterNoHandleError extends RosieActivity {
     presenter.callErrorUseCase();
   }
 
-  @Override public void showGlobalError(com.karumi.rosie.domain.usecase.error.Error error) {
+  @Override public void showError(Error error) {
     this.error = true;
   }
 

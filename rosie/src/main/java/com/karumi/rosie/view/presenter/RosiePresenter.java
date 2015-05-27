@@ -68,7 +68,7 @@ public class RosiePresenter {
     @Override public void onError(com.karumi.rosie.domain.usecase.error.Error error) {
       if (!onGlobalError(error)) {
         if (errorView != null) {
-          errorView.showGlobalError(error);
+          errorView.showError(error);
         }
       }
     }

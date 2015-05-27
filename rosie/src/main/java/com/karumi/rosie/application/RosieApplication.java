@@ -46,8 +46,7 @@ public class RosieApplication extends Application {
 
   /**
    * Given an object passed as argument uses the object graph associated to the application scope
-   * to
-   * resolve all the dependencies needed by the object and inject them.
+   * to resolve all the dependencies needed by the object and inject them.
    */
   public void inject(Object object) {
     graph.inject(object);
@@ -76,7 +75,7 @@ public class RosieApplication extends Application {
   }
 
   /**
-   * Indicates if the class has to be injected or not. Override this method and return true to use
+   * Indicates if the class has to be injected or not. Override this method and return false to use
    * RosieApplication without inject any dependency.
    */
   protected boolean shouldInjectApplication() {
