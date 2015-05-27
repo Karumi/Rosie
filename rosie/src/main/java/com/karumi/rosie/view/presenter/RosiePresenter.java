@@ -61,7 +61,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * Returns the view configured in the presenter which real implementation is an Activity or
    * Fragment using this presenter.
    */
-  protected T getView() {
+  protected final T getView() {
     return view;
   }
 

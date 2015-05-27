@@ -30,7 +30,7 @@ import javax.inject.Inject;
 /**
  * RosiePresenter extension configured to use the View interface declared in this class. Implements
  * all the presentation logic related to the hipsters sample executing a UseCase and obtaining data
- * from the application domain to be shown once the data is loaded..
+ * from the application domain to be shown once the data is loaded.
  */
 public class HipsterListPresenter extends RosiePresenter<HipsterListPresenter.View> {
 
