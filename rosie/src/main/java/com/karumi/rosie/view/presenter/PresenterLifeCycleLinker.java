@@ -51,6 +51,12 @@ public class PresenterLifeCycleLinker {
     }
   }
 
+  public void setView(RosiePresenter.View view) {
+    for (RosiePresenter presenter : presenters) {
+      presenter.setView(view);
+    }
+  }
+
   public void setErrorView(ErrorView errorView) {
     for (RosiePresenter presenter : presenters) {
       presenter.setErrorView(errorView);

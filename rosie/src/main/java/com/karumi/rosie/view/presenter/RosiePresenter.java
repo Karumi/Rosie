@@ -9,10 +9,11 @@ import com.karumi.rosie.view.presenter.view.ErrorView;
  * All Presenters must extends from this one. Add accessor methods to manage the presenter life
  * cycle.
  */
-public class RosiePresenter {
+public class RosiePresenter<T extends RosiePresenter.View> {
 
   private final UseCaseHandler useCaseHandler;
   private ErrorView errorView;
+  private T view;
 
   public RosiePresenter(UseCaseHandler useCaseHandler) {
     this.useCaseHandler = useCaseHandler;
@@ -50,6 +51,14 @@ public class RosiePresenter {
 
   }
 
+  protected T getView(){
+    return view;
+  }
+
+  void setView(T view) {
+    this.view = view;
+  }
+
   void setErrorView(ErrorView errorView) {
     this.errorView = errorView;
   }
@@ -64,6 +73,10 @@ public class RosiePresenter {
     return false;
   }
 
+  protected UseCaseHandler getUseCaseHandler() {
+    return useCaseHandler;
+  }
+
   private UseCaseErrorCallback globalError = new UseCaseErrorCallback() {
     @Override public void onError(com.karumi.rosie.domain.usecase.error.Error error) {
       if (!onGlobalError(error)) {
@@ -74,7 +87,7 @@ public class RosiePresenter {
     }
   };
 
-  protected UseCaseHandler getUseCaseHandler() {
-    return useCaseHandler;
+  public interface View {
+
   }
 }
