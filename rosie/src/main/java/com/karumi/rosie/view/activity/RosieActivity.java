@@ -99,7 +99,7 @@ public class RosieActivity extends FragmentActivity implements ErrorView {
       activityScopeModules = Collections.EMPTY_LIST;
     }
 
-    activityScopeGraph = rosieApplication.plusModules(activityScopeModules);
+    activityScopeGraph = rosieApplication.plusGraph(activityScopeModules);
     inject(this);
   }
 
