@@ -32,15 +32,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
-<<<<<<< HEAD
- * BaseActivity created to implement some common functionality to activities using this library.
- * All
- * activities in this project should extend from this one.
-=======
  * Base Activity created to implement some common functionality to every Activity using this
  * library. All activities in this project should extend from this one to be able to use core
  * features like view injection, dependency injection or Rosie presenters.
->>>>>>> #5-generify-rosie-presenters
  */
 public class RosieActivity extends FragmentActivity implements ErrorView, RosiePresenter.View {
 
