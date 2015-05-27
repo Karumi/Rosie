@@ -27,10 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 
-public class HipsterListPresenter extends RosiePresenter {
+public class HipsterListPresenter extends RosiePresenter<HipsterListPresenter.View> {
 
   private final ObtainHipsters obtainHipsters;
-  private View view;
   private ArrayList<Hipster> hipsters = new ArrayList<Hipster>();
 
   @Inject
@@ -39,34 +38,28 @@ public class HipsterListPresenter extends RosiePresenter {
     this.obtainHipsters = obtainHipsters;
   }
 
-  public void setView(View view) {
-    this.view = view;
-  }
-
   @Override public void update() {
     super.update();
     obtainHipsters();
   }
 
   private void obtainHipsters() {
-    UseCaseParams params = new UseCaseParams.Builder()
-        .onSuccess(successCallback).build();
+    UseCaseParams params = new UseCaseParams.Builder().onSuccess(successCallback).build();
 
     UseCaseHandler useCaseHandler = getUseCaseHandler();
     useCaseHandler.execute(obtainHipsters, params);
   }
 
   private OnSuccessCallback successCallback = new OnSuccessCallback() {
-    @Success
-    public void success(List<Hipster> hipsters) {
+    @Success public void success(List<Hipster> hipsters) {
       HipsterListPresenter.this.hipsters.clear();
       HipsterListPresenter.this.hipsters.addAll(hipsters);
 
-      view.updateList(HipsterListPresenter.this.hipsters);
+      getView().updateList(HipsterListPresenter.this.hipsters);
     }
   };
 
-  public interface View {
+  public interface View extends RosiePresenter.View {
     void updateList(List<Hipster> hipsters);
   }
 }
