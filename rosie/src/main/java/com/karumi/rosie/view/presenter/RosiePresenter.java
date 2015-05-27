@@ -6,12 +6,14 @@ import com.karumi.rosie.domain.usecase.error.UseCaseErrorCallback;
 import com.karumi.rosie.view.presenter.view.ErrorView;
 
 /**
- * All Presenters must extends from this one. Add accessor methods to manage the presenter life
- * cycle.
+ * Implements all the presentation logic. All Presenters must extends from this class and indicate
+ * which view extending from RosiePresenter.View interface are going to use. Override lifecycle
+ * methods to be able to react to the view lifecycle.
  */
 public class RosiePresenter<T extends RosiePresenter.View> {
 
   private final UseCaseHandler useCaseHandler;
+
   private ErrorView errorView;
   private T view;
 
@@ -20,14 +22,16 @@ public class RosiePresenter<T extends RosiePresenter.View> {
   }
 
   /**
-   * This method has been called when the presenter must be initialize.
+   * First method called in the presenter lifecycle. Invoked when the component containing the
+   * presenter is initialized.
    */
   public void initialize() {
 
   }
 
   /**
-   * This method has been called when the presenter must be update the info.
+   * Second method called in the presenter lifecycle. Invoked when the component containing the
+   * presenter is resumed.
    */
   public void update() {
     if (globalError != null) {
@@ -36,7 +40,8 @@ public class RosiePresenter<T extends RosiePresenter.View> {
   }
 
   /**
-   * This method has been called when the presenter has been paused.
+   * Third method called in the presenter lifecycle. Invoked when the component containing the
+   * presenter is paused.
    */
   public void pause() {
     if (globalError != null) {
@@ -45,41 +50,55 @@ public class RosiePresenter<T extends RosiePresenter.View> {
   }
 
   /**
-   * This method has been called when the presenter must be destroyed.
+   * Fourth method called in the presenter lifecycle. Invoked when the component containing the
+   * presenter is destroyed.
    */
   public void destroy() {
 
   }
 
-  protected T getView(){
+  /**
+   * Returns the view configured in the presenter which real implementation is an Activity or
+   * Fragment using this presenter.
+   */
+  protected T getView() {
     return view;
   }
 
-  void setView(T view) {
-    this.view = view;
-  }
-
-  void setErrorView(ErrorView errorView) {
-    this.errorView = errorView;
-  }
-
   /**
-   * notifies that an unexpected error has happened.
+   * Notifies that an unexpected error has happened.
    *
    * @param error the error.
    * @return true if the error must be consume.
    */
-  protected boolean onGlobalError(Error error) {
+  protected boolean onError(Error error) {
     return false;
   }
 
+  /**
+   * Returns the UseCaseHandler instance used to create this presenter class.
+   */
   protected UseCaseHandler getUseCaseHandler() {
     return useCaseHandler;
   }
 
+  /**
+   * Configures the View instance used in this presenter as view.
+   */
+  void setView(T view) {
+    this.view = view;
+  }
+
+  /**
+   * Configures the ErrorView used in this presenter
+   */
+  void setErrorView(ErrorView errorView) {
+    this.errorView = errorView;
+  }
+
   private UseCaseErrorCallback globalError = new UseCaseErrorCallback() {
     @Override public void onError(com.karumi.rosie.domain.usecase.error.Error error) {
-      if (!onGlobalError(error)) {
+      if (!RosiePresenter.this.onError(error)) {
         if (errorView != null) {
           errorView.showError(error);
         }
@@ -87,6 +106,10 @@ public class RosiePresenter<T extends RosiePresenter.View> {
     }
   };
 
+  /**
+   * Represents the View component inside the Model View Presenter pattern. This interface must be
+   * used as base interface for every View interface declared.
+   */
   public interface View {
 
   }

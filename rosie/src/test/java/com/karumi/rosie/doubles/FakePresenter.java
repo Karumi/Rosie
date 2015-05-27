@@ -48,7 +48,7 @@ public class FakePresenter extends RosiePresenter {
     this.fakeUi = fakeUi;
   }
 
-  @Override protected boolean onGlobalError(com.karumi.rosie.domain.usecase.error.Error error) {
+  @Override protected boolean onError(com.karumi.rosie.domain.usecase.error.Error error) {
     if (fakeUi != null) {
       fakeUi.showFakeError();
       return true;
