@@ -27,10 +27,15 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 
+/**
+ * RosiePresenter extension configured to use the View interface declared in this class. Implements
+ * all the presentation logic related to the hipsters sample executing a UseCase and obtaining data
+ * from the application domain to be shown once the data is loaded..
+ */
 public class HipsterListPresenter extends RosiePresenter<HipsterListPresenter.View> {
 
   private final ObtainHipsters obtainHipsters;
-  private ArrayList<Hipster> hipsters = new ArrayList<Hipster>();
+  private List<Hipster> hipsters = new ArrayList<Hipster>();
 
   @Inject
   public HipsterListPresenter(UseCaseHandler useCaseHandler, ObtainHipsters obtainHipsters) {
@@ -39,11 +44,10 @@ public class HipsterListPresenter extends RosiePresenter<HipsterListPresenter.Vi
   }
 
   @Override public void update() {
-    super.update();
-    obtainHipsters();
+    loadHipsters();
   }
 
-  private void obtainHipsters() {
+  private void loadHipsters() {
     UseCaseParams params = new UseCaseParams.Builder().onSuccess(successCallback).build();
 
     UseCaseHandler useCaseHandler = getUseCaseHandler();
@@ -51,10 +55,9 @@ public class HipsterListPresenter extends RosiePresenter<HipsterListPresenter.Vi
   }
 
   private OnSuccessCallback successCallback = new OnSuccessCallback() {
-    @Success public void success(List<Hipster> hipsters) {
+    @Success public void onSuccess(List<Hipster> hipsters) {
       HipsterListPresenter.this.hipsters.clear();
       HipsterListPresenter.this.hipsters.addAll(hipsters);
-
       getView().updateList(HipsterListPresenter.this.hipsters);
     }
   };
