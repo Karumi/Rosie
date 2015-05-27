@@ -39,7 +39,7 @@ import javax.inject.Inject;
  */
 public class HipsterListActivity extends RosieActivity implements HipsterListPresenter.View {
 
-  @Inject @Presenter public HipsterListPresenter presenter;
+  @Inject @Presenter HipsterListPresenter presenter;
   @Inject Picasso picasso;
   private Transformation transformationAvatar;
 
@@ -47,8 +47,7 @@ public class HipsterListActivity extends RosieActivity implements HipsterListPre
 
   private FeedAdapter feedAdapter;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
+  @Override protected void onCreate(Bundle savedInstanceState) {
     setContentView(R.layout.activity_hipster_list);
     super.onCreate(savedInstanceState);
     presenter.setView(this);

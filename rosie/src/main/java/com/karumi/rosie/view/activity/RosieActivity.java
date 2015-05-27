@@ -31,7 +31,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * BaseActivity created to implement some common functionality to activities using this library. All
+ * BaseActivity created to implement some common functionality to activities using this library.
+ * All
  * activities in this project should extend from this one.
  */
 public class RosieActivity extends FragmentActivity implements ErrorView {
@@ -47,8 +48,7 @@ public class RosieActivity extends FragmentActivity implements ErrorView {
    *
    * @throws IllegalStateException if setContentView is not called before this method.
    */
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
+  @Override protected void onCreate(Bundle savedInstanceState) {
     if (!layoutSet) {
       throw new IllegalStateException("You need call setContentView(...) before call onCreate.");
     }
