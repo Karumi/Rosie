@@ -28,7 +28,9 @@ import com.karumi.rosie.view.presenter.RosiePresenter;
 import com.karumi.rosie.view.presenter.view.ErrorView;
 
 /**
- * Base fragment which performs injection using the activity object graph of its parent.
+ * Base Fragment created to implement some common functionality to every Fragment using this
+ * library. All Fragments in this project should extend from this one to be able to use core
+ * features like view injection, dependency injection or Rosie presenters.
  */
 public abstract class RosieFragment extends Fragment implements ErrorView {
 
@@ -36,55 +38,86 @@ public abstract class RosieFragment extends Fragment implements ErrorView {
 
   private boolean injected;
 
+  /**
+   * Injects the Fragment dependencies if this injection wasn't performed previously in other
+   * Fragment life cycle event.
+   */
   @Override public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     injectDependencies();
   }
 
+  /**
+   * Injects the Fragment dependencies if this injection wasn't performed previously in other
+   * Fragment life cycle event.
+   */
   @Override public void onAttach(Activity activity) {
     super.onAttach(activity);
     injectDependencies();
   }
 
-  private void injectDependencies() {
-    if (!injected) {
-      ((RosieActivity) getActivity()).inject(this);
-      presenterLifeCycleHooker.addAnnotatedPresenter(getClass().getDeclaredFields(), this);
-      injected = true;
-    }
-  }
-
+  /**
+   * Injects the Fragment views using ButterKnife.
+   */
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     ButterKnife.inject(this, view);
   }
 
+  /**
+   * Connects the Fragment onCreate method with the presenter used in this Activity.
+   */
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     presenterLifeCycleHooker.initializePresenters();
     presenterLifeCycleHooker.setErrorView(this);
   }
 
+  /**
+   * Connects the Fragment onResume method with the presenter used in this Activity.
+   */
   @Override public void onResume() {
     super.onResume();
     presenterLifeCycleHooker.updatePresenters();
   }
 
+  /**
+   * Connects the Fragment onPause method with the presenter used in this Activity.
+   */
   @Override public void onPause() {
     super.onPause();
     presenterLifeCycleHooker.pausePresenters();
   }
 
+  /**
+   * Connects the Fragment onDestroy method with the presenter used in this Activity.
+   */
   @Override public void onDestroy() {
     super.onDestroy();
     presenterLifeCycleHooker.destroyPresenters();
+  }
+
+  @Override public void showError(Error error) {
+
+  }
+
+  /**
+   * Indicates if the class has to be injected or not. Override this method and return false to use
+   * RosieActivity without inject any dependency.
+   */
+  protected boolean shouldInjectFragment() {
+    return true;
   }
 
   protected void registerPresenter(RosiePresenter presenter) {
     presenterLifeCycleHooker.registerPresenter(presenter);
   }
 
-  @Override public void showError(Error error) {
-
+  private void injectDependencies() {
+    if (!injected && shouldInjectFragment()) {
+      ((RosieActivity) getActivity()).inject(this);
+      presenterLifeCycleHooker.addAnnotatedPresenter(getClass().getDeclaredFields(), this);
+      injected = true;
+    }
   }
 }

@@ -32,7 +32,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * BaseActivity created to implement some common functionality to every Activity using this
+ * Base Activity created to implement some common functionality to every Activity using this
  * library. All activities in this project should extend from this one to be able to use core
  * features like view injection, dependency injection or Rosie presenters.
  */

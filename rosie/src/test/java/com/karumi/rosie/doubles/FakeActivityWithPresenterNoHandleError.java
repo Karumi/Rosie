@@ -51,7 +51,7 @@ public class FakeActivityWithPresenterNoHandleError extends RosieActivity {
     this.error = true;
   }
 
-  public boolean isAnErrorHappend() {
+  public boolean hasShownError() {
     return error;
   }
 }
