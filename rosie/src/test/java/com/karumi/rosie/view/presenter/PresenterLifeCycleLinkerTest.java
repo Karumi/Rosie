@@ -17,16 +17,24 @@
 package com.karumi.rosie.view.presenter;
 
 import com.karumi.rosie.view.presenter.view.ErrorView;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 public class PresenterLifeCycleLinkerTest {
 
+  @Mock RosiePresenter anyPresenter1;
+  @Mock RosiePresenter anyPresenter2;
+
+  @Before public void setUp() {
+    MockitoAnnotations.initMocks(this);
+  }
+
   @Test public void shouldCallAllRegisteredPresentersAreCalledWhenInitializeIsCalled() {
-    RosiePresenter anyPresenter1 = mock(RosiePresenter.class);
-    RosiePresenter anyPresenter2 = mock(RosiePresenter.class);
     PresenterLifeCycleLinker presenterLifeCycleLinker =
         givenAPresenterLifecycleLinker(anyPresenter1, anyPresenter2);
 
@@ -37,8 +45,6 @@ public class PresenterLifeCycleLinkerTest {
   }
 
   @Test public void shouldCallAllRegisteredPresentersAreCalledWhenUpdateIsCalled() {
-    RosiePresenter anyPresenter1 = mock(RosiePresenter.class);
-    RosiePresenter anyPresenter2 = mock(RosiePresenter.class);
     PresenterLifeCycleLinker presenterLifeCycleLinker =
         givenAPresenterLifecycleLinker(anyPresenter1, anyPresenter2);
 
@@ -49,8 +55,6 @@ public class PresenterLifeCycleLinkerTest {
   }
 
   @Test public void shouldCallAllRegisteredPresentersAreCalledWhenDestroyIsCalled() {
-    RosiePresenter anyPresenter1 = mock(RosiePresenter.class);
-    RosiePresenter anyPresenter2 = mock(RosiePresenter.class);
     PresenterLifeCycleLinker presenterLifeCycleLinker =
         givenAPresenterLifecycleLinker(anyPresenter1, anyPresenter2);
 
@@ -61,8 +65,6 @@ public class PresenterLifeCycleLinkerTest {
   }
 
   @Test public void shouldCallAllRegisteredPresentersAreCalledWhenPauseIsCalled() {
-    RosiePresenter anyPresenter1 = mock(RosiePresenter.class);
-    RosiePresenter anyPresenter2 = mock(RosiePresenter.class);
     PresenterLifeCycleLinker presenterLifeCycleLinker =
         givenAPresenterLifecycleLinker(anyPresenter1, anyPresenter2);
 
@@ -73,8 +75,6 @@ public class PresenterLifeCycleLinkerTest {
   }
 
   @Test public void shouldConfigureViewToEveryPresenterRegistered() {
-    RosiePresenter anyPresenter1 = mock(RosiePresenter.class);
-    RosiePresenter anyPresenter2 = mock(RosiePresenter.class);
     PresenterLifeCycleLinker presenterLifeCycleLinker =
         givenAPresenterLifecycleLinker(anyPresenter1, anyPresenter2);
 
@@ -86,8 +86,6 @@ public class PresenterLifeCycleLinkerTest {
   }
 
   @Test public void shouldConfigureErrorViewToEveryPresenterRegistered() {
-    RosiePresenter anyPresenter1 = mock(RosiePresenter.class);
-    RosiePresenter anyPresenter2 = mock(RosiePresenter.class);
     PresenterLifeCycleLinker presenterLifeCycleLinker =
         givenAPresenterLifecycleLinker(anyPresenter1, anyPresenter2);
 
