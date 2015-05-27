@@ -23,7 +23,7 @@ import com.demo.rosie.R;
 import com.karumi.rosie.demo.base.view.transformation.RoundAvatarTransformation;
 import com.karumi.rosie.demo.hipsterlist.domain.HipsterListDomainModule;
 import com.karumi.rosie.demo.hipsterlist.view.HipsterListViewModule;
-import com.karumi.rosie.demo.hipsterlist.view.adapter.FeedAdapter;
+import com.karumi.rosie.demo.hipsterlist.view.adapter.HipstersAdapter;
 import com.karumi.rosie.demo.hipsterlist.view.model.Hipster;
 import com.karumi.rosie.demo.hipsterlist.view.presenter.HipsterListPresenter;
 import com.karumi.rosie.view.activity.RosieActivity;
@@ -35,7 +35,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 /**
- * A placeholder fragment containing a simple view.
+ * RosieActivity extension created to show a List of Hipster instances into a ListView.
  */
 public class HipsterListActivity extends RosieActivity implements HipsterListPresenter.View {
 
@@ -45,29 +45,29 @@ public class HipsterListActivity extends RosieActivity implements HipsterListPre
 
   @InjectView(R.id.lv_feed) ListView listViewFeed;
 
-  private FeedAdapter feedAdapter;
+  private HipstersAdapter hipstersAdapter;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     setContentView(R.layout.activity_hipster_list);
     super.onCreate(savedInstanceState);
-    presenter.setView(this);
-  }
-
-  private void refreshData(List<Hipster> hipsters) {
-    if (feedAdapter == null) {
-      transformationAvatar = new RoundAvatarTransformation();
-      feedAdapter = new FeedAdapter(getBaseContext(), hipsters, picasso, transformationAvatar);
-      listViewFeed.setAdapter(feedAdapter);
-    } else {
-      feedAdapter.notifyDataSetChanged();
-    }
   }
 
   @Override public void updateList(List<Hipster> hipsters) {
-    refreshData(hipsters);
+    updateHipstersAdapter(hipsters);
   }
 
-  @Override protected List<Object> provideActivityScopeModules() {
+  private void updateHipstersAdapter(List<Hipster> hipsters) {
+    if (hipstersAdapter == null) {
+      transformationAvatar = new RoundAvatarTransformation();
+      hipstersAdapter =
+          new HipstersAdapter(getBaseContext(), hipsters, picasso, transformationAvatar);
+      listViewFeed.setAdapter(hipstersAdapter);
+    } else {
+      hipstersAdapter.notifyDataSetChanged();
+    }
+  }
+
+  @Override protected List<Object> getActivityScopeModules() {
     return Arrays.asList(new HipsterListViewModule(), new HipsterListDomainModule());
   }
 }

@@ -30,15 +30,16 @@ import com.squareup.picasso.Transformation;
 import java.util.List;
 
 /**
- *
+ * BaseAdapter extension created to show a List<Hipster> instance into a ListView widget.
  */
-public class FeedAdapter extends BaseAdapter {
+public class HipstersAdapter extends BaseAdapter {
+
   private final Context context;
   private final List<Hipster> hipsters;
   private final Picasso picasso;
   private final Transformation transformation;
 
-  public FeedAdapter(Context context, List<Hipster> hipsters, Picasso picasso,
+  public HipstersAdapter(Context context, List<Hipster> hipsters, Picasso picasso,
       Transformation transformation) {
     this.context = context;
     this.hipsters = hipsters;

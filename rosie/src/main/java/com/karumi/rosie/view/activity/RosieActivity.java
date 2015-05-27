@@ -22,7 +22,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import butterknife.ButterKnife;
 import com.karumi.rosie.application.RosieApplication;
-import com.karumi.rosie.view.presenter.PresenterLifeCycleHooker;
+import com.karumi.rosie.domain.usecase.error.Error;
+import com.karumi.rosie.view.presenter.PresenterLifeCycleLinker;
 import com.karumi.rosie.view.presenter.RosiePresenter;
 import com.karumi.rosie.view.presenter.view.ErrorView;
 import dagger.ObjectGraph;
@@ -31,20 +32,27 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+<<<<<<< HEAD
  * BaseActivity created to implement some common functionality to activities using this library.
  * All
  * activities in this project should extend from this one.
+=======
+ * Base Activity created to implement some common functionality to every Activity using this
+ * library. All activities in this project should extend from this one to be able to use core
+ * features like view injection, dependency injection or Rosie presenters.
+>>>>>>> #5-generify-rosie-presenters
  */
-public class RosieActivity extends FragmentActivity implements ErrorView {
+public class RosieActivity extends FragmentActivity implements ErrorView, RosiePresenter.View {
 
   private ObjectGraph activityScopeGraph;
-  private PresenterLifeCycleHooker presenterLifeCycleHooker = new PresenterLifeCycleHooker();
+  private PresenterLifeCycleLinker presenterLifeCycleLinker = new PresenterLifeCycleLinker();
   private boolean layoutSet = false;
 
   /**
-   * onCreate method is mandatory called for init rosie. Classes extending from RosieActivity
-   * should call {@link #setContentView(int)}, {@link #setContentView(View)} or {@link
-   * #setContentView(View, ViewGroup.LayoutParams)} before this method calls super.
+   * Initializes the object graph associated to the activity scope, links presenters to the
+   * Activity life cycle and initializes view injection using butter knife. Classes extending from
+   * RosieActivity should call {@link #setContentView(int)}, {@link #setContentView(View)} or
+   * {@link#setContentView(View, ViewGroup.LayoutParams)} before this method calls super.
    *
    * @throws IllegalStateException if setContentView is not called before this method.
    */
@@ -55,10 +63,35 @@ public class RosieActivity extends FragmentActivity implements ErrorView {
 
     super.onCreate(savedInstanceState);
     injectActivityModules();
-    presenterLifeCycleHooker.addAnnotatedPresenter(getClass().getDeclaredFields(), this);
+    presenterLifeCycleLinker.addAnnotatedPresenter(getClass().getDeclaredFields(), this);
     ButterKnife.inject(this);
-    presenterLifeCycleHooker.initializePresenters();
-    presenterLifeCycleHooker.setErrorView(this);
+    presenterLifeCycleLinker.initializePresenters();
+    presenterLifeCycleLinker.setView(this);
+    presenterLifeCycleLinker.setErrorView(this);
+  }
+
+  /**
+   * Connects the Activity onResume method with the presenter used in this Activity.
+   */
+  @Override protected void onResume() {
+    super.onResume();
+    presenterLifeCycleLinker.updatePresenters();
+  }
+
+  /**
+   * Connects the Activity onPause method with the presenter used in this Activity.
+   */
+  @Override protected void onPause() {
+    super.onPause();
+    presenterLifeCycleLinker.pausePresenters();
+  }
+
+  /**
+   * Connects the Activity onDestroy method with the presenter used in this Activity.
+   */
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    presenterLifeCycleLinker.destroyPresenters();
   }
 
   @Override public void setContentView(int layoutResID) {
@@ -76,45 +109,47 @@ public class RosieActivity extends FragmentActivity implements ErrorView {
     super.setContentView(view, params);
   }
 
-  @Override protected void onResume() {
-    super.onResume();
-    presenterLifeCycleHooker.updatePresenters();
+  /**
+   * Given an object passed as argument uses the object graph associated to the Activity scope
+   * to resolve all the dependencies needed by the object and inject them.
+   */
+  public final void inject(Object object) {
+    activityScopeGraph.inject(object);
+    activityScopeGraph.injectStatics();
   }
 
-  @Override protected void onPause() {
-    super.onPause();
-    presenterLifeCycleHooker.pausePresenters();
+  @Override public void showError(Error error) {
   }
 
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    presenterLifeCycleHooker.destroyPresenters();
+  /**
+   * Indicates if the class has to be injected or not. Override this method and return false to use
+   * RosieActivity without inject any dependency.
+   */
+  protected boolean shouldInjectActivity() {
+    return true;
+  }
+
+  /**
+   * Returns a List<Object> with the additional modules needed to create the Activity scope
+   * graph. Override this method to return the list of modules associated to your Activity
+   * graph.
+   */
+  protected List<Object> getActivityScopeModules() {
+    return new ArrayList<Object>();
+  }
+
+  protected void registerPresenter(RosiePresenter presenter) {
+    presenterLifeCycleLinker.registerPresenter(presenter);
   }
 
   private void injectActivityModules() {
     RosieApplication rosieApplication = (RosieApplication) getApplication();
-
-    List<Object> activityScopeModules = provideActivityScopeModules();
-    if (activityScopeModules == null) {
+    List<Object> activityScopeModules = getActivityScopeModules();
+    if (activityScopeModules == null && shouldInjectActivity()) {
       activityScopeModules = Collections.EMPTY_LIST;
     }
 
-    activityScopeGraph = rosieApplication.plusModules(activityScopeModules);
+    activityScopeGraph = rosieApplication.plusGraph(activityScopeModules);
     inject(this);
-  }
-
-  protected List<Object> provideActivityScopeModules() {
-    return new ArrayList<Object>();
-  }
-
-  public void inject(Object object) {
-    activityScopeGraph.inject(object);
-  }
-
-  protected void registerPresenter(RosiePresenter presenter) {
-    presenterLifeCycleHooker.registerPresenter(presenter);
-  }
-
-  @Override public void showGlobalError(com.karumi.rosie.domain.usecase.error.Error error) {
   }
 }

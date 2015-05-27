@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class DemoApplication extends RosieApplication {
 
-  @Override public List<Object> provideApplicationModules() {
+  @Override public List<Object> getApplicationModules() {
     return Arrays.asList((Object) new GlobalDemoAndroidModule());
   }
 }

@@ -23,10 +23,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Analizes a class with Presenter annotations passed as parameter to obtain a list of Presenter
- * instances to be linked to the source lifecycle.
+ * Analyzes a Activity or Fragment with Presenter annotations passed as parameter to obtain a list
+ * of Presenter instances to be linked to the source lifecycle.
  */
-public class PresenterLifeCycleHooker {
+public class PresenterLifeCycleLinker {
   private final Set<RosiePresenter> presenters = new HashSet<>();
 
   public void addAnnotatedPresenter(Field[] declaredFields, Object source) {
@@ -50,6 +50,12 @@ public class PresenterLifeCycleHooker {
           }
         }
       }
+    }
+  }
+
+  public void setView(RosiePresenter.View view) {
+    for (RosiePresenter presenter : presenters) {
+      presenter.setView(view);
     }
   }
 

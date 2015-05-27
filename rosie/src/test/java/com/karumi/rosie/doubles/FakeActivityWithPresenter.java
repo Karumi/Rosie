@@ -40,7 +40,7 @@ public class FakeActivityWithPresenter extends RosieActivity {
 
   @Presenter FakePresenter presenter = new FakePresenter();
 
-  @Override protected List<Object> provideActivityScopeModules() {
+  @Override protected List<Object> getActivityScopeModules() {
     return Arrays.asList((Object) new TestModule());
   }
 

@@ -83,6 +83,6 @@ public class RosieActivityTest extends RobolectricTest {
 
     fakeActivity.generateErrorOnPresenter();
 
-    assertTrue(fakeActivity.isAnErrorHappend());
+    assertTrue(fakeActivity.hasShownError());
   }
 }
