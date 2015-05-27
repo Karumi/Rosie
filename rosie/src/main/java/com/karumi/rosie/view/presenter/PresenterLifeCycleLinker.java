@@ -16,6 +16,7 @@
 
 package com.karumi.rosie.view.presenter;
 
+import com.karumi.rosie.view.presenter.annotation.Presenter;
 import com.karumi.rosie.view.presenter.view.ErrorView;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -23,19 +24,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Analizes a class with Presenter annotations passed as parameter to obtain a list of Presenter
- * instances to be linked to the source lifecycle.
+ * Analyzes a Activity or Fragment with Presenter annotations passed as parameter to obtain a list
+ * of Presenter instances to be linked to the source lifecycle.
  */
-public class PresenterLifeCycleHooker {
+public class PresenterLifeCycleLinker {
   private final Set<RosiePresenter> presenters = new HashSet<>();
 
   public void addAnnotatedPresenter(Field[] declaredFields, Object source) {
     for (Field field : declaredFields) {
-      if (field.isAnnotationPresent(com.karumi.rosie.view.presenter.annotation.Presenter.class)) {
+      if (field.isAnnotationPresent(Presenter.class)) {
         if (!Modifier.isPublic(field.getModifiers())) {
           throw new RuntimeException(
               "Presenter must be accessible for this class. Change visibility to public");
-
         } else {
           try {
             RosiePresenter presenter = (RosiePresenter) field.get(source);

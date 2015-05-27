@@ -23,7 +23,7 @@ import android.view.ViewGroup;
 import butterknife.ButterKnife;
 import com.karumi.rosie.application.RosieApplication;
 import com.karumi.rosie.domain.usecase.error.Error;
-import com.karumi.rosie.view.presenter.PresenterLifeCycleHooker;
+import com.karumi.rosie.view.presenter.PresenterLifeCycleLinker;
 import com.karumi.rosie.view.presenter.RosiePresenter;
 import com.karumi.rosie.view.presenter.view.ErrorView;
 import dagger.ObjectGraph;
@@ -39,7 +39,7 @@ import java.util.List;
 public class RosieActivity extends FragmentActivity implements ErrorView {
 
   private ObjectGraph activityScopeGraph;
-  private PresenterLifeCycleHooker presenterLifeCycleHooker = new PresenterLifeCycleHooker();
+  private PresenterLifeCycleLinker presenterLifeCycleLinker = new PresenterLifeCycleLinker();
   private boolean layoutSet = false;
 
   /**
@@ -57,10 +57,10 @@ public class RosieActivity extends FragmentActivity implements ErrorView {
 
     super.onCreate(savedInstanceState);
     injectActivityModules();
-    presenterLifeCycleHooker.addAnnotatedPresenter(getClass().getDeclaredFields(), this);
+    presenterLifeCycleLinker.addAnnotatedPresenter(getClass().getDeclaredFields(), this);
     ButterKnife.inject(this);
-    presenterLifeCycleHooker.initializePresenters();
-    presenterLifeCycleHooker.setErrorView(this);
+    presenterLifeCycleLinker.initializePresenters();
+    presenterLifeCycleLinker.setErrorView(this);
   }
 
   /**
@@ -68,7 +68,7 @@ public class RosieActivity extends FragmentActivity implements ErrorView {
    */
   @Override protected void onResume() {
     super.onResume();
-    presenterLifeCycleHooker.updatePresenters();
+    presenterLifeCycleLinker.updatePresenters();
   }
 
   /**
@@ -76,7 +76,7 @@ public class RosieActivity extends FragmentActivity implements ErrorView {
    */
   @Override protected void onPause() {
     super.onPause();
-    presenterLifeCycleHooker.pausePresenters();
+    presenterLifeCycleLinker.pausePresenters();
   }
 
   /**
@@ -84,7 +84,7 @@ public class RosieActivity extends FragmentActivity implements ErrorView {
    */
   @Override protected void onDestroy() {
     super.onDestroy();
-    presenterLifeCycleHooker.destroyPresenters();
+    presenterLifeCycleLinker.destroyPresenters();
   }
 
   @Override public void setContentView(int layoutResID) {
@@ -132,7 +132,7 @@ public class RosieActivity extends FragmentActivity implements ErrorView {
   }
 
   protected void registerPresenter(RosiePresenter presenter) {
-    presenterLifeCycleHooker.registerPresenter(presenter);
+    presenterLifeCycleLinker.registerPresenter(presenter);
   }
 
   private void injectActivityModules() {
