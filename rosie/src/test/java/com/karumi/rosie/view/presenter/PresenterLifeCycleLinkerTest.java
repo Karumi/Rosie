@@ -16,20 +16,27 @@
 
 package com.karumi.rosie.view.presenter;
 
+import com.karumi.rosie.view.presenter.view.ErrorView;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 public class PresenterLifeCycleLinkerTest {
 
-  @Test
-  public void shouldCallAllRegisteredPresenersAreCalledWhenInitializateIsCalled() {
-    PresenterLifeCycleLinker presenterLifeCycleLinker = new PresenterLifeCycleLinker();
-    RosiePresenter anyPresenter1 = mock(RosiePresenter.class);
-    RosiePresenter anyPresenter2 = mock(RosiePresenter.class);
-    presenterLifeCycleLinker.registerPresenter(anyPresenter1);
-    presenterLifeCycleLinker.registerPresenter(anyPresenter2);
+  @Mock RosiePresenter anyPresenter1;
+  @Mock RosiePresenter anyPresenter2;
+
+  @Before public void setUp() {
+    MockitoAnnotations.initMocks(this);
+  }
+
+  @Test public void shouldCallAllRegisteredPresentersAreCalledWhenInitializeIsCalled() {
+    PresenterLifeCycleLinker presenterLifeCycleLinker =
+        givenAPresenterLifecycleLinker(anyPresenter1, anyPresenter2);
 
     presenterLifeCycleLinker.initializePresenters();
 
@@ -37,13 +44,9 @@ public class PresenterLifeCycleLinkerTest {
     verify(anyPresenter2).initialize();
   }
 
-  @Test
-  public void shouldCallAllRegisteredPresenersAreCalledWhenUpdateIsCalled() {
-    PresenterLifeCycleLinker presenterLifeCycleLinker = new PresenterLifeCycleLinker();
-    RosiePresenter anyPresenter1 = mock(RosiePresenter.class);
-    RosiePresenter anyPresenter2 = mock(RosiePresenter.class);
-    presenterLifeCycleLinker.registerPresenter(anyPresenter1);
-    presenterLifeCycleLinker.registerPresenter(anyPresenter2);
+  @Test public void shouldCallAllRegisteredPresentersAreCalledWhenUpdateIsCalled() {
+    PresenterLifeCycleLinker presenterLifeCycleLinker =
+        givenAPresenterLifecycleLinker(anyPresenter1, anyPresenter2);
 
     presenterLifeCycleLinker.updatePresenters();
 
@@ -51,13 +54,9 @@ public class PresenterLifeCycleLinkerTest {
     verify(anyPresenter2).update();
   }
 
-  @Test
-  public void shouldCallAllRegisteredPresenersAreCalledWhenDestroyIsCalled() {
-    PresenterLifeCycleLinker presenterLifeCycleLinker = new PresenterLifeCycleLinker();
-    RosiePresenter anyPresenter1 = mock(RosiePresenter.class);
-    RosiePresenter anyPresenter2 = mock(RosiePresenter.class);
-    presenterLifeCycleLinker.registerPresenter(anyPresenter1);
-    presenterLifeCycleLinker.registerPresenter(anyPresenter2);
+  @Test public void shouldCallAllRegisteredPresentersAreCalledWhenDestroyIsCalled() {
+    PresenterLifeCycleLinker presenterLifeCycleLinker =
+        givenAPresenterLifecycleLinker(anyPresenter1, anyPresenter2);
 
     presenterLifeCycleLinker.destroyPresenters();
 
@@ -65,17 +64,43 @@ public class PresenterLifeCycleLinkerTest {
     verify(anyPresenter2).destroy();
   }
 
-  @Test
-  public void shouldCallAllRegisteredPresenersAreCalledWhenPauseIsCalled() {
-    PresenterLifeCycleLinker presenterLifeCycleLinker = new PresenterLifeCycleLinker();
-    RosiePresenter anyPresenter1 = mock(RosiePresenter.class);
-    RosiePresenter anyPresenter2 = mock(RosiePresenter.class);
-    presenterLifeCycleLinker.registerPresenter(anyPresenter1);
-    presenterLifeCycleLinker.registerPresenter(anyPresenter2);
+  @Test public void shouldCallAllRegisteredPresentersAreCalledWhenPauseIsCalled() {
+    PresenterLifeCycleLinker presenterLifeCycleLinker =
+        givenAPresenterLifecycleLinker(anyPresenter1, anyPresenter2);
 
     presenterLifeCycleLinker.pausePresenters();
 
     verify(anyPresenter1).pause();
     verify(anyPresenter2).pause();
+  }
+
+  @Test public void shouldConfigureViewToEveryPresenterRegistered() {
+    PresenterLifeCycleLinker presenterLifeCycleLinker =
+        givenAPresenterLifecycleLinker(anyPresenter1, anyPresenter2);
+
+    RosiePresenter.View view = mock(RosiePresenter.View.class);
+    presenterLifeCycleLinker.setView(view);
+
+    verify(anyPresenter1).setView(view);
+    verify(anyPresenter2).setView(view);
+  }
+
+  @Test public void shouldConfigureErrorViewToEveryPresenterRegistered() {
+    PresenterLifeCycleLinker presenterLifeCycleLinker =
+        givenAPresenterLifecycleLinker(anyPresenter1, anyPresenter2);
+
+    ErrorView errorView = mock(ErrorView.class);
+    presenterLifeCycleLinker.setErrorView(errorView);
+
+    verify(anyPresenter1).setErrorView(errorView);
+    verify(anyPresenter2).setErrorView(errorView);
+  }
+
+  private PresenterLifeCycleLinker givenAPresenterLifecycleLinker(RosiePresenter... presenters) {
+    PresenterLifeCycleLinker presenterLifeCycleLinker = new PresenterLifeCycleLinker();
+    for (RosiePresenter presenter : presenters) {
+      presenterLifeCycleLinker.registerPresenter(presenter);
+    }
+    return presenterLifeCycleLinker;
   }
 }

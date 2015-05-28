@@ -36,7 +36,7 @@ import java.util.List;
  * library. All activities in this project should extend from this one to be able to use core
  * features like view injection, dependency injection or Rosie presenters.
  */
-public class RosieActivity extends FragmentActivity implements ErrorView {
+public class RosieActivity extends FragmentActivity implements ErrorView, RosiePresenter.View {
 
   private ObjectGraph activityScopeGraph;
   private PresenterLifeCycleLinker presenterLifeCycleLinker = new PresenterLifeCycleLinker();
@@ -60,6 +60,7 @@ public class RosieActivity extends FragmentActivity implements ErrorView {
     presenterLifeCycleLinker.addAnnotatedPresenter(getClass().getDeclaredFields(), this);
     ButterKnife.inject(this);
     presenterLifeCycleLinker.initializePresenters();
+    presenterLifeCycleLinker.setView(this);
     presenterLifeCycleLinker.setErrorView(this);
   }
 

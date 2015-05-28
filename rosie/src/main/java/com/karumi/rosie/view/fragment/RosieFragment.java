@@ -32,7 +32,7 @@ import com.karumi.rosie.view.presenter.view.ErrorView;
  * library. All Fragments in this project should extend from this one to be able to use core
  * features like view injection, dependency injection or Rosie presenters.
  */
-public abstract class RosieFragment extends Fragment implements ErrorView {
+public abstract class RosieFragment extends Fragment implements ErrorView, RosiePresenter.View {
 
   private PresenterLifeCycleLinker presenterLifeCycleLinker = new PresenterLifeCycleLinker();
 
@@ -70,6 +70,7 @@ public abstract class RosieFragment extends Fragment implements ErrorView {
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     presenterLifeCycleLinker.initializePresenters();
+    presenterLifeCycleLinker.setView(this);
     presenterLifeCycleLinker.setErrorView(this);
   }
 

@@ -17,9 +17,9 @@
 package com.karumi.rosie.view.activity;
 
 import com.karumi.rosie.RobolectricTest;
+import com.karumi.rosie.doubles.FakeActivity;
 import com.karumi.rosie.doubles.FakeActivityWithPresenter;
 import com.karumi.rosie.doubles.FakeActivityWithPresenterNoHandleError;
-import com.karumi.rosie.doubles.FakeActivity;
 import org.junit.Test;
 import org.robolectric.Robolectric;
 
@@ -31,38 +31,38 @@ public class RosieActivityTest extends RobolectricTest {
 
   @Test public void shouldCallInitializePresenterWhenActivityCreate() {
     FakeActivity fakeActivity = Robolectric.buildActivity(FakeActivity.class).create().get();
-    verify(fakeActivity.presenter, times(1)).initialize();
+    verify(fakeActivity.getPresenter(), times(1)).initialize();
   }
 
   @Test public void shouldCallUpdatePresenterWhenActivityResume() {
     FakeActivity fakeActivity =
         Robolectric.buildActivity(FakeActivity.class).create().resume().get();
 
-    verify(fakeActivity.presenter).initialize();
-    verify(fakeActivity.presenter).update();
+    verify(fakeActivity.getPresenter()).initialize();
+    verify(fakeActivity.getPresenter()).update();
   }
 
   @Test public void shouldCallPausePresenterWhenActivityPause() {
     FakeActivity fakeActivity =
         Robolectric.buildActivity(FakeActivity.class).create().resume().pause().get();
-    verify(fakeActivity.presenter).initialize();
-    verify(fakeActivity.presenter).update();
-    verify(fakeActivity.presenter).pause();
+    verify(fakeActivity.getPresenter()).initialize();
+    verify(fakeActivity.getPresenter()).update();
+    verify(fakeActivity.getPresenter()).pause();
   }
 
   @Test public void shouldCallPausePresenterAndRestartPresenterWhenActivityPauseAndRestart() {
     FakeActivity fakeActivity =
         Robolectric.buildActivity(FakeActivity.class).create().resume().pause().resume().get();
-    verify(fakeActivity.presenter).initialize();
-    verify(fakeActivity.presenter, times(2)).update();
-    verify(fakeActivity.presenter).pause();
+    verify(fakeActivity.getPresenter()).initialize();
+    verify(fakeActivity.getPresenter(), times(2)).update();
+    verify(fakeActivity.getPresenter()).pause();
   }
 
   @Test public void shouldCallDestroyPresenterWhenActivityDestroy() {
     FakeActivity fakeActivity =
         Robolectric.buildActivity(FakeActivity.class).create().destroy().get();
-    verify(fakeActivity.presenter).initialize();
-    verify(fakeActivity.presenter).destroy();
+    verify(fakeActivity.getPresenter()).initialize();
+    verify(fakeActivity.getPresenter()).destroy();
   }
 
   @Test public void shouldCallErrorWhenAnUseCaseLaunchAnGlobalError() {
