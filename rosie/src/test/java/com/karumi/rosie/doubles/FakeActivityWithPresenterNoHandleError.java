@@ -37,7 +37,7 @@ public class FakeActivityWithPresenterNoHandleError extends RosieActivity {
     super.onCreate(savedInstanceState);
   }
 
-  @Presenter public FakePresenter presenter = new FakePresenter();
+  @Presenter FakePresenter presenter = new FakePresenter();
 
   @Override protected List<Object> getActivityScopeModules() {
     return Arrays.asList((Object) new TestModule());

@@ -28,8 +28,7 @@ import static org.mockito.Mockito.verify;
 
 public class RosieFragmentTest extends RobolectricTest {
 
-  @Test
-  public void shouldCallInitializePresenterWhenFragmentCreate() {
+  @Test public void shouldCallInitializePresenterWhenFragmentCreate() {
 
     TestFragment testFragment = new TestFragment();
     FragmentTestUtil.startFragment(testFragment, FakeActivity.class);
@@ -37,8 +36,7 @@ public class RosieFragmentTest extends RobolectricTest {
     verify(testFragment.presenter).initialize();
   }
 
-  @Test
-  public void shouldCallUpdatePresenterWhenFragmentResume() {
+  @Test public void shouldCallUpdatePresenterWhenFragmentResume() {
 
     TestFragment testFragment = new TestFragment();
     FragmentTestUtil.startFragment(testFragment, FakeActivity.class);
@@ -47,8 +45,7 @@ public class RosieFragmentTest extends RobolectricTest {
     verify(testFragment.presenter).update();
   }
 
-  @Test
-  public void shouldCallPausePresenterWhenFragmentPause() {
+  @Test public void shouldCallPausePresenterWhenFragmentPause() {
 
     TestFragment testFragment = new TestFragment();
     FragmentTestUtil.startFragment(testFragment, FakeActivity.class);
@@ -59,8 +56,7 @@ public class RosieFragmentTest extends RobolectricTest {
     verify(testFragment.presenter).pause();
   }
 
-  @Test
-  public void shouldCallDestroyPresenterWhenFragmentDestroy() {
+  @Test public void shouldCallDestroyPresenterWhenFragmentDestroy() {
 
     TestFragment testFragment = new TestFragment();
     FragmentTestUtil.startFragment(testFragment, FakeActivity.class);
@@ -73,14 +69,11 @@ public class RosieFragmentTest extends RobolectricTest {
     verify(testFragment.presenter).destroy();
   }
 
-
   public static class TestFragment extends RosieFragment {
-    @Presenter
-    public RosiePresenter presenter =
-        mock(RosiePresenter.class);
+
+    @Presenter RosiePresenter presenter = mock(RosiePresenter.class);
 
     public TestFragment() {
     }
-
   }
 }
