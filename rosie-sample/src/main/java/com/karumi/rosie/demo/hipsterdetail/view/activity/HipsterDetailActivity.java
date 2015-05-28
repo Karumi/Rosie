@@ -48,4 +48,8 @@ public class HipsterDetailActivity extends RosieActivity {
     intent.putExtra(HipsterDetailFragment.HIPSTER_EXTRA_KEY, hipster);
     context.startActivity(intent);
   }
+
+  @Override protected boolean shouldInjectActivity() {
+    return false;
+  }
 }

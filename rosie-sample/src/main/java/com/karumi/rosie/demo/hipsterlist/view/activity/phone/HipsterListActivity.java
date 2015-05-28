@@ -22,6 +22,7 @@ import butterknife.InjectView;
 import butterknife.OnItemClick;
 import com.karumi.rosie.demo.R;
 import com.karumi.rosie.demo.base.view.transformation.RoundAvatarTransformation;
+import com.karumi.rosie.demo.hipsterdetail.view.activity.HipsterDetailActivity;
 import com.karumi.rosie.demo.hipsterlist.domain.HipsterListDomainModule;
 import com.karumi.rosie.demo.hipsterlist.view.HipsterListViewModule;
 import com.karumi.rosie.demo.hipsterlist.view.adapter.HipstersAdapter;
@@ -59,7 +60,7 @@ public class HipsterListActivity extends RosieActivity implements HipsterListPre
 
   @OnItemClick(R.id.lv_feed) void onHipsterClicked(int position) {
     Hipster hipster = hipstersAdapter.getItem(position);
-
+    HipsterDetailActivity.open(this, hipster);
   }
 
   private void updateHipstersAdapter(List<Hipster> hipsters) {

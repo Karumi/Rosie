@@ -16,7 +16,18 @@
 
 package com.karumi.rosie.demo.hipsterdetail.view.fragment;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import butterknife.InjectView;
+import com.karumi.rosie.demo.R;
+import com.karumi.rosie.demo.hipsterlist.view.model.Hipster;
 import com.karumi.rosie.view.fragment.RosieFragment;
+import com.squareup.picasso.Picasso;
 
 /**
  * RosieFragment extension created to show detailed information related to a Hipster instance
@@ -25,4 +36,36 @@ import com.karumi.rosie.view.fragment.RosieFragment;
 public class HipsterDetailFragment extends RosieFragment {
 
   public static final String HIPSTER_EXTRA_KEY = "HipsterDetailFragment.hipsterKey";
+
+  @InjectView(R.id.iv_avatar) ImageView hipsterAvatarView;
+  @InjectView(R.id.tv_hipster_name) TextView hipsterNameView;
+
+  @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    super.onCreateView(inflater, container, savedInstanceState);
+    return inflater.inflate(R.layout.fragment_hipster_detail, container, false);
+  }
+
+  @Override public void onViewCreated(View view, Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    Hipster hipster = getHipster();
+    showHipsterPhoto(hipster.getAvatarUrl());
+    showHipsterName(hipster.getName());
+  }
+
+  private void showHipsterPhoto(String avatarUrl) {
+    Picasso.with(getActivity()).load(avatarUrl).into(hipsterAvatarView);
+  }
+
+  private void showHipsterName(String name) {
+    hipsterNameView.setText(name);
+  }
+
+  @Override protected boolean shouldInjectFragment() {
+    return false;
+  }
+
+  private Hipster getHipster() {
+    return (Hipster) getActivity().getIntent().getExtras().get(HIPSTER_EXTRA_KEY);
+  }
 }
