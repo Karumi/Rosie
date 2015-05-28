@@ -17,7 +17,6 @@
 package com.karumi.rosie.demo.hipsterdetail.view.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +39,7 @@ public class HipsterDetailFragment extends RosieFragment {
   @InjectView(R.id.iv_avatar) ImageView hipsterAvatarView;
   @InjectView(R.id.tv_hipster_name) TextView hipsterNameView;
 
-  @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
     return inflater.inflate(R.layout.fragment_hipster_detail, container, false);
