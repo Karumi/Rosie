@@ -36,6 +36,7 @@ import javax.inject.Singleton;
   private final Context context;
 
   public RosieAndroidModule(Application application) {
+    validateApplication(application);
     this.context = application;
   }
 
@@ -57,5 +58,11 @@ import javax.inject.Singleton;
 
   @Provides @Singleton public JobManager provideJobManager(@ForApplication Context context) {
     return new JobManager(context);
+  }
+
+  private void validateApplication(Application application) {
+    if (application == null) {
+      throw new IllegalArgumentException("The Application passed in construction can't be null.");
+    }
   }
 }
