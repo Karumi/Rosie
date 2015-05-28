@@ -18,6 +18,7 @@ package com.karumi.rosie.module;
 
 import android.app.Application;
 import android.content.Context;
+import com.karumi.rosie.application.RosieApplication;
 import com.karumi.rosie.daggerutils.ForApplication;
 import com.karumi.rosie.domain.usecase.TaskScheduler;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
@@ -31,8 +32,7 @@ import javax.inject.Singleton;
  * A module for Android-specific dependencies which require a {@link Context} or
  * {@link android.app.Application} to create.
  */
-@Module(library = true)
-public class RosieAndroidModule {
+@Module(library = true, injects = RosieApplication.class) public class RosieAndroidModule {
   private final Context context;
 
   public RosieAndroidModule(Application application) {
@@ -47,18 +47,15 @@ public class RosieAndroidModule {
     return context;
   }
 
-  @Provides @Singleton
-  public UseCaseHandler provideUseCaseHandler(TaskScheduler taskScheduler) {
+  @Provides @Singleton public UseCaseHandler provideUseCaseHandler(TaskScheduler taskScheduler) {
     return new UseCaseHandler(taskScheduler);
   }
 
-  @Provides @Singleton
-  public TaskScheduler provideTaskScheduler(JobManager jobManager) {
+  @Provides @Singleton public TaskScheduler provideTaskScheduler(JobManager jobManager) {
     return new TaskSchedulerJobQueue(jobManager);
   }
 
-  @Provides @Singleton
-  public JobManager provideJobManager(@ForApplication Context context) {
+  @Provides @Singleton public JobManager provideJobManager(@ForApplication Context context) {
     return new JobManager(context);
   }
 }

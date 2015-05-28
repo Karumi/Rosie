@@ -27,11 +27,15 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 
-public class HipsterListPresenter extends RosiePresenter {
+/**
+ * RosiePresenter extension configured to use the View interface declared in this class. Implements
+ * all the presentation logic related to the hipsters sample executing a UseCase and obtaining data
+ * from the application domain to be shown once the data is loaded.
+ */
+public class HipsterListPresenter extends RosiePresenter<HipsterListPresenter.View> {
 
   private final ObtainHipsters obtainHipsters;
-  private View view;
-  private ArrayList<Hipster> hipsters = new ArrayList<Hipster>();
+  private List<Hipster> hipsters = new ArrayList<Hipster>();
 
   @Inject
   public HipsterListPresenter(UseCaseHandler useCaseHandler, ObtainHipsters obtainHipsters) {
@@ -39,34 +43,26 @@ public class HipsterListPresenter extends RosiePresenter {
     this.obtainHipsters = obtainHipsters;
   }
 
-  public void setView(View view) {
-    this.view = view;
-  }
-
   @Override public void update() {
-    super.update();
-    obtainHipsters();
+    loadHipsters();
   }
 
-  private void obtainHipsters() {
-    UseCaseParams params = new UseCaseParams.Builder()
-        .onSuccess(successCallback).build();
+  private void loadHipsters() {
+    UseCaseParams params = new UseCaseParams.Builder().onSuccess(successCallback).build();
 
     UseCaseHandler useCaseHandler = getUseCaseHandler();
     useCaseHandler.execute(obtainHipsters, params);
   }
 
   private OnSuccessCallback successCallback = new OnSuccessCallback() {
-    @Success
-    public void success(List<Hipster> hipsters) {
+    @Success public void onSuccess(List<Hipster> hipsters) {
       HipsterListPresenter.this.hipsters.clear();
       HipsterListPresenter.this.hipsters.addAll(hipsters);
-
-      view.updateList(HipsterListPresenter.this.hipsters);
+      getView().updateList(HipsterListPresenter.this.hipsters);
     }
   };
 
-  public interface View {
+  public interface View extends RosiePresenter.View {
     void updateList(List<Hipster> hipsters);
   }
 }

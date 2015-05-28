@@ -23,23 +23,25 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Analizes a class with Presenter annotations passed as parameter to obtain a list of Presenter
- * instances to be linked to the source lifecycle.
+ * Analyzes a Activity or Fragment with Presenter annotations passed as parameter to obtain a list
+ * of Presenter instances to be linked to the source lifecycle.
  */
-public class PresenterLifeCycleHooker {
+public class PresenterLifeCycleLinker {
   private final Set<RosiePresenter> presenters = new HashSet<>();
 
   public void addAnnotatedPresenter(Field[] declaredFields, Object source) {
     for (Field field : declaredFields) {
       if (field.isAnnotationPresent(com.karumi.rosie.view.presenter.annotation.Presenter.class)) {
-        if (!Modifier.isPublic(field.getModifiers())) {
+        if (Modifier.isPrivate(field.getModifiers())) {
           throw new RuntimeException(
-              "Presenter must be accessible for this class. Change visibility to public");
-
+              "Presenter must be accessible for this class. The visibility modifier used can't be"
+                  + " private");
         } else {
           try {
+            field.setAccessible(true);
             RosiePresenter presenter = (RosiePresenter) field.get(source);
             presenters.add(presenter);
+            field.setAccessible(false);
           } catch (IllegalAccessException e) {
             IllegalStateException runtimeException = new IllegalStateException(
                 "the presenter " + field.getName() + " can not be access");
@@ -48,6 +50,12 @@ public class PresenterLifeCycleHooker {
           }
         }
       }
+    }
+  }
+
+  public void setView(RosiePresenter.View view) {
+    for (RosiePresenter presenter : presenters) {
+      presenter.setView(view);
     }
   }
 
