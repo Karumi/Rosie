@@ -16,7 +16,6 @@
 
 package com.karumi.rosie.view.presenter;
 
-import com.karumi.rosie.view.presenter.annotation.Presenter;
 import com.karumi.rosie.view.presenter.view.ErrorView;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -32,14 +31,17 @@ public class PresenterLifeCycleLinker {
 
   public void addAnnotatedPresenter(Field[] declaredFields, Object source) {
     for (Field field : declaredFields) {
-      if (field.isAnnotationPresent(Presenter.class)) {
-        if (!Modifier.isPublic(field.getModifiers())) {
+      if (field.isAnnotationPresent(com.karumi.rosie.view.presenter.annotation.Presenter.class)) {
+        if (Modifier.isPrivate(field.getModifiers())) {
           throw new RuntimeException(
-              "Presenter must be accessible for this class. Change visibility to public");
+              "Presenter must be accessible for this class. The visibility modifier used can't be"
+                  + " private");
         } else {
           try {
+            field.setAccessible(true);
             RosiePresenter presenter = (RosiePresenter) field.get(source);
             presenters.add(presenter);
+            field.setAccessible(false);
           } catch (IllegalAccessException e) {
             IllegalStateException runtimeException = new IllegalStateException(
                 "the presenter " + field.getName() + " can not be access");

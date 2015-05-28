@@ -39,7 +39,7 @@ import javax.inject.Inject;
  */
 public class HipsterListActivity extends RosieActivity implements HipsterListPresenter.View {
 
-  @Inject @Presenter public HipsterListPresenter presenter;
+  @Inject @Presenter HipsterListPresenter presenter;
   @Inject Picasso picasso;
   private Transformation transformationAvatar;
 
