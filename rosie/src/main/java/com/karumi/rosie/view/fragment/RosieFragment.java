@@ -57,7 +57,7 @@ public abstract class RosieFragment extends Fragment implements ErrorView, Rosie
   }
 
   /**
-   * Injects the Fragment views using ButterKnife.
+   * Injects the Fragment views using Butter Knife library.
    */
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
