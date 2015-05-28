@@ -14,36 +14,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.demo.hipsterlist.view.model;
+package com.karumi.rosie.demo.hipsterdetail.view.fragment;
 
-import java.io.Serializable;
+import com.karumi.rosie.view.fragment.RosieFragment;
 
-public class Hipster implements Serializable {
-  private String id;
-  private String name;
-  private String avatarUrl;
+/**
+ * RosieFragment extension created to show detailed information related to a Hipster instance
+ * passed as argument.
+ */
+public class HipsterDetailFragment extends RosieFragment {
 
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getAvatarUrl() {
-    return avatarUrl;
-  }
-
-  public void setAvatarUrl(String avatarUrl) {
-    this.avatarUrl = avatarUrl;
-  }
+  public static final String HIPSTER_EXTRA_KEY = "HipsterDetailFragment.hipsterKey";
 }

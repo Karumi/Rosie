@@ -23,7 +23,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.demo.rosie.R;
+import com.karumi.rosie.demo.R;
 import com.karumi.rosie.demo.hipsterlist.view.model.Hipster;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
@@ -51,7 +51,7 @@ public class HipstersAdapter extends BaseAdapter {
     return hipsters.size();
   }
 
-  @Override public Object getItem(int position) {
+  @Override public Hipster getItem(int position) {
     Hipster hipster = hipsters.get(position);
     return hipster;
   }
