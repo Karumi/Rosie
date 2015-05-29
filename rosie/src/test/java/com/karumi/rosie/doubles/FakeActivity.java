@@ -16,8 +16,6 @@
 
 package com.karumi.rosie.doubles;
 
-import android.os.Bundle;
-import android.view.View;
 import com.karumi.rosie.TestModule;
 import com.karumi.rosie.view.activity.RosieActivity;
 import com.karumi.rosie.view.presenter.RosiePresenter;
@@ -31,15 +29,17 @@ import static org.mockito.Mockito.mock;
  * Activity for run the tests
  */
 public class FakeActivity extends RosieActivity {
+
+  private static final int ANY_LAYOUT = android.R.layout.list_content;
+
   public FakeActivity() {
   }
 
-  @Override public void onCreate(Bundle savedInstanceState) {
-    setContentView(new View(getBaseContext()));
-    super.onCreate(savedInstanceState);
-  }
-
   @Presenter RosiePresenter presenter = mock(RosiePresenter.class);
+
+  @Override protected int getLayoutId() {
+    return ANY_LAYOUT;
+  }
 
   @Override protected List<Object> getActivityScopeModules() {
     return Arrays.asList((Object) new TestModule());

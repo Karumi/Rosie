@@ -63,8 +63,7 @@ public class FakePresenter extends RosiePresenter {
 
   public class ErrorUseCase extends RosieUseCase {
 
-    @UseCase
-    public void excuteError() throws Exception {
+    @UseCase public void excuteError() throws Exception {
       notifyError(new Error("error"));
     }
   }

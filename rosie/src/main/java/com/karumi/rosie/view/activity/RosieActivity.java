@@ -18,8 +18,6 @@ package com.karumi.rosie.view.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.View;
-import android.view.ViewGroup;
 import butterknife.ButterKnife;
 import com.karumi.rosie.application.RosieApplication;
 import com.karumi.rosie.domain.usecase.error.Error;
@@ -44,11 +42,7 @@ public abstract class RosieActivity extends FragmentActivity
 
   /**
    * Initializes the object graph associated to the activity scope, links presenters to the
-   * Activity life cycle and initializes view injection using butter knife. Classes extending from
-   * RosieActivity should call {@link #setContentView(int)}, {@link #setContentView(View)} or
-   * {@link#setContentView(View, ViewGroup.LayoutParams)} before this method calls super.
-   *
-   * @throws IllegalStateException if setContentView is not called before this method.
+   * Activity life cycle and initializes view injection using butter knife.
    */
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

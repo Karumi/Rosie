@@ -17,7 +17,6 @@
 package com.karumi.rosie.doubles;
 
 import android.os.Bundle;
-import android.view.View;
 import com.karumi.rosie.TestModule;
 import com.karumi.rosie.domain.usecase.error.Error;
 import com.karumi.rosie.view.activity.RosieActivity;
@@ -27,13 +26,14 @@ import java.util.List;
 
 public class FakeActivityWithPresenterNoHandleError extends RosieActivity {
 
+  private static final int ANY_LAYOUT = android.R.layout.list_content;
+
   private boolean error = false;
 
   public FakeActivityWithPresenterNoHandleError() {
   }
 
   @Override public void onCreate(Bundle savedInstanceState) {
-    setContentView(new View(getBaseContext()));
     super.onCreate(savedInstanceState);
   }
 
@@ -49,6 +49,10 @@ public class FakeActivityWithPresenterNoHandleError extends RosieActivity {
 
   @Override public void showError(Error error) {
     this.error = true;
+  }
+
+  @Override protected int getLayoutId() {
+    return ANY_LAYOUT;
   }
 
   public boolean hasShownError() {
