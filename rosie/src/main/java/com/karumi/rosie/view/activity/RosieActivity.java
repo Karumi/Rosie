@@ -36,11 +36,11 @@ import java.util.List;
  * library. All activities in this project should extend from this one to be able to use core
  * features like view injection, dependency injection or Rosie presenters.
  */
-public class RosieActivity extends FragmentActivity implements ErrorView, RosiePresenter.View {
+public abstract class RosieActivity extends FragmentActivity
+    implements ErrorView, RosiePresenter.View {
 
   private ObjectGraph activityScopeGraph;
   private PresenterLifeCycleLinker presenterLifeCycleLinker = new PresenterLifeCycleLinker();
-  private boolean layoutSet = false;
 
   /**
    * Initializes the object graph associated to the activity scope, links presenters to the
@@ -51,11 +51,9 @@ public class RosieActivity extends FragmentActivity implements ErrorView, RosieP
    * @throws IllegalStateException if setContentView is not called before this method.
    */
   @Override protected void onCreate(Bundle savedInstanceState) {
-    if (!layoutSet) {
-      throw new IllegalStateException("You need call setContentView(...) before call onCreate.");
-    }
-
     super.onCreate(savedInstanceState);
+    int layoutId = getLayoutId();
+    setContentView(layoutId);
     injectActivityModules();
     presenterLifeCycleLinker.addAnnotatedPresenter(getClass().getDeclaredFields(), this);
     ButterKnife.inject(this);
@@ -88,21 +86,6 @@ public class RosieActivity extends FragmentActivity implements ErrorView, RosieP
     presenterLifeCycleLinker.destroyPresenters();
   }
 
-  @Override public void setContentView(int layoutResID) {
-    layoutSet = true;
-    super.setContentView(layoutResID);
-  }
-
-  @Override public void setContentView(View view) {
-    layoutSet = true;
-    super.setContentView(view);
-  }
-
-  @Override public void setContentView(View view, ViewGroup.LayoutParams params) {
-    layoutSet = true;
-    super.setContentView(view, params);
-  }
-
   /**
    * Given an object passed as argument uses the object graph associated to the Activity scope
    * to resolve all the dependencies needed by the object and inject them.
@@ -122,6 +105,11 @@ public class RosieActivity extends FragmentActivity implements ErrorView, RosieP
   protected boolean shouldInjectActivity() {
     return true;
   }
+
+  /**
+   * Returns the layout id associated to the layout used in the activity.
+   */
+  protected abstract int getLayoutId();
 
   /**
    * Returns a List<Object> with the additional modules needed to create the Activity scope

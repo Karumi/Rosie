@@ -17,9 +17,7 @@
 package com.karumi.rosie.demo.hipsterdetail.view.fragment;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.InjectView;
@@ -39,12 +37,6 @@ public class HipsterDetailFragment extends RosieFragment {
   @InjectView(R.id.iv_avatar) ImageView hipsterAvatarView;
   @InjectView(R.id.tv_hipster_name) TextView hipsterNameView;
 
-  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
-    super.onCreateView(inflater, container, savedInstanceState);
-    return inflater.inflate(R.layout.fragment_hipster_detail, container, false);
-  }
-
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     Hipster hipster = getHipster();
@@ -62,6 +54,10 @@ public class HipsterDetailFragment extends RosieFragment {
 
   @Override protected boolean shouldInjectFragment() {
     return false;
+  }
+
+  @Override protected int getLayoutId() {
+    return R.layout.fragment_hipster_detail;
   }
 
   private Hipster getHipster() {

@@ -16,9 +16,9 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-</FrameLayout>
+<fragment
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:name="com.karumi.rosie.demo.hipsterdetail.view.fragment.HipsterDetailFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>

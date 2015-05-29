@@ -19,7 +19,10 @@ package com.karumi.rosie.view.fragment;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import butterknife.ButterKnife;
 import com.karumi.rosie.domain.usecase.error.Error;
 import com.karumi.rosie.view.activity.RosieActivity;
@@ -54,6 +57,12 @@ public abstract class RosieFragment extends Fragment implements ErrorView, Rosie
   @Override public void onAttach(Activity activity) {
     super.onAttach(activity);
     injectDependencies();
+  }
+
+  @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    int layoutId = getLayoutId();
+    return inflater.inflate(layoutId, container, false);
   }
 
   /**
@@ -102,6 +111,11 @@ public abstract class RosieFragment extends Fragment implements ErrorView, Rosie
   protected boolean shouldInjectFragment() {
     return true;
   }
+
+  /**
+   * Returns the layout id associated to the layout used in the activity.
+   */
+  protected abstract int getLayoutId();
 
   protected void registerPresenter(RosiePresenter presenter) {
     presenterLifeCycleLinker.registerPresenter(presenter);
