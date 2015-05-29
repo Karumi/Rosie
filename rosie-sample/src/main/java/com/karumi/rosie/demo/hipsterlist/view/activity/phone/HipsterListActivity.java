@@ -62,11 +62,6 @@ public class HipsterListActivity extends RosieActivity implements HipsterListPre
     updateHipstersAdapter(hipsters);
   }
 
-  @OnItemClick(R.id.lv_feed) void onHipsterClicked(int position) {
-    Hipster hipster = hipstersAdapter.getItem(position);
-    HipsterDetailActivity.open(this, hipster);
-  }
-
   private void updateHipstersAdapter(List<Hipster> hipsters) {
     if (hipstersAdapter == null) {
       transformationAvatar = new RoundAvatarTransformation();

@@ -7,8 +7,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.InjectView;
-import com.demo.rosie.R;
+import butterknife.OnClick;
+import com.karumi.rosie.demo.R;
 import com.karumi.rosie.demo.base.view.transformation.RoundAvatarTransformation;
+import com.karumi.rosie.demo.hipsterdetail.view.activity.HipsterDetailActivity;
 import com.karumi.rosie.demo.hipsterlist.view.model.Hipster;
 import com.squareup.picasso.Picasso;
 
@@ -37,8 +39,14 @@ public class HipsterRenderer extends RosieRenderer<Hipster> {
     renderHipsterName(hipster.getName());
   }
 
+  @OnClick(R.id.rl_container) public void onHipsterClicked() {
+    Hipster hipster = getContent();
+    HipsterDetailActivity.open(context, hipster);
+  }
+
   private void renderHipsterAvatar(String avatarUrl) {
-    Picasso.with(context).load(avatarUrl)
+    Picasso.with(context)
+        .load(avatarUrl)
         .fit()
         .centerCrop()
         .placeholder(R.drawable.placeholder)
