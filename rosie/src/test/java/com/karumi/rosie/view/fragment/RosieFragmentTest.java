@@ -16,6 +16,8 @@
 
 package com.karumi.rosie.view.fragment;
 
+import android.os.Bundle;
+import android.view.View;
 import com.karumi.rosie.RobolectricTest;
 import com.karumi.rosie.doubles.FakeActivity;
 import com.karumi.rosie.view.presenter.RosiePresenter;
@@ -28,45 +30,43 @@ import static org.mockito.Mockito.verify;
 
 public class RosieFragmentTest extends RobolectricTest {
 
-  @Test public void shouldCallInitializePresenterWhenFragmentCreate() {
+  private static final Bundle ANY_SAVED_INSTANCE = mock(Bundle.class);
+  private static final View ANY_VIEW = mock(View.class);
 
-    TestFragment testFragment = new TestFragment();
-    FragmentTestUtil.startFragment(testFragment, FakeActivity.class);
+  @Test public void shouldCallInitializePresenterAfterOnViewCreatedMethod() {
+    TestFragment testFragment = startFragment();
+
+    testFragment.onViewCreated(ANY_VIEW, ANY_SAVED_INSTANCE);
 
     verify(testFragment.presenter).initialize();
   }
 
   @Test public void shouldCallUpdatePresenterWhenFragmentResume() {
+    TestFragment testFragment = startFragment();
 
-    TestFragment testFragment = new TestFragment();
-    FragmentTestUtil.startFragment(testFragment, FakeActivity.class);
-
-    verify(testFragment.presenter).initialize();
     verify(testFragment.presenter).update();
   }
 
   @Test public void shouldCallPausePresenterWhenFragmentPause() {
+    TestFragment testFragment = startFragment();
 
-    TestFragment testFragment = new TestFragment();
-    FragmentTestUtil.startFragment(testFragment, FakeActivity.class);
     testFragment.onPause();
 
-    verify(testFragment.presenter).initialize();
-    verify(testFragment.presenter).update();
     verify(testFragment.presenter).pause();
   }
 
   @Test public void shouldCallDestroyPresenterWhenFragmentDestroy() {
+    TestFragment testFragment = startFragment();
 
-    TestFragment testFragment = new TestFragment();
-    FragmentTestUtil.startFragment(testFragment, FakeActivity.class);
-    testFragment.onPause();
     testFragment.onDestroy();
 
-    verify(testFragment.presenter).initialize();
-    verify(testFragment.presenter).update();
-    verify(testFragment.presenter).pause();
     verify(testFragment.presenter).destroy();
+  }
+
+  private TestFragment startFragment() {
+    TestFragment testFragment = new TestFragment();
+    FragmentTestUtil.startFragment(testFragment, FakeActivity.class);
+    return testFragment;
   }
 
   public static class TestFragment extends RosieFragment {

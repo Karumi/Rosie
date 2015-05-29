@@ -25,8 +25,8 @@ import dagger.Module;
 @Module(
     library = true,
     complete = false,
-    injects = { HipsterListActivity.class }
-)
-public class HipsterListViewModule {
+    injects = {
+        HipsterListActivity.class
+    }) public class HipsterListViewModule {
 
 }

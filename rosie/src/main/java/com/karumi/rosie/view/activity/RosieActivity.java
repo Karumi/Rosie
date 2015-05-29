@@ -137,13 +137,15 @@ public class RosieActivity extends FragmentActivity implements ErrorView, RosieP
   }
 
   private void injectActivityModules() {
-    RosieApplication rosieApplication = (RosieApplication) getApplication();
-    List<Object> activityScopeModules = getActivityScopeModules();
-    if (activityScopeModules == null && shouldInjectActivity()) {
-      activityScopeModules = Collections.EMPTY_LIST;
-    }
+    if (shouldInjectActivity()) {
+      RosieApplication rosieApplication = (RosieApplication) getApplication();
+      List<Object> activityScopeModules = getActivityScopeModules();
+      if (activityScopeModules == null) {
+        activityScopeModules = Collections.EMPTY_LIST;
+      }
 
-    activityScopeGraph = rosieApplication.plusGraph(activityScopeModules);
-    inject(this);
+      activityScopeGraph = rosieApplication.plusGraph(activityScopeModules);
+      inject(this);
+    }
   }
 }
