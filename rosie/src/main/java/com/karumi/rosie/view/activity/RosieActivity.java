@@ -51,9 +51,9 @@ public abstract class RosieActivity extends FragmentActivity
     injectActivityModules();
     presenterLifeCycleLinker.addAnnotatedPresenter(getClass().getDeclaredFields(), this);
     ButterKnife.inject(this);
-    presenterLifeCycleLinker.initializePresenters();
     presenterLifeCycleLinker.setView(this);
     presenterLifeCycleLinker.setErrorView(this);
+    presenterLifeCycleLinker.initializePresenters();
   }
 
   /**
