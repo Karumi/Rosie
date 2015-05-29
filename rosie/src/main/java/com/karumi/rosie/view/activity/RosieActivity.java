@@ -46,9 +46,9 @@ public abstract class RosieActivity extends FragmentActivity
    */
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    injectActivityModules();
     int layoutId = getLayoutId();
     setContentView(layoutId);
-    injectActivityModules();
     presenterLifeCycleLinker.addAnnotatedPresenter(getClass().getDeclaredFields(), this);
     ButterKnife.inject(this);
     presenterLifeCycleLinker.setView(this);
