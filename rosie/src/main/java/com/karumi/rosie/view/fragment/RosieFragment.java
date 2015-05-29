@@ -62,7 +62,9 @@ public abstract class RosieFragment extends Fragment implements ErrorView, Rosie
   @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     int layoutId = getLayoutId();
-    return inflater.inflate(layoutId, container, false);
+    View view = inflater.inflate(layoutId, container, false);
+    ButterKnife.inject(this, view);
+    return view;
   }
 
   /**
@@ -70,7 +72,6 @@ public abstract class RosieFragment extends Fragment implements ErrorView, Rosie
    */
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    ButterKnife.inject(this, view);
     presenterLifeCycleLinker.setView(this);
     presenterLifeCycleLinker.setErrorView(this);
     presenterLifeCycleLinker.initializePresenters();
