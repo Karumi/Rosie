@@ -53,7 +53,16 @@ public abstract class RosieActivity extends FragmentActivity
     ButterKnife.inject(this);
     presenterLifeCycleLinker.setView(this);
     presenterLifeCycleLinker.setErrorView(this);
+    onPreparePresenter();
     presenterLifeCycleLinker.initializePresenters();
+  }
+
+  /**
+   * Called before to initialize all the presenter instances linked to the component lifecycle.
+   * Override this method to configure your presenter with extra data if needed.
+   */
+  protected void onPreparePresenter() {
+
   }
 
   /**
