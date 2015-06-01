@@ -17,19 +17,21 @@
 package com.karumi.rosie.demo.hipsterlist.view.activity.phone;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.widget.ListView;
 import butterknife.InjectView;
-import butterknife.OnItemClick;
 import com.karumi.rosie.demo.R;
 import com.karumi.rosie.demo.base.view.transformation.RoundAvatarTransformation;
-import com.karumi.rosie.demo.hipsterdetail.view.activity.HipsterDetailActivity;
 import com.karumi.rosie.demo.hipsterlist.domain.HipsterListDomainModule;
 import com.karumi.rosie.demo.hipsterlist.view.HipsterListViewModule;
-import com.karumi.rosie.demo.hipsterlist.view.adapter.HipstersAdapter;
 import com.karumi.rosie.demo.hipsterlist.view.model.Hipster;
 import com.karumi.rosie.demo.hipsterlist.view.presenter.HipsterListPresenter;
+import com.karumi.rosie.demo.hipsterlist.view.renderer.HipsterRendererBuilder;
 import com.karumi.rosie.view.activity.RosieActivity;
 import com.karumi.rosie.view.presenter.annotation.Presenter;
+import com.pedrogomez.renderers.ListAdapteeCollection;
+import com.pedrogomez.renderers.RendererAdapter;
+import com.pedrogomez.renderers.RendererBuilder;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 import java.util.Arrays;
@@ -47,7 +49,7 @@ public class HipsterListActivity extends RosieActivity implements HipsterListPre
 
   @InjectView(R.id.lv_feed) ListView listViewFeed;
 
-  private HipstersAdapter hipstersAdapter;
+  private RendererAdapter<Hipster> hipstersAdapter;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     setContentView(R.layout.activity_hipster_list);
@@ -58,16 +60,11 @@ public class HipsterListActivity extends RosieActivity implements HipsterListPre
     updateHipstersAdapter(hipsters);
   }
 
-  @OnItemClick(R.id.lv_feed) void onHipsterClicked(int position) {
-    Hipster hipster = hipstersAdapter.getItem(position);
-    HipsterDetailActivity.open(this, hipster);
-  }
-
   private void updateHipstersAdapter(List<Hipster> hipsters) {
     if (hipstersAdapter == null) {
       transformationAvatar = new RoundAvatarTransformation();
-      hipstersAdapter =
-          new HipstersAdapter(getBaseContext(), hipsters, picasso, transformationAvatar);
+      initializeAdapter(hipsters);
+
       listViewFeed.setAdapter(hipstersAdapter);
     } else {
       hipstersAdapter.notifyDataSetChanged();
@@ -76,5 +73,12 @@ public class HipsterListActivity extends RosieActivity implements HipsterListPre
 
   @Override protected List<Object> getActivityScopeModules() {
     return Arrays.asList(new HipsterListViewModule(), new HipsterListDomainModule());
+  }
+
+  private void initializeAdapter(List<Hipster> hipsters) {
+    LayoutInflater layoutInflater = getLayoutInflater();
+    ListAdapteeCollection<Hipster> adapteeCollection = new ListAdapteeCollection<>(hipsters);
+    RendererBuilder<Hipster> rendererBuilder = new HipsterRendererBuilder(this);
+    hipstersAdapter = new RendererAdapter(layoutInflater, rendererBuilder, adapteeCollection);
   }
 }

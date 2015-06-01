@@ -14,40 +14,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-apply plugin: 'com.android.library'
-apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
+package com.karumi.rosie.demo.hipsterlist.view.renderer;
 
-android {
-  compileSdkVersion 22
-  buildToolsVersion "22.0.1"
+import android.view.View;
+import butterknife.ButterKnife;
+import com.pedrogomez.renderers.Renderer;
 
-  defaultConfig {
-    minSdkVersion 14
-    targetSdkVersion 22
+/**
+ * Renderer extension create to provide Butter Knife view injection in a transparent way. Your
+ * Renderer classes should extend from this one to be able tu use Butter Knife annotations.
+ * Remember
+ * to call supper in you overriden render method.
+ */
+public abstract class RosieRenderer<T> extends Renderer<T> {
+
+  @Override public void render() {
+    ButterKnife.inject(this, getRootView());
+  }
+
+  @Override protected void setUpView(View view) {
+
+  }
+
+  @Override protected void hookListeners(View view) {
+
   }
 }
-
-dependencies {
-  compile 'com.android.support:appcompat-v7:22.0.0'
-
-  provided 'com.squareup.dagger:dagger-compiler:1.2.2'
-
-  compile 'com.squareup.dagger:dagger:1.2.2'
-  compile 'com.birbit:android-priority-jobqueue:1.3.1'
-  compile 'com.jakewharton:butterknife:6.1.0'
-  compile 'com.github.pedrovgs:renderers:2.0.0'
-
-  testCompile 'junit:junit:4.12'
-  testCompile 'org.mockito:mockito-all:1.9.5'
-  testCompile 'org.robolectric:robolectric:2.4'
-}
-
-task checkstyle(type: Checkstyle) {
-  configFile file('../config/checkstyle/checkstyle.xml')
-  source 'src'
-  include '**/*.java'
-  exclude '**/gen/**'
-
-  classpath = files()
-}
-
