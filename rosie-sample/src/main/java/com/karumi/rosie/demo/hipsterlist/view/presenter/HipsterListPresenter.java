@@ -43,7 +43,7 @@ public class HipsterListPresenter extends RosiePresenter<HipsterListPresenter.Vi
     this.obtainHipsters = obtainHipsters;
   }
 
-  @Override public void update() {
+  @Override public void initialize() {
     loadHipsters();
   }
 

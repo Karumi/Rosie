@@ -14,53 +14,63 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.demo.hipsterdetail.view.fragment;
+package com.karumi.rosie.demo.hipsterlist.view.renderer;
 
-import android.os.Bundle;
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import com.karumi.rosie.demo.R;
+import com.karumi.rosie.demo.base.view.transformation.RoundAvatarTransformation;
+import com.karumi.rosie.demo.hipsterdetail.view.activity.HipsterDetailActivity;
 import com.karumi.rosie.demo.hipsterlist.view.model.Hipster;
-import com.karumi.rosie.view.fragment.RosieFragment;
 import com.squareup.picasso.Picasso;
 
 /**
- * RosieFragment extension created to show detailed information related to a Hipster instance
- * passed as argument.
+ * Renderer extension created to render Hipster instances into a ListView or RecyclerView
  */
-public class HipsterDetailFragment extends RosieFragment {
+public class HipsterRenderer extends RosieRenderer<Hipster> {
 
-  public static final String HIPSTER_EXTRA_KEY = "HipsterDetailFragment.hipsterKey";
+  private final Context context;
 
   @InjectView(R.id.iv_avatar) ImageView hipsterAvatarView;
   @InjectView(R.id.tv_hipster_name) TextView hipsterNameView;
 
-  @Override public void onViewCreated(View view, Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    Hipster hipster = getHipster();
-    showHipsterPhoto(hipster.getAvatarUrl());
-    showHipsterName(hipster.getName());
+  public HipsterRenderer(Context context) {
+    this.context = context;
   }
 
-  private void showHipsterPhoto(String avatarUrl) {
-    Picasso.with(getActivity()).load(avatarUrl).into(hipsterAvatarView);
+  @Override protected View inflate(LayoutInflater layoutInflater, ViewGroup viewGroup) {
+    return layoutInflater.inflate(R.layout.row_hipster, viewGroup, false);
   }
 
-  private void showHipsterName(String name) {
+  @Override public void render() {
+    super.render();
+    Hipster hipster = getContent();
+    renderHipsterAvatar(hipster.getAvatarUrl());
+    renderHipsterName(hipster.getName());
+  }
+
+  @OnClick(R.id.rl_container) public void onHipsterClicked() {
+    Hipster hipster = getContent();
+    HipsterDetailActivity.open(context, hipster);
+  }
+
+  private void renderHipsterAvatar(String avatarUrl) {
+    Picasso.with(context)
+        .load(avatarUrl)
+        .fit()
+        .centerCrop()
+        .placeholder(R.drawable.placeholder)
+        .transform(new RoundAvatarTransformation())
+        .into(hipsterAvatarView);
+  }
+
+  private void renderHipsterName(String name) {
     hipsterNameView.setText(name);
-  }
-
-  @Override protected boolean shouldInjectFragment() {
-    return false;
-  }
-
-  @Override protected int getLayoutId() {
-    return R.layout.fragment_hipster_detail;
-  }
-
-  private Hipster getHipster() {
-    return (Hipster) getArguments().get(HIPSTER_EXTRA_KEY);
   }
 }

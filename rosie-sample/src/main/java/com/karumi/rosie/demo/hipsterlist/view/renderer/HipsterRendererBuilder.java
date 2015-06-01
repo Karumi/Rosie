@@ -14,40 +14,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-apply plugin: 'com.android.library'
-apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
+package com.karumi.rosie.demo.hipsterlist.view.renderer;
 
-android {
-  compileSdkVersion 22
-  buildToolsVersion "22.0.1"
+import android.content.Context;
+import com.karumi.rosie.demo.hipsterlist.view.model.Hipster;
+import com.pedrogomez.renderers.Renderer;
+import com.pedrogomez.renderers.RendererBuilder;
+import java.util.ArrayList;
+import java.util.Collection;
 
-  defaultConfig {
-    minSdkVersion 14
-    targetSdkVersion 22
+/**
+ * RendererBuilder extension created to map Hipster instances to the Renderer used to render the
+ * Hipster information into a ListView or RecyclerView.
+ */
+public class HipsterRendererBuilder extends RendererBuilder<Hipster> {
+
+  private final Context context;
+
+  public HipsterRendererBuilder(Context context) {
+    this.context = context;
+    initializePrototypes();
+  }
+
+  private void initializePrototypes() {
+    Collection<Renderer<Hipster>> prototypes = new ArrayList<>();
+    prototypes.add(new HipsterRenderer(context));
+    setPrototypes(prototypes);
+  }
+
+  @Override protected Class getPrototypeClass(Hipster hipster) {
+    return HipsterRenderer.class;
   }
 }
-
-dependencies {
-  compile 'com.android.support:appcompat-v7:22.0.0'
-
-  provided 'com.squareup.dagger:dagger-compiler:1.2.2'
-
-  compile 'com.squareup.dagger:dagger:1.2.2'
-  compile 'com.birbit:android-priority-jobqueue:1.3.1'
-  compile 'com.jakewharton:butterknife:6.1.0'
-  compile 'com.github.pedrovgs:renderers:2.0.0'
-
-  testCompile 'junit:junit:4.12'
-  testCompile 'org.mockito:mockito-all:1.9.5'
-  testCompile 'org.robolectric:robolectric:2.4'
-}
-
-task checkstyle(type: Checkstyle) {
-  configFile file('../config/checkstyle/checkstyle.xml')
-  source 'src'
-  include '**/*.java'
-  exclude '**/gen/**'
-
-  classpath = files()
-}
-

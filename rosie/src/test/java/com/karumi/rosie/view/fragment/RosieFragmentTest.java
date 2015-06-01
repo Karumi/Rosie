@@ -32,11 +32,10 @@ public class RosieFragmentTest extends RobolectricTest {
 
   private static final Bundle ANY_SAVED_INSTANCE = mock(Bundle.class);
   private static final View ANY_VIEW = mock(View.class);
+  private static final int ANY_LAYOUT = android.R.layout.list_content;
 
   @Test public void shouldCallInitializePresenterAfterOnViewCreatedMethod() {
     TestFragment testFragment = startFragment();
-
-    testFragment.onViewCreated(ANY_VIEW, ANY_SAVED_INSTANCE);
 
     verify(testFragment.presenter).initialize();
   }
@@ -74,6 +73,10 @@ public class RosieFragmentTest extends RobolectricTest {
     @Presenter RosiePresenter presenter = mock(RosiePresenter.class);
 
     public TestFragment() {
+    }
+
+    @Override protected int getLayoutId() {
+      return ANY_LAYOUT;
     }
   }
 }
