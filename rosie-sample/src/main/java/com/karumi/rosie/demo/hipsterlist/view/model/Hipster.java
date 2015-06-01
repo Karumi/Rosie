@@ -16,7 +16,9 @@
 
 package com.karumi.rosie.demo.hipsterlist.view.model;
 
-public class Hipster {
+import java.io.Serializable;
+
+public class Hipster implements Serializable {
   private String id;
   private String name;
   private String avatarUrl;
