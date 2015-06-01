@@ -74,7 +74,16 @@ public abstract class RosieFragment extends Fragment implements ErrorView, Rosie
     super.onViewCreated(view, savedInstanceState);
     presenterLifeCycleLinker.setView(this);
     presenterLifeCycleLinker.setErrorView(this);
+    onPreparePresenter();
     presenterLifeCycleLinker.initializePresenters();
+  }
+
+  /**
+   * Called before to initialize all the presenter instances linked to the component lifecycle.
+   * Override this method to configure your presenter with extra data if needed.
+   */
+  protected void onPreparePresenter() {
+
   }
 
   /**
