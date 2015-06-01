@@ -14,23 +14,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.demo.base.application;
+package com.karumi.rosie.daggerutils;
 
-import android.content.Context;
-import com.karumi.rosie.daggerutils.ForApplication;
-import com.squareup.picasso.Picasso;
-import dagger.Module;
-import dagger.Provides;
-import javax.inject.Singleton;
+import java.lang.annotation.Retention;
+import javax.inject.Qualifier;
 
-/**
- *
- */
-@Module(library = true,
-    complete = false,
-    injects = { DemoApplication.class }) public class GlobalDemoAndroidModule {
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-  @Provides @Singleton public Picasso providePicasso(@ForApplication Context context) {
-    return Picasso.with(context);
-  }
+@Qualifier @Retention(RUNTIME)
+public @interface ForActivity {
+
 }
