@@ -39,7 +39,6 @@ dependencies {
   testCompile 'junit:junit:4.12'
   testCompile 'org.mockito:mockito-all:1.9.5'
   testCompile 'org.robolectric:robolectric:2.4'
-
 }
 
 task checkstyle(type: Checkstyle) {
