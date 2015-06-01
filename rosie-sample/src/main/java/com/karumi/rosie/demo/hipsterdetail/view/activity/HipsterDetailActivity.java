@@ -31,16 +31,8 @@ import com.karumi.rosie.view.activity.RosieActivity;
  */
 public class HipsterDetailActivity extends RosieActivity {
 
-  @Override protected void onCreate(Bundle savedInstanceState) {
-    setContentView(R.layout.activity_hipster_detail);
-    super.onCreate(savedInstanceState);
-    if (savedInstanceState == null) {
-      Fragment fragment = new HipsterDetailFragment();
-      fragment.setArguments(getIntent().getExtras());
-
-      FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-      fragmentTransaction.add(R.id.fragment_container, fragment).commit();
-    }
+  @Override protected int getLayoutId() {
+    return R.layout.activity_hipster_detail;
   }
 
   public static void open(Context context, Hipster hipster) {

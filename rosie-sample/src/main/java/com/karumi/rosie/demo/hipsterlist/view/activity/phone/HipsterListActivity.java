@@ -51,8 +51,11 @@ public class HipsterListActivity extends RosieActivity implements HipsterListPre
 
   private RendererAdapter<Hipster> hipstersAdapter;
 
+  @Override protected int getLayoutId() {
+    return R.layout.activity_hipster_list;
+  }
+
   @Override protected void onCreate(Bundle savedInstanceState) {
-    setContentView(R.layout.activity_hipster_list);
     super.onCreate(savedInstanceState);
   }
 
