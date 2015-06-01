@@ -22,7 +22,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
   }
 
   /**
-   * First method called in the presenter lifecycle. Invoked when the component containing the
+   * Method called in the presenter lifecycle. Invoked when the component containing the
    * presenter is initialized.
    */
   public void initialize() {
@@ -30,7 +30,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
   }
 
   /**
-   * Second method called in the presenter lifecycle. Invoked when the component containing the
+   * Method called in the presenter lifecycle. Invoked when the component containing the
    * presenter is resumed.
    */
   public void update() {
@@ -40,7 +40,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
   }
 
   /**
-   * Third method called in the presenter lifecycle. Invoked when the component containing the
+   * Method called in the presenter lifecycle. Invoked when the component containing the
    * presenter is paused.
    */
   public void pause() {
@@ -50,7 +50,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
   }
 
   /**
-   * Fourth method called in the presenter lifecycle. Invoked when the component containing the
+   * Method called in the presenter lifecycle. Invoked when the component containing the
    * presenter is destroyed.
    */
   public void destroy() {

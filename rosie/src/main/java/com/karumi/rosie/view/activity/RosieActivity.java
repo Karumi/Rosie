@@ -23,12 +23,12 @@ import android.view.ViewGroup;
 import butterknife.ButterKnife;
 import com.karumi.rosie.application.RosieApplication;
 import com.karumi.rosie.domain.usecase.error.Error;
+import com.karumi.rosie.module.RosieActivityModule;
 import com.karumi.rosie.view.presenter.PresenterLifeCycleLinker;
 import com.karumi.rosie.view.presenter.RosiePresenter;
 import com.karumi.rosie.view.presenter.view.ErrorView;
 import dagger.ObjectGraph;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -137,15 +137,15 @@ public class RosieActivity extends FragmentActivity implements ErrorView, RosieP
   }
 
   private void injectActivityModules() {
-    if (shouldInjectActivity()) {
-      RosieApplication rosieApplication = (RosieApplication) getApplication();
-      List<Object> activityScopeModules = getActivityScopeModules();
-      if (activityScopeModules == null) {
-        activityScopeModules = Collections.EMPTY_LIST;
-      }
-
-      activityScopeGraph = rosieApplication.plusGraph(activityScopeModules);
-      inject(this);
+    RosieApplication rosieApplication = (RosieApplication) getApplication();
+    List<Object> additionalModules = getActivityScopeModules();
+    if (additionalModules == null && shouldInjectActivity()) {
+      additionalModules = new ArrayList<Object>();
     }
+    List<Object> activityScopeModules = new ArrayList<Object>();
+    activityScopeModules.add(new RosieActivityModule(this));
+    activityScopeModules.addAll(additionalModules);
+    activityScopeGraph = rosieApplication.plusGraph(activityScopeModules);
+    inject(this);
   }
 }
