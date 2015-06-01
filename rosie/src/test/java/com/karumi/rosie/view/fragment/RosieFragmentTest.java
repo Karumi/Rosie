@@ -30,8 +30,6 @@ import static org.mockito.Mockito.verify;
 
 public class RosieFragmentTest extends RobolectricTest {
 
-  private static final Bundle ANY_SAVED_INSTANCE = mock(Bundle.class);
-  private static final View ANY_VIEW = mock(View.class);
   private static final int ANY_LAYOUT = android.R.layout.list_content;
 
   @Test public void shouldCallInitializePresenterAfterOnViewCreatedMethod() {
