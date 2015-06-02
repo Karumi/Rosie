@@ -16,8 +16,6 @@
 
 package com.karumi.rosie.view.fragment;
 
-import android.os.Bundle;
-import android.view.View;
 import com.karumi.rosie.RobolectricTest;
 import com.karumi.rosie.doubles.FakeActivity;
 import com.karumi.rosie.view.presenter.RosiePresenter;
