@@ -14,7 +14,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.demo.hipsterlist.view.renderer;
+package com.karumi.rosie.renderer;
 
 import android.view.View;
 import butterknife.ButterKnife;

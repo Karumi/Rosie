@@ -28,6 +28,7 @@ import com.karumi.rosie.demo.R;
 import com.karumi.rosie.demo.base.view.transformation.RoundAvatarTransformation;
 import com.karumi.rosie.demo.hipsterdetail.view.activity.HipsterDetailActivity;
 import com.karumi.rosie.demo.hipsterlist.view.model.Hipster;
+import com.karumi.rosie.renderer.RosieRenderer;
 import com.squareup.picasso.Picasso;
 
 /**
