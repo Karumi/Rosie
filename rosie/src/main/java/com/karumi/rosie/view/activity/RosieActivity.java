@@ -130,13 +130,15 @@ public abstract class RosieActivity extends FragmentActivity
   private void injectActivityModules() {
     RosieApplication rosieApplication = (RosieApplication) getApplication();
     List<Object> additionalModules = getActivityScopeModules();
-    if (additionalModules == null && shouldInjectActivity()) {
+    if (additionalModules == null) {
       additionalModules = new ArrayList<Object>();
     }
     List<Object> activityScopeModules = new ArrayList<Object>();
     activityScopeModules.add(new RosieActivityModule(this));
     activityScopeModules.addAll(additionalModules);
     activityScopeGraph = rosieApplication.plusGraph(activityScopeModules);
-    inject(this);
+    if (shouldInjectActivity()) {
+      inject(this);
+    }
   }
 }
