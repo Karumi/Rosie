@@ -17,9 +17,9 @@
 package com.karumi.rosie.domain.usecase.error;
 
 /**
- * This callback must be invoked when an error happens inside of a use case.
+ * Callback invoked when an error happens inside of a use case.
  */
-public interface UseCaseErrorCallback<T extends Error> {
+public interface OnErrorCallback<T extends Error> {
   void onError(T error);
 }
 

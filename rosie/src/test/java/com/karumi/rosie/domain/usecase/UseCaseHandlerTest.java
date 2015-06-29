@@ -22,7 +22,7 @@ import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
 import com.karumi.rosie.domain.usecase.error.Error;
 import com.karumi.rosie.domain.usecase.error.ErrorHandler;
 import com.karumi.rosie.domain.usecase.error.ErrorNotHandledException;
-import com.karumi.rosie.domain.usecase.error.UseCaseErrorCallback;
+import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 import com.karumi.rosie.doubles.NetworkError;
 import com.karumi.rosie.testutils.FakeScheduler;
 import java.util.ArrayList;
@@ -211,7 +211,7 @@ public class UseCaseHandlerTest {
     FakeScheduler taskScheduler = new FakeScheduler();
     ErrorUseCase errorUseCase = new ErrorUseCase();
     UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
-    UseCaseErrorCallback errorCallback = spy(useCaseErrorCallback);
+    OnErrorCallback errorCallback = spy(onErrorCallback);
     UseCaseParams useCaseParams =
         new UseCaseParams.Builder().useCaseName("customError").onError(errorCallback).build();
 
@@ -262,13 +262,13 @@ public class UseCaseHandlerTest {
     verify(errorHandler).notifyError(any(Exception.class));
   }
 
-  private UseCaseErrorCallback useCaseErrorCallback = new UseCaseErrorCallback<Error>() {
+  private OnErrorCallback onErrorCallback = new OnErrorCallback<Error>() {
 
     @Override public void onError(Error error) {
     }
   };
 
-  private UseCaseErrorCallback specificErrorCallback = new UseCaseErrorCallback<NetworkError>() {
+  private OnErrorCallback specificErrorCallback = new OnErrorCallback<NetworkError>() {
 
     @Override public void onError(NetworkError error) {
     }
