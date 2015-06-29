@@ -20,7 +20,7 @@ package com.karumi.rosie.domain.usecase.error;
  * This is an exception that contains a domain error that has been sended but not received for the
  * error callback, and send it to the generic error handler.
  */
-public class ErrorNotHandledException extends Exception {
+public class ErrorNotHandledException extends RuntimeException {
   private final Error error;
 
   public ErrorNotHandledException(Error error) {

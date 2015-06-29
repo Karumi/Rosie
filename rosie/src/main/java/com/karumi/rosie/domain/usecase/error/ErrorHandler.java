@@ -25,6 +25,7 @@ public class ErrorHandler {
   private List<UseCaseErrorCallback> errorCallbacks = new ArrayList<>();
 
   public ErrorHandler() {
+    this.errorFactory = new ErrorFactory();
   }
 
   public void setErrorFactory(ErrorFactory errorFactory) {

@@ -20,7 +20,7 @@ import com.karumi.rosie.domain.usecase.error.ErrorHandler;
 import java.lang.reflect.Method;
 
 /**
- * This class envolve the use case for invoke it.
+ * This class wrap the use case for invoke it.
  */
 public class UseCaseWrapper {
   private final RosieUseCase useCase;
