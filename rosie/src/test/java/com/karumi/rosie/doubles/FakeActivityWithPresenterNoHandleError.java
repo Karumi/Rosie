@@ -18,7 +18,6 @@ package com.karumi.rosie.doubles;
 
 import android.os.Bundle;
 import com.karumi.rosie.TestModule;
-import com.karumi.rosie.domain.usecase.error.Error;
 import com.karumi.rosie.view.activity.RosieActivity;
 import com.karumi.rosie.view.presenter.annotation.Presenter;
 import java.util.Arrays;

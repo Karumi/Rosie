@@ -18,7 +18,6 @@ package com.karumi.rosie.domain.usecase;
 
 import com.karumi.rosie.domain.usecase.annotation.Success;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
-import com.karumi.rosie.domain.usecase.error.Error;
 import com.karumi.rosie.domain.usecase.error.ErrorNotHandledException;
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 import java.lang.reflect.Method;

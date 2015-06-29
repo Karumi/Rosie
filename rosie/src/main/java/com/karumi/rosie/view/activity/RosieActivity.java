@@ -20,7 +20,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import butterknife.ButterKnife;
 import com.karumi.rosie.application.RosieApplication;
-import com.karumi.rosie.domain.usecase.error.Error;
 import com.karumi.rosie.module.RosieActivityModule;
 import com.karumi.rosie.view.presenter.PresenterLifeCycleLinker;
 import com.karumi.rosie.view.presenter.RosiePresenter;
