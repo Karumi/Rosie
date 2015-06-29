@@ -24,8 +24,6 @@ import com.karumi.rosie.domain.usecase.UseCaseWrapper;
  */
 public class FakeScheduler implements TaskScheduler {
 
-  private static final String TAG = "TestScheduler";
-
   @Override public void execute(UseCaseWrapper useCaseWrapper) {
     try {
       useCaseWrapper.execute();

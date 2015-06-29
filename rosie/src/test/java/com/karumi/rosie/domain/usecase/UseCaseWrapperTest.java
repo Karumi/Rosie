@@ -16,15 +16,15 @@
 
 package com.karumi.rosie.domain.usecase;
 
+import com.karumi.rosie.UnitTest;
 import com.karumi.rosie.domain.usecase.annotation.UseCase;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class UseCaseWrapperTest {
+public class UseCaseWrapperTest extends UnitTest {
 
-  @Test
-  public void testExecuteWithArgs() throws Exception {
+  @Test public void testExecuteWithArgs() throws Exception {
     AnyUseCase anyUseCase = new AnyUseCase();
     UseCaseParams argsParams = new UseCaseParams.Builder().args("anyValue", 2).build();
 
@@ -44,8 +44,7 @@ public class UseCaseWrapperTest {
     AnyUseCase() {
     }
 
-    @UseCase
-    public void methodWithArgs(String arg1, int arg2) {
+    @UseCase public void methodWithArgs(String arg1, int arg2) {
       this.arg1 = arg1;
       this.arg2 = arg2;
     }

@@ -14,40 +14,18 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.view.presenter;
+package com.karumi.rosie;
 
-import com.karumi.rosie.UnitTest;
-import com.karumi.rosie.domain.usecase.RosieUseCase;
-import com.karumi.rosie.domain.usecase.UseCaseHandler;
-import com.karumi.rosie.domain.usecase.UseCaseParams;
-import org.junit.Test;
-import org.mockito.Mock;
+import org.junit.Before;
+import org.mockito.MockitoAnnotations;
 
-import static org.mockito.Mockito.verify;
+/**
+ * Base test case created to perform some common operations like initialize the mocking framework
+ * before each test. Every unit test in this repository should extend from this class.
+ */
+public class UnitTest {
 
-public class RosiePresenterTest extends UnitTest {
-
-  @Mock private UseCaseHandler useCaseHandler;
-  @Mock private RosieUseCase anyUseCase;
-  @Mock private UseCaseParams anyUseCaseParams;
-
-  @Test public void shouldExecuteUseCaseUsingTheUseCaseHandler() {
-    RosiePresenter rosiePresenter = givenARosiePresenter();
-
-    rosiePresenter.execute(anyUseCase);
-
-    verify(useCaseHandler).execute(anyUseCase);
-  }
-
-  @Test public void shouldExecuteUseCaseWithUseCaseParamsUsingTheUseCaseHandler() {
-    RosiePresenter rosiePresenter = givenARosiePresenter();
-
-    rosiePresenter.execute(anyUseCase, anyUseCaseParams);
-
-    verify(useCaseHandler).execute(anyUseCase, anyUseCaseParams);
-  }
-
-  private RosiePresenter givenARosiePresenter() {
-    return new RosiePresenter(useCaseHandler);
+  @Before public void setUpMockitoAnnotations() {
+    MockitoAnnotations.initMocks(this);
   }
 }

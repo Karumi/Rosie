@@ -16,23 +16,18 @@
 
 package com.karumi.rosie.view.presenter;
 
+import com.karumi.rosie.UnitTest;
 import com.karumi.rosie.view.presenter.view.ErrorView;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class PresenterLifeCycleLinkerTest {
+public class PresenterLifeCycleLinkerTest extends UnitTest {
 
   @Mock RosiePresenter anyPresenter1;
   @Mock RosiePresenter anyPresenter2;
-
-  @Before public void setUp() {
-    MockitoAnnotations.initMocks(this);
-  }
 
   @Test public void shouldCallAllRegisteredPresentersAreCalledWhenInitializeIsCalled() {
     PresenterLifeCycleLinker presenterLifeCycleLinker =
