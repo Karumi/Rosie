@@ -48,12 +48,11 @@ public class RosieUseCase {
    * return the response to the UI Thread.
    */
   protected void notifySuccess(Object... values) {
-
     Method[] methodsArray = onSuccess.getClass().getMethods();
     if (methodsArray.length > 0) {
       Method methodToInvoke =
           UseCaseFilter.filterValidMethodArgs(values, methodsArray, Success.class);
-      invokeMethodInTheUIThread(methodToInvoke, values);
+      invokeMethodInTheCallbackScheduler(methodToInvoke, values);
     }
   }
 
@@ -89,7 +88,8 @@ public class RosieUseCase {
     this.useCaseErrorCallback = useCaseErrorCallback;
   }
 
-  private void invokeMethodInTheUIThread(final Method methodToInvoke, final Object[] values) {
+  private void invokeMethodInTheCallbackScheduler(final Method methodToInvoke,
+      final Object[] values) {
     getCallbackScheduler().post(new Runnable() {
       @Override public void run() {
         try {
