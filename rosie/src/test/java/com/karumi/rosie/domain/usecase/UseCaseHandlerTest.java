@@ -221,8 +221,7 @@ public class UseCaseHandlerTest extends UnitTest {
   }
 
   @Test
-  public void
-  shouldCallErrorHandlerErrorWhenUseCaseInvokeAnErrorAndTheCallbackDontHandleThisKindOfMethod() {
+  public void shouldCallErrorHandlerErrorWhenUseCaseInvokeAnErrorAndTheCallbackDontHandleThisKindOfMethod() {
     FakeScheduler taskScheduler = new FakeScheduler();
     ErrorUseCase errorUseCase = new ErrorUseCase();
     ErrorHandler errorHandler = mock(ErrorHandler.class);

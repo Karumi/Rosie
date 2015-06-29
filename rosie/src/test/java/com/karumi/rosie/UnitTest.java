@@ -20,7 +20,7 @@ import org.junit.Before;
 import org.mockito.MockitoAnnotations;
 
 /**
- * Base test case created to perform some common operations like initialize the mocking framework
+ * Base test class created to perform some common operations like initialize the mocking framework
  * before each test. Every unit test in this repository should extend from this class.
  */
 public class UnitTest {
