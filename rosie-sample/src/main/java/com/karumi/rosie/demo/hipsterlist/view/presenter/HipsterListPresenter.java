@@ -50,8 +50,7 @@ public class HipsterListPresenter extends RosiePresenter<HipsterListPresenter.Vi
   private void loadHipsters() {
     UseCaseParams params = new UseCaseParams.Builder().onSuccess(successCallback).build();
 
-    UseCaseHandler useCaseHandler = getUseCaseHandler();
-    useCaseHandler.execute(obtainHipsters, params);
+    execute(obtainHipsters, params);
   }
 
   private OnSuccessCallback successCallback = new OnSuccessCallback() {
