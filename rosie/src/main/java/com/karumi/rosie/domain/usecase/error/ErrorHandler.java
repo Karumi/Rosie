@@ -16,16 +16,33 @@
 
 package com.karumi.rosie.domain.usecase.error;
 
+import com.karumi.rosie.domain.usecase.callback.CallbackScheduler;
+import com.karumi.rosie.domain.usecase.callback.MainThreadCallbackScheduler;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 
 public class ErrorHandler {
 
   private ErrorFactory errorFactory;
+  private CallbackScheduler callbackScheduler;
   private List<OnErrorCallback> errorCallbacks = new ArrayList<>();
 
-  public ErrorHandler() {
-    this.errorFactory = new ErrorFactory();
+  @Inject public ErrorHandler() {
+    this(new ErrorFactory(), new MainThreadCallbackScheduler());
+  }
+
+  public ErrorHandler(ErrorFactory errorFactory) {
+    this(errorFactory, new MainThreadCallbackScheduler());
+  }
+
+  public ErrorHandler(CallbackScheduler callbackScheduler) {
+    this(new ErrorFactory(), callbackScheduler);
+  }
+
+  public ErrorHandler(ErrorFactory errorFactory, CallbackScheduler callbackScheduler) {
+    this.errorFactory = errorFactory;
+    this.callbackScheduler = callbackScheduler;
   }
 
   public void setErrorFactory(ErrorFactory errorFactory) {
@@ -35,15 +52,26 @@ public class ErrorHandler {
     this.errorFactory = errorFactory;
   }
 
+  public void setCallbackScheduler(CallbackScheduler callbackScheduler) {
+    if (callbackScheduler == null) {
+      throw new IllegalArgumentException("callbackScheduler can not be null");
+    }
+    this.callbackScheduler = callbackScheduler;
+  }
+
   public void notifyError(Exception exception) {
     Error error = createError(exception);
     notifyError(error);
   }
 
-  private void notifyError(Error error) {
-    for (OnErrorCallback errorCallback : errorCallbacks) {
-      errorCallback.onError(error);
-    }
+  private void notifyError(final Error error) {
+    callbackScheduler.post(new Runnable() {
+      @Override public void run() {
+        for (OnErrorCallback errorCallback : errorCallbacks) {
+          errorCallback.onError(error);
+        }
+      }
+    });
   }
 
   public void registerCallback(OnErrorCallback onErrorCallback) {

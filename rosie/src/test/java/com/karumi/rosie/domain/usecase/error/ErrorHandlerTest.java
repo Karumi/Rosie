@@ -16,6 +16,7 @@
 
 package com.karumi.rosie.domain.usecase.error;
 
+import com.karumi.rosie.doubles.FakeCallbackScheduler;
 import java.lang.reflect.InvocationTargetException;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +50,7 @@ public class ErrorHandlerTest {
   }
 
   private ErrorHandler givenAnErrorHandlerWithOneOnErrorCallback() {
-    ErrorHandler errorHandler = new ErrorHandler();
+    ErrorHandler errorHandler = new ErrorHandler(new ErrorFactory(), new FakeCallbackScheduler());
     errorHandler.registerCallback(onErrorCallback);
     return errorHandler;
   }
