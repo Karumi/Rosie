@@ -14,23 +14,12 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.testutils;
-
-import com.karumi.rosie.domain.usecase.TaskScheduler;
-import com.karumi.rosie.domain.usecase.UseCaseWrapper;
+package com.karumi.rosie.domain.usecase.callback;
 
 /**
- * Scheduler to run the test sequencially
+ * Abstracts the thread where the use case callback is going to be notified.
  */
-public class FakeScheduler implements TaskScheduler {
+public interface CallbackScheduler {
 
-  private static final String TAG = "TestScheduler";
-
-  @Override public void execute(UseCaseWrapper useCaseWrapper) {
-    try {
-      useCaseWrapper.execute();
-    } catch (Exception e) {
-      //avoid exceptions for test scheduler
-    }
-  }
+  void post(Runnable runnable);
 }

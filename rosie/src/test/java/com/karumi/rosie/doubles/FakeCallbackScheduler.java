@@ -14,29 +14,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.demo.hipsterlist.view.renderer;
+package com.karumi.rosie.doubles;
 
-import android.view.View;
-import butterknife.ButterKnife;
-import com.pedrogomez.renderers.Renderer;
+import com.karumi.rosie.domain.usecase.callback.CallbackScheduler;
 
 /**
- * Renderer extension create to provide Butter Knife view injection in a transparent way. Your
- * Renderer classes should extend from this one to be able tu use Butter Knife annotations.
- * Remember
- * to call supper in you overriden render method.
+ * CallbackScheduler implementation for tests. This scheduler executes the runnable in the same
+ * thread where the post method is invoked.
  */
-public abstract class RosieRenderer<T> extends Renderer<T> {
+public class FakeCallbackScheduler implements CallbackScheduler {
 
-  @Override public void render() {
-    ButterKnife.inject(this, getRootView());
-  }
-
-  @Override protected void setUpView(View view) {
-
-  }
-
-  @Override protected void hookListeners(View view) {
-
+  @Override public void post(Runnable runnable) {
+    runnable.run();
   }
 }

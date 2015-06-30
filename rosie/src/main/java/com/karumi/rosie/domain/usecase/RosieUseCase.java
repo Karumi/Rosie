@@ -17,6 +17,8 @@
 package com.karumi.rosie.domain.usecase;
 
 import com.karumi.rosie.domain.usecase.annotation.Success;
+import com.karumi.rosie.domain.usecase.callback.CallbackScheduler;
+import com.karumi.rosie.domain.usecase.callback.MainThreadCallbackScheduler;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
 import com.karumi.rosie.domain.usecase.error.ErrorNotHandledException;
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
@@ -27,8 +29,16 @@ import java.lang.reflect.Method;
  * this class.
  */
 public class RosieUseCase {
+
   private OnSuccessCallback onSuccess;
   private OnErrorCallback onErrorCallback;
+  private CallbackScheduler callbackScheduler;
+
+  public void setCallbackScheduler(CallbackScheduler callbackScheduler) {
+    validateCallbackScheduler(callbackScheduler);
+    this.callbackScheduler = callbackScheduler;
+  }
+
 
   /**
    * Notify to the callback onSuccess that something it's work fine. You can invoke the method as
@@ -38,33 +48,30 @@ public class RosieUseCase {
    * return the response to the UI Thread.
    */
   protected void notifySuccess(Object... values) {
-
     Method[] methodsArray = onSuccess.getClass().getMethods();
     if (methodsArray.length > 0) {
       Method methodToInvoke =
           UseCaseFilter.filterValidMethodArgs(values, methodsArray, Success.class);
-
-      try {
-        methodToInvoke.invoke(onSuccess, values);
-      } catch (Exception e) {
-        throw new RuntimeException("internal error invoking the success object", e);
-      }
+      invokeMethodInTheCallbackScheduler(methodToInvoke, values);
     }
   }
 
   /**
-   * Notify to the error listener that an error happend, if you don't declare an specific error
+   * Notify to the error listener that an error happened, if you don't declare an specific error
    * handler for you use case, this error will be manage for the generic error system.
    *
    * @param error the error to send to the callback.
    * @throws ErrorNotHandledException this exception launch when the specific error is not
    * handled. You don't need manage this exception UseCaseHandler do it for you.
    */
-  protected void notifyError(Error error) throws ErrorNotHandledException {
-
+  protected void notifyError(final Error error) throws ErrorNotHandledException {
     if (onErrorCallback != null) {
       try {
-        onErrorCallback.onError(error);
+        getCallbackScheduler().post(new Runnable() {
+          @Override public void run() {
+            onErrorCallback.onError(error);
+          }
+        });
       } catch (IllegalArgumentException e) {
         throw new ErrorNotHandledException(error);
       }
@@ -79,5 +86,31 @@ public class RosieUseCase {
 
   void setOnError(OnErrorCallback onErrorCallback) {
     this.onErrorCallback = onErrorCallback;
+  }
+
+  private void invokeMethodInTheCallbackScheduler(final Method methodToInvoke,
+      final Object[] values) {
+    getCallbackScheduler().post(new Runnable() {
+      @Override public void run() {
+        try {
+          methodToInvoke.invoke(onSuccess, values);
+        } catch (Exception e) {
+          throw new RuntimeException("Internal error invoking the success object", e);
+        }
+      }
+    });
+  }
+
+  private CallbackScheduler getCallbackScheduler() {
+    if (callbackScheduler == null) {
+      callbackScheduler = new MainThreadCallbackScheduler();
+    }
+    return callbackScheduler;
+  }
+
+  private void validateCallbackScheduler(CallbackScheduler callbackScheduler) {
+    if (callbackScheduler == null) {
+      throw new IllegalArgumentException("You can't use a null instance as CallbackScheduler.");
+    }
   }
 }
