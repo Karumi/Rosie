@@ -24,7 +24,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import butterknife.ButterKnife;
-import com.karumi.rosie.domain.usecase.error.Error;
 import com.karumi.rosie.view.activity.RosieActivity;
 import com.karumi.rosie.view.presenter.PresenterLifeCycleLinker;
 import com.karumi.rosie.view.presenter.RosiePresenter;

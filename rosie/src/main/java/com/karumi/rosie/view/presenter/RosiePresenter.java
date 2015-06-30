@@ -1,8 +1,7 @@
 package com.karumi.rosie.view.presenter;
 
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
-import com.karumi.rosie.domain.usecase.error.Error;
-import com.karumi.rosie.domain.usecase.error.UseCaseErrorCallback;
+import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 import com.karumi.rosie.view.presenter.view.ErrorView;
 
 /**
@@ -96,8 +95,8 @@ public class RosiePresenter<T extends RosiePresenter.View> {
     this.errorView = errorView;
   }
 
-  private UseCaseErrorCallback globalError = new UseCaseErrorCallback() {
-    @Override public void onError(com.karumi.rosie.domain.usecase.error.Error error) {
+  private OnErrorCallback globalError = new OnErrorCallback() {
+    @Override public void onError(Error error) {
       if (!RosiePresenter.this.onError(error)) {
         if (errorView != null) {
           errorView.showError(error);

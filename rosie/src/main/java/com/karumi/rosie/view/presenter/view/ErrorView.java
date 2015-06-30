@@ -16,8 +16,6 @@
 
 package com.karumi.rosie.view.presenter.view;
 
-import com.karumi.rosie.domain.usecase.error.Error;
-
 /**
  * Represents all the actions you can perform to notify an error to the use interface.
  */

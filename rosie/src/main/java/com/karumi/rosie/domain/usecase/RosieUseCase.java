@@ -20,9 +20,8 @@ import com.karumi.rosie.domain.usecase.annotation.Success;
 import com.karumi.rosie.domain.usecase.callback.CallbackScheduler;
 import com.karumi.rosie.domain.usecase.callback.MainThreadCallbackScheduler;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
-import com.karumi.rosie.domain.usecase.error.Error;
 import com.karumi.rosie.domain.usecase.error.ErrorNotHandledException;
-import com.karumi.rosie.domain.usecase.error.UseCaseErrorCallback;
+import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 import java.lang.reflect.Method;
 
 /**
@@ -32,13 +31,14 @@ import java.lang.reflect.Method;
 public class RosieUseCase {
 
   private OnSuccessCallback onSuccess;
-  private UseCaseErrorCallback useCaseErrorCallback;
+  private OnErrorCallback onErrorCallback;
   private CallbackScheduler callbackScheduler;
 
   public void setCallbackScheduler(CallbackScheduler callbackScheduler) {
     validateCallbackScheduler(callbackScheduler);
     this.callbackScheduler = callbackScheduler;
   }
+
 
   /**
    * Notify to the callback onSuccess that something it's work fine. You can invoke the method as
@@ -65,11 +65,11 @@ public class RosieUseCase {
    * handled. You don't need manage this exception UseCaseHandler do it for you.
    */
   protected void notifyError(final Error error) throws ErrorNotHandledException {
-    if (useCaseErrorCallback != null) {
+    if (onErrorCallback != null) {
       try {
         getCallbackScheduler().post(new Runnable() {
           @Override public void run() {
-            useCaseErrorCallback.onError(error);
+            onErrorCallback.onError(error);
           }
         });
       } catch (IllegalArgumentException e) {
@@ -84,8 +84,8 @@ public class RosieUseCase {
     this.onSuccess = onSuccess;
   }
 
-  void setOnError(UseCaseErrorCallback useCaseErrorCallback) {
-    this.useCaseErrorCallback = useCaseErrorCallback;
+  void setOnError(OnErrorCallback onErrorCallback) {
+    this.onErrorCallback = onErrorCallback;
   }
 
   private void invokeMethodInTheCallbackScheduler(final Method methodToInvoke,

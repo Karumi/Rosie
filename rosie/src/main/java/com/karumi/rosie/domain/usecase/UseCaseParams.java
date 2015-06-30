@@ -17,7 +17,7 @@
 package com.karumi.rosie.domain.usecase;
 
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
-import com.karumi.rosie.domain.usecase.error.UseCaseErrorCallback;
+import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 
 /**
  * The params value to execute with the use case.
@@ -26,10 +26,10 @@ public class UseCaseParams {
   private final OnSuccessCallback onSuccessCallback;
   private final String useCaseName;
   private final Object[] args;
-  private final UseCaseErrorCallback errorCallback;
+  private final OnErrorCallback errorCallback;
 
   public UseCaseParams(String useCaseName, Object[] args, OnSuccessCallback onSuccess,
-      UseCaseErrorCallback errorCallback) {
+      OnErrorCallback errorCallback) {
     this.args = args;
     this.useCaseName = useCaseName;
     this.onSuccessCallback = onSuccess;
@@ -48,7 +48,7 @@ public class UseCaseParams {
     return onSuccessCallback;
   }
 
-  public UseCaseErrorCallback getErrorCallback() {
+  public OnErrorCallback getErrorCallback() {
     return errorCallback;
   }
 
@@ -59,7 +59,7 @@ public class UseCaseParams {
     private String useCaseName = "";
     private Object[] args;
     private OnSuccessCallback onSuccess = EMPTY_SUCCESS;
-    private UseCaseErrorCallback errorCallback;
+    private OnErrorCallback errorCallback;
 
     public Builder useCaseName(String name) {
       useCaseName = name;
@@ -81,7 +81,7 @@ public class UseCaseParams {
       return this;
     }
 
-    public Builder onError(UseCaseErrorCallback errorCallback) {
+    public Builder onError(OnErrorCallback errorCallback) {
       if (errorCallback == null) {
         throw new IllegalArgumentException(
             "The errorCallback used is null, you can't use a null instance as onError callback.");
