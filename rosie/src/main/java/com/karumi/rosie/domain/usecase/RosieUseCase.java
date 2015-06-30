@@ -18,9 +18,8 @@ package com.karumi.rosie.domain.usecase;
 
 import com.karumi.rosie.domain.usecase.annotation.Success;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
-import com.karumi.rosie.domain.usecase.error.Error;
 import com.karumi.rosie.domain.usecase.error.ErrorNotHandledException;
-import com.karumi.rosie.domain.usecase.error.UseCaseErrorCallback;
+import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 import java.lang.reflect.Method;
 
 /**
@@ -29,7 +28,7 @@ import java.lang.reflect.Method;
  */
 public class RosieUseCase {
   private OnSuccessCallback onSuccess;
-  private UseCaseErrorCallback useCaseErrorCallback;
+  private OnErrorCallback onErrorCallback;
 
   /**
    * Notify to the callback onSuccess that something it's work fine. You can invoke the method as
@@ -63,9 +62,9 @@ public class RosieUseCase {
    */
   protected void notifyError(Error error) throws ErrorNotHandledException {
 
-    if (useCaseErrorCallback != null) {
+    if (onErrorCallback != null) {
       try {
-        useCaseErrorCallback.onError(error);
+        onErrorCallback.onError(error);
       } catch (IllegalArgumentException e) {
         throw new ErrorNotHandledException(error);
       }
@@ -78,7 +77,7 @@ public class RosieUseCase {
     this.onSuccess = onSuccess;
   }
 
-  void setOnError(UseCaseErrorCallback useCaseErrorCallback) {
-    this.useCaseErrorCallback = useCaseErrorCallback;
+  void setOnError(OnErrorCallback onErrorCallback) {
+    this.onErrorCallback = onErrorCallback;
   }
 }

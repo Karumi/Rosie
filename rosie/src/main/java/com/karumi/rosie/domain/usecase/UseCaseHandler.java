@@ -17,7 +17,7 @@
 package com.karumi.rosie.domain.usecase;
 
 import com.karumi.rosie.domain.usecase.error.ErrorHandler;
-import com.karumi.rosie.domain.usecase.error.UseCaseErrorCallback;
+import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 
 /**
  * Invoke methods annotated with UseCase annotation. The RosieUseCase instance will be executed out
@@ -64,11 +64,11 @@ public class UseCaseHandler {
     taskScheduler.execute(useCaseWrapper);
   }
 
-  public void registerGlobalErrorCallback(UseCaseErrorCallback globalError) {
+  public void registerGlobalErrorCallback(OnErrorCallback globalError) {
     errorHandler.registerCallback(globalError);
   }
 
-  public void unregisterGlobalErrorCallback(UseCaseErrorCallback globalError) {
+  public void unregisterGlobalErrorCallback(OnErrorCallback globalError) {
     errorHandler.unregisterCallback(globalError);
   }
 }
