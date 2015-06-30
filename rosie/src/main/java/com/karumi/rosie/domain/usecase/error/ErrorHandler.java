@@ -22,7 +22,7 @@ import java.util.List;
 public class ErrorHandler {
 
   private ErrorFactory errorFactory;
-  private List<UseCaseErrorCallback> errorCallbacks = new ArrayList<>();
+  private List<OnErrorCallback> errorCallbacks = new ArrayList<>();
 
   public ErrorHandler() {
     this.errorFactory = new ErrorFactory();
@@ -41,17 +41,17 @@ public class ErrorHandler {
   }
 
   private void notifyError(Error error) {
-    for (UseCaseErrorCallback errorCallback : errorCallbacks) {
+    for (OnErrorCallback errorCallback : errorCallbacks) {
       errorCallback.onError(error);
     }
   }
 
-  public void registerCallback(UseCaseErrorCallback useCaseErrorCallback) {
-    errorCallbacks.add(useCaseErrorCallback);
+  public void registerCallback(OnErrorCallback onErrorCallback) {
+    errorCallbacks.add(onErrorCallback);
   }
 
-  public void unregisterCallback(UseCaseErrorCallback useCaseErrorCallback) {
-    errorCallbacks.remove(useCaseErrorCallback);
+  public void unregisterCallback(OnErrorCallback onErrorCallback) {
+    errorCallbacks.remove(onErrorCallback);
   }
 
   private Error createError(Exception exception) {

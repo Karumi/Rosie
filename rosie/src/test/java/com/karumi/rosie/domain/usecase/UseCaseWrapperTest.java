@@ -16,8 +16,8 @@
 
 package com.karumi.rosie.domain.usecase;
 
+import com.karumi.rosie.UnitTest;
 import com.karumi.rosie.domain.usecase.annotation.UseCase;
-import com.karumi.rosie.domain.usecase.error.Error;
 import com.karumi.rosie.domain.usecase.error.ErrorHandler;
 import com.karumi.rosie.domain.usecase.error.ErrorNotHandledException;
 import java.lang.reflect.InvocationTargetException;
@@ -29,7 +29,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class UseCaseWrapperTest {
+public class UseCaseWrapperTest extends UnitTest {
 
   private static final String ANY_FIRST_ARG = "anyValue";
   private static final int ANY_SECOND_ARG = 2;

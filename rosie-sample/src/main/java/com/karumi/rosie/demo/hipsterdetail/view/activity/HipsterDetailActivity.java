@@ -16,11 +16,8 @@
 
 package com.karumi.rosie.demo.hipsterdetail.view.activity;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import com.karumi.rosie.demo.R;
 import com.karumi.rosie.demo.hipsterdetail.view.fragment.HipsterDetailFragment;
 import com.karumi.rosie.demo.hipsterlist.view.model.Hipster;

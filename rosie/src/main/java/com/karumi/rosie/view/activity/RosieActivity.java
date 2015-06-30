@@ -20,7 +20,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import butterknife.ButterKnife;
 import com.karumi.rosie.application.RosieApplication;
-import com.karumi.rosie.domain.usecase.error.Error;
 import com.karumi.rosie.module.RosieActivityModule;
 import com.karumi.rosie.view.presenter.PresenterLifeCycleLinker;
 import com.karumi.rosie.view.presenter.RosiePresenter;
@@ -130,13 +129,15 @@ public abstract class RosieActivity extends FragmentActivity
   private void injectActivityModules() {
     RosieApplication rosieApplication = (RosieApplication) getApplication();
     List<Object> additionalModules = getActivityScopeModules();
-    if (additionalModules == null && shouldInjectActivity()) {
+    if (additionalModules == null) {
       additionalModules = new ArrayList<Object>();
     }
     List<Object> activityScopeModules = new ArrayList<Object>();
     activityScopeModules.add(new RosieActivityModule(this));
     activityScopeModules.addAll(additionalModules);
     activityScopeGraph = rosieApplication.plusGraph(activityScopeModules);
-    inject(this);
+    if (shouldInjectActivity()) {
+      inject(this);
+    }
   }
 }

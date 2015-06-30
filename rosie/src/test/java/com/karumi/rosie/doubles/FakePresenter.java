@@ -19,8 +19,7 @@ package com.karumi.rosie.doubles;
 import com.karumi.rosie.domain.usecase.RosieUseCase;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
 import com.karumi.rosie.domain.usecase.annotation.UseCase;
-import com.karumi.rosie.domain.usecase.error.Error;
-import com.karumi.rosie.testutils.FakeScheduler;
+import com.karumi.rosie.testutils.FakeTaskScheduler;
 import com.karumi.rosie.view.presenter.RosiePresenter;
 
 /**
@@ -31,7 +30,7 @@ public class FakePresenter extends RosiePresenter {
   private FakeUi fakeUi;
 
   public FakePresenter() {
-    this(new UseCaseHandler(new FakeScheduler()));
+    this(new UseCaseHandler(new FakeTaskScheduler()));
   }
 
   public FakePresenter(UseCaseHandler useCaseHandler) {
@@ -48,7 +47,7 @@ public class FakePresenter extends RosiePresenter {
     this.fakeUi = fakeUi;
   }
 
-  @Override protected boolean onError(com.karumi.rosie.domain.usecase.error.Error error) {
+  @Override protected boolean onError(Error error) {
     if (fakeUi != null) {
       fakeUi.showFakeError();
       return true;

@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verify;
 
 public class ErrorHandlerTest {
 
-  @Mock private UseCaseErrorCallback onErrorCallback;
+  @Mock private OnErrorCallback onErrorCallback;
   @Mock private Error error;
 
   @Before public void setUp() {

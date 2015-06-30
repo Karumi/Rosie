@@ -42,12 +42,3 @@ dependencies {
   testCompile 'org.robolectric:robolectric:2.4'
 }
 
-task checkstyle(type: Checkstyle) {
-  configFile file('../config/checkstyle/checkstyle.xml')
-  source 'src'
-  include '**/*.java'
-  exclude '**/gen/**'
-
-  classpath = files()
-}
-

@@ -27,10 +27,18 @@ buildscript {
 
 
 allprojects {
-    repositories {
-        jcenter()
-    }
+  repositories {
+    jcenter()
+  }
 
-    apply plugin: 'checkstyle'
+  apply plugin: 'checkstyle'
 
+  task checkstyle(type: Checkstyle) {
+    configFile file("${project.rootDir}/config/checkstyle/checkstyle.xml")
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    classpath = files()
+  }
 }

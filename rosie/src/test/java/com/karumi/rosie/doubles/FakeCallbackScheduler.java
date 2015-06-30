@@ -14,12 +14,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usecase.error;
+package com.karumi.rosie.doubles;
+
+import com.karumi.rosie.domain.usecase.callback.CallbackScheduler;
 
 /**
- * This callback must be invoked when an error happens inside of a use case.
+ * CallbackScheduler implementation for tests. This scheduler executes the runnable in the same
+ * thread where the post method is invoked.
  */
-public interface UseCaseErrorCallback<T extends Error> {
-  void onError(T error);
-}
+public class FakeCallbackScheduler implements CallbackScheduler {
 
+  @Override public void post(Runnable runnable) {
+    runnable.run();
+  }
+}

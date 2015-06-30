@@ -1,8 +1,10 @@
 package com.karumi.rosie.view.presenter;
 
+import com.karumi.rosie.domain.usecase.RosieUseCase;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
-import com.karumi.rosie.domain.usecase.error.Error;
-import com.karumi.rosie.domain.usecase.error.UseCaseErrorCallback;
+import com.karumi.rosie.domain.usecase.UseCaseParams;
+
+import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 import com.karumi.rosie.view.presenter.view.ErrorView;
 
 /**
@@ -58,6 +60,22 @@ public class RosiePresenter<T extends RosiePresenter.View> {
   }
 
   /**
+   * Executes a RosieUseCase passed as parameter using the UseCaseHandler instance obtained during
+   * the RosiePresenter construction.
+   */
+  protected void execute(RosieUseCase useCase) {
+    useCaseHandler.execute(useCase);
+  }
+
+  /**
+   * Executes a RosieUseCase passed as parameter using the UseCaseHandler instance obtained during
+   * the RosiePresenter construction and the UseCaseParams object passed as second parameter.
+   */
+  protected void execute(RosieUseCase useCase, UseCaseParams useCaseParams) {
+    useCaseHandler.execute(useCase, useCaseParams);
+  }
+
+  /**
    * Returns the view configured in the presenter which real implementation is an Activity or
    * Fragment using this presenter.
    */
@@ -96,8 +114,8 @@ public class RosiePresenter<T extends RosiePresenter.View> {
     this.errorView = errorView;
   }
 
-  private UseCaseErrorCallback globalError = new UseCaseErrorCallback() {
-    @Override public void onError(com.karumi.rosie.domain.usecase.error.Error error) {
+  private OnErrorCallback globalError = new OnErrorCallback() {
+    @Override public void onError(Error error) {
       if (!RosiePresenter.this.onError(error)) {
         if (errorView != null) {
           errorView.showError(error);
