@@ -25,13 +25,9 @@ import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
  * a callback.
  */
 public class UseCaseHandler {
-  private static final ErrorHandler EMPTY_ERROR_HANDLER = new ErrorHandler();
+
   private final TaskScheduler taskScheduler;
   private final ErrorHandler errorHandler;
-
-  public UseCaseHandler(TaskScheduler taskScheduler) {
-    this(taskScheduler, EMPTY_ERROR_HANDLER);
-  }
 
   public UseCaseHandler(TaskScheduler taskScheduler, ErrorHandler errorHandler) {
     this.taskScheduler = taskScheduler;

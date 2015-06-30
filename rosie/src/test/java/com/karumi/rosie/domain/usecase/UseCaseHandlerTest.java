@@ -49,7 +49,8 @@ public class UseCaseHandlerTest extends UnitTest {
   @Test public void testExecuteAnyObject() throws Exception {
     TaskScheduler taskScheduler = mock(TaskScheduler.class);
     EmptyUseCase anyUseCase = new EmptyUseCase();
-    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
+    ErrorHandler errorHandler = new ErrorHandler(new FakeCallbackScheduler());
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler, errorHandler);
 
     useCaseHandler.execute(anyUseCase);
 
@@ -59,7 +60,8 @@ public class UseCaseHandlerTest extends UnitTest {
   @Test public void testExecuteFailNotAnyUseCase() throws Exception {
     TaskScheduler taskScheduler = mock(TaskScheduler.class);
     NoUseCase noUseCase = new NoUseCase();
-    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
+    ErrorHandler errorHandler = new ErrorHandler(new FakeCallbackScheduler());
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler, errorHandler);
 
     boolean exception = false;
     try {
@@ -75,7 +77,8 @@ public class UseCaseHandlerTest extends UnitTest {
   @Test public void testExecuteWithMethodName() throws Exception {
     TaskScheduler taskScheduler = mock(TaskScheduler.class);
     AnyUseCase anyUseCase = new AnyUseCase();
-    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
+    ErrorHandler errorHandler = new ErrorHandler(new FakeCallbackScheduler());
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler, errorHandler);
     UseCaseParams params = new UseCaseParams.Builder().useCaseName("anyExecution").build();
 
     useCaseHandler.execute(anyUseCase, params);
@@ -86,7 +89,8 @@ public class UseCaseHandlerTest extends UnitTest {
   @Test public void testExecuteFailsWithWrongMethodName() throws Exception {
     TaskScheduler taskScheduler = mock(TaskScheduler.class);
     AnyUseCase anyUseCase = new AnyUseCase();
-    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
+    ErrorHandler errorHandler = new ErrorHandler(new FakeCallbackScheduler());
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler, errorHandler);
     UseCaseParams params = new UseCaseParams.Builder().useCaseName("noExistMethod").build();
 
     boolean error = false;
@@ -103,7 +107,8 @@ public class UseCaseHandlerTest extends UnitTest {
   @Test public void testExecuteWithArgs() throws Exception {
     TaskScheduler taskScheduler = mock(TaskScheduler.class);
     AnyUseCase anyUseCase = new AnyUseCase();
-    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
+    ErrorHandler errorHandler = new ErrorHandler(new FakeCallbackScheduler());
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler, errorHandler);
     String anyArg1 = "param1";
     int anyArg2 = 2;
     UseCaseParams paramsWithArgs = new UseCaseParams.Builder().args(anyArg1, anyArg2).build();
@@ -116,7 +121,8 @@ public class UseCaseHandlerTest extends UnitTest {
   @Test public void testExecuteAmbigous() throws Exception {
     TaskScheduler taskScheduler = mock(TaskScheduler.class);
     AmbiguousUseCase ambigousUseCase = new AmbiguousUseCase();
-    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
+    ErrorHandler errorHandler = new ErrorHandler(new FakeCallbackScheduler());
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler, errorHandler);
 
     boolean exception = false;
     try {
@@ -133,7 +139,8 @@ public class UseCaseHandlerTest extends UnitTest {
   @Test public void testExecuteNoAmbigous() throws Exception {
     TaskScheduler taskScheduler = mock(TaskScheduler.class);
     AmbiguousUseCase ambigousUseCase = new AmbiguousUseCase();
-    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
+    ErrorHandler errorHandler = new ErrorHandler(new FakeCallbackScheduler());
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler, errorHandler);
     UseCaseParams ambiguousParams =
         new UseCaseParams.Builder().args("anyString", 2).useCaseName("method1").build();
 
@@ -146,7 +153,8 @@ public class UseCaseHandlerTest extends UnitTest {
     FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
     EmptyResponseUseCase anyUseCase = new EmptyResponseUseCase();
     EmptyOnSuccess onSuccessCallback = new EmptyOnSuccess();
-    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
+    ErrorHandler errorHandler = new ErrorHandler(new FakeCallbackScheduler());
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler, errorHandler);
     UseCaseParams useCaseParams = new UseCaseParams.Builder().onSuccess(onSuccessCallback).build();
 
     useCaseHandler.execute(anyUseCase, useCaseParams);
@@ -158,7 +166,8 @@ public class UseCaseHandlerTest extends UnitTest {
     FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
     AnyUseCase anyUseCase = new AnyUseCase();
     AnyOnSuccess onSuccessCallback = new AnyOnSuccess();
-    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
+    ErrorHandler errorHandler = new ErrorHandler(new FakeCallbackScheduler());
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler, errorHandler);
     UseCaseParams useCaseParams = new UseCaseParams.Builder().useCaseName("anyExecution")
         .onSuccess(onSuccessCallback)
         .build();
@@ -172,7 +181,8 @@ public class UseCaseHandlerTest extends UnitTest {
     FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
     AnyUseCase anyUseCase = new AnyUseCase();
     AnyOnSuccessWithDowncast onSuccessCallback = new AnyOnSuccessWithDowncast();
-    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
+    ErrorHandler errorHandler = new ErrorHandler(new FakeCallbackScheduler());
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler, errorHandler);
     UseCaseParams useCaseParams = new UseCaseParams.Builder().useCaseName("downcastResponse")
         .onSuccess(onSuccessCallback)
         .build();
@@ -186,7 +196,8 @@ public class UseCaseHandlerTest extends UnitTest {
     FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
     AnyUseCase anyUseCase = new AnyUseCase();
     EmptyOnSuccess onSuccessCallback = new EmptyOnSuccess();
-    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
+    ErrorHandler errorHandler = new ErrorHandler(new FakeCallbackScheduler());
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler, errorHandler);
     UseCaseParams useCaseParams = new UseCaseParams.Builder().useCaseName("anyExecution")
         .onSuccess(onSuccessCallback)
         .build();
@@ -199,7 +210,8 @@ public class UseCaseHandlerTest extends UnitTest {
   @Test public void shouldCallErrorOnErrorWhenUseCaseInvokeAnError() {
     FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
     ErrorUseCase errorUseCase = new ErrorUseCase();
-    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
+    ErrorHandler errorHandler = new ErrorHandler(new FakeCallbackScheduler());
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler, errorHandler);
     OnErrorCallback errorCallback = spy(onErrorCallback);
     UseCaseParams useCaseParams =
         new UseCaseParams.Builder().useCaseName("customError").onError(errorCallback).build();
@@ -222,8 +234,7 @@ public class UseCaseHandlerTest extends UnitTest {
   }
 
   @Test
-  public void
-  shouldCallErrorHandlerErrorWhenUseCaseInvokeAnErrorAndTheCallbackDoNotHandleThisKindOfMethod() {
+  public void shouldCallErrorHandlerErrorWhenUseCaseInvokeAnErrorAndTheCallbackDoNotHandleThisKindOfMethod() {
     FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
     ErrorUseCase errorUseCase = new ErrorUseCase();
     ErrorHandler errorHandler = mock(ErrorHandler.class);

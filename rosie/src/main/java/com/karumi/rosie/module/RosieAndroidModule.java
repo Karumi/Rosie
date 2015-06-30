@@ -22,6 +22,7 @@ import com.karumi.rosie.application.RosieApplication;
 import com.karumi.rosie.daggerutils.ForApplication;
 import com.karumi.rosie.domain.usecase.TaskScheduler;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
+import com.karumi.rosie.domain.usecase.error.ErrorHandler;
 import com.karumi.rosie.domain.usecase.jobqueue.TaskSchedulerJobQueue;
 import com.path.android.jobqueue.JobManager;
 import dagger.Module;
@@ -48,8 +49,9 @@ import javax.inject.Singleton;
     return context;
   }
 
-  @Provides @Singleton public UseCaseHandler provideUseCaseHandler(TaskScheduler taskScheduler) {
-    return new UseCaseHandler(taskScheduler);
+  @Provides @Singleton public UseCaseHandler provideUseCaseHandler(TaskScheduler taskScheduler,
+      ErrorHandler errorHandler) {
+    return new UseCaseHandler(taskScheduler, errorHandler);
   }
 
   @Provides @Singleton public TaskScheduler provideTaskScheduler(JobManager jobManager) {
