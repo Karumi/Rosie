@@ -61,6 +61,7 @@ public class HipsterDetailFragment extends RosieFragment {
   }
 
   private Hipster getHipster() {
-    return (Hipster) getArguments().get(HIPSTER_EXTRA_KEY);
+    Bundle extras = getActivity().getIntent().getExtras();
+    return (Hipster) extras.getSerializable(HIPSTER_EXTRA_KEY);
   }
 }

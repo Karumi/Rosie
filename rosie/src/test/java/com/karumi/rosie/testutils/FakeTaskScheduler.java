@@ -20,9 +20,9 @@ import com.karumi.rosie.domain.usecase.TaskScheduler;
 import com.karumi.rosie.domain.usecase.UseCaseWrapper;
 
 /**
- * Scheduler to run the test sequencially
+ * Scheduler to run the test sequentially
  */
-public class FakeScheduler implements TaskScheduler {
+public class FakeTaskScheduler implements TaskScheduler {
 
   @Override public void execute(UseCaseWrapper useCaseWrapper) {
     try {

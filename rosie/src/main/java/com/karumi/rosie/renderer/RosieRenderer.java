@@ -14,32 +14,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usecase.error;
+package com.karumi.rosie.renderer;
+
+import android.view.View;
+import butterknife.ButterKnife;
+import com.pedrogomez.renderers.Renderer;
 
 /**
- * Base class that works to restrict the classes that onError can allow.
+ * Renderer extension create to provide Butter Knife view injection in a transparent way. Your
+ * Renderer classes should extend from this one to be able tu use Butter Knife annotations.
+ * Remember
+ * to call supper in you overriden render method.
  */
-public class Error {
-  private Exception cause;
-  private String description = "";
+public abstract class RosieRenderer<T> extends Renderer<T> {
 
-  public Error() {
+  @Override public void render() {
+    ButterKnife.inject(this, getRootView());
   }
 
-  public Error(String description) {
-    this.description = description;
+  @Override protected void setUpView(View view) {
+
   }
 
-  public Error(String description, Exception cause) {
-    this(description);
-    this.cause = cause;
-  }
+  @Override protected void hookListeners(View view) {
 
-  public Exception getCause() {
-    return cause;
-  }
-
-  public String getDescription() {
-    return description;
   }
 }

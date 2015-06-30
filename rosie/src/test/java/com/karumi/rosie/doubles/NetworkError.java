@@ -19,7 +19,7 @@ package com.karumi.rosie.doubles;
 /**
  * Double that emulate an network error
  */
-public class NetworkError extends com.karumi.rosie.domain.usecase.error.Error {
+public class NetworkError extends Error {
   public NetworkError() {
     super();
   }

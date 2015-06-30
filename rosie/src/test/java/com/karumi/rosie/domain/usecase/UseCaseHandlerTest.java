@@ -20,12 +20,13 @@ import com.karumi.rosie.UnitTest;
 import com.karumi.rosie.domain.usecase.annotation.Success;
 import com.karumi.rosie.domain.usecase.annotation.UseCase;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
-import com.karumi.rosie.domain.usecase.error.Error;
 import com.karumi.rosie.domain.usecase.error.ErrorHandler;
 import com.karumi.rosie.domain.usecase.error.ErrorNotHandledException;
-import com.karumi.rosie.domain.usecase.error.UseCaseErrorCallback;
+
+import com.karumi.rosie.doubles.FakeCallbackScheduler;
+import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 import com.karumi.rosie.doubles.NetworkError;
-import com.karumi.rosie.testutils.FakeScheduler;
+import com.karumi.rosie.testutils.FakeTaskScheduler;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
@@ -142,7 +143,7 @@ public class UseCaseHandlerTest extends UnitTest {
   }
 
   @Test public void onSuccessCallbackShouldBeCalledWithSuccessArgs() {
-    FakeScheduler taskScheduler = new FakeScheduler();
+    FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
     EmptyResponseUseCase anyUseCase = new EmptyResponseUseCase();
     EmptyOnSuccess onSuccessCallback = new EmptyOnSuccess();
     UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
@@ -154,7 +155,7 @@ public class UseCaseHandlerTest extends UnitTest {
   }
 
   @Test public void completeCallbackShouldBeCalledWithSuccessArgs() {
-    FakeScheduler taskScheduler = new FakeScheduler();
+    FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
     AnyUseCase anyUseCase = new AnyUseCase();
     AnyOnSuccess onSuccessCallback = new AnyOnSuccess();
     UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
@@ -168,7 +169,7 @@ public class UseCaseHandlerTest extends UnitTest {
   }
 
   @Test public void onSuccessCallbackShouldBeCalledWithSuccessArgsAndDowncastingResponse() {
-    FakeScheduler taskScheduler = new FakeScheduler();
+    FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
     AnyUseCase anyUseCase = new AnyUseCase();
     AnyOnSuccessWithDowncast onSuccessCallback = new AnyOnSuccessWithDowncast();
     UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
@@ -182,7 +183,7 @@ public class UseCaseHandlerTest extends UnitTest {
   }
 
   @Test public void completeCallbackShouldNotBeExecuteWhenNotMatchArgs() {
-    FakeScheduler taskScheduler = new FakeScheduler();
+    FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
     AnyUseCase anyUseCase = new AnyUseCase();
     EmptyOnSuccess onSuccessCallback = new EmptyOnSuccess();
     UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
@@ -196,10 +197,10 @@ public class UseCaseHandlerTest extends UnitTest {
   }
 
   @Test public void shouldCallErrorOnErrorWhenUseCaseInvokeAnError() {
-    FakeScheduler taskScheduler = new FakeScheduler();
+    FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
     ErrorUseCase errorUseCase = new ErrorUseCase();
     UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler);
-    UseCaseErrorCallback errorCallback = spy(useCaseErrorCallback);
+    OnErrorCallback errorCallback = spy(onErrorCallback);
     UseCaseParams useCaseParams =
         new UseCaseParams.Builder().useCaseName("customError").onError(errorCallback).build();
 
@@ -209,7 +210,7 @@ public class UseCaseHandlerTest extends UnitTest {
   }
 
   @Test public void shouldCallErrorHandlerWhenUseCaseInvokeAnErrorAndDontExistSpecificCallback() {
-    FakeScheduler taskScheduler = new FakeScheduler();
+    FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
     ErrorUseCase errorUseCase = new ErrorUseCase();
     ErrorHandler errorHandler = mock(ErrorHandler.class);
     UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler, errorHandler);
@@ -221,8 +222,9 @@ public class UseCaseHandlerTest extends UnitTest {
   }
 
   @Test
-  public void shouldCallErrorHandlerErrorWhenUseCaseInvokeAnErrorAndTheCallbackDontHandleThisKindOfMethod() {
-    FakeScheduler taskScheduler = new FakeScheduler();
+  public void
+  shouldCallErrorHandlerErrorWhenUseCaseInvokeAnErrorAndTheCallbackDoNotHandleThisKindOfMethod() {
+    FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
     ErrorUseCase errorUseCase = new ErrorUseCase();
     ErrorHandler errorHandler = mock(ErrorHandler.class);
     UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler, errorHandler);
@@ -236,7 +238,7 @@ public class UseCaseHandlerTest extends UnitTest {
   }
 
   @Test public void shouldCallErrorHandlerErrorWhenUseCaseThrowsAnException() {
-    FakeScheduler taskScheduler = new FakeScheduler();
+    FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
     ErrorUseCase errorUseCase = new ErrorUseCase();
     ErrorHandler errorHandler = mock(ErrorHandler.class);
     UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler, errorHandler);
@@ -248,13 +250,13 @@ public class UseCaseHandlerTest extends UnitTest {
     verify(errorHandler).notifyError(any(Exception.class));
   }
 
-  private UseCaseErrorCallback useCaseErrorCallback = new UseCaseErrorCallback<Error>() {
+  private OnErrorCallback onErrorCallback = new OnErrorCallback<Error>() {
 
     @Override public void onError(Error error) {
     }
   };
 
-  private UseCaseErrorCallback specificErrorCallback = new UseCaseErrorCallback<NetworkError>() {
+  private OnErrorCallback specificErrorCallback = new OnErrorCallback<NetworkError>() {
 
     @Override public void onError(NetworkError error) {
     }
@@ -299,6 +301,7 @@ public class UseCaseHandlerTest extends UnitTest {
   private class AnyUseCase extends RosieUseCase {
 
     AnyUseCase() {
+      setCallbackScheduler(new FakeCallbackScheduler());
     }
 
     @UseCase(name = "anyExecution") public void anyExecution() {
@@ -338,12 +341,22 @@ public class UseCaseHandlerTest extends UnitTest {
   }
 
   private class EmptyResponseUseCase extends RosieUseCase {
+
+    public EmptyResponseUseCase() {
+      setCallbackScheduler(new FakeCallbackScheduler());
+    }
+
     @UseCase public void method2() {
       notifySuccess();
     }
   }
 
   private class ErrorUseCase extends RosieUseCase {
+
+    public ErrorUseCase() {
+      setCallbackScheduler(new FakeCallbackScheduler());
+    }
+
     @UseCase(name = "customError") public void errorMethod() throws Exception {
       notifyError(new Error("error network", new Exception()));
     }
