@@ -16,29 +16,26 @@
 
 package com.karumi.rosie.domain.usecase;
 
+import com.karumi.rosie.UnitTest;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class ClassUtilsTest {
+public class ClassUtilsTest extends UnitTest {
 
-  @Test
-  public void testCanAssignTwoAnyObjects() throws Exception {
+  @Test public void testCanAssignTwoAnyObjects() throws Exception {
     assertTrue(ClassUtils.canAssign(String.class, String.class));
   }
 
-  @Test
-  public void testCanAssignTwoAnyObjectsWithHierarchy() throws Exception {
+  @Test public void testCanAssignTwoAnyObjectsWithHierarchy() throws Exception {
     assertTrue(ClassUtils.canAssign(AnyClass.class, SonOfAnyClass.class));
   }
 
-  @Test
-  public void testCanAssignTwoObjectsWithAPrimitiveObject() throws Exception {
+  @Test public void testCanAssignTwoObjectsWithAPrimitiveObject() throws Exception {
     assertTrue(ClassUtils.canAssign(int.class, Integer.class));
   }
 
-  @Test
-  public void testCanAssignTwoObjectsWithAPrimitiveObjectBase() throws Exception {
+  @Test public void testCanAssignTwoObjectsWithAPrimitiveObjectBase() throws Exception {
     assertTrue(ClassUtils.canAssign(Integer.class, int.class));
   }
 

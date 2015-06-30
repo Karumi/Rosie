@@ -16,6 +16,7 @@
 
 package com.karumi.rosie.domain.usecase;
 
+import com.karumi.rosie.UnitTest;
 import com.karumi.rosie.domain.usecase.annotation.Success;
 import com.karumi.rosie.domain.usecase.annotation.UseCase;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
@@ -41,7 +42,7 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-public class UseCaseHandlerTest {
+public class UseCaseHandlerTest extends UnitTest {
 
   private static final int ANY_RETURN_VALUE = 2;
 
@@ -340,6 +341,7 @@ public class UseCaseHandlerTest {
   }
 
   private class EmptyResponseUseCase extends RosieUseCase {
+
     public EmptyResponseUseCase() {
       setCallbackScheduler(new FakeCallbackScheduler());
     }

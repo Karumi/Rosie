@@ -14,21 +14,40 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.testutils;
+package com.karumi.rosie.view.presenter;
 
-import com.karumi.rosie.domain.usecase.TaskScheduler;
-import com.karumi.rosie.domain.usecase.UseCaseWrapper;
+import com.karumi.rosie.UnitTest;
+import com.karumi.rosie.domain.usecase.RosieUseCase;
+import com.karumi.rosie.domain.usecase.UseCaseHandler;
+import com.karumi.rosie.domain.usecase.UseCaseParams;
+import org.junit.Test;
+import org.mockito.Mock;
 
-/**
- * Scheduler to run the test sequentially
- */
-public class FakeTaskScheduler implements TaskScheduler {
+import static org.mockito.Mockito.verify;
 
-  @Override public void execute(UseCaseWrapper useCaseWrapper) {
-    try {
-      useCaseWrapper.execute();
-    } catch (Exception e) {
-      //avoid exceptions for test scheduler
-    }
+public class RosiePresenterTest extends UnitTest {
+
+  @Mock private UseCaseHandler useCaseHandler;
+  @Mock private RosieUseCase anyUseCase;
+  @Mock private UseCaseParams anyUseCaseParams;
+
+  @Test public void shouldExecuteUseCaseUsingTheUseCaseHandler() {
+    RosiePresenter rosiePresenter = givenARosiePresenter();
+
+    rosiePresenter.execute(anyUseCase);
+
+    verify(useCaseHandler).execute(anyUseCase);
+  }
+
+  @Test public void shouldExecuteUseCaseWithUseCaseParamsUsingTheUseCaseHandler() {
+    RosiePresenter rosiePresenter = givenARosiePresenter();
+
+    rosiePresenter.execute(anyUseCase, anyUseCaseParams);
+
+    verify(useCaseHandler).execute(anyUseCase, anyUseCaseParams);
+  }
+
+  private RosiePresenter givenARosiePresenter() {
+    return new RosiePresenter(useCaseHandler);
   }
 }

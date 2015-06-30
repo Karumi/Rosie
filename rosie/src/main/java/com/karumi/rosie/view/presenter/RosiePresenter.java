@@ -1,6 +1,9 @@
 package com.karumi.rosie.view.presenter;
 
+import com.karumi.rosie.domain.usecase.RosieUseCase;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
+import com.karumi.rosie.domain.usecase.UseCaseParams;
+
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 import com.karumi.rosie.view.presenter.view.ErrorView;
 
@@ -54,6 +57,22 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    */
   public void destroy() {
 
+  }
+
+  /**
+   * Executes a RosieUseCase passed as parameter using the UseCaseHandler instance obtained during
+   * the RosiePresenter construction.
+   */
+  protected void execute(RosieUseCase useCase) {
+    useCaseHandler.execute(useCase);
+  }
+
+  /**
+   * Executes a RosieUseCase passed as parameter using the UseCaseHandler instance obtained during
+   * the RosiePresenter construction and the UseCaseParams object passed as second parameter.
+   */
+  protected void execute(RosieUseCase useCase, UseCaseParams useCaseParams) {
+    useCaseHandler.execute(useCase, useCaseParams);
   }
 
   /**
