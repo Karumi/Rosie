@@ -17,26 +17,40 @@
 package com.karumi.rosie.domain.usecase.error;
 
 import java.lang.reflect.InvocationTargetException;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-/**
- * Provides Error instances given an Exception passed as argument. Create you own factory extending
- * from this class and override create method if needed.
- */
-public class ErrorFactory {
+import static org.mockito.Mockito.verify;
 
-  public Error create(Exception exception) {
-    return null;
+public class ErrorHandlerTest {
+
+  @Mock private OnErrorCallback onErrorCallback;
+  @Mock private Error error;
+
+  @Before public void setUp() {
+    MockitoAnnotations.initMocks(this);
   }
 
-  final Error createInternalException(Exception exception) {
-    if (exception instanceof ErrorNotHandledException) {
-      return ((ErrorNotHandledException) exception).getError();
-    } else if (exception instanceof InvocationTargetException) {
-      InvocationTargetException invocationTargetException = (InvocationTargetException) exception;
-      ErrorNotHandledException errorNotHandledException =
-          (ErrorNotHandledException) invocationTargetException.getTargetException();
-      return createInternalException(errorNotHandledException);
-    }
-    return new Error("Generic Error", exception);
+  @Test public void shouldNotifyInvocationTargetExceptionWrappingAnErrorNotHandledExceptionError() {
+    ErrorHandler errorHandler = givenAnErrorHandlerWithOneOnErrorCallback();
+    InvocationTargetException invocationTargetException =
+        givenAnInvocationExceptionWrappingAnErrorNotHandledException();
+
+    errorHandler.notifyError(invocationTargetException);
+
+    verify(onErrorCallback).onError(error);
+  }
+
+  private InvocationTargetException givenAnInvocationExceptionWrappingAnErrorNotHandledException() {
+    ErrorNotHandledException errorNotHandledException = new ErrorNotHandledException(error);
+    return new InvocationTargetException(errorNotHandledException);
+  }
+
+  private ErrorHandler givenAnErrorHandlerWithOneOnErrorCallback() {
+    ErrorHandler errorHandler = new ErrorHandler();
+    errorHandler.registerCallback(onErrorCallback);
+    return errorHandler;
   }
 }
