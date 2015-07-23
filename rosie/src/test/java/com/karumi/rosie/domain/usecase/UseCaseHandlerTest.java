@@ -22,9 +22,8 @@ import com.karumi.rosie.domain.usecase.annotation.UseCase;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
 import com.karumi.rosie.domain.usecase.error.ErrorHandler;
 import com.karumi.rosie.domain.usecase.error.ErrorNotHandledException;
-
-import com.karumi.rosie.doubles.FakeCallbackScheduler;
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
+import com.karumi.rosie.doubles.FakeCallbackScheduler;
 import com.karumi.rosie.doubles.NetworkError;
 import com.karumi.rosie.testutils.FakeTaskScheduler;
 import java.util.ArrayList;
@@ -261,6 +260,31 @@ public class UseCaseHandlerTest extends UnitTest {
     verify(errorHandler).notifyError(any(Exception.class));
   }
 
+  @Test public void shouldThrowExceptionIfUseCaseNotifiesSuccessButThereIsNoOnSuccessCallback() {
+    FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
+    SuccessUseCase successUseCase = new SuccessUseCase();
+    ErrorHandler errorHandler = mock(ErrorHandler.class);
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler, errorHandler);
+    UseCaseParams useCaseParams = new UseCaseParams.Builder().build();
+
+    useCaseHandler.execute(successUseCase, useCaseParams);
+
+    verify(errorHandler).notifyError(any(IllegalStateException.class));
+  }
+
+  @Test public void shouldThrowExceptionIfTheOnSuccessCallbackHasNoMethodsWithSuccessAnnotations() {
+    FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
+    SuccessUseCase successUseCase = new SuccessUseCase();
+    ErrorHandler errorHandler = mock(ErrorHandler.class);
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler, errorHandler);
+    UseCaseParams useCaseParams = new UseCaseParams.Builder().onSuccess(new OnSuccessCallback() {
+    }).build();
+
+    useCaseHandler.execute(successUseCase, useCaseParams);
+
+    verify(errorHandler).notifyError(any(IllegalStateException.class));
+  }
+
   private OnErrorCallback onErrorCallback = new OnErrorCallback<Error>() {
 
     @Override public void onError(Error error) {
@@ -374,6 +398,17 @@ public class UseCaseHandlerTest extends UnitTest {
 
     @UseCase(name = "launchException") public void launchExceptionMethod() throws Exception {
       throw new Exception("exception");
+    }
+  }
+
+  private class SuccessUseCase extends RosieUseCase {
+
+    public SuccessUseCase() {
+      setCallbackScheduler(new FakeCallbackScheduler());
+    }
+
+    @UseCase public void execute() {
+      notifySuccess();
     }
   }
 }
