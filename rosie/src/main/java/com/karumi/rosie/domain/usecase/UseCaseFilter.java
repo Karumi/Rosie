@@ -64,8 +64,7 @@ class UseCaseFilter {
 
     Method[] methods = target.getClass().getMethods();
     for (Method method : methods) {
-      UseCase useCaseMethod =
-          method.getAnnotation(UseCase.class);
+      UseCase useCaseMethod = method.getAnnotation(UseCase.class);
 
       if (useCaseMethod != null) {
         useCaseMethods.add(method);
@@ -99,10 +98,13 @@ class UseCaseFilter {
 
   private static boolean hasValidArguments(Class<?>[] parameters, Object[] selectedArgs) {
     for (int i = 0; i < parameters.length; i++) {
-      Class<?> targetClass = selectedArgs[i].getClass();
-      Class<?> parameterClass = parameters[i];
-      if (!ClassUtils.canAssign(targetClass, parameterClass)) {
-        return false;
+      Object argument = selectedArgs[i];
+      if (argument != null) {
+        Class<?> targetClass = argument.getClass();
+        Class<?> parameterClass = parameters[i];
+        if (!ClassUtils.canAssign(targetClass, parameterClass)) {
+          return false;
+        }
       }
     }
     return true;

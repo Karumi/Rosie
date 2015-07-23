@@ -20,9 +20,11 @@ import com.karumi.rosie.UnitTest;
 import com.karumi.rosie.domain.usecase.RosieUseCase;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
 import com.karumi.rosie.domain.usecase.UseCaseParams;
+import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 
 public class RosiePresenterTest extends UnitTest {
@@ -45,6 +47,23 @@ public class RosiePresenterTest extends UnitTest {
     rosiePresenter.execute(anyUseCase, anyUseCaseParams);
 
     verify(useCaseHandler).execute(anyUseCase, anyUseCaseParams);
+  }
+
+  @Test public void shouldRegisterGlobalErrorCallbackDuringTheInitializeLifecycleStage() {
+    RosiePresenter rosiePresenter = givenARosiePresenter();
+
+    rosiePresenter.initialize();
+    rosiePresenter.update();
+
+    verify(useCaseHandler).registerGlobalErrorCallback(any(OnErrorCallback.class));
+  }
+
+  @Test public void shouldUnregisterGlobalErrorCallbackDuringThePauseLifecycleStage() {
+    RosiePresenter rosiePresenter = givenARosiePresenter();
+
+    rosiePresenter.pause();
+
+    verify(useCaseHandler).unregisterGlobalErrorCallback(any(OnErrorCallback.class));
   }
 
   private RosiePresenter givenARosiePresenter() {
