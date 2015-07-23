@@ -41,9 +41,8 @@ public class RosieUseCase {
 
   /**
    * Notify to the callback onSuccessCallback that something it's work fine. You can invoke the
-   * method as
-   * many times as you want. You only need on your onSuccessCallback a method with the same
-   * arguments.
+   * method as many times as you want. You only need on your onSuccessCallback a method with the
+   * same arguments.
    *
    * @param values that will be send to the onSuccessCallback callback. Note: By default this
    * method
