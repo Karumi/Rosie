@@ -53,7 +53,7 @@ public class RosieUseCase {
     if (onSuccessCallback == null) {
       throw new IllegalStateException("There is no a OnSuccessCallback configured.");
     }
-    
+
     Method[] methodsArray = onSuccessCallback.getClass().getMethods();
     if (methodsArray.length != 0) {
       Method methodToInvoke =
@@ -61,7 +61,8 @@ public class RosieUseCase {
       invokeMethodInTheCallbackScheduler(methodToInvoke, values);
     } else {
       throw new IllegalStateException(
-          "The OnSuccessCallback instance configured has no methods annotated with the @Success annotation.");
+          "The OnSuccessCallback instance configured has no methods annotated with the "
+              + "@Success annotation.");
     }
   }
 
