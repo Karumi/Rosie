@@ -50,6 +50,10 @@ public class RosieUseCase {
    * return the response to the UI Thread.
    */
   protected void notifySuccess(Object... values) {
+    if (onSuccessCallback == null) {
+      throw new IllegalStateException("There is no a OnSuccessCallback configured.");
+    }
+    
     Method[] methodsArray = onSuccessCallback.getClass().getMethods();
     if (methodsArray.length != 0) {
       Method methodToInvoke =
