@@ -3,7 +3,6 @@ package com.karumi.rosie.view.presenter;
 import com.karumi.rosie.domain.usecase.RosieUseCase;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
 import com.karumi.rosie.domain.usecase.UseCaseParams;
-
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 import com.karumi.rosie.view.presenter.view.ErrorView;
 
@@ -18,6 +17,16 @@ public class RosiePresenter<T extends RosiePresenter.View> {
 
   private ErrorView errorView;
   private T view;
+  private boolean shouldRegisterGlobalErrorCallback = true;
+  private final OnErrorCallback globalErrorCallback = new OnErrorCallback() {
+    @Override public void onError(Error error) {
+      if (!RosiePresenter.this.onError(error)) {
+        if (errorView != null) {
+          errorView.showError(error);
+        }
+      }
+    }
+  };
 
   public RosiePresenter(UseCaseHandler useCaseHandler) {
     this.useCaseHandler = useCaseHandler;
@@ -28,7 +37,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * presenter is initialized.
    */
   public void initialize() {
-
+    registerGlobalErrorCallback();
   }
 
   /**
@@ -36,9 +45,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * presenter is resumed.
    */
   public void update() {
-    if (globalError != null) {
-      useCaseHandler.registerGlobalErrorCallback(globalError);
-    }
+    registerGlobalErrorCallback();
   }
 
   /**
@@ -46,9 +53,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * presenter is paused.
    */
   public void pause() {
-    if (globalError != null) {
-      useCaseHandler.unregisterGlobalErrorCallback(globalError);
-    }
+    unregisterGlobalErrorCallback();
   }
 
   /**
@@ -114,15 +119,19 @@ public class RosiePresenter<T extends RosiePresenter.View> {
     this.errorView = errorView;
   }
 
-  private OnErrorCallback globalError = new OnErrorCallback() {
-    @Override public void onError(Error error) {
-      if (!RosiePresenter.this.onError(error)) {
-        if (errorView != null) {
-          errorView.showError(error);
-        }
-      }
+  private void registerGlobalErrorCallback() {
+    if (globalErrorCallback != null && shouldRegisterGlobalErrorCallback) {
+      shouldRegisterGlobalErrorCallback = false;
+      useCaseHandler.registerGlobalErrorCallback(globalErrorCallback);
     }
-  };
+  }
+
+  private void unregisterGlobalErrorCallback() {
+    if (globalErrorCallback != null) {
+      shouldRegisterGlobalErrorCallback = true;
+      useCaseHandler.unregisterGlobalErrorCallback(globalErrorCallback);
+    }
+  }
 
   /**
    * Represents the View component inside the Model View Presenter pattern. This interface must be
