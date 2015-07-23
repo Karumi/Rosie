@@ -16,14 +16,20 @@
 
 package com.karumi.rosie.demo.base.application;
 
+import android.os.StrictMode;
 import com.karumi.rosie.application.RosieApplication;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- *
- */
 public class DemoApplication extends RosieApplication {
+
+  @Override public void onCreate() {
+    super.onCreate();
+    StrictMode.setThreadPolicy(
+        new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().penaltyDeath().build());
+    StrictMode.setVmPolicy(
+        new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().penaltyDeath().build());
+  }
 
   @Override public List<Object> getApplicationModules() {
     return Arrays.asList((Object) new GlobalDemoAndroidModule());
