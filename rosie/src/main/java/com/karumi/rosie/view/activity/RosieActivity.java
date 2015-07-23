@@ -18,6 +18,7 @@ package com.karumi.rosie.view.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import butterknife.ButterKnife;
 import com.karumi.rosie.application.RosieApplication;
 import com.karumi.rosie.module.RosieActivityModule;
@@ -86,6 +87,12 @@ public abstract class RosieActivity extends FragmentActivity
   @Override protected void onDestroy() {
     super.onDestroy();
     presenterLifeCycleLinker.destroyPresenters();
+    System.gc();
+  }
+
+  @Override protected void finalize() throws Throwable {
+    Log.e("DEPURAR", "CG");
+    super.finalize();
   }
 
   /**

@@ -56,7 +56,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * presenter is destroyed.
    */
   public void destroy() {
-
+    this.view = null;
   }
 
   /**

@@ -22,6 +22,7 @@ import com.karumi.rosie.domain.usecase.callback.MainThreadCallbackScheduler;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
 import com.karumi.rosie.domain.usecase.error.ErrorNotHandledException;
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 
 /**
@@ -30,15 +31,14 @@ import java.lang.reflect.Method;
  */
 public class RosieUseCase {
 
-  private OnSuccessCallback onSuccess;
-  private OnErrorCallback onErrorCallback;
+  private WeakReference<OnSuccessCallback> onSuccess;
+  private WeakReference<OnErrorCallback> onErrorCallback;
   private CallbackScheduler callbackScheduler;
 
   public void setCallbackScheduler(CallbackScheduler callbackScheduler) {
     validateCallbackScheduler(callbackScheduler);
     this.callbackScheduler = callbackScheduler;
   }
-
 
   /**
    * Notify to the callback onSuccess that something it's work fine. You can invoke the method as
@@ -48,7 +48,7 @@ public class RosieUseCase {
    * return the response to the UI Thread.
    */
   protected void notifySuccess(Object... values) {
-    Method[] methodsArray = onSuccess.getClass().getMethods();
+    Method[] methodsArray = onSuccess.get().getClass().getMethods();
     if (methodsArray.length > 0) {
       Method methodToInvoke =
           UseCaseFilter.filterValidMethodArgs(values, methodsArray, Success.class);
@@ -65,11 +65,11 @@ public class RosieUseCase {
    * handled. You don't need manage this exception UseCaseHandler do it for you.
    */
   protected void notifyError(final Error error) throws ErrorNotHandledException {
-    if (onErrorCallback != null) {
+    if (onErrorCallback.get() != null) {
       try {
         getCallbackScheduler().post(new Runnable() {
           @Override public void run() {
-            onErrorCallback.onError(error);
+            onErrorCallback.get().onError(error);
           }
         });
       } catch (IllegalArgumentException e) {
@@ -81,11 +81,11 @@ public class RosieUseCase {
   }
 
   void setOnSuccess(OnSuccessCallback onSuccess) {
-    this.onSuccess = onSuccess;
+    this.onSuccess = new WeakReference<>(onSuccess);
   }
 
   void setOnError(OnErrorCallback onErrorCallback) {
-    this.onErrorCallback = onErrorCallback;
+    this.onErrorCallback = new WeakReference<OnErrorCallback>(onErrorCallback);
   }
 
   private void invokeMethodInTheCallbackScheduler(final Method methodToInvoke,
@@ -93,7 +93,7 @@ public class RosieUseCase {
     getCallbackScheduler().post(new Runnable() {
       @Override public void run() {
         try {
-          methodToInvoke.invoke(onSuccess, values);
+          methodToInvoke.invoke(onSuccess.get(), values);
         } catch (Exception e) {
           throw new RuntimeException("Internal error invoking the success object", e);
         }
