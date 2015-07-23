@@ -45,7 +45,9 @@ public abstract class RosieActivity extends FragmentActivity
    */
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    injectActivityModules();
+    if (shouldInitializeActivityScopeGraph()) {
+      injectActivityModules();
+    }
     int layoutId = getLayoutId();
     setContentView(layoutId);
     presenterLifeCycleLinker.addAnnotatedPresenter(getClass().getDeclaredFields(), this);
@@ -93,8 +95,15 @@ public abstract class RosieActivity extends FragmentActivity
    * to resolve all the dependencies needed by the object and inject them.
    */
   public final void inject(Object object) {
+    if (shouldInitializeActivityScopeGraph()) {
+      injectActivityModules();
+    }
     activityScopeGraph.inject(object);
     activityScopeGraph.injectStatics();
+  }
+
+  private boolean shouldInitializeActivityScopeGraph() {
+    return activityScopeGraph == null;
   }
 
   @Override public void showError(Error error) {

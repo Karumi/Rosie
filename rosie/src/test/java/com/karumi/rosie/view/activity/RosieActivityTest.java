@@ -85,4 +85,11 @@ public class RosieActivityTest extends RobolectricTest {
 
     assertTrue(fakeActivity.hasShownError());
   }
+
+  @Test
+  public void shouldNotCrashIfSomeoneTriesToInjectAnObjectBeforeTheOnCreateMethodHasNotBeenCalled() {
+    FakeActivity fakeActivity = Robolectric.buildActivity(FakeActivity.class).get();
+
+    fakeActivity.inject(new Object());
+  }
 }
