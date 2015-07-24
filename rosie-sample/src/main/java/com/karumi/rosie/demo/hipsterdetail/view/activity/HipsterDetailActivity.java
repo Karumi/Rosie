@@ -18,21 +18,10 @@ package com.karumi.rosie.demo.hipsterdetail.view.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
 import com.karumi.rosie.demo.R;
 import com.karumi.rosie.demo.hipsterdetail.view.fragment.HipsterDetailFragment;
-import com.karumi.rosie.demo.hipsterlist.domain.HipsterListDomainModule;
-import com.karumi.rosie.demo.hipsterlist.domain.usecase.ObtainHipsters2;
 import com.karumi.rosie.demo.hipsterlist.view.model.Hipster;
-import com.karumi.rosie.domain.usecase.UseCaseHandler;
-import com.karumi.rosie.domain.usecase.UseCaseParams;
-import com.karumi.rosie.domain.usecase.annotation.Success;
-import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
 import com.karumi.rosie.view.activity.RosieActivity;
-import java.util.Arrays;
-import java.util.List;
-import javax.inject.Inject;
 
 /**
  * RosieActivity extension created to show a Hipster detailed information.
@@ -43,32 +32,13 @@ public class HipsterDetailActivity extends RosieActivity {
     return R.layout.activity_hipster_detail;
   }
 
-  @Inject UseCaseHandler useCaseHandler;
-  @Inject ObtainHipsters2 obtainHipsters2;
-
-  @Override public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    UseCaseParams params = new UseCaseParams.Builder().onSuccess(new OnSuccessCallback() {
-      @Success public void onSuccess() {
-        Log.e("DEPURAR", "DEATIL INTERACTOR FINISHED, this is UI");
-        System.gc();
-      }
-    }).build();
-    useCaseHandler.execute(obtainHipsters2, params);
-  }
-
   public static void open(Context context, Hipster hipster) {
     Intent intent = new Intent(context, HipsterDetailActivity.class);
     intent.putExtra(HipsterDetailFragment.HIPSTER_EXTRA_KEY, hipster);
     context.startActivity(intent);
   }
 
-  @Override protected void finalize() throws Throwable {
-    Log.e("DEPURAR", "----------->GC Hipster-Detail-Activity");
-    super.finalize();
-  }
-
-  @Override protected List<Object> getActivityScopeModules() {
-    return Arrays.asList((Object) new HipsterListDomainModule());
+  @Override protected boolean shouldInjectActivity() {
+    return false;
   }
 }

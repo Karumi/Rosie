@@ -87,11 +87,7 @@ public abstract class RosieActivity extends FragmentActivity implements RosiePre
    */
   @Override protected void onDestroy() {
     presenterLifeCycleLinker.destroyPresenters();
-    System.gc();
-    Log.e("DEPURAR", "ondestroy in " + getLocalClassName());
-    Log.e("DEPURAR", "REQUESTING FOR GARBAGE COLLECTOR " + getLocalClassName());
     super.onDestroy();
-    System.gc();
   }
 
   /**
