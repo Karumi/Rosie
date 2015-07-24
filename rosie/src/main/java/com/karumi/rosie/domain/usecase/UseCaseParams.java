@@ -61,12 +61,9 @@ public class UseCaseParams {
 
   public static class Builder {
 
-    private final static OnSuccessCallback EMPTY_SUCCESS = new OnSuccessCallback() {
-    };
-
     private String useCaseName = "";
     private Object[] args;
-    private OnSuccessCallback onSuccess = EMPTY_SUCCESS;
+    private OnSuccessCallback onSuccess;
     private OnErrorCallback errorCallback;
 
     public Builder useCaseName(String name) {

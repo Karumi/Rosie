@@ -33,6 +33,7 @@ public class RosieUseCase {
 
   private WeakReference<OnSuccessCallback> onSuccessCallback;
   private WeakReference<OnErrorCallback> onErrorCallback;
+
   private CallbackScheduler callbackScheduler;
 
   public void setCallbackScheduler(CallbackScheduler callbackScheduler) {
@@ -42,6 +43,7 @@ public class RosieUseCase {
 
   /**
    * Notify to the callback onSuccessCallback that something it's work fine. You can invoke the
+   *
    * method as
    * many times as you want. You only need on your onSuccessCallback a method with the same
    * arguments.
@@ -56,6 +58,10 @@ public class RosieUseCase {
       Method methodToInvoke =
           UseCaseFilter.filterValidMethodArgs(values, methodsArray, Success.class);
       invokeMethodInTheCallbackScheduler(methodToInvoke, values);
+    } else {
+      throw new IllegalStateException(
+          "The OnSuccessCallback instance configured has no methods annotated with the "
+              + "@Success annotation.");
     }
   }
 
@@ -67,6 +73,7 @@ public class RosieUseCase {
    * @throws ErrorNotHandledException this exception launch when the specific error is not
    * handled. You don't need manage this exception UseCaseHandler do it for you.
    */
+
   protected void notifyError(final Error error) throws ErrorNotHandledException {
     if (onErrorCallback == null) {
       throw new ErrorNotHandledException(error);
@@ -105,6 +112,7 @@ public class RosieUseCase {
    * Activity lifecycle pause-destroy stage. Remember to keep a strong reference of your
    * OnErrorCallback instance if needed.
    */
+
   void setOnErrorCallback(OnErrorCallback onErrorCallback) {
     if (onErrorCallback != null) {
       this.onErrorCallback = new WeakReference<>(onErrorCallback);
