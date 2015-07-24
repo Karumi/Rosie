@@ -3,10 +3,13 @@ package com.karumi.rosie.view.presenter;
 import com.karumi.rosie.domain.usecase.RosieUseCase;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
 import com.karumi.rosie.domain.usecase.UseCaseParams;
+import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Implements all the presentation logic. All Presenters must extends from this class and indicate
@@ -18,6 +21,8 @@ public class RosiePresenter<T extends RosiePresenter.View> {
   private final UseCaseHandler useCaseHandler;
 
   private T view;
+  private List<OnSuccessCallback> onSuccessCallbacks = new LinkedList<>();
+  private List<OnErrorCallback> onErrorCallbacks = new LinkedList<>();
   private boolean shouldRegisterGlobalErrorCallback = true;
   private final OnErrorCallback globalErrorCallback = new OnErrorCallback() {
     @Override public void onError(Error error) {
@@ -72,8 +77,12 @@ public class RosiePresenter<T extends RosiePresenter.View> {
   /**
    * Executes a RosieUseCase passed as parameter using the UseCaseHandler instance obtained during
    * the RosiePresenter construction and the UseCaseParams object passed as second parameter.
+   *
+   * This method also keeps a strong reference of OnSuccessCallback and OnErrorCallback parameters
+   * because most of the times this method is called using anonymous functions as callbacks
    */
   protected void execute(RosieUseCase useCase, UseCaseParams useCaseParams) {
+    retainCallbackReferences(useCaseParams);
     useCaseHandler.execute(useCase, useCaseParams);
   }
 
@@ -113,7 +122,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * Changes the current view instance with a dynamic proxy to avoid real UI updates.
    */
   void resetView() {
-    Class<?> viewClass = view.getClass().getInterfaces()[0];
+    final Class<?> viewClass = getViewInterfaceClass();
     InvocationHandler emptyHandler = new InvocationHandler() {
       @Override public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         return null;
@@ -122,7 +131,19 @@ public class RosiePresenter<T extends RosiePresenter.View> {
     ClassLoader classLoader = viewClass.getClassLoader();
     Class[] interfaces = new Class[1];
     interfaces[0] = viewClass;
-    view = (T) Proxy.newProxyInstance(classLoader, interfaces, emptyHandler);
+    this.view = (T) Proxy.newProxyInstance(classLoader, interfaces, emptyHandler);
+  }
+
+  private Class<?> getViewInterfaceClass() {
+    Class<?> interfaceClass = null;
+    Class<?>[] interfaces = this.view.getClass().getInterfaces();
+    for (int i = 0; i < interfaces.length; i++) {
+      Class<?> interfaceCandidate = interfaces[i];
+      if (RosiePresenter.View.class.isAssignableFrom(interfaceCandidate)) {
+        interfaceClass = interfaceCandidate;
+      }
+    }
+    return interfaceClass;
   }
 
   private void registerGlobalErrorCallback() {
@@ -143,6 +164,17 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * Represents the View component inside the Model View Presenter pattern. This interface must be
    * used as base interface for every View interface declared.
    */
+  private void retainCallbackReferences(UseCaseParams useCaseParams) {
+    OnSuccessCallback onSuccessCallback = useCaseParams.getOnSuccessCallback();
+    if (onSuccessCallback != null) {
+      onSuccessCallbacks.add(onSuccessCallback);
+    }
+    OnErrorCallback onErrorCallback = useCaseParams.getOnErrorCallback();
+    if (onErrorCallback != null) {
+      onErrorCallbacks.add(onErrorCallback);
+    }
+  }
+
   public interface View {
 
   }

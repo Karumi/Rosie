@@ -20,9 +20,6 @@ import com.karumi.rosie.application.RosieApplication;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- *
- */
 public class DemoApplication extends RosieApplication {
 
   @Override public List<Object> getApplicationModules() {

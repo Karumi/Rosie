@@ -48,18 +48,16 @@ public class HipsterListPresenter extends RosiePresenter<HipsterListPresenter.Vi
   }
 
   private void loadHipsters() {
-    UseCaseParams params = new UseCaseParams.Builder().onSuccess(successCallback).build();
+    UseCaseParams params = new UseCaseParams.Builder().onSuccess(new OnSuccessCallback() {
+      @Success public void onSuccess(List<Hipster> hipsters) {
+        HipsterListPresenter.this.hipsters.clear();
+        HipsterListPresenter.this.hipsters.addAll(hipsters);
+        getView().updateList(HipsterListPresenter.this.hipsters);
+      }
+    }).build();
 
     execute(obtainHipsters, params);
   }
-
-  private OnSuccessCallback successCallback = new OnSuccessCallback() {
-    @Success public void onSuccess(List<Hipster> hipsters) {
-      HipsterListPresenter.this.hipsters.clear();
-      HipsterListPresenter.this.hipsters.addAll(hipsters);
-      getView().updateList(HipsterListPresenter.this.hipsters);
-    }
-  };
 
   public interface View extends RosiePresenter.View {
     void updateList(List<Hipster> hipsters);

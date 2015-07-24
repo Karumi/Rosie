@@ -22,6 +22,7 @@ import com.karumi.rosie.domain.usecase.callback.MainThreadCallbackScheduler;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
 import com.karumi.rosie.domain.usecase.error.ErrorNotHandledException;
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 
 /**
@@ -30,8 +31,9 @@ import java.lang.reflect.Method;
  */
 public class RosieUseCase {
 
-  private OnSuccessCallback onSuccessCallback;
-  private OnErrorCallback onErrorCallback;
+  private WeakReference<OnSuccessCallback> onSuccessCallback;
+  private WeakReference<OnErrorCallback> onErrorCallback;
+
   private CallbackScheduler callbackScheduler;
 
   public void setCallbackScheduler(CallbackScheduler callbackScheduler) {
@@ -41,20 +43,18 @@ public class RosieUseCase {
 
   /**
    * Notify to the callback onSuccessCallback that something it's work fine. You can invoke the
-   * method as many times as you want. You only need on your onSuccessCallback a method with the
-   * same arguments.
+   *
+   * method as
+   * many times as you want. You only need on your onSuccessCallback a method with the same
+   * arguments.
    *
    * @param values that will be send to the onSuccessCallback callback. Note: By default this
    * method
    * return the response to the UI Thread.
    */
   protected void notifySuccess(Object... values) {
-    if (onSuccessCallback == null) {
-      throw new IllegalStateException("There is no a OnSuccessCallback configured.");
-    }
-
-    Method[] methodsArray = onSuccessCallback.getClass().getMethods();
-    if (methodsArray.length != 0) {
+    Method[] methodsArray = onSuccessCallback.get().getClass().getMethods();
+    if (methodsArray.length > 0) {
       Method methodToInvoke =
           UseCaseFilter.filterValidMethodArgs(values, methodsArray, Success.class);
       invokeMethodInTheCallbackScheduler(methodToInvoke, values);
@@ -73,12 +73,17 @@ public class RosieUseCase {
    * @throws ErrorNotHandledException this exception launch when the specific error is not
    * handled. You don't need manage this exception UseCaseHandler do it for you.
    */
+
   protected void notifyError(final Error error) throws ErrorNotHandledException {
-    if (onErrorCallback != null) {
+    if (onErrorCallback == null) {
+      throw new ErrorNotHandledException(error);
+    }
+    final OnErrorCallback callback = this.onErrorCallback.get();
+    if (callback != null) {
       try {
         getCallbackScheduler().post(new Runnable() {
           @Override public void run() {
-            onErrorCallback.onError(error);
+            callback.onError(error);
           }
         });
       } catch (IllegalArgumentException e) {
@@ -89,25 +94,47 @@ public class RosieUseCase {
     }
   }
 
-  void setOnSuccess(OnSuccessCallback onSuccess) {
-    this.onSuccessCallback = onSuccess;
+  /**
+   * The OnSuccessCallback passed as argument in this method will be referenced as a
+   * WeakReference inside RosieUseCase and UseCaseParams to avoid memory leaks during the
+   * Activity lifecycle pause-destroy stage. Remember to keep a strong reference of your
+   * OnSuccessCallback instance if needed.
+   */
+  void setOnSuccessCallback(OnSuccessCallback onSuccessCallback) {
+    if (onSuccessCallback != null) {
+      this.onSuccessCallback = new WeakReference<>(onSuccessCallback);
+    }
   }
 
-  void setOnError(OnErrorCallback onErrorCallback) {
-    this.onErrorCallback = onErrorCallback;
+  /**
+   * The OnErrorCallback passed as argument in this method will be referenced as a
+   * WeakReference inside RosieUseCase and UseCaseParams to avoid memory leaks during the
+   * Activity lifecycle pause-destroy stage. Remember to keep a strong reference of your
+   * OnErrorCallback instance if needed.
+   */
+
+  void setOnErrorCallback(OnErrorCallback onErrorCallback) {
+    if (onErrorCallback != null) {
+      this.onErrorCallback = new WeakReference<>(onErrorCallback);
+    }
   }
 
   private void invokeMethodInTheCallbackScheduler(final Method methodToInvoke,
       final Object[] values) {
-    getCallbackScheduler().post(new Runnable() {
-      @Override public void run() {
-        try {
-          methodToInvoke.invoke(onSuccessCallback, values);
-        } catch (Exception e) {
-          throw new RuntimeException("Internal error invoking the success object", e);
-        }
+    if (onSuccessCallback != null) {
+      OnSuccessCallback callback = onSuccessCallback.get();
+      if (callback != null) {
+        getCallbackScheduler().post(new Runnable() {
+          @Override public void run() {
+            try {
+              methodToInvoke.invoke(onSuccessCallback.get(), values);
+            } catch (Exception e) {
+              throw new RuntimeException("Internal error invoking the success object", e);
+            }
+          }
+        });
       }
-    });
+    }
   }
 
   private CallbackScheduler getCallbackScheduler() {

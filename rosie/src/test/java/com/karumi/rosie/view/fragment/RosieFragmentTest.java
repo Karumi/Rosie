@@ -71,6 +71,10 @@ public class RosieFragmentTest extends RobolectricTest {
     public TestFragment() {
     }
 
+    @Override protected boolean shouldInjectFragment() {
+      return false;
+    }
+
     @Override protected int getLayoutId() {
       return ANY_LAYOUT;
     }

@@ -25,12 +25,9 @@ import dagger.Provides;
  */
 @Module(
     complete = false,
-    library = true
-)
-public class HipsterListDomainModule {
+    library = true) public class HipsterListDomainModule {
 
-  @Provides
-  public ObtainHipsters provideObtainHipsters() {
+  @Provides public ObtainHipsters provideObtainHipsters() {
     return new ObtainHipsters();
   }
 }

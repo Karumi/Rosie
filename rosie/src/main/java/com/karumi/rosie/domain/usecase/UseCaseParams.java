@@ -18,22 +18,29 @@ package com.karumi.rosie.domain.usecase;
 
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
+import java.lang.ref.WeakReference;
 
 /**
  * The params value to execute with the use case.
  */
 public class UseCaseParams {
-  private final OnSuccessCallback onSuccessCallback;
+
   private final String useCaseName;
   private final Object[] args;
-  private final OnErrorCallback errorCallback;
+
+  private WeakReference<OnSuccessCallback> onSuccessCallback;
+  private WeakReference<OnErrorCallback> onErrorCallback;
 
   public UseCaseParams(String useCaseName, Object[] args, OnSuccessCallback onSuccessCallback,
-      OnErrorCallback errorCallback) {
+      OnErrorCallback onErrorCallback) {
     this.args = args;
     this.useCaseName = useCaseName;
-    this.onSuccessCallback = onSuccessCallback;
-    this.errorCallback = errorCallback;
+    if (onSuccessCallback != null) {
+      this.onSuccessCallback = new WeakReference<>(onSuccessCallback);
+    }
+    if (onErrorCallback != null) {
+      this.onErrorCallback = new WeakReference<>(onErrorCallback);
+    }
   }
 
   String getUseCaseName() {
@@ -45,11 +52,11 @@ public class UseCaseParams {
   }
 
   public OnSuccessCallback getOnSuccessCallback() {
-    return onSuccessCallback;
+    return onSuccessCallback != null ? onSuccessCallback.get() : null;
   }
 
-  public OnErrorCallback getErrorCallback() {
-    return errorCallback;
+  public OnErrorCallback getOnErrorCallback() {
+    return onErrorCallback != null ? onErrorCallback.get() : null;
   }
 
   public static class Builder {
@@ -69,6 +76,12 @@ public class UseCaseParams {
       return this;
     }
 
+    /**
+     * The OnSuccessCallback passed as argument in this method will be referenced as a
+     * WeakReference inside RosieUseCase and UseCaseParams to avoid memory leaks during the
+     * Activity lifecycle pause-destroy stage. Remember to keep a strong reference of your
+     * OnSuccessCallback instance if needed.
+     */
     public Builder onSuccess(OnSuccessCallback onSuccessCallback) {
       if (onSuccessCallback == null) {
         throw new IllegalArgumentException(
@@ -79,10 +92,16 @@ public class UseCaseParams {
       return this;
     }
 
+    /**
+     * The OnErrorCallback passed as argument in this method will be referenced as a
+     * WeakReference inside RosieUseCase and UseCaseParams to avoid memory leaks during the
+     * Activity lifecycle pause-destroy stage. Remember to keep a strong reference of your
+     * OnErrorCallback instance if needed.
+     */
     public Builder onError(OnErrorCallback errorCallback) {
       if (errorCallback == null) {
         throw new IllegalArgumentException(
-            "The errorCallback used is null, you can't use a null instance as onError callback.");
+            "The onErrorCallback used is null, you can't use a null instance as onError callback.");
       }
       this.errorCallback = errorCallback;
       return this;

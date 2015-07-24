@@ -36,6 +36,7 @@ public class ObtainHipsters extends RosieUseCase {
 
     List<Hipster> hipsters = new ArrayList<Hipster>();
     hipsters.add(hipster);
+
     notifySuccess(hipsters);
   }
 }

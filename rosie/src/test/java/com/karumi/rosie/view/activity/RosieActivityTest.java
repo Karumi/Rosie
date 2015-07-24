@@ -18,7 +18,6 @@ package com.karumi.rosie.view.activity;
 
 import com.karumi.rosie.RobolectricTest;
 import com.karumi.rosie.doubles.FakeActivity;
-import com.karumi.rosie.doubles.FakeActivityWithPresenter;
 import org.junit.Test;
 import org.robolectric.Robolectric;
 
@@ -61,15 +60,6 @@ public class RosieActivityTest extends RobolectricTest {
         Robolectric.buildActivity(FakeActivity.class).create().destroy().get();
     verify(fakeActivity.getPresenter()).initialize();
     verify(fakeActivity.getPresenter()).destroy();
-  }
-
-  @Test public void shouldCallErrorWhenAnUseCaseLaunchAnGlobalError() {
-    FakeActivityWithPresenter fakeActivity =
-        Robolectric.buildActivity(FakeActivityWithPresenter.class).create().resume().get();
-
-    fakeActivity.generateErrorOnPresenter();
-
-    verify(fakeActivity.uiView).showFakeError();
   }
 
   @Test
