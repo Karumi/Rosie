@@ -68,11 +68,15 @@ public class RosieUseCase {
    * handled. You don't need manage this exception UseCaseHandler do it for you.
    */
   protected void notifyError(final Error error) throws ErrorNotHandledException {
-    if (onErrorCallback.get() != null) {
+    if (onErrorCallback == null) {
+      throw new ErrorNotHandledException(error);
+    }
+    final OnErrorCallback callback = this.onErrorCallback.get();
+    if (callback != null) {
       try {
         getCallbackScheduler().post(new Runnable() {
           @Override public void run() {
-            onErrorCallback.get().onError(error);
+            callback.onError(error);
           }
         });
       } catch (IllegalArgumentException e) {
@@ -90,7 +94,9 @@ public class RosieUseCase {
    * OnSuccessCallback instance if needed.
    */
   void setOnSuccessCallback(OnSuccessCallback onSuccessCallback) {
-    this.onSuccessCallback = new WeakReference<>(onSuccessCallback);
+    if (onSuccessCallback != null) {
+      this.onSuccessCallback = new WeakReference<>(onSuccessCallback);
+    }
   }
 
   /**
@@ -100,20 +106,27 @@ public class RosieUseCase {
    * OnErrorCallback instance if needed.
    */
   void setOnErrorCallback(OnErrorCallback onErrorCallback) {
-    this.onErrorCallback = new WeakReference<>(onErrorCallback);
+    if (onErrorCallback != null) {
+      this.onErrorCallback = new WeakReference<>(onErrorCallback);
+    }
   }
 
   private void invokeMethodInTheCallbackScheduler(final Method methodToInvoke,
       final Object[] values) {
-    getCallbackScheduler().post(new Runnable() {
-      @Override public void run() {
-        try {
-          methodToInvoke.invoke(onSuccessCallback.get(), values);
-        } catch (Exception e) {
-          throw new RuntimeException("Internal error invoking the success object", e);
-        }
+    if (onSuccessCallback != null) {
+      OnSuccessCallback callback = onSuccessCallback.get();
+      if (callback != null) {
+        getCallbackScheduler().post(new Runnable() {
+          @Override public void run() {
+            try {
+              methodToInvoke.invoke(onSuccessCallback.get(), values);
+            } catch (Exception e) {
+              throw new RuntimeException("Internal error invoking the success object", e);
+            }
+          }
+        });
       }
-    });
+    }
   }
 
   private CallbackScheduler getCallbackScheduler() {

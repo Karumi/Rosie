@@ -27,15 +27,20 @@ public class UseCaseParams {
 
   private final String useCaseName;
   private final Object[] args;
-  private final WeakReference<OnSuccessCallback> onSuccessCallback;
-  private final WeakReference<OnErrorCallback> errorCallback;
 
-  public UseCaseParams(String useCaseName, Object[] args, OnSuccessCallback onSuccess,
-      OnErrorCallback errorCallback) {
+  private WeakReference<OnSuccessCallback> onSuccessCallback;
+  private WeakReference<OnErrorCallback> onErrorCallback;
+
+  public UseCaseParams(String useCaseName, Object[] args, OnSuccessCallback onSuccessCallback,
+      OnErrorCallback onErrorCallback) {
     this.args = args;
     this.useCaseName = useCaseName;
-    this.onSuccessCallback = new WeakReference<>(onSuccess);
-    this.errorCallback = new WeakReference<>(errorCallback);
+    if (onSuccessCallback != null) {
+      this.onSuccessCallback = new WeakReference<>(onSuccessCallback);
+    }
+    if (onErrorCallback != null) {
+      this.onErrorCallback = new WeakReference<>(onErrorCallback);
+    }
   }
 
   String getUseCaseName() {
@@ -47,14 +52,15 @@ public class UseCaseParams {
   }
 
   public OnSuccessCallback getOnSuccessCallback() {
-    return onSuccessCallback.get();
+    return onSuccessCallback != null ? onSuccessCallback.get() : null;
   }
 
   public OnErrorCallback getOnErrorCallback() {
-    return errorCallback.get();
+    return onErrorCallback != null ? onErrorCallback.get() : null;
   }
 
   public static class Builder {
+
     private final static OnSuccessCallback EMPTY_SUCCESS = new OnSuccessCallback() {
     };
 
@@ -98,7 +104,7 @@ public class UseCaseParams {
     public Builder onError(OnErrorCallback errorCallback) {
       if (errorCallback == null) {
         throw new IllegalArgumentException(
-            "The errorCallback used is null, you can't use a null instance as onError callback.");
+            "The onErrorCallback used is null, you can't use a null instance as onError callback.");
       }
       this.errorCallback = errorCallback;
       return this;

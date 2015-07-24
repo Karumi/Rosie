@@ -17,7 +17,6 @@
 package com.karumi.rosie.domain.usecase;
 
 import com.karumi.rosie.domain.usecase.error.ErrorHandler;
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 
 /**
