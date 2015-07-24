@@ -16,7 +16,9 @@
 
 package com.karumi.rosie.demo.hipsterlist.domain;
 
+import com.karumi.rosie.demo.hipsterdetail.view.activity.HipsterDetailActivity;
 import com.karumi.rosie.demo.hipsterlist.domain.usecase.ObtainHipsters;
+import com.karumi.rosie.demo.hipsterlist.domain.usecase.ObtainHipsters2;
 import dagger.Module;
 import dagger.Provides;
 
@@ -25,12 +27,14 @@ import dagger.Provides;
  */
 @Module(
     complete = false,
-    library = true
-)
-public class HipsterListDomainModule {
+    library = true,
+    injects = HipsterDetailActivity.class) public class HipsterListDomainModule {
 
-  @Provides
-  public ObtainHipsters provideObtainHipsters() {
+  @Provides public ObtainHipsters provideObtainHipsters() {
     return new ObtainHipsters();
+  }
+
+  @Provides public ObtainHipsters2 provideObtainHipsters2() {
+    return new ObtainHipsters2();
   }
 }

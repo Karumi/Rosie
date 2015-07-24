@@ -55,7 +55,7 @@ public class UseCaseHandler {
     UseCaseFilter.filter(useCase, useCaseParams);
 
     useCase.setOnSuccess(useCaseParams.getOnSuccessCallback());
-    useCase.setOnError(useCaseParams.getErrorCallback());
+    useCase.setOnError(useCaseParams.getOnErrorCallback());
     UseCaseWrapper useCaseWrapper = new UseCaseWrapper(useCase, useCaseParams, errorHandler);
     taskScheduler.execute(useCaseWrapper);
   }

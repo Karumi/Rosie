@@ -18,22 +18,24 @@ package com.karumi.rosie.domain.usecase;
 
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
+import java.lang.ref.WeakReference;
 
 /**
  * The params value to execute with the use case.
  */
 public class UseCaseParams {
-  private final OnSuccessCallback onSuccessCallback;
+
   private final String useCaseName;
   private final Object[] args;
-  private final OnErrorCallback errorCallback;
+  private final WeakReference<OnSuccessCallback> onSuccessCallback;
+  private final WeakReference<OnErrorCallback> errorCallback;
 
   public UseCaseParams(String useCaseName, Object[] args, OnSuccessCallback onSuccess,
       OnErrorCallback errorCallback) {
     this.args = args;
     this.useCaseName = useCaseName;
-    this.onSuccessCallback = onSuccess;
-    this.errorCallback = errorCallback;
+    this.onSuccessCallback = new WeakReference<>(onSuccess);
+    this.errorCallback = new WeakReference<>(errorCallback);
   }
 
   String getUseCaseName() {
@@ -45,11 +47,11 @@ public class UseCaseParams {
   }
 
   public OnSuccessCallback getOnSuccessCallback() {
-    return onSuccessCallback;
+    return onSuccessCallback.get();
   }
 
-  public OnErrorCallback getErrorCallback() {
-    return errorCallback;
+  public OnErrorCallback getOnErrorCallback() {
+    return errorCallback.get();
   }
 
   public static class Builder {

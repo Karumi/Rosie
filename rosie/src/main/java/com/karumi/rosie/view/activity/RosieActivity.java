@@ -36,7 +36,7 @@ import java.util.List;
 public abstract class RosieActivity extends FragmentActivity implements RosiePresenter.View {
 
   private ObjectGraph activityScopeGraph;
-  private PresenterLifeCycleLinker presenterLifeCycleLinker = new PresenterLifeCycleLinker();
+  private PresenterLifeCycleLinker presenterLifeCycleLinker;
 
   /**
    * Initializes the object graph associated to the activity scope, links presenters to the
@@ -49,6 +49,7 @@ public abstract class RosieActivity extends FragmentActivity implements RosiePre
     }
     int layoutId = getLayoutId();
     setContentView(layoutId);
+    presenterLifeCycleLinker = new PresenterLifeCycleLinker();
     presenterLifeCycleLinker.addAnnotatedPresenter(getClass().getDeclaredFields(), this);
     ButterKnife.inject(this);
     presenterLifeCycleLinker.setView(this);
@@ -85,10 +86,12 @@ public abstract class RosieActivity extends FragmentActivity implements RosiePre
    * Connects the Activity onDestroy method with the presenter used in this Activity.
    */
   @Override protected void onDestroy() {
-    super.onDestroy();
     presenterLifeCycleLinker.destroyPresenters();
     System.gc();
+    Log.e("DEPURAR", "ondestroy in " + getLocalClassName());
     Log.e("DEPURAR", "REQUESTING FOR GARBAGE COLLECTOR " + getLocalClassName());
+    super.onDestroy();
+    System.gc();
   }
 
   /**

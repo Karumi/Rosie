@@ -35,7 +35,7 @@ import com.karumi.rosie.view.presenter.RosiePresenter;
  */
 public abstract class RosieFragment extends Fragment implements RosiePresenter.View {
 
-  private PresenterLifeCycleLinker presenterLifeCycleLinker = new PresenterLifeCycleLinker();
+  private PresenterLifeCycleLinker presenterLifeCycleLinker;
 
   private boolean injected;
 
@@ -70,6 +70,7 @@ public abstract class RosieFragment extends Fragment implements RosiePresenter.V
    */
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    presenterLifeCycleLinker = new PresenterLifeCycleLinker();
     presenterLifeCycleLinker.setView(this);
     onPreparePresenter();
     presenterLifeCycleLinker.initializePresenters();

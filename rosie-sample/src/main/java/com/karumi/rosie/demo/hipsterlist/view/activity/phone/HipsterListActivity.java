@@ -80,7 +80,8 @@ public class HipsterListActivity extends RosieActivity implements HipsterListPre
   }
 
   @Override protected void finalize() throws Throwable {
-    Log.e("DEPURAR", "GC HipsterListActivity");
+    Log.e("DEPURAR", "----------->GC HipsterListActivity");
+    System.gc();
     super.finalize();
   }
 

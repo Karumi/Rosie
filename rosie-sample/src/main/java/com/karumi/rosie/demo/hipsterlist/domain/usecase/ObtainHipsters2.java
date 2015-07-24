@@ -14,39 +14,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.domain.usecase;
+package com.karumi.rosie.demo.hipsterlist.domain.usecase;
 
-import com.karumi.rosie.domain.usecase.error.ErrorHandler;
-import java.lang.ref.WeakReference;
-import java.lang.reflect.Method;
+import android.util.Log;
+import com.karumi.rosie.domain.usecase.RosieUseCase;
+import com.karumi.rosie.domain.usecase.annotation.UseCase;
 
 /**
- * This class wrap the use case for invoke it.
+ * This UseCase provide hipsters from dummy data.
  */
-public class UseCaseWrapper {
-  private final RosieUseCase useCase;
-  private final UseCaseParams useCaseParams;
-  private final ErrorHandler errorHandler;
+public class ObtainHipsters2 extends RosieUseCase {
 
-  public UseCaseWrapper(RosieUseCase useCase, UseCaseParams useCaseParams,
-      ErrorHandler errorHandler) {
-    this.useCase = useCase;
-    this.useCaseParams = useCaseParams;
-    this.errorHandler = errorHandler;
-  }
-
-  public void execute() {
+  @UseCase public void obtain() {
+    Log.e("DEPURAR", "LET'S GO TO SLEEP FOR 10 SECONDS");
     try {
-      Method methodToInvoke = UseCaseFilter.filter(useCase, useCaseParams);
-      methodToInvoke.invoke(useCase, useCaseParams.getArgs());
-    } catch (Exception e) {
-      notifyError(e);
+      Thread.sleep(20000);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
     }
-  }
-
-  private void notifyError(Exception exception) {
-    if (errorHandler != null) {
-      errorHandler.notifyError(exception);
-    }
+    Log.e("DEPURAR", "DETAIL SLEEP FINISHED IN THE INTERACTOR");
+    notifySuccess();
   }
 }
