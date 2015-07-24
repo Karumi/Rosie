@@ -77,10 +77,12 @@ public class RosiePresenter<T extends RosiePresenter.View> {
   /**
    * Executes a RosieUseCase passed as parameter using the UseCaseHandler instance obtained during
    * the RosiePresenter construction and the UseCaseParams object passed as second parameter.
+   *
+   * This method also keeps a strong reference of OnSuccessCallback and OnErrorCallback parameters
+   * because most of the times this method is called using anonymous functions as callbacks
    */
   protected void execute(RosieUseCase useCase, UseCaseParams useCaseParams) {
-    onSuccessCallbacks.add(useCaseParams.getOnSuccessCallback());
-    onErrorCallbacks.add(useCaseParams.getOnErrorCallback());
+    retainCallbackReferences(useCaseParams);
     useCaseHandler.execute(useCase, useCaseParams);
   }
 
@@ -150,6 +152,17 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * Represents the View component inside the Model View Presenter pattern. This interface must be
    * used as base interface for every View interface declared.
    */
+  private void retainCallbackReferences(UseCaseParams useCaseParams) {
+    OnSuccessCallback onSuccessCallback = useCaseParams.getOnSuccessCallback();
+    if (onSuccessCallback != null) {
+      onSuccessCallbacks.add(onSuccessCallback);
+    }
+    OnErrorCallback onErrorCallback = useCaseParams.getOnErrorCallback();
+    if (onErrorCallback != null) {
+      onErrorCallbacks.add(onErrorCallback);
+    }
+  }
+
   public interface View {
 
   }

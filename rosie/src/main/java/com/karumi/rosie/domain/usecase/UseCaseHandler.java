@@ -54,8 +54,8 @@ public class UseCaseHandler {
   public void execute(RosieUseCase useCase, UseCaseParams useCaseParams) {
     UseCaseFilter.filter(useCase, useCaseParams);
 
-    useCase.setOnSuccess(useCaseParams.getOnSuccessCallback());
-    useCase.setOnError(useCaseParams.getOnErrorCallback());
+    useCase.setOnSuccessCallback(useCaseParams.getOnSuccessCallback());
+    useCase.setOnErrorCallback(useCaseParams.getOnErrorCallback());
     UseCaseWrapper useCaseWrapper = new UseCaseWrapper(useCase, useCaseParams, errorHandler);
     taskScheduler.execute(useCaseWrapper);
   }

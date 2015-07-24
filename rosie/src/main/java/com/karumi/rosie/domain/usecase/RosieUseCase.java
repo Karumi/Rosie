@@ -31,7 +31,7 @@ import java.lang.reflect.Method;
  */
 public class RosieUseCase {
 
-  private WeakReference<OnSuccessCallback> onSuccess;
+  private WeakReference<OnSuccessCallback> onSuccessCallback;
   private WeakReference<OnErrorCallback> onErrorCallback;
   private CallbackScheduler callbackScheduler;
 
@@ -41,14 +41,17 @@ public class RosieUseCase {
   }
 
   /**
-   * Notify to the callback onSuccess that something it's work fine. You can invoke the method as
-   * many times as you want. You only need on your onSuccess a method with the same arguments.
+   * Notify to the callback onSuccessCallback that something it's work fine. You can invoke the
+   * method as
+   * many times as you want. You only need on your onSuccessCallback a method with the same
+   * arguments.
    *
-   * @param values that will be send to the onSuccess callback. Note: By default this method
+   * @param values that will be send to the onSuccessCallback callback. Note: By default this
+   * method
    * return the response to the UI Thread.
    */
   protected void notifySuccess(Object... values) {
-    Method[] methodsArray = onSuccess.get().getClass().getMethods();
+    Method[] methodsArray = onSuccessCallback.get().getClass().getMethods();
     if (methodsArray.length > 0) {
       Method methodToInvoke =
           UseCaseFilter.filterValidMethodArgs(values, methodsArray, Success.class);
@@ -80,12 +83,24 @@ public class RosieUseCase {
     }
   }
 
-  void setOnSuccess(OnSuccessCallback onSuccess) {
-    this.onSuccess = new WeakReference<>(onSuccess);
+  /**
+   * The OnSuccessCallback passed as argument in this method will be referenced as a
+   * WeakReference inside RosieUseCase and UseCaseParams to avoid memory leaks during the
+   * Activity lifecycle pause-destroy stage. Remember to keep a strong reference of your
+   * OnSuccessCallback instance if needed.
+   */
+  void setOnSuccessCallback(OnSuccessCallback onSuccessCallback) {
+    this.onSuccessCallback = new WeakReference<>(onSuccessCallback);
   }
 
-  void setOnError(OnErrorCallback onErrorCallback) {
-    this.onErrorCallback = new WeakReference<OnErrorCallback>(onErrorCallback);
+  /**
+   * The OnErrorCallback passed as argument in this method will be referenced as a
+   * WeakReference inside RosieUseCase and UseCaseParams to avoid memory leaks during the
+   * Activity lifecycle pause-destroy stage. Remember to keep a strong reference of your
+   * OnErrorCallback instance if needed.
+   */
+  void setOnErrorCallback(OnErrorCallback onErrorCallback) {
+    this.onErrorCallback = new WeakReference<>(onErrorCallback);
   }
 
   private void invokeMethodInTheCallbackScheduler(final Method methodToInvoke,
@@ -93,7 +108,7 @@ public class RosieUseCase {
     getCallbackScheduler().post(new Runnable() {
       @Override public void run() {
         try {
-          methodToInvoke.invoke(onSuccess.get(), values);
+          methodToInvoke.invoke(onSuccessCallback.get(), values);
         } catch (Exception e) {
           throw new RuntimeException("Internal error invoking the success object", e);
         }
