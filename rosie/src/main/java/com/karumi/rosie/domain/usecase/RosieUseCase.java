@@ -30,7 +30,7 @@ import java.lang.reflect.Method;
  */
 public class RosieUseCase {
 
-  private OnSuccessCallback onSuccess;
+  private OnSuccessCallback onSuccessCallback;
   private OnErrorCallback onErrorCallback;
   private CallbackScheduler callbackScheduler;
 
@@ -39,20 +39,29 @@ public class RosieUseCase {
     this.callbackScheduler = callbackScheduler;
   }
 
-
   /**
-   * Notify to the callback onSuccess that something it's work fine. You can invoke the method as
-   * many times as you want. You only need on your onSuccess a method with the same arguments.
+   * Notify to the callback onSuccessCallback that something it's work fine. You can invoke the
+   * method as many times as you want. You only need on your onSuccessCallback a method with the
+   * same arguments.
    *
-   * @param values that will be send to the onSuccess callback. Note: By default this method
+   * @param values that will be send to the onSuccessCallback callback. Note: By default this
+   * method
    * return the response to the UI Thread.
    */
   protected void notifySuccess(Object... values) {
-    Method[] methodsArray = onSuccess.getClass().getMethods();
-    if (methodsArray.length > 0) {
+    if (onSuccessCallback == null) {
+      throw new IllegalStateException("There is no a OnSuccessCallback configured.");
+    }
+
+    Method[] methodsArray = onSuccessCallback.getClass().getMethods();
+    if (methodsArray.length != 0) {
       Method methodToInvoke =
           UseCaseFilter.filterValidMethodArgs(values, methodsArray, Success.class);
       invokeMethodInTheCallbackScheduler(methodToInvoke, values);
+    } else {
+      throw new IllegalStateException(
+          "The OnSuccessCallback instance configured has no methods annotated with the "
+              + "@Success annotation.");
     }
   }
 
@@ -81,7 +90,7 @@ public class RosieUseCase {
   }
 
   void setOnSuccess(OnSuccessCallback onSuccess) {
-    this.onSuccess = onSuccess;
+    this.onSuccessCallback = onSuccess;
   }
 
   void setOnError(OnErrorCallback onErrorCallback) {
@@ -93,7 +102,7 @@ public class RosieUseCase {
     getCallbackScheduler().post(new Runnable() {
       @Override public void run() {
         try {
-          methodToInvoke.invoke(onSuccess, values);
+          methodToInvoke.invoke(onSuccessCallback, values);
         } catch (Exception e) {
           throw new RuntimeException("Internal error invoking the success object", e);
         }

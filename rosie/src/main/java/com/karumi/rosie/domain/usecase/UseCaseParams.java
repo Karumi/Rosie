@@ -28,11 +28,11 @@ public class UseCaseParams {
   private final Object[] args;
   private final OnErrorCallback errorCallback;
 
-  public UseCaseParams(String useCaseName, Object[] args, OnSuccessCallback onSuccess,
+  public UseCaseParams(String useCaseName, Object[] args, OnSuccessCallback onSuccessCallback,
       OnErrorCallback errorCallback) {
     this.args = args;
     this.useCaseName = useCaseName;
-    this.onSuccessCallback = onSuccess;
+    this.onSuccessCallback = onSuccessCallback;
     this.errorCallback = errorCallback;
   }
 
@@ -53,12 +53,10 @@ public class UseCaseParams {
   }
 
   public static class Builder {
-    private final static OnSuccessCallback EMPTY_SUCCESS = new OnSuccessCallback() {
-    };
 
     private String useCaseName = "";
     private Object[] args;
-    private OnSuccessCallback onSuccess = EMPTY_SUCCESS;
+    private OnSuccessCallback onSuccess;
     private OnErrorCallback errorCallback;
 
     public Builder useCaseName(String name) {
