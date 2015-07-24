@@ -24,7 +24,6 @@ import com.karumi.rosie.application.RosieApplication;
 import com.karumi.rosie.module.RosieActivityModule;
 import com.karumi.rosie.view.presenter.PresenterLifeCycleLinker;
 import com.karumi.rosie.view.presenter.RosiePresenter;
-import com.karumi.rosie.view.presenter.view.ErrorView;
 import dagger.ObjectGraph;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +33,7 @@ import java.util.List;
  * library. All activities in this project should extend from this one to be able to use core
  * features like view injection, dependency injection or Rosie presenters.
  */
-public abstract class RosieActivity extends FragmentActivity
-    implements ErrorView, RosiePresenter.View {
+public abstract class RosieActivity extends FragmentActivity implements RosiePresenter.View {
 
   private ObjectGraph activityScopeGraph;
   private PresenterLifeCycleLinker presenterLifeCycleLinker = new PresenterLifeCycleLinker();
@@ -46,13 +44,14 @@ public abstract class RosieActivity extends FragmentActivity
    */
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    injectActivityModules();
+    if (shouldInitializeActivityScopeGraph()) {
+      injectActivityModules();
+    }
     int layoutId = getLayoutId();
     setContentView(layoutId);
     presenterLifeCycleLinker.addAnnotatedPresenter(getClass().getDeclaredFields(), this);
     ButterKnife.inject(this);
     presenterLifeCycleLinker.setView(this);
-    presenterLifeCycleLinker.setErrorView(this);
     onPreparePresenter();
     presenterLifeCycleLinker.initializePresenters();
   }
@@ -70,6 +69,7 @@ public abstract class RosieActivity extends FragmentActivity
    */
   @Override protected void onResume() {
     super.onResume();
+    presenterLifeCycleLinker.setView(this);
     presenterLifeCycleLinker.updatePresenters();
   }
 
@@ -96,11 +96,15 @@ public abstract class RosieActivity extends FragmentActivity
    * to resolve all the dependencies needed by the object and inject them.
    */
   public final void inject(Object object) {
+    if (shouldInitializeActivityScopeGraph()) {
+      injectActivityModules();
+    }
     activityScopeGraph.inject(object);
     activityScopeGraph.injectStatics();
   }
 
-  @Override public void showError(Error error) {
+  private boolean shouldInitializeActivityScopeGraph() {
+    return activityScopeGraph == null;
   }
 
   /**

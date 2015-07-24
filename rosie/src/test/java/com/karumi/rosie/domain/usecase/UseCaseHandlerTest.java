@@ -22,9 +22,8 @@ import com.karumi.rosie.domain.usecase.annotation.UseCase;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
 import com.karumi.rosie.domain.usecase.error.ErrorHandler;
 import com.karumi.rosie.domain.usecase.error.ErrorNotHandledException;
-
-import com.karumi.rosie.doubles.FakeCallbackScheduler;
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
+import com.karumi.rosie.doubles.FakeCallbackScheduler;
 import com.karumi.rosie.doubles.NetworkError;
 import com.karumi.rosie.testutils.FakeTaskScheduler;
 import java.util.ArrayList;
@@ -45,6 +44,7 @@ import static org.mockito.Mockito.verify;
 public class UseCaseHandlerTest extends UnitTest {
 
   private static final int ANY_RETURN_VALUE = 2;
+  private static final int ANY_INT_PARAM = 1;
 
   @Test public void testExecuteAnyObject() throws Exception {
     TaskScheduler taskScheduler = mock(TaskScheduler.class);
@@ -261,6 +261,20 @@ public class UseCaseHandlerTest extends UnitTest {
     verify(errorHandler).notifyError(any(Exception.class));
   }
 
+  @Test public void shouldSupportNullUseCaseParams() {
+    FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
+    AnyUseCase useCase = new AnyUseCase();
+    ErrorHandler errorHandler = mock(ErrorHandler.class);
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler, errorHandler);
+    AnyOnSuccess onSuccessCallback = new AnyOnSuccess();
+    UseCaseParams useCaseParams =
+        new UseCaseParams.Builder().args(null, ANY_INT_PARAM).onSuccess(onSuccessCallback).build();
+
+    useCaseHandler.execute(useCase, useCaseParams);
+
+    assertEquals(ANY_INT_PARAM, onSuccessCallback.getValue());
+  }
+
   private OnErrorCallback onErrorCallback = new OnErrorCallback<Error>() {
 
     @Override public void onError(Error error) {
@@ -324,7 +338,7 @@ public class UseCaseHandlerTest extends UnitTest {
     }
 
     @UseCase public void methodWithArgs(String arg1, int arg2) {
-
+      notifySuccess(arg2);
     }
   }
 

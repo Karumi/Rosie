@@ -27,8 +27,7 @@ import java.util.List;
  */
 public class ObtainHipsters extends RosieUseCase {
 
-  @UseCase
-  public void obtain() {
+  @UseCase public void obtain() {
     Hipster hipster = new Hipster();
     hipster.setName("Hipstotito Fernandez");
     hipster.setAvatarUrl(

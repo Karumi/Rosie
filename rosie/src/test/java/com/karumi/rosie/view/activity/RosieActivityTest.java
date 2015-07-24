@@ -19,11 +19,9 @@ package com.karumi.rosie.view.activity;
 import com.karumi.rosie.RobolectricTest;
 import com.karumi.rosie.doubles.FakeActivity;
 import com.karumi.rosie.doubles.FakeActivityWithPresenter;
-import com.karumi.rosie.doubles.FakeActivityWithPresenterNoHandleError;
 import org.junit.Test;
 import org.robolectric.Robolectric;
 
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -74,15 +72,10 @@ public class RosieActivityTest extends RobolectricTest {
     verify(fakeActivity.uiView).showFakeError();
   }
 
-  @Test public void shouldCallErrorWhenAnUseCaseLaunchAGlobalErrorAndPresenterDontInterceptIt() {
-    FakeActivityWithPresenterNoHandleError fakeActivity =
-        Robolectric.buildActivity(FakeActivityWithPresenterNoHandleError.class)
-            .create()
-            .resume()
-            .get();
+  @Test
+  public void shouldNotCrashIfSomeoneTriesToInjectAnObjectBeforeTheOnCreateMethodHasNotBeenCalled() {
+    FakeActivity fakeActivity = Robolectric.buildActivity(FakeActivity.class).get();
 
-    fakeActivity.generateErrorOnPresenter();
-
-    assertTrue(fakeActivity.hasShownError());
+    fakeActivity.inject(new Object());
   }
 }

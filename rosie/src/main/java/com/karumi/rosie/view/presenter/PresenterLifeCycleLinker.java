@@ -16,7 +16,6 @@
 
 package com.karumi.rosie.view.presenter;
 
-import com.karumi.rosie.view.presenter.view.ErrorView;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
@@ -59,12 +58,6 @@ public class PresenterLifeCycleLinker {
     }
   }
 
-  public void setErrorView(ErrorView errorView) {
-    for (RosiePresenter presenter : presenters) {
-      presenter.setErrorView(errorView);
-    }
-  }
-
   public void initializePresenters() {
     for (RosiePresenter presenter : presenters) {
       presenter.initialize();
@@ -80,6 +73,7 @@ public class PresenterLifeCycleLinker {
   public void pausePresenters() {
     for (RosiePresenter presenter : presenters) {
       presenter.pause();
+      presenter.resetView();
     }
   }
 
