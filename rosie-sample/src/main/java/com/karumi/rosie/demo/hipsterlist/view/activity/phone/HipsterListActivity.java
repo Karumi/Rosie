@@ -17,6 +17,7 @@
 package com.karumi.rosie.demo.hipsterlist.view.activity.phone;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ListView;
 import butterknife.InjectView;
@@ -76,6 +77,11 @@ public class HipsterListActivity extends RosieActivity implements HipsterListPre
 
   @Override protected List<Object> getActivityScopeModules() {
     return Arrays.asList(new HipsterListViewModule(), new HipsterListDomainModule());
+  }
+
+  @Override protected void finalize() throws Throwable {
+    Log.e("DEPURAR", "GC HipsterListActivity");
+    super.finalize();
   }
 
   private void initializeAdapter(List<Hipster> hipsters) {

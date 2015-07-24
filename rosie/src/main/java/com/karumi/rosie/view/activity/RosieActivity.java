@@ -88,11 +88,7 @@ public abstract class RosieActivity extends FragmentActivity
     super.onDestroy();
     presenterLifeCycleLinker.destroyPresenters();
     System.gc();
-  }
-
-  @Override protected void finalize() throws Throwable {
-    Log.e("DEPURAR", "CG");
-    super.finalize();
+    Log.e("DEPURAR", "REQUESTING FOR GARBAGE COLLECTOR " + getLocalClassName());
   }
 
   /**

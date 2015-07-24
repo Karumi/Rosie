@@ -18,6 +18,7 @@ package com.karumi.rosie.demo.hipsterdetail.view.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import com.karumi.rosie.demo.R;
 import com.karumi.rosie.demo.hipsterdetail.view.fragment.HipsterDetailFragment;
 import com.karumi.rosie.demo.hipsterlist.view.model.Hipster;
@@ -40,5 +41,10 @@ public class HipsterDetailActivity extends RosieActivity {
 
   @Override protected boolean shouldInjectActivity() {
     return false;
+  }
+
+  @Override protected void finalize() throws Throwable {
+    Log.e("DEPURAR", "GC HipsterListActivity");
+    super.finalize();
   }
 }
