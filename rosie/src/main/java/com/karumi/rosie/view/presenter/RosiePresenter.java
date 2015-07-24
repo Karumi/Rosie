@@ -4,7 +4,9 @@ import com.karumi.rosie.domain.usecase.RosieUseCase;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
 import com.karumi.rosie.domain.usecase.UseCaseParams;
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
-import com.karumi.rosie.view.presenter.view.ErrorView;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 /**
  * Implements all the presentation logic. All Presenters must extends from this class and indicate
@@ -15,16 +17,11 @@ public class RosiePresenter<T extends RosiePresenter.View> {
 
   private final UseCaseHandler useCaseHandler;
 
-  private ErrorView errorView;
   private T view;
   private boolean shouldRegisterGlobalErrorCallback = true;
   private final OnErrorCallback globalErrorCallback = new OnErrorCallback() {
     @Override public void onError(Error error) {
-      if (!RosiePresenter.this.onError(error)) {
-        if (errorView != null) {
-          errorView.showError(error);
-        }
-      }
+      RosiePresenter.this.onError(error);
     }
   };
 
@@ -113,10 +110,19 @@ public class RosiePresenter<T extends RosiePresenter.View> {
   }
 
   /**
-   * Configures the ErrorView used in this presenter
+   * Changes the current view instance with a dynamic proxy to avoid real UI updates.
    */
-  void setErrorView(ErrorView errorView) {
-    this.errorView = errorView;
+  void resetView() {
+    Class<?> viewClass = view.getClass().getInterfaces()[0];
+    InvocationHandler emptyHandler = new InvocationHandler() {
+      @Override public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        return null;
+      }
+    };
+    ClassLoader classLoader = viewClass.getClassLoader();
+    Class[] interfaces = new Class[1];
+    interfaces[0] = viewClass;
+    view = (T) Proxy.newProxyInstance(classLoader, interfaces, emptyHandler);
   }
 
   private void registerGlobalErrorCallback() {

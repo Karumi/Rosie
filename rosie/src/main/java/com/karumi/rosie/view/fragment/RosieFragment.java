@@ -27,14 +27,13 @@ import butterknife.ButterKnife;
 import com.karumi.rosie.view.activity.RosieActivity;
 import com.karumi.rosie.view.presenter.PresenterLifeCycleLinker;
 import com.karumi.rosie.view.presenter.RosiePresenter;
-import com.karumi.rosie.view.presenter.view.ErrorView;
 
 /**
  * Base Fragment created to implement some common functionality to every Fragment using this
  * library. All Fragments in this project should extend from this one to be able to use core
  * features like view injection, dependency injection or Rosie presenters.
  */
-public abstract class RosieFragment extends Fragment implements ErrorView, RosiePresenter.View {
+public abstract class RosieFragment extends Fragment implements RosiePresenter.View {
 
   private PresenterLifeCycleLinker presenterLifeCycleLinker = new PresenterLifeCycleLinker();
 
@@ -72,7 +71,6 @@ public abstract class RosieFragment extends Fragment implements ErrorView, Rosie
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     presenterLifeCycleLinker.setView(this);
-    presenterLifeCycleLinker.setErrorView(this);
     onPreparePresenter();
     presenterLifeCycleLinker.initializePresenters();
   }
@@ -90,6 +88,7 @@ public abstract class RosieFragment extends Fragment implements ErrorView, Rosie
    */
   @Override public void onResume() {
     super.onResume();
+    presenterLifeCycleLinker.setView(this);
     presenterLifeCycleLinker.updatePresenters();
   }
 
@@ -107,10 +106,6 @@ public abstract class RosieFragment extends Fragment implements ErrorView, Rosie
   @Override public void onDestroy() {
     super.onDestroy();
     presenterLifeCycleLinker.destroyPresenters();
-  }
-
-  @Override public void showError(Error error) {
-
   }
 
   /**

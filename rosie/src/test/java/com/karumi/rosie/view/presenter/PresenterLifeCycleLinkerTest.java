@@ -17,7 +17,6 @@
 package com.karumi.rosie.view.presenter;
 
 import com.karumi.rosie.UnitTest;
-import com.karumi.rosie.view.presenter.view.ErrorView;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -80,15 +79,15 @@ public class PresenterLifeCycleLinkerTest extends UnitTest {
     verify(anyPresenter2).setView(view);
   }
 
-  @Test public void shouldConfigureErrorViewToEveryPresenterRegistered() {
+  @Test public void shouldResetPresenterViewOnPause() {
     PresenterLifeCycleLinker presenterLifeCycleLinker =
-        givenAPresenterLifecycleLinker(anyPresenter1, anyPresenter2);
+        givenAPresenterLifecycleLinker(anyPresenter1);
 
-    ErrorView errorView = mock(ErrorView.class);
-    presenterLifeCycleLinker.setErrorView(errorView);
+    presenterLifeCycleLinker.initializePresenters();
+    presenterLifeCycleLinker.updatePresenters();
+    presenterLifeCycleLinker.pausePresenters();
 
-    verify(anyPresenter1).setErrorView(errorView);
-    verify(anyPresenter2).setErrorView(errorView);
+    verify(anyPresenter1).resetView();
   }
 
   private PresenterLifeCycleLinker givenAPresenterLifecycleLinker(RosiePresenter... presenters) {
