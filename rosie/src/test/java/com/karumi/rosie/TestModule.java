@@ -18,7 +18,6 @@ package com.karumi.rosie;
 
 import com.karumi.rosie.doubles.FakeActivity;
 import com.karumi.rosie.doubles.FakeActivityWithPresenter;
-import com.karumi.rosie.doubles.FakeActivityWithPresenterNoHandleError;
 import com.karumi.rosie.view.fragment.RosieFragmentTest;
 import dagger.Module;
 
@@ -26,8 +25,7 @@ import dagger.Module;
     library = true,
     complete = false,
     injects = {
-        FakeActivity.class, FakeActivityWithPresenter.class,
-        FakeActivityWithPresenterNoHandleError.class, RosieFragmentTest.TestFragment.class,
+        FakeActivity.class, FakeActivityWithPresenter.class, RosieFragmentTest.TestFragment.class,
         Object.class
     }) public class TestModule {
 

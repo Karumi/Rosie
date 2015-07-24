@@ -37,7 +37,11 @@ public class ObtainHipsters extends RosieUseCase {
 
     List<Hipster> hipsters = new ArrayList<Hipster>();
     hipsters.add(hipster);
-
+    try {
+      Thread.sleep(5000);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
     notifySuccess(hipsters);
   }
 }
