@@ -122,7 +122,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * Changes the current view instance with a dynamic proxy to avoid real UI updates.
    */
   void resetView() {
-    final Class<?> viewClass = this.view.getClass().getInterfaces()[0];
+    final Class<?> viewClass = getViewInterfaceClass();
     InvocationHandler emptyHandler = new InvocationHandler() {
       @Override public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         return null;
@@ -132,6 +132,18 @@ public class RosiePresenter<T extends RosiePresenter.View> {
     Class[] interfaces = new Class[1];
     interfaces[0] = viewClass;
     this.view = (T) Proxy.newProxyInstance(classLoader, interfaces, emptyHandler);
+  }
+
+  private Class<?> getViewInterfaceClass() {
+    Class<?> interfaceClass = null;
+    Class<?>[] interfaces = this.view.getClass().getInterfaces();
+    for (int i = 0; i < interfaces.length; i++) {
+      Class<?> interfaceCandidate = interfaces[i];
+      if (RosiePresenter.View.class.isAssignableFrom(interfaceCandidate)) {
+        interfaceClass = interfaceCandidate;
+      }
+    }
+    return interfaceClass;
   }
 
   private void registerGlobalErrorCallback() {
