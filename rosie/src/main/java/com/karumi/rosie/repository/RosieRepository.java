@@ -37,9 +37,10 @@ public class RosieRepository<T> {
 
   public Collection<T> getAll() {
     Collection<T> allData = null;
-    for (DataSource<T> dataSource : dataSources) {
+    for (int i = 0; i < dataSources.length; i++) {
+      DataSource<T> dataSource = dataSources[i];
       allData = dataSource.getAll();
-      if (allData != null) {
+      if (allData != null || i == dataSources.length - 1) {
         break;
       }
     }
