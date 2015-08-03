@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 
 public class RosieRepositoryTest extends UnitTest {
@@ -39,12 +40,12 @@ public class RosieRepositoryTest extends UnitTest {
     assertEquals(allData, data);
   }
 
-  @Test public void shouldReturnNullIfThereAreNoDataSourcesWithContent(){
+  @Test public void shouldReturnNullIfThereAreNoDataSourcesWithContent() {
     RosieRepository<Object> repository = givenARepositoryWithTwoDataSources();
 
     Collection<Object> data = repository.getAll();
 
-    assertEquals(allData, data);
+    assertNull(data);
   }
 
   private Collection<Object> givenTheCacheReturnsNullAndTheApiReturnSomeData() {
