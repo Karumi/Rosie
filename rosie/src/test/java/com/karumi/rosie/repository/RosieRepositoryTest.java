@@ -39,6 +39,14 @@ public class RosieRepositoryTest extends UnitTest {
     assertEquals(allData, data);
   }
 
+  @Test public void shouldReturnNullIfThereAreNoDataSourcesWithContent(){
+    RosieRepository<Object> repository = givenARepositoryWithTwoDataSources();
+
+    Collection<Object> data = repository.getAll();
+
+    assertEquals(allData, data);
+  }
+
   private Collection<Object> givenTheCacheReturnsNullAndTheApiReturnSomeData() {
     when(inMemoryDataSource.getAll()).thenReturn(null);
     Collection<Object> allData = new LinkedList<>();
