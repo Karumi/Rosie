@@ -111,6 +111,23 @@ public class RosieRepository<T extends Cacheable> {
     return item;
   }
 
+  public Collection<T> addOrUpdate(Collection<T> items) throws Exception {
+    validateItems(items);
+
+    if (items.isEmpty()) {
+      return items;
+    }
+
+    int lastDataSourceIndex = dataSources.length - 1;
+    DataSource<T> lastDataSource = dataSources[(lastDataSourceIndex)];
+    items = lastDataSource.addOrUpdate(items);
+    boolean itemAddedSuccessfully = items != null && !items.isEmpty();
+    if (itemAddedSuccessfully) {
+      populateDataSources(items, lastDataSourceIndex);
+    }
+    return items;
+  }
+
   private void populateDataSources(T item, int dataSourceIndex) {
     if (item == null) {
       return;
@@ -156,6 +173,12 @@ public class RosieRepository<T extends Cacheable> {
   private void validateItem(T item) {
     if (item == null) {
       throw new IllegalArgumentException("The item can't be null.");
+    }
+  }
+
+  private void validateItems(Collection<T> items) {
+    if (items == null) {
+      throw new IllegalArgumentException("The items can't be null.");
     }
   }
 }

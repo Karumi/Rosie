@@ -243,7 +243,7 @@ public class RosieRepositoryTest extends UnitTest {
 
     verify(cacheDataSource, never()).addOrUpdate(any(AnyCacheableItem.class));
   }
-  
+
   private void givenItemNotAdded(AnyCacheableItem itemToUpdate) {
     when(apiDataSource.addOrUpdate(itemToUpdate)).thenReturn(null);
   }

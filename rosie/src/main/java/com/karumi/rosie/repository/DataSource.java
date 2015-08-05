@@ -29,7 +29,7 @@ public interface DataSource<T> {
 
   T addOrUpdate(T item);
 
-  void addOrUpdate(Collection<T> items);
+  Collection<T> addOrUpdate(Collection<T> items);
 
   void deleteAll();
 
