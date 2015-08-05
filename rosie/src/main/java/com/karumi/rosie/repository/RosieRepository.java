@@ -16,6 +16,7 @@
 
 package com.karumi.rosie.repository;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -36,27 +37,51 @@ public class RosieRepository<T extends Cacheable> {
     this.dataSources = dataSources;
   }
 
+  public T getById(String id) throws Exception {
+    return getById(id, false);
+  }
+
+  public T getById(String id, boolean forceLoad) {
+    validateId(id);
+    T item = null;
+    int firstDataSource = forceLoad ? dataSources.length - 1 : 0;
+    for (int i = firstDataSource; i < dataSources.length; i++) {
+      DataSource<T> dataSource = dataSources[i];
+      boolean isTheLastDataSource = i == dataSources.length - 1;
+      item = dataSource.getById(id);
+      if (isTheLastDataSource) {
+        populateDataSources(Arrays.asList(item), i);
+        break;
+      } else if (areValidItems(dataSource, Arrays.asList(item))) {
+        break;
+      } else {
+        dataSource.deleteById(id);
+      }
+    }
+    return item;
+  }
+
   public Collection<T> getAll() throws Exception {
     return getAll(false);
   }
 
   public Collection<T> getAll(boolean forceLoad) throws Exception {
-    Collection<T> allData = null;
+    Collection<T> items = null;
     int firstDataSource = forceLoad ? dataSources.length - 1 : 0;
     for (int i = firstDataSource; i < dataSources.length; i++) {
       DataSource<T> dataSource = dataSources[i];
       boolean isTheLastDataSource = i == dataSources.length - 1;
-      allData = dataSource.getAll();
+      items = dataSource.getAll();
       if (isTheLastDataSource) {
-        populateDataSources(allData, i);
+        populateDataSources(items, i);
         break;
-      } else if (isValidData(dataSource, allData)) {
+      } else if (areValidItems(dataSource, items)) {
         break;
       } else {
         dataSource.deleteAll();
       }
     }
-    return allData;
+    return items;
   }
 
   public Collection<T> get(Predicate<T> predicate) throws Exception {
@@ -65,38 +90,44 @@ public class RosieRepository<T extends Cacheable> {
 
   public Collection<T> get(Predicate<T> predicate, boolean forceLoad) throws Exception {
     validatePredicate(predicate);
-    Collection<T> filteredData = new LinkedList<>();
+    Collection<T> filteredItems = new LinkedList<>();
     for (T item : getAll(forceLoad)) {
       if (predicate.isValid(item)) {
-        filteredData.add(item);
+        filteredItems.add(item);
       }
     }
-    return filteredData;
+    return filteredItems;
   }
 
-  private void populateDataSources(Collection<T> data, int dataSourceIndex) {
-    if (data == null) {
+  private void populateDataSources(Collection<T> items, int dataSourceIndex) {
+    if (items == null) {
       return;
     }
     for (int i = 0; i < dataSourceIndex; i++) {
       DataSource dataSource = dataSources[i];
-      dataSource.addOrUpdate(data);
+      dataSource.addOrUpdate(items);
     }
   }
 
-  private boolean isValidData(DataSource<T> dataSource, Collection<T> data) {
-    boolean isValidData = false;
-    if (data != null) {
-      for (T item : data) {
-        isValidData |= dataSource.isValidItem(item);
+  private boolean areValidItems(DataSource<T> dataSource, Collection<T> items) {
+    boolean areValidItems = false;
+    if (items != null) {
+      for (T item : items) {
+        areValidItems |= dataSource.isValid(item);
       }
     }
-    return isValidData;
+    return areValidItems;
   }
 
   private void validatePredicate(Predicate<T> predicate) {
     if (predicate == null) {
       throw new IllegalArgumentException("The predicate used can't be null.");
+    }
+  }
+
+  private void validateId(String id) {
+    if (id == null) {
+      throw new IllegalArgumentException("The id used can't be null.");
     }
   }
 }

@@ -143,9 +143,9 @@ public class RosieRepositoryTest extends UnitTest {
     Collection<AnyCacheableItem> cacheData = getSomeItems();
     Collection<AnyCacheableItem> apiData = getSomeItems();
     when(cacheDataSource.getAll()).thenReturn(cacheData);
-    when(cacheDataSource.isValidItem(any(AnyCacheableItem.class))).thenReturn(true);
+    when(cacheDataSource.isValid(any(AnyCacheableItem.class))).thenReturn(true);
     when(apiDataSource.getAll()).thenReturn(apiData);
-    when(apiDataSource.isValidItem(any(AnyCacheableItem.class))).thenReturn(true);
+    when(apiDataSource.isValid(any(AnyCacheableItem.class))).thenReturn(true);
   }
 
   private void givenAnyDataSourceThrowsAnException() throws Exception {
@@ -156,9 +156,9 @@ public class RosieRepositoryTest extends UnitTest {
     Collection<AnyCacheableItem> cacheData = getSomeItems();
     Collection<AnyCacheableItem> apiData = getSomeItems();
     when(cacheDataSource.getAll()).thenReturn(cacheData);
-    when(cacheDataSource.isValidItem(any(AnyCacheableItem.class))).thenReturn(false);
+    when(cacheDataSource.isValid(any(AnyCacheableItem.class))).thenReturn(false);
     when(apiDataSource.getAll()).thenReturn(apiData);
-    when(apiDataSource.isValidItem(any(AnyCacheableItem.class))).thenReturn(false);
+    when(apiDataSource.isValid(any(AnyCacheableItem.class))).thenReturn(false);
     return apiData;
   }
 
@@ -167,7 +167,7 @@ public class RosieRepositoryTest extends UnitTest {
     Collection<AnyCacheableItem> cacheData = getSomeItems();
     Collection<AnyCacheableItem> apiData = getSomeItems();
     when(cacheDataSource.getAll()).thenReturn(cacheData);
-    when(cacheDataSource.isValidItem(any(AnyCacheableItem.class))).thenReturn(false);
+    when(cacheDataSource.isValid(any(AnyCacheableItem.class))).thenReturn(false);
     when(apiDataSource.getAll()).thenReturn(apiData);
     return apiData;
   }
@@ -175,7 +175,7 @@ public class RosieRepositoryTest extends UnitTest {
   private Collection<AnyCacheableItem> givenTheCacheReturnsValidData() throws Exception {
     Collection<AnyCacheableItem> data = getSomeItems();
     when(cacheDataSource.getAll()).thenReturn(data);
-    when(cacheDataSource.isValidItem(any(AnyCacheableItem.class))).thenReturn(true);
+    when(cacheDataSource.isValid(any(AnyCacheableItem.class))).thenReturn(true);
     when(apiDataSource.getAll()).thenReturn(null);
     return data;
   }

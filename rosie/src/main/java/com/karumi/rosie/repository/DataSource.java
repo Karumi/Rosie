@@ -25,9 +25,13 @@ public interface DataSource<T> {
 
   Collection<T> getAll() throws Exception;
 
-  boolean isValidItem(T item);
+  boolean isValid(T item);
 
   Void addOrUpdate(Collection<T> cacheData);
 
   void deleteAll();
+
+  T getById(String id);
+
+  void deleteById(String id);
 }
