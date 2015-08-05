@@ -99,6 +99,18 @@ public class RosieRepository<T extends Cacheable> {
     return filteredItems;
   }
 
+  public T addOrUpdate(T item) throws Exception {
+    validateItem(item);
+    int lastDataSourceIndex = dataSources.length - 1;
+    DataSource<T> lastDataSource = dataSources[(lastDataSourceIndex)];
+    item = lastDataSource.addOrUpdate(item);
+    boolean itemAddedSuccessfully = item != null;
+    if (itemAddedSuccessfully) {
+      populateDataSources(item, lastDataSourceIndex);
+    }
+    return item;
+  }
+
   private void populateDataSources(T item, int dataSourceIndex) {
     if (item == null) {
       return;
@@ -138,6 +150,12 @@ public class RosieRepository<T extends Cacheable> {
   private void validateId(String id) {
     if (id == null) {
       throw new IllegalArgumentException("The id used can't be null.");
+    }
+  }
+
+  private void validateItem(T item) {
+    if (item == null) {
+      throw new IllegalArgumentException("The item can't be null.");
     }
   }
 }

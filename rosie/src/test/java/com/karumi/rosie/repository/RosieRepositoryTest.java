@@ -207,6 +207,53 @@ public class RosieRepositoryTest extends UnitTest {
     assertEquals(apiItem, item);
   }
 
+  @Test(expected = IllegalArgumentException.class) public void shouldNotAddOrUpdateNullItems()
+      throws Exception {
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    repository.addOrUpdate(null);
+  }
+
+  @Test public void shouldAddOrUpdateItemToTheAPIDataSource() throws Exception {
+    AnyCacheableItem item = new AnyCacheableItem(ANY_ID);
+    givenItemAddedSuccessfully(item);
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    repository.addOrUpdate(item);
+
+    verify(apiDataSource).addOrUpdate(item);
+  }
+
+  @Test public void shouldPopulateCacheDataSourceWithTheAPIDataSourceResult() throws Exception {
+    AnyCacheableItem itemToUpdate = new AnyCacheableItem(ANY_ID);
+    AnyCacheableItem updatedItem = givenItemAddedSuccessfully(itemToUpdate);
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    repository.addOrUpdate(itemToUpdate);
+
+    verify(cacheDataSource).addOrUpdate(updatedItem);
+  }
+
+  @Test public void shouldNotPopulateCacheDataSourceIfTheResultIsNotSuccess() throws Exception {
+    AnyCacheableItem itemToUpdate = new AnyCacheableItem(ANY_ID);
+    givenItemNotAdded(itemToUpdate);
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    repository.addOrUpdate(itemToUpdate);
+
+    verify(cacheDataSource, never()).addOrUpdate(any(AnyCacheableItem.class));
+  }
+  
+  private void givenItemNotAdded(AnyCacheableItem itemToUpdate) {
+    when(apiDataSource.addOrUpdate(itemToUpdate)).thenReturn(null);
+  }
+
+  private AnyCacheableItem givenItemAddedSuccessfully(AnyCacheableItem item) {
+    AnyCacheableItem updatedItem = new AnyCacheableItem(item.getId());
+    when(apiDataSource.addOrUpdate(item)).thenReturn(updatedItem);
+    return updatedItem;
+  }
+
   private AnyCacheableItem givenDataSourcesReturnValidData(String id) {
     AnyCacheableItem cacheItem = new AnyCacheableItem(id);
     AnyCacheableItem apiItem = new AnyCacheableItem(id);

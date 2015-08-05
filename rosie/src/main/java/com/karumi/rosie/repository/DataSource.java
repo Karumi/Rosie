@@ -27,7 +27,7 @@ public interface DataSource<T> {
 
   boolean isValid(T item);
 
-  void addOrUpdate(T item);
+  T addOrUpdate(T item);
 
   void addOrUpdate(Collection<T> items);
 
