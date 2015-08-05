@@ -43,13 +43,13 @@ public class RosieRepositoryTest extends UnitTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void shouldNotAcceptNullRepositoriesAsInput() {
-    RosieRepository.with(null);
+    new RosieRepository<>(null);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void shouldNotAcceptAnEmptyArrayOfRepositories() {
     DataSource<AnyCacheableItem>[] dataSources = new DataSource[] {};
-    RosieRepository.with(dataSources);
+    new RosieRepository<>(dataSources);
   }
 
   @Test public void shouldReturnNullIfThereAreNoDataSourcesWithData() throws Exception {
@@ -425,7 +425,7 @@ public class RosieRepositoryTest extends UnitTest {
   }
 
   private RosieRepository<AnyCacheableItem> givenARepositoryWithTwoDataSources() {
-    return RosieRepository.with(cacheDataSource, apiDataSource);
+    return new RosieRepository<>(cacheDataSource, apiDataSource);
   }
 
   private LinkedList<AnyCacheableItem> getSomeItems() {

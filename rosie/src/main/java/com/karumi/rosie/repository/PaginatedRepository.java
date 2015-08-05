@@ -23,7 +23,7 @@ import java.util.Collection;
  */
 public class PaginatedRepository<T extends Cacheable> extends RosieRepository {
 
-  public PaginatedRepository(PaginatedDataSource<T>... dataSources) {
+  public PaginatedRepository(PaginatedDataSource<T> ... dataSources){
     super(dataSources);
   }
 

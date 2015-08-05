@@ -24,10 +24,14 @@ import java.util.Collection;
  */
 public class PaginatedCollection<T> {
 
-  private final Collection<T> items;
+  private Collection<T> items;
   private boolean hasMore;
   private int offset;
   private int limit;
+
+  public PaginatedCollection() {
+    this(null);
+  }
 
   public PaginatedCollection(Collection<T> items) {
     this.items = items;
