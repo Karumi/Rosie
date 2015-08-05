@@ -16,14 +16,10 @@
 
 package com.karumi.rosie.repository;
 
-import java.util.Collection;
-
 /**
- * Declares the contract of all data sources related to a RosieRepository.
+ * Declares the minimum contract needed to add or get items from a RosieRepository.
  */
-public interface DataSource<T> {
+public interface Cacheable {
 
-  Collection<T> getAll() throws Exception;
-
-  boolean isValidItem(T item);
+  String getId();
 }

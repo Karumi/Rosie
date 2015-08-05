@@ -17,36 +17,100 @@
 package com.karumi.rosie.repository;
 
 import com.karumi.rosie.UnitTest;
+import com.karumi.rosie.doubles.AnyCacheableItem;
 import java.util.Collection;
 import java.util.LinkedList;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 public class RosieRepositoryTest extends UnitTest {
 
-  @Mock public DataSource<Object> inMemoryDataSource;
-  @Mock public DataSource<Object> apiDataSource;
+  @Mock private DataSource<AnyCacheableItem> inMemoryDataSource;
+  @Mock private DataSource<AnyCacheableItem> apiDataSource;
 
-  @Test public void shouldReturnDataFromTheLastDataSourceIfTheFirstOneReturnNullOnGetAll() {
-    Collection<Object> allData = givenTheCacheReturnsNullAndTheApiReturnSomeData();
-    RosieRepository<Object> repository = givenARepositoryWithTwoDataSources();
+  @Test public void shouldReturnNullIfThereAreNoDataSourcesWithData() throws Exception {
+    givenTheDataSourcesHasNoData();
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
 
-    Collection<Object> data = repository.getAll();
+    Collection<AnyCacheableItem> data = repository.getAll();
 
-    assertEquals(allData, data);
+    assertNull(data);
   }
 
-  private Collection<Object> givenTheCacheReturnsNullAndTheApiReturnSomeData() {
+  @Test public void shouldReturnDataFromTheFirstDataSourceIfTheDataIsValid() throws Exception {
+    Collection<AnyCacheableItem> cacheData = givenTheCacheReturnsValidData();
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    Collection<AnyCacheableItem> data = repository.getAll();
+
+    assertEquals(cacheData, data);
+  }
+
+  @Test public void shouldReturnDataFromTheLastDataSourceIfTheFirstOneReturnNullOnGetAll()
+      throws Exception {
+    Collection<AnyCacheableItem> apiData = givenTheCacheReturnsNullAndTheApiReturnSomeData();
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    Collection<AnyCacheableItem> data = repository.getAll();
+
+    assertEquals(apiData, data);
+  }
+
+  @Test public void shouldReturnDataFromTheLastDataSourceIfTheFirstOneReturnsNoValidData()
+      throws Exception {
+    Collection<AnyCacheableItem> apiData = givenTheCacheReturnsNoValidDataAndTheApiReturnsData();
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    Collection<AnyCacheableItem> data = repository.getAll();
+
+    assertEquals(apiData, data);
+  }
+
+  private Collection<AnyCacheableItem> givenTheCacheReturnsNoValidDataAndTheApiReturnsData()
+      throws Exception {
+    Collection<AnyCacheableItem> cacheData = getSomeItems();
+    Collection<AnyCacheableItem> apiData = getSomeItems();
+    when(inMemoryDataSource.getAll()).thenReturn(cacheData);
+    when(inMemoryDataSource.isValidItem(any(AnyCacheableItem.class))).thenReturn(false);
+    when(apiDataSource.getAll()).thenReturn(apiData);
+    return apiData;
+  }
+
+  private Collection<AnyCacheableItem> givenTheCacheReturnsValidData() throws Exception {
+    Collection<AnyCacheableItem> data = getSomeItems();
+    when(inMemoryDataSource.getAll()).thenReturn(data);
+    when(inMemoryDataSource.isValidItem(any(AnyCacheableItem.class))).thenReturn(true);
+    when(apiDataSource.getAll()).thenReturn(null);
+    return data;
+  }
+
+  private void givenTheDataSourcesHasNoData() throws Exception {
     when(inMemoryDataSource.getAll()).thenReturn(null);
-    Collection<Object> allData = new LinkedList<>();
+    when(apiDataSource.getAll()).thenReturn(null);
+  }
+
+  private Collection<AnyCacheableItem> givenTheCacheReturnsNullAndTheApiReturnSomeData()
+      throws Exception {
+    when(inMemoryDataSource.getAll()).thenReturn(null);
+    Collection<AnyCacheableItem> allData = getSomeItems();
     when(apiDataSource.getAll()).thenReturn(allData);
     return allData;
   }
 
-  private RosieRepository<Object> givenARepositoryWithTwoDataSources() {
+  private RosieRepository<AnyCacheableItem> givenARepositoryWithTwoDataSources() {
     return RosieRepository.with(inMemoryDataSource, apiDataSource);
+  }
+
+  private LinkedList<AnyCacheableItem> getSomeItems() {
+    LinkedList<AnyCacheableItem> anyCacheableItems = new LinkedList<>();
+    for (int i = 0; i < 10; i++) {
+      anyCacheableItems.add(new AnyCacheableItem(String.valueOf(i)));
+    }
+    return anyCacheableItems;
   }
 }

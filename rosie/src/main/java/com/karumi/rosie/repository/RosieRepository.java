@@ -23,11 +23,11 @@ import java.util.Collection;
  * different data sources. Abstracts the data origin and works as a processor cache system where
  * different data sources are going to work as different cache levels.
  */
-public class RosieRepository<T> {
+public class RosieRepository<T extends Cacheable> {
 
   private final DataSource<T>[] dataSources;
 
-  public static <R> RosieRepository<R> with(DataSource<R>... dataSources) {
+  public static <R extends Cacheable> RosieRepository<R> with(DataSource<R>... dataSources) {
     return new RosieRepository<R>(dataSources);
   }
 
@@ -35,15 +35,26 @@ public class RosieRepository<T> {
     this.dataSources = dataSources;
   }
 
-  public Collection<T> getAll() {
+  public Collection<T> getAll() throws Exception {
     Collection<T> allData = null;
     for (int i = 0; i < dataSources.length; i++) {
       DataSource<T> dataSource = dataSources[i];
+      boolean isTheLastDataSource = i == dataSources.length - 1;
       allData = dataSource.getAll();
-      if (allData != null || i == dataSources.length - 1) {
+      if (isValidData(dataSource, allData) || isTheLastDataSource) {
         break;
       }
     }
     return allData;
+  }
+
+  private boolean isValidData(DataSource<T> dataSource, Collection<T> data) {
+    boolean isValidData = false;
+    if (data != null) {
+      for (T item : data) {
+        isValidData |= dataSource.isValidItem(item);
+      }
+    }
+    return isValidData;
   }
 }
