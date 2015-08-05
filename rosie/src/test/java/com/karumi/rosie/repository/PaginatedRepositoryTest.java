@@ -25,6 +25,7 @@ import org.mockito.Mock;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class PaginatedRepositoryTest extends UnitTest {
@@ -36,7 +37,7 @@ public class PaginatedRepositoryTest extends UnitTest {
   @Mock private PaginatedDataSource<AnyCacheableItem> apiDataSource;
 
   @Test public void shouldReturnItemsFromTheCacheDataSourceIfDataIsValid() throws Exception {
-    PaginatedCollection<AnyCacheableItem> cacheItems = givenTheCacheReturnsValidData();
+    PaginatedCollection<AnyCacheableItem> cacheItems = givenCacheReturnsValidData();
     PaginatedRepository<AnyCacheableItem> repository = givenARepository();
 
     PaginatedCollection<AnyCacheableItem> items = repository.get(ANY_OFFSET, ANY_LIMIT);
@@ -62,6 +63,44 @@ public class PaginatedRepositoryTest extends UnitTest {
     assertEquals(apiItems, items);
   }
 
+  @Test public void shouldReturnItemsFromTheAPIIfTheForceLoadFlagIsEnabled() throws Exception {
+    PaginatedCollection<AnyCacheableItem> apiItems = givenCacheReturnsValidDataAndAPIToo();
+    PaginatedRepository<AnyCacheableItem> repository = givenARepository();
+
+    PaginatedCollection<AnyCacheableItem> items = repository.get(ANY_OFFSET, ANY_LIMIT, true);
+
+    assertEquals(apiItems, items);
+  }
+
+  @Test public void shouldPopulateCacheDataSourceAfterGetDataFromTheAPI() throws Exception {
+    PaginatedCollection<AnyCacheableItem> apiItems = givenCacheReturnsValidDataAndAPIToo();
+    PaginatedRepository<AnyCacheableItem> repository = givenARepository();
+
+    repository.get(ANY_OFFSET, ANY_LIMIT, true);
+
+    verify(cacheDataSource).addOrUpdate(ANY_OFFSET, ANY_LIMIT, apiItems.getItems());
+  }
+
+  @Test public void shouldDeleteCacheDataIfItemsAreNotValid() throws Exception {
+    givenCacheDataIsInvalid();
+    PaginatedRepository<AnyCacheableItem> repository = givenARepository();
+
+    repository.get(ANY_OFFSET, ANY_LIMIT);
+
+    verify(cacheDataSource).deleteAll();
+  }
+
+  private PaginatedCollection<AnyCacheableItem> givenCacheReturnsValidDataAndAPIToo()
+      throws Exception {
+    LinkedList<AnyCacheableItem> items = getSomeItems();
+    PaginatedCollection<AnyCacheableItem> cacheItems = new PaginatedCollection<>(items);
+    when(cacheDataSource.get(anyInt(), anyInt())).thenReturn(cacheItems);
+    when(cacheDataSource.isValid(any(AnyCacheableItem.class))).thenReturn(true);
+    PaginatedCollection<AnyCacheableItem> apiItems = new PaginatedCollection<>(items);
+    when(apiDataSource.get(anyInt(), anyInt())).thenReturn(apiItems);
+    return apiItems;
+  }
+
   private PaginatedCollection<AnyCacheableItem> givenCacheDataIsInvalid() throws Exception {
     LinkedList<AnyCacheableItem> items = getSomeItems();
     when(cacheDataSource.get(anyInt(), anyInt())).thenReturn(
@@ -82,7 +121,7 @@ public class PaginatedRepositoryTest extends UnitTest {
     return apiItems;
   }
 
-  private PaginatedCollection<AnyCacheableItem> givenTheCacheReturnsValidData() throws Exception {
+  private PaginatedCollection<AnyCacheableItem> givenCacheReturnsValidData() throws Exception {
     LinkedList<AnyCacheableItem> items = getSomeItems();
     PaginatedCollection<AnyCacheableItem> cacheItems = new PaginatedCollection<>(items);
     when(cacheDataSource.get(anyInt(), anyInt())).thenReturn(cacheItems);
