@@ -29,10 +29,6 @@ public class RosieRepository<T extends Cacheable> {
 
   private final DataSource<T>[] dataSources;
 
-  public static <R extends Cacheable> RosieRepository<R> with(DataSource<R>... dataSources) {
-    return new RosieRepository<R>(dataSources);
-  }
-
   public RosieRepository(DataSource<T>... dataSources) {
     if (dataSources == null || dataSources.length == 0) {
       throw new IllegalArgumentException("The Repository can't be created without data sources.");
@@ -47,10 +43,11 @@ public class RosieRepository<T extends Cacheable> {
   public T get(String id, boolean forceLoad) throws Exception {
     validateId(id);
     T item = null;
-    int firstDataSource = forceLoad ? dataSources.length - 1 : 0;
-    for (int i = firstDataSource; i < dataSources.length; i++) {
-      DataSource<T> dataSource = dataSources[i];
-      boolean isTheLastDataSource = i == dataSources.length - 1;
+    int numberOfDataSources = getNumberOfDataSources();
+    int firstDataSource = forceLoad ? numberOfDataSources - 1 : 0;
+    for (int i = firstDataSource; i < numberOfDataSources; i++) {
+      DataSource<T> dataSource = getDataSource(i);
+      boolean isTheLastDataSource = i == numberOfDataSources - 1;
       item = dataSource.getById(id);
       if (isTheLastDataSource) {
         populateDataSources(item, i);
@@ -70,10 +67,11 @@ public class RosieRepository<T extends Cacheable> {
 
   public Collection<T> getAll(boolean forceLoad) throws Exception {
     Collection<T> items = null;
-    int firstDataSource = forceLoad ? dataSources.length - 1 : 0;
-    for (int i = firstDataSource; i < dataSources.length; i++) {
-      DataSource<T> dataSource = dataSources[i];
-      boolean isTheLastDataSource = i == dataSources.length - 1;
+    int numberOfDataSources = getNumberOfDataSources();
+    int firstDataSource = forceLoad ? numberOfDataSources - 1 : 0;
+    for (int i = firstDataSource; i < numberOfDataSources; i++) {
+      DataSource<T> dataSource = getDataSource(i);
+      boolean isTheLastDataSource = i == numberOfDataSources - 1;
       items = dataSource.getAll();
       if (isTheLastDataSource) {
         populateDataSources(items, i);
@@ -106,8 +104,8 @@ public class RosieRepository<T extends Cacheable> {
   public T addOrUpdate(T item) throws Exception {
     validateItem(item);
 
-    int lastDataSourceIndex = dataSources.length - 1;
-    DataSource<T> lastDataSource = dataSources[(lastDataSourceIndex)];
+    int lastDataSourceIndex = getNumberOfDataSources() - 1;
+    DataSource<T> lastDataSource = getDataSource(lastDataSourceIndex);
     item = lastDataSource.addOrUpdate(item);
     boolean itemAddedSuccessfully = item != null;
     if (itemAddedSuccessfully) {
@@ -123,8 +121,8 @@ public class RosieRepository<T extends Cacheable> {
       return items;
     }
 
-    int lastDataSourceIndex = dataSources.length - 1;
-    DataSource<T> lastDataSource = dataSources[(lastDataSourceIndex)];
+    int lastDataSourceIndex = getNumberOfDataSources() - 1;
+    DataSource<T> lastDataSource = getDataSource(lastDataSourceIndex);
     items = lastDataSource.addOrUpdate(items);
     boolean itemAddedSuccessfully = items != null && !items.isEmpty();
     if (itemAddedSuccessfully) {
@@ -135,7 +133,7 @@ public class RosieRepository<T extends Cacheable> {
 
   public void deleteAll() throws Exception {
     for (int i = dataSources.length - 1; i >= 0; i--) {
-      DataSource dataSource = dataSources[i];
+      DataSource dataSource = getDataSource(i);
       dataSource.deleteAll();
     }
   }
@@ -143,10 +141,28 @@ public class RosieRepository<T extends Cacheable> {
   public void deleteById(String id) throws Exception {
     validateId(id);
 
-    for (int i = dataSources.length - 1; i >= 0; i--) {
-      DataSource dataSource = dataSources[i];
+    for (int i = getNumberOfDataSources() - 1; i >= 0; i--) {
+      DataSource dataSource = getDataSource(i);
       dataSource.deleteById(id);
     }
+  }
+
+  protected int getNumberOfDataSources() {
+    return dataSources.length;
+  }
+
+  protected DataSource<T> getDataSource(int index) {
+    return dataSources[index];
+  }
+
+  protected boolean areValidItems(DataSource<T> dataSource, Collection<T> items) throws Exception {
+    boolean areValidItems = false;
+    if (items != null) {
+      for (T item : items) {
+        areValidItems |= dataSource.isValid(item);
+      }
+    }
+    return areValidItems;
   }
 
   private void populateDataSources(T item, int dataSourceIndex) throws Exception {
@@ -155,7 +171,7 @@ public class RosieRepository<T extends Cacheable> {
     }
 
     for (int i = 0; i < dataSourceIndex; i++) {
-      DataSource dataSource = dataSources[i];
+      DataSource dataSource = getDataSource(i);
       dataSource.addOrUpdate(item);
     }
   }
@@ -166,19 +182,9 @@ public class RosieRepository<T extends Cacheable> {
     }
 
     for (int i = 0; i < dataSourceIndex; i++) {
-      DataSource dataSource = dataSources[i];
+      DataSource dataSource = getDataSource(i);
       dataSource.addOrUpdate(items);
     }
-  }
-
-  private boolean areValidItems(DataSource<T> dataSource, Collection<T> items) throws Exception {
-    boolean areValidItems = false;
-    if (items != null) {
-      for (T item : items) {
-        areValidItems |= dataSource.isValid(item);
-      }
-    }
-    return areValidItems;
   }
 
   private void validatePredicate(Predicate<T> predicate) {

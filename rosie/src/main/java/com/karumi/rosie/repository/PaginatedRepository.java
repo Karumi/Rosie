@@ -16,11 +16,65 @@
 
 package com.karumi.rosie.repository;
 
+import java.util.Collection;
+
 /**
  * Paginated version of RosieRepository.
  */
-public class PaginatedRepository extends RosieRepository {
+public class PaginatedRepository<T extends Cacheable> extends RosieRepository {
 
+  public PaginatedRepository(PaginatedDataSource<T>... dataSources) {
+    super(dataSources);
+  }
 
+  public PaginatedCollection<T> get(int offset, int limit) throws Exception {
+    return get(offset, limit, false);
+  }
 
+  public PaginatedCollection<T> get(int offset, int limit, boolean forceLoad) throws Exception {
+    validatePageParams(offset, limit);
+
+    PaginatedCollection<T> page = null;
+    int numberOfDataSources = getNumberOfDataSources();
+    int firstDataSource = forceLoad ? numberOfDataSources - 1 : 0;
+    for (int i = firstDataSource; i < numberOfDataSources; i++) {
+      PaginatedDataSource<T> dataSource = getPaginatedDataSource(i);
+      boolean isTheLastDataSource = i == numberOfDataSources - 1;
+      page = dataSource.get(offset, limit);
+      if (isTheLastDataSource) {
+        populateDataSources(offset, limit, page.getItems(), i);
+        break;
+      } else if (areValidItems(dataSource, page.getItems())) {
+        break;
+      } else {
+        dataSource.deleteAll();
+      }
+    }
+    return page;
+  }
+
+  private void populateDataSources(int offset, int limit, Collection<T> items,
+      int dataSourceIndex) {
+    if (items == null) {
+      return;
+    }
+
+    for (int i = 0; i < dataSourceIndex; i++) {
+      PaginatedDataSource dataSource = getPaginatedDataSource(i);
+      dataSource.addOrUpdate(offset, limit, items);
+    }
+  }
+
+  private PaginatedDataSource<T> getPaginatedDataSource(int index) {
+    return (PaginatedDataSource<T>) getDataSource(index);
+  }
+
+  private void validatePageParams(int offset, int limit) {
+    if (offset < 0) {
+      throw new IllegalArgumentException("The offset used can't be negative.");
+    }
+    if (limit < 0) {
+      throw new IllegalArgumentException("The limit used can't be negative.");
+    }
+  }
 }
