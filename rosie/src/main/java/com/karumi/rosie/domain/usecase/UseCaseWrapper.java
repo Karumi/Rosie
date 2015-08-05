@@ -45,7 +45,7 @@ public class UseCaseWrapper {
 
   private void notifyError(Exception exception) {
     if (errorHandler != null) {
-      errorHandler.notifyError(exception);
+      errorHandler.notifyError(exception, useCaseParams.getOnErrorCallback());
     }
   }
 }

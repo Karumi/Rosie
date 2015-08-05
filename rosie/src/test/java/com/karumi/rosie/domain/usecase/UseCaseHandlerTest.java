@@ -35,6 +35,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
@@ -221,6 +222,20 @@ public class UseCaseHandlerTest extends UnitTest {
     verify(errorCallback).onError(any(Error.class));
   }
 
+  @Test public void shouldCallErrorOnErrorWhenHappendAnUnhadledError() {
+    FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
+    ErrorUseCase errorUseCase = new ErrorUseCase();
+    ErrorHandler errorHandler = new ErrorHandler(new FakeCallbackScheduler());
+    UseCaseHandler useCaseHandler = new UseCaseHandler(taskScheduler, errorHandler);
+    OnErrorCallback errorCallback = spy(onErrorCallback);
+    UseCaseParams useCaseParams =
+        new UseCaseParams.Builder().useCaseName("launchException").onError(errorCallback).build();
+
+    useCaseHandler.execute(errorUseCase, useCaseParams);
+
+    verify(errorCallback).onError(any(Error.class));
+  }
+
   @Test public void shouldCallErrorHandlerWhenUseCaseInvokeAnErrorAndDontExistSpecificCallback() {
     FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
     ErrorUseCase errorUseCase = new ErrorUseCase();
@@ -230,11 +245,13 @@ public class UseCaseHandlerTest extends UnitTest {
 
     useCaseHandler.execute(errorUseCase, useCaseParams);
 
-    verify(errorHandler).notifyError(any(ErrorNotHandledException.class));
+    verify(errorHandler).notifyError(any(ErrorNotHandledException.class),
+        eq((OnErrorCallback) null));
   }
 
   @Test
-  public void shouldCallErrorHandlerErrorWhenUseCaseInvokeAnErrorAndTheCallbackDoNotHandleThisKindOfMethod() {
+  public void
+  shouldCallErrorHandlerErrorWhenUseCaseInvokeAnErrorAndTheCallbackDoNotHandleThisKindOfMethod() {
     FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
     ErrorUseCase errorUseCase = new ErrorUseCase();
     ErrorHandler errorHandler = mock(ErrorHandler.class);
@@ -245,7 +262,8 @@ public class UseCaseHandlerTest extends UnitTest {
 
     useCaseHandler.execute(errorUseCase, useCaseParams);
 
-    verify(errorHandler).notifyError(any(ErrorNotHandledException.class));
+    verify(errorHandler).notifyError(any(ErrorNotHandledException.class),
+        eq(specificErrorCallback));
   }
 
   @Test public void shouldCallErrorHandlerErrorWhenUseCaseThrowsAnException() {
@@ -258,7 +276,7 @@ public class UseCaseHandlerTest extends UnitTest {
 
     useCaseHandler.execute(errorUseCase, useCaseParams);
 
-    verify(errorHandler).notifyError(any(Exception.class));
+    verify(errorHandler).notifyError(any(Exception.class), eq((OnErrorCallback) null));
   }
 
   @Test public void shouldThrowExceptionIfUseCaseNotifiesSuccessButThereIsNoOnSuccessCallback() {
@@ -270,7 +288,7 @@ public class UseCaseHandlerTest extends UnitTest {
 
     useCaseHandler.execute(successUseCase, useCaseParams);
 
-    verify(errorHandler).notifyError(any(IllegalStateException.class));
+    verify(errorHandler).notifyError(any(IllegalStateException.class), eq((OnErrorCallback) null));
   }
 
   @Test public void shouldThrowExceptionIfTheOnSuccessCallbackHasNoMethodsWithSuccessAnnotations() {
@@ -283,7 +301,7 @@ public class UseCaseHandlerTest extends UnitTest {
 
     useCaseHandler.execute(successUseCase, useCaseParams);
 
-    verify(errorHandler).notifyError(any(IllegalStateException.class));
+    verify(errorHandler).notifyError(any(IllegalStateException.class), eq((OnErrorCallback) null));
   }
 
   @Test public void shouldSupportNullUseCaseParams() {

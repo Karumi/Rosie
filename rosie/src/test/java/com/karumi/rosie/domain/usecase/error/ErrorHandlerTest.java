@@ -39,7 +39,7 @@ public class ErrorHandlerTest {
     InvocationTargetException invocationTargetException =
         givenAnInvocationExceptionWrappingAnErrorNotHandledException();
 
-    errorHandler.notifyError(invocationTargetException);
+    errorHandler.notifyError(invocationTargetException, null);
 
     verify(onErrorCallback).onError(error);
   }
