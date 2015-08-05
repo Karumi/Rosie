@@ -33,6 +33,8 @@ import static org.mockito.Mockito.when;
 
 public class RosieRepositoryTest extends UnitTest {
 
+  private static final String ANY_ID = "1";
+
   @Mock private DataSource<AnyCacheableItem> cacheDataSource;
   @Mock private DataSource<AnyCacheableItem> apiDataSource;
 
@@ -153,6 +155,55 @@ public class RosieRepositoryTest extends UnitTest {
 
     Predicate nullPredicate = null;
     repository.get(nullPredicate);
+  }
+
+  @Test public void shouldReturnItemByIdFromTheCacheDataSource() throws Exception {
+    AnyCacheableItem cacheItem = givenTheCacheReturnsAValidItemById(ANY_ID);
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    AnyCacheableItem item = repository.get(ANY_ID);
+
+    assertEquals(cacheItem, item);
+  }
+
+  @Test public void shouldReturnItemFromTheAPIIfTheCacheContentIsNull() throws Exception {
+    AnyCacheableItem apiItem = givenTheCacheReturnsNullItemsById(ANY_ID);
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    AnyCacheableItem item = repository.get(ANY_ID);
+
+    assertEquals(apiItem, item);
+  }
+
+  @Test public void shouldReturnItemFromTheAPIIfTheCacheContentIsNotValid() throws Exception {
+    AnyCacheableItem apiItem = givenTheCacheReturnsNotValidItemById(ANY_ID);
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    AnyCacheableItem item = repository.get(ANY_ID);
+
+    assertEquals(apiItem, item);
+  }
+
+  private AnyCacheableItem givenTheCacheReturnsNotValidItemById(String id) {
+    AnyCacheableItem item = new AnyCacheableItem(id);
+    when(cacheDataSource.getById(id)).thenReturn(item);
+    when(cacheDataSource.isValid(item)).thenReturn(false);
+    when(apiDataSource.getById(id)).thenReturn(item);
+    return item;
+  }
+
+  private AnyCacheableItem givenTheCacheReturnsNullItemsById(String id) {
+    AnyCacheableItem item = new AnyCacheableItem(id);
+    when(cacheDataSource.getById(id)).thenReturn(null);
+    when(apiDataSource.getById(id)).thenReturn(item);
+    return item;
+  }
+
+  private AnyCacheableItem givenTheCacheReturnsAValidItemById(String id) {
+    AnyCacheableItem item = new AnyCacheableItem(id);
+    when(cacheDataSource.getById(id)).thenReturn(item);
+    when(cacheDataSource.isValid(item)).thenReturn(true);
+    return item;
   }
 
   private void givenDataSourcesReturnValidData() throws Exception {
