@@ -26,11 +26,13 @@ import org.mockito.Mock;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class RosieRepositoryTest extends UnitTest {
 
-  @Mock private DataSource<AnyCacheableItem> inMemoryDataSource;
+  @Mock private DataSource<AnyCacheableItem> cacheDataSource;
   @Mock private DataSource<AnyCacheableItem> apiDataSource;
 
   @Test public void shouldReturnNullIfThereAreNoDataSourcesWithData() throws Exception {
@@ -71,39 +73,92 @@ public class RosieRepositoryTest extends UnitTest {
     assertEquals(apiData, data);
   }
 
+  @Test public void shouldReturnDataFromTheLastDataSourceEvenIfIsMarkedAsInvalid()
+      throws Exception {
+    Collection<AnyCacheableItem> apiData = givenCachedDataIsNotValidNeitherAPI();
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    Collection<AnyCacheableItem> data = repository.getAll();
+
+    assertEquals(apiData, data);
+  }
+
+  @Test(expected = Exception.class) public void shouldPropagateExceptionsThrownByAnyDataSource()
+      throws Exception {
+    givenAnyDataSourceThrowsAnException();
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    repository.getAll();
+  }
+
+  @Test public void shouldGetDataFromTheLastDataSourceIfTheForceLoadFlagIsEnabled()
+      throws Exception {
+    givenDataSourcesReturnValidData();
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    boolean forceLoad = true;
+    repository.getAll(forceLoad);
+
+    verify(cacheDataSource, never()).getAll();
+    verify(apiDataSource).getAll();
+  }
+
+  private void givenDataSourcesReturnValidData() throws Exception {
+    Collection<AnyCacheableItem> cacheData = getSomeItems();
+    Collection<AnyCacheableItem> apiData = getSomeItems();
+    when(cacheDataSource.getAll()).thenReturn(cacheData);
+    when(cacheDataSource.isValidItem(any(AnyCacheableItem.class))).thenReturn(true);
+    when(apiDataSource.getAll()).thenReturn(apiData);
+    when(apiDataSource.isValidItem(any(AnyCacheableItem.class))).thenReturn(true);
+  }
+
+  private void givenAnyDataSourceThrowsAnException() throws Exception {
+    when(apiDataSource.getAll()).thenThrow(new Exception());
+  }
+
+  private Collection<AnyCacheableItem> givenCachedDataIsNotValidNeitherAPI() throws Exception {
+    Collection<AnyCacheableItem> cacheData = getSomeItems();
+    Collection<AnyCacheableItem> apiData = getSomeItems();
+    when(cacheDataSource.getAll()).thenReturn(cacheData);
+    when(cacheDataSource.isValidItem(any(AnyCacheableItem.class))).thenReturn(false);
+    when(apiDataSource.getAll()).thenReturn(apiData);
+    when(apiDataSource.isValidItem(any(AnyCacheableItem.class))).thenReturn(false);
+    return apiData;
+  }
+
   private Collection<AnyCacheableItem> givenTheCacheReturnsNoValidDataAndTheApiReturnsData()
       throws Exception {
     Collection<AnyCacheableItem> cacheData = getSomeItems();
     Collection<AnyCacheableItem> apiData = getSomeItems();
-    when(inMemoryDataSource.getAll()).thenReturn(cacheData);
-    when(inMemoryDataSource.isValidItem(any(AnyCacheableItem.class))).thenReturn(false);
+    when(cacheDataSource.getAll()).thenReturn(cacheData);
+    when(cacheDataSource.isValidItem(any(AnyCacheableItem.class))).thenReturn(false);
     when(apiDataSource.getAll()).thenReturn(apiData);
     return apiData;
   }
 
   private Collection<AnyCacheableItem> givenTheCacheReturnsValidData() throws Exception {
     Collection<AnyCacheableItem> data = getSomeItems();
-    when(inMemoryDataSource.getAll()).thenReturn(data);
-    when(inMemoryDataSource.isValidItem(any(AnyCacheableItem.class))).thenReturn(true);
+    when(cacheDataSource.getAll()).thenReturn(data);
+    when(cacheDataSource.isValidItem(any(AnyCacheableItem.class))).thenReturn(true);
     when(apiDataSource.getAll()).thenReturn(null);
     return data;
   }
 
   private void givenTheDataSourcesHasNoData() throws Exception {
-    when(inMemoryDataSource.getAll()).thenReturn(null);
+    when(cacheDataSource.getAll()).thenReturn(null);
     when(apiDataSource.getAll()).thenReturn(null);
   }
 
   private Collection<AnyCacheableItem> givenTheCacheReturnsNullAndTheApiReturnSomeData()
       throws Exception {
-    when(inMemoryDataSource.getAll()).thenReturn(null);
-    Collection<AnyCacheableItem> allData = getSomeItems();
-    when(apiDataSource.getAll()).thenReturn(allData);
-    return allData;
+    when(cacheDataSource.getAll()).thenReturn(null);
+    Collection<AnyCacheableItem> apiData = getSomeItems();
+    when(apiDataSource.getAll()).thenReturn(apiData);
+    return apiData;
   }
 
   private RosieRepository<AnyCacheableItem> givenARepositoryWithTwoDataSources() {
-    return RosieRepository.with(inMemoryDataSource, apiDataSource);
+    return RosieRepository.with(cacheDataSource, apiDataSource);
   }
 
   private LinkedList<AnyCacheableItem> getSomeItems() {

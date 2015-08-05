@@ -36,8 +36,13 @@ public class RosieRepository<T extends Cacheable> {
   }
 
   public Collection<T> getAll() throws Exception {
+    return getAll(false);
+  }
+
+  public Collection<T> getAll(boolean forceLoad) throws Exception {
     Collection<T> allData = null;
-    for (int i = 0; i < dataSources.length; i++) {
+    int firstDataSource = forceLoad ? dataSources.length - 1 : 0;
+    for (int i = firstDataSource; i < dataSources.length; i++) {
       DataSource<T> dataSource = dataSources[i];
       boolean isTheLastDataSource = i == dataSources.length - 1;
       allData = dataSource.getAll();
