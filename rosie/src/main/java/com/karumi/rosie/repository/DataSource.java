@@ -27,7 +27,9 @@ public interface DataSource<T> {
 
   boolean isValid(T item);
 
-  Void addOrUpdate(Collection<T> cacheData);
+  void addOrUpdate(T item);
+
+  void addOrUpdate(Collection<T> items);
 
   void deleteAll();
 

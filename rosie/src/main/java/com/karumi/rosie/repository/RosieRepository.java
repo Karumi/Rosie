@@ -50,7 +50,7 @@ public class RosieRepository<T extends Cacheable> {
       boolean isTheLastDataSource = i == dataSources.length - 1;
       item = dataSource.getById(id);
       if (isTheLastDataSource) {
-        populateDataSources(Arrays.asList(item), i);
+        populateDataSources(item, i);
         break;
       } else if (areValidItems(dataSource, Arrays.asList(item))) {
         break;
@@ -97,6 +97,16 @@ public class RosieRepository<T extends Cacheable> {
       }
     }
     return filteredItems;
+  }
+
+  private void populateDataSources(T item, int dataSourceIndex) {
+    if (item == null) {
+      return;
+    }
+    for (int i = 0; i < dataSourceIndex; i++) {
+      DataSource dataSource = dataSources[i];
+      dataSource.addOrUpdate(item);
+    }
   }
 
   private void populateDataSources(Collection<T> items, int dataSourceIndex) {

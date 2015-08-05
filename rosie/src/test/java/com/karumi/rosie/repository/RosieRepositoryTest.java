@@ -184,6 +184,24 @@ public class RosieRepositoryTest extends UnitTest {
     assertEquals(apiItem, item);
   }
 
+  @Test public void shouldPopulateCacheWithItemIfCacheIsNotValid() throws Exception {
+    AnyCacheableItem apiItem = givenTheCacheReturnsNotValidItemById(ANY_ID);
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    repository.get(ANY_ID);
+
+    verify(cacheDataSource).addOrUpdate(apiItem);
+  }
+
+  @Test public void shouldDeleteItemsIfAreNotValid() throws Exception {
+    givenTheCacheReturnsNotValidItemById(ANY_ID);
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    repository.get(ANY_ID);
+
+    verify(cacheDataSource).deleteById(ANY_ID);
+  }
+
   private AnyCacheableItem givenTheCacheReturnsNotValidItemById(String id) {
     AnyCacheableItem item = new AnyCacheableItem(id);
     when(cacheDataSource.getById(id)).thenReturn(item);
