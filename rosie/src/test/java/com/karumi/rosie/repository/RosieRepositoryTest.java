@@ -139,6 +139,22 @@ public class RosieRepositoryTest extends UnitTest {
     verify(cacheDataSource).deleteAll();
   }
 
+  @Test(expected = IllegalArgumentException.class) public void shouldNotAcceptNullIds()
+      throws Exception {
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    String nullId = null;
+    repository.get(nullId);
+  }
+
+  @Test(expected = IllegalArgumentException.class) public void shouldNotAcceptNullPredicates()
+      throws Exception {
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    Predicate nullPredicate = null;
+    repository.get(nullPredicate);
+  }
+
   private void givenDataSourcesReturnValidData() throws Exception {
     Collection<AnyCacheableItem> cacheData = getSomeItems();
     Collection<AnyCacheableItem> apiData = getSomeItems();

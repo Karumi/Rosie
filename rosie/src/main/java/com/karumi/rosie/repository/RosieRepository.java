@@ -37,11 +37,11 @@ public class RosieRepository<T extends Cacheable> {
     this.dataSources = dataSources;
   }
 
-  public T getById(String id) throws Exception {
-    return getById(id, false);
+  public T get(String id) throws Exception {
+    return get(id, false);
   }
 
-  public T getById(String id, boolean forceLoad) {
+  public T get(String id, boolean forceLoad) {
     validateId(id);
     T item = null;
     int firstDataSource = forceLoad ? dataSources.length - 1 : 0;
