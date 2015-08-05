@@ -59,9 +59,13 @@ public class ErrorHandler {
     this.callbackScheduler = callbackScheduler;
   }
 
-  public void notifyError(Exception exception) {
+  public void notifyError(Exception exception, OnErrorCallback useCaseErrorCallback) {
     Error error = createError(exception);
-    notifyError(error);
+    if (useCaseErrorCallback != null) {
+      useCaseErrorCallback.onError(error);
+    } else {
+      notifyError(error);
+    }
   }
 
   private void notifyError(final Error error) {
