@@ -20,12 +20,16 @@ import com.karumi.rosie.UnitTest;
 import com.karumi.rosie.doubles.AnyCacheableItem;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyCollection;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -211,7 +215,8 @@ public class RosieRepositoryTest extends UnitTest {
       throws Exception {
     RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
 
-    repository.addOrUpdate(null);
+    AnyCacheableItem item = null;
+    repository.addOrUpdate(item);
   }
 
   @Test public void shouldAddOrUpdateItemToTheAPIDataSource() throws Exception {
@@ -244,17 +249,86 @@ public class RosieRepositoryTest extends UnitTest {
     verify(cacheDataSource, never()).addOrUpdate(any(AnyCacheableItem.class));
   }
 
-  private void givenItemNotAdded(AnyCacheableItem itemToUpdate) {
+  @Test(expected = IllegalArgumentException.class) public void shouldNotAcceptNullItems()
+      throws Exception {
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    List<AnyCacheableItem> items = null;
+    repository.addOrUpdate(items);
+  }
+
+  @Test public void shouldAddItemsToTheAPIDataSource() throws Exception {
+    Collection<AnyCacheableItem> itemsToUpdate = getSomeItems();
+    givenItemsAddedSuccessfully(itemsToUpdate);
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    repository.addOrUpdate(itemsToUpdate);
+
+    verify(apiDataSource).addOrUpdate(itemsToUpdate);
+  }
+
+  @Test public void shouldPopulateCacheDataSourceWithTheAPIDataSourceResults() throws Exception {
+    Collection<AnyCacheableItem> itemsToUpdate = getSomeItems();
+    Collection<AnyCacheableItem> updatedItems = givenItemsAddedSuccessfully(itemsToUpdate);
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    repository.addOrUpdate(itemsToUpdate);
+
+    verify(cacheDataSource).addOrUpdate(updatedItems);
+  }
+
+  @Test public void shouldNotPopulateCacheDataSourceIfTheAPIResultIsNotSuccess() throws Exception {
+    Collection<AnyCacheableItem> itemsToUpdate = getSomeItems();
+    givenItemsNotAdded(itemsToUpdate);
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    repository.addOrUpdate(itemsToUpdate);
+
+    verify(cacheDataSource, never()).addOrUpdate(anyCollection());
+  }
+
+  @Test public void shouldDeleteAllDataSourcesInDescendantOrder() throws Exception {
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    repository.deleteAll();
+
+    InOrder dataSourceOrder = inOrder(apiDataSource, cacheDataSource);
+    dataSourceOrder.verify(apiDataSource).deleteAll();
+    dataSourceOrder.verify(cacheDataSource).deleteAll();
+  }
+
+  @Test public void shouldDeleteAllDataSourcesByIdInDescendantOrder() throws Exception {
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    repository.deleteById(ANY_ID);
+
+    InOrder dataSourceOrder = inOrder(apiDataSource, cacheDataSource);
+    dataSourceOrder.verify(apiDataSource).deleteById(ANY_ID);
+    dataSourceOrder.verify(cacheDataSource).deleteById(ANY_ID);
+  }
+
+  private void givenItemsNotAdded(Collection<AnyCacheableItem> items) throws Exception {
+    when(apiDataSource.addOrUpdate(items)).thenReturn(null);
+  }
+
+  private Collection<AnyCacheableItem> givenItemsAddedSuccessfully(
+      Collection<AnyCacheableItem> items) throws Exception {
+    Collection<AnyCacheableItem> updatedItems = new LinkedList<>(items);
+    when(apiDataSource.addOrUpdate(items)).thenReturn(updatedItems);
+    return updatedItems;
+  }
+
+  private void givenItemNotAdded(AnyCacheableItem itemToUpdate) throws Exception {
     when(apiDataSource.addOrUpdate(itemToUpdate)).thenReturn(null);
   }
 
-  private AnyCacheableItem givenItemAddedSuccessfully(AnyCacheableItem item) {
+  private AnyCacheableItem givenItemAddedSuccessfully(AnyCacheableItem item) throws Exception {
     AnyCacheableItem updatedItem = new AnyCacheableItem(item.getId());
     when(apiDataSource.addOrUpdate(item)).thenReturn(updatedItem);
     return updatedItem;
   }
 
-  private AnyCacheableItem givenDataSourcesReturnValidData(String id) {
+  private AnyCacheableItem givenDataSourcesReturnValidData(String id) throws Exception {
     AnyCacheableItem cacheItem = new AnyCacheableItem(id);
     AnyCacheableItem apiItem = new AnyCacheableItem(id);
     when(cacheDataSource.getById(id)).thenReturn(cacheItem);
@@ -263,7 +337,7 @@ public class RosieRepositoryTest extends UnitTest {
     return apiItem;
   }
 
-  private AnyCacheableItem givenTheCacheReturnsNotValidItemById(String id) {
+  private AnyCacheableItem givenTheCacheReturnsNotValidItemById(String id) throws Exception {
     AnyCacheableItem item = new AnyCacheableItem(id);
     when(cacheDataSource.getById(id)).thenReturn(item);
     when(cacheDataSource.isValid(item)).thenReturn(false);
@@ -271,14 +345,14 @@ public class RosieRepositoryTest extends UnitTest {
     return item;
   }
 
-  private AnyCacheableItem givenTheCacheReturnsNullItemsById(String id) {
+  private AnyCacheableItem givenTheCacheReturnsNullItemsById(String id) throws Exception {
     AnyCacheableItem item = new AnyCacheableItem(id);
     when(cacheDataSource.getById(id)).thenReturn(null);
     when(apiDataSource.getById(id)).thenReturn(item);
     return item;
   }
 
-  private AnyCacheableItem givenTheCacheReturnsAValidItemById(String id) {
+  private AnyCacheableItem givenTheCacheReturnsAValidItemById(String id) throws Exception {
     AnyCacheableItem item = new AnyCacheableItem(id);
     when(cacheDataSource.getById(id)).thenReturn(item);
     when(cacheDataSource.isValid(item)).thenReturn(true);

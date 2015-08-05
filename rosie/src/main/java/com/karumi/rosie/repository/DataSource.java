@@ -25,15 +25,15 @@ public interface DataSource<T> {
 
   Collection<T> getAll() throws Exception;
 
-  boolean isValid(T item);
+  boolean isValid(T item) throws Exception;
 
-  T addOrUpdate(T item);
+  T addOrUpdate(T item) throws Exception;
 
-  Collection<T> addOrUpdate(Collection<T> items);
+  Collection<T> addOrUpdate(Collection<T> items) throws Exception;
 
-  void deleteAll();
+  void deleteAll() throws Exception;
 
-  T getById(String id);
+  T getById(String id) throws Exception;
 
-  void deleteById(String id);
+  void deleteById(String id) throws Exception;
 }
