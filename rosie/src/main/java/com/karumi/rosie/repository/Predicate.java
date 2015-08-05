@@ -16,18 +16,7 @@
 
 package com.karumi.rosie.repository;
 
-import java.util.Collection;
+public interface Predicate<T extends Cacheable> {
 
-/**
- * Declares the contract of all data sources related to a RosieRepository.
- */
-public interface DataSource<T> {
-
-  Collection<T> getAll() throws Exception;
-
-  boolean isValidItem(T item);
-
-  Void addOrUpdate(Collection<T> cacheData);
-
-  void deleteAll();
+  boolean isValid(T item);
 }

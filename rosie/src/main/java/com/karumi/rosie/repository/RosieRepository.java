@@ -17,6 +17,7 @@
 package com.karumi.rosie.repository;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 /**
  * Repository pattern implementation. This class implements all the data handling logic based on
@@ -46,11 +47,26 @@ public class RosieRepository<T extends Cacheable> {
       DataSource<T> dataSource = dataSources[i];
       boolean isTheLastDataSource = i == dataSources.length - 1;
       allData = dataSource.getAll();
-      if (isValidData(dataSource, allData) || isTheLastDataSource) {
+      if (isTheLastDataSource) {
+        populateDataSources(allData, i);
         break;
+      } else if (isValidData(dataSource, allData)) {
+        break;
+      } else {
+        dataSource.deleteAll();
       }
     }
     return allData;
+  }
+
+  private void populateDataSources(Collection<T> data, int dataSourceIndex) {
+    if (data == null) {
+      return;
+    }
+    for (int i = 0; i < dataSourceIndex; i++) {
+      DataSource dataSource = dataSources[i];
+      dataSource.addOrUpdate(data);
+    }
   }
 
   private boolean isValidData(DataSource<T> dataSource, Collection<T> data) {
@@ -61,5 +77,22 @@ public class RosieRepository<T extends Cacheable> {
       }
     }
     return isValidData;
+  }
+
+  public Collection<T> get(Predicate<T> predicate) throws Exception {
+    validatePredicate(predicate);
+    Collection<T> filteredData = new LinkedList<>();
+    for (T item : getAll()) {
+      if (predicate.isValid(item)) {
+        filteredData.add(item);
+      }
+    }
+    return filteredData;
+  }
+
+  private void validatePredicate(Predicate<T> predicate) {
+    if (predicate == null) {
+      throw new IllegalArgumentException("The predicate used can't be null.");
+    }
   }
 }

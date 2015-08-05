@@ -25,6 +25,7 @@ import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -101,6 +102,41 @@ public class RosieRepositoryTest extends UnitTest {
 
     verify(cacheDataSource, never()).getAll();
     verify(apiDataSource).getAll();
+  }
+
+  @Test public void shouldReturnJustDataMatchingWithThePredicate() throws Exception {
+    final Collection<AnyCacheableItem> cacheData = givenTheCacheReturnsValidData();
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    Collection<AnyCacheableItem> filteredData = repository.get(new Predicate<AnyCacheableItem>() {
+      @Override public boolean isValid(AnyCacheableItem item) {
+        return item.getId().equals("1") || item.getId().equals("2");
+      }
+    });
+
+    assertEquals(2, filteredData.size());
+    assertTrue(filteredData.size() < cacheData.size());
+    assertTrue(filteredData.contains(new AnyCacheableItem("1")));
+    assertTrue(filteredData.contains(new AnyCacheableItem("2")));
+  }
+
+  @Test public void shouldPopulateFasterDataSources() throws Exception {
+    final Collection<AnyCacheableItem> cacheData =
+        givenTheCacheReturnsNoValidDataAndTheApiReturnsData();
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    repository.getAll();
+
+    verify(cacheDataSource).addOrUpdate(cacheData);
+  }
+
+  @Test public void shouldDeleteAllFromTheDataSourceIfTheDataIsNotValid() throws Exception {
+    givenTheCacheReturnsNoValidDataAndTheApiReturnsData();
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    repository.getAll();
+
+    verify(cacheDataSource).deleteAll();
   }
 
   private void givenDataSourcesReturnValidData() throws Exception {
