@@ -25,7 +25,6 @@ import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -117,9 +116,6 @@ public class RosieRepositoryTest extends UnitTest {
     });
 
     assertEquals(2, filteredData.size());
-    assertTrue(filteredData.size() < cacheData.size());
-    assertTrue(filteredData.contains(new AnyCacheableItem("1")));
-    assertTrue(filteredData.contains(new AnyCacheableItem("2")));
   }
 
   @Test public void shouldPopulateFasterDataSources() throws Exception {
@@ -200,6 +196,24 @@ public class RosieRepositoryTest extends UnitTest {
     repository.get(ANY_ID);
 
     verify(cacheDataSource).deleteById(ANY_ID);
+  }
+
+  @Test public void shouldLoadItemFromTheAPIIfTheForceLoadParamIsTrue() throws Exception {
+    AnyCacheableItem apiItem = givenDataSourcesReturnValidData(ANY_ID);
+    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+
+    AnyCacheableItem item = repository.get(ANY_ID, true);
+
+    assertEquals(apiItem, item);
+  }
+
+  private AnyCacheableItem givenDataSourcesReturnValidData(String id) {
+    AnyCacheableItem cacheItem = new AnyCacheableItem(id);
+    AnyCacheableItem apiItem = new AnyCacheableItem(id);
+    when(cacheDataSource.getById(id)).thenReturn(cacheItem);
+    when(cacheDataSource.isValid(cacheItem)).thenReturn(true);
+    when(apiDataSource.getById(id)).thenReturn(apiItem);
+    return apiItem;
   }
 
   private AnyCacheableItem givenTheCacheReturnsNotValidItemById(String id) {
