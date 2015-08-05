@@ -33,9 +33,14 @@ public class ErrorFactory {
       return ((ErrorNotHandledException) exception).getError();
     } else if (exception instanceof InvocationTargetException) {
       InvocationTargetException invocationTargetException = (InvocationTargetException) exception;
-      ErrorNotHandledException errorNotHandledException =
-          (ErrorNotHandledException) invocationTargetException.getTargetException();
-      return createInternalException(errorNotHandledException);
+      Throwable targetException = invocationTargetException.getTargetException();
+      if (targetException != null && targetException instanceof ErrorNotHandledException) {
+        ErrorNotHandledException errorNotHandledException =
+            (ErrorNotHandledException) targetException;
+        return createInternalException(errorNotHandledException);
+      } else {
+        return new Error();
+      }
     }
     return new Error("Generic Error", exception);
   }
