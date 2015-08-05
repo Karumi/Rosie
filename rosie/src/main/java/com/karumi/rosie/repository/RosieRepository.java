@@ -30,10 +30,14 @@ public class RosieRepository<T extends Cacheable> {
   private final DataSource<T>[] dataSources;
 
   public static <R extends Cacheable> RosieRepository<R> with(DataSource<R>... dataSources) {
+    if (dataSources == null || dataSources.length == 0) {
+      throw new IllegalArgumentException("The Repository can't be created without data sources.");
+    }
+
     return new RosieRepository<R>(dataSources);
   }
 
-  public RosieRepository(DataSource<T>... dataSources) {
+  private RosieRepository(DataSource<T>... dataSources) {
     this.dataSources = dataSources;
   }
 
@@ -90,6 +94,7 @@ public class RosieRepository<T extends Cacheable> {
 
   public Collection<T> get(Predicate<T> predicate, boolean forceLoad) throws Exception {
     validatePredicate(predicate);
+
     Collection<T> filteredItems = new LinkedList<>();
     for (T item : getAll(forceLoad)) {
       if (predicate.isValid(item)) {
@@ -101,6 +106,7 @@ public class RosieRepository<T extends Cacheable> {
 
   public T addOrUpdate(T item) throws Exception {
     validateItem(item);
+
     int lastDataSourceIndex = dataSources.length - 1;
     DataSource<T> lastDataSource = dataSources[(lastDataSourceIndex)];
     item = lastDataSource.addOrUpdate(item);
@@ -148,6 +154,7 @@ public class RosieRepository<T extends Cacheable> {
     if (item == null) {
       return;
     }
+
     for (int i = 0; i < dataSourceIndex; i++) {
       DataSource dataSource = dataSources[i];
       dataSource.addOrUpdate(item);
@@ -158,6 +165,7 @@ public class RosieRepository<T extends Cacheable> {
     if (items == null) {
       return;
     }
+
     for (int i = 0; i < dataSourceIndex; i++) {
       DataSource dataSource = dataSources[i];
       dataSource.addOrUpdate(items);

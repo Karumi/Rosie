@@ -23,17 +23,17 @@ import java.util.Collection;
  */
 public interface DataSource<T> {
 
-  Collection<T> getAll() throws Exception;
+  T getById(String id) throws Exception;
 
-  boolean isValid(T item) throws Exception;
+  Collection<T> getAll() throws Exception;
 
   T addOrUpdate(T item) throws Exception;
 
   Collection<T> addOrUpdate(Collection<T> items) throws Exception;
 
+  void deleteById(String id) throws Exception;
+
   void deleteAll() throws Exception;
 
-  T getById(String id) throws Exception;
-
-  void deleteById(String id) throws Exception;
+  boolean isValid(T item) throws Exception;
 }

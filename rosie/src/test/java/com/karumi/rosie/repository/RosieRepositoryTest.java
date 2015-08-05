@@ -41,6 +41,17 @@ public class RosieRepositoryTest extends UnitTest {
   @Mock private DataSource<AnyCacheableItem> cacheDataSource;
   @Mock private DataSource<AnyCacheableItem> apiDataSource;
 
+  @Test(expected = IllegalArgumentException.class)
+  public void shouldNotAcceptNullRepositoriesAsInput() {
+    RosieRepository.with(null);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void shouldNotAcceptAnEmptyArrayOfRepositories() {
+    DataSource<AnyCacheableItem>[] dataSources = new DataSource[] {};
+    RosieRepository.with(dataSources);
+  }
+
   @Test public void shouldReturnNullIfThereAreNoDataSourcesWithData() throws Exception {
     givenTheDataSourcesHasNoData();
     RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
