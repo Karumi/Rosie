@@ -59,6 +59,21 @@ public class RosieRepository<T extends Cacheable> {
     return allData;
   }
 
+  public Collection<T> get(Predicate<T> predicate) throws Exception {
+    return get(predicate, false);
+  }
+
+  public Collection<T> get(Predicate<T> predicate, boolean forceLoad) throws Exception {
+    validatePredicate(predicate);
+    Collection<T> filteredData = new LinkedList<>();
+    for (T item : getAll(forceLoad)) {
+      if (predicate.isValid(item)) {
+        filteredData.add(item);
+      }
+    }
+    return filteredData;
+  }
+
   private void populateDataSources(Collection<T> data, int dataSourceIndex) {
     if (data == null) {
       return;
@@ -77,17 +92,6 @@ public class RosieRepository<T extends Cacheable> {
       }
     }
     return isValidData;
-  }
-
-  public Collection<T> get(Predicate<T> predicate) throws Exception {
-    validatePredicate(predicate);
-    Collection<T> filteredData = new LinkedList<>();
-    for (T item : getAll()) {
-      if (predicate.isValid(item)) {
-        filteredData.add(item);
-      }
-    }
-    return filteredData;
   }
 
   private void validatePredicate(Predicate<T> predicate) {
