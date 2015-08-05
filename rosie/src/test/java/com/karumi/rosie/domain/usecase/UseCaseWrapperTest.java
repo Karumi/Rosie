@@ -20,12 +20,14 @@ import com.karumi.rosie.UnitTest;
 import com.karumi.rosie.domain.usecase.annotation.UseCase;
 import com.karumi.rosie.domain.usecase.error.ErrorHandler;
 import com.karumi.rosie.domain.usecase.error.ErrorNotHandledException;
+import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 import java.lang.reflect.InvocationTargetException;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -57,7 +59,8 @@ public class UseCaseWrapperTest extends UnitTest {
 
     useCaseWrapper.execute();
 
-    verify(errorHandler).notifyError(any(ErrorNotHandledException.class));
+    verify(errorHandler).notifyError(any(ErrorNotHandledException.class),
+        eq((OnErrorCallback) null));
   }
 
   @Test public void shouldNotifyErrorUsingTheErrorGeneratedFromTheUseCase() {
@@ -73,7 +76,7 @@ public class UseCaseWrapperTest extends UnitTest {
 
     useCaseWrapper.execute();
 
-    verify(errorHandler).notifyError(errorArgumentCaptor.capture());
+    verify(errorHandler).notifyError(errorArgumentCaptor.capture(), eq((OnErrorCallback) null));
     ErrorNotHandledException errorNotHandledException =
         (ErrorNotHandledException) errorArgumentCaptor.getValue().getTargetException();
     assertEquals(error, errorNotHandledException.getError());
