@@ -30,14 +30,13 @@ public class RosieRepository<T extends Cacheable> {
   private final DataSource<T>[] dataSources;
 
   public static <R extends Cacheable> RosieRepository<R> with(DataSource<R>... dataSources) {
-    if (dataSources == null || dataSources.length == 0) {
-      throw new IllegalArgumentException("The Repository can't be created without data sources.");
-    }
-
     return new RosieRepository<R>(dataSources);
   }
 
-  private RosieRepository(DataSource<T>... dataSources) {
+  public RosieRepository(DataSource<T>... dataSources) {
+    if (dataSources == null || dataSources.length == 0) {
+      throw new IllegalArgumentException("The Repository can't be created without data sources.");
+    }
     this.dataSources = dataSources;
   }
 
