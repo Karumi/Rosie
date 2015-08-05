@@ -222,7 +222,7 @@ public class UseCaseHandlerTest extends UnitTest {
     verify(errorCallback).onError(any(Error.class));
   }
 
-  @Test public void shouldCallErrorOnErrorWhenHappendAnUnhadledError() {
+  @Test public void shouldCallOnErrorCallbackWhenUseCaseThrowAnUnhandledException() {
     FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
     ErrorUseCase errorUseCase = new ErrorUseCase();
     ErrorHandler errorHandler = new ErrorHandler(new FakeCallbackScheduler());
@@ -249,9 +249,7 @@ public class UseCaseHandlerTest extends UnitTest {
         eq((OnErrorCallback) null));
   }
 
-  @Test
-  public void
-  shouldCallErrorHandlerErrorWhenUseCaseInvokeAnErrorAndTheCallbackDoNotHandleThisKindOfMethod() {
+  @Test public void shouldNotifyErrorHandlerWhenUseCaseOnErrorCallbackDoesNotExist() {
     FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
     ErrorUseCase errorUseCase = new ErrorUseCase();
     ErrorHandler errorHandler = mock(ErrorHandler.class);
