@@ -59,23 +59,23 @@ public class ErrorHandler {
     this.callbackScheduler = callbackScheduler;
   }
 
-  public void notifyError(Exception exception, OnErrorCallback useCaseErrorCallback) {
-    Error error = createError(exception);
-    if (useCaseErrorCallback != null) {
-      useCaseErrorCallback.onError(error);
-    } else {
-      notifyError(error);
-    }
-  }
-
-  private void notifyError(final Error error) {
+  public void notifyError(Exception exception, final OnErrorCallback useCaseErrorCallback) {
+    final Error error = createError(exception);
     callbackScheduler.post(new Runnable() {
       @Override public void run() {
-        for (OnErrorCallback errorCallback : errorCallbacks) {
-          errorCallback.onError(error);
+        if (useCaseErrorCallback != null) {
+          useCaseErrorCallback.onError(error);
+        } else {
+          notifyError(error);
         }
       }
     });
+  }
+
+  private void notifyError(final Error error) {
+    for (OnErrorCallback errorCallback : errorCallbacks) {
+      errorCallback.onError(error);
+    }
   }
 
   public void registerCallback(OnErrorCallback onErrorCallback) {
