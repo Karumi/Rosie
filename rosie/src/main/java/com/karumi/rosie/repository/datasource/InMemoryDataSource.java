@@ -16,38 +16,90 @@
 
 package com.karumi.rosie.repository.datasource;
 
+import com.karumi.rosie.repository.Cacheable;
+import com.karumi.rosie.time.TimeProvider;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * In memory implementation of a generic DataSource implementing a basic TTL policy.
  */
-public class InMemoryDataSource<T> implements DataSource<T> {
+public class InMemoryDataSource<T extends Cacheable> implements DataSource<T> {
 
-  @Override public T getById(String id) throws Exception {
-    return null;
+  private final TimeProvider timeProvider;
+  private final long ttlInMillis;
+
+  private List<T> items;
+  private long lastItemsUpdate;
+
+  public InMemoryDataSource(TimeProvider timeProvider, long ttlInMillis) {
+    this.timeProvider = timeProvider;
+    this.ttlInMillis = ttlInMillis;
   }
 
-  @Override public Collection<T> getAll() throws Exception {
-    return null;
+  @Override public synchronized T getById(String id) throws Exception {
+    T result = null;
+    for (T item : items) {
+      if (item.getId().equals(id)) {
+        result = item;
+        break;
+      }
+    }
+    return result;
   }
 
-  @Override public T addOrUpdate(T item) throws Exception {
-    return null;
+  @Override public synchronized Collection<T> getAll() throws Exception {
+    return new LinkedList<>(items);
   }
 
-  @Override public Collection<T> addOrUpdate(Collection<T> items) throws Exception {
-    return null;
+  @Override public synchronized T addOrUpdate(T item) throws Exception {
+    if (items.contains(item)) {
+      updateItem(item);
+    } else {
+      items.add(item);
+    }
+    lastItemsUpdate = timeProvider.currentTimeMillis();
+    return item;
   }
 
-  @Override public void deleteById(String id) throws Exception {
-
+  @Override public synchronized Collection<T> addOrUpdate(Collection<T> items) throws Exception {
+    for (T item : items) {
+      addOrUpdate(item);
+    }
+    lastItemsUpdate = timeProvider.currentTimeMillis();
+    return items;
   }
 
-  @Override public void deleteAll() throws Exception {
+  @Override public synchronized void deleteById(String id) throws Exception {
+    List<T> newItems = new LinkedList<>();
+    for (T item : items) {
+      if (!item.getId().equals(id)) {
+        items.add(item);
+      }
+    }
+    this.items = newItems;
+  }
 
+  @Override public synchronized void deleteAll() throws Exception {
+    items = null;
+    lastItemsUpdate = 0;
   }
 
   @Override public boolean isValid(T item) throws Exception {
+    //TODO IMPLEMENT THIS SHIT AND ADD SOME TESTS
     return false;
+  }
+
+  private void updateItem(T item) {
+    List<T> newItems = new LinkedList<>();
+    for (T i : items) {
+      if (i.equals(item)) {
+        items.add(item);
+      } else {
+        items.add(i);
+      }
+    }
+    this.items = newItems;
   }
 }
