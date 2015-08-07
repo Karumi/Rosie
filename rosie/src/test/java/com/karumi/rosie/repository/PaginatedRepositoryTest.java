@@ -18,6 +18,7 @@ package com.karumi.rosie.repository;
 
 import com.karumi.rosie.UnitTest;
 import com.karumi.rosie.doubles.AnyCacheableItem;
+import com.karumi.rosie.repository.datasource.PaginatedDataSource;
 import java.util.LinkedList;
 import org.junit.Test;
 import org.mockito.Mock;

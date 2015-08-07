@@ -14,26 +14,40 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.repository;
+package com.karumi.rosie.repository.datasource;
 
 import java.util.Collection;
 
 /**
- * Declares the contract of all data sources related to a RosieRepository.
+ * In memory implementation of a generic DataSource implementing a basic TTL policy.
  */
-public interface DataSource<T> {
+public class InMemoryDataSource<T> implements DataSource<T> {
 
-  T getById(String id) throws Exception;
+  @Override public T getById(String id) throws Exception {
+    return null;
+  }
 
-  Collection<T> getAll() throws Exception;
+  @Override public Collection<T> getAll() throws Exception {
+    return null;
+  }
 
-  T addOrUpdate(T item) throws Exception;
+  @Override public T addOrUpdate(T item) throws Exception {
+    return null;
+  }
 
-  Collection<T> addOrUpdate(Collection<T> items) throws Exception;
+  @Override public Collection<T> addOrUpdate(Collection<T> items) throws Exception {
+    return null;
+  }
 
-  void deleteById(String id) throws Exception;
+  @Override public void deleteById(String id) throws Exception {
 
-  void deleteAll() throws Exception;
+  }
 
-  boolean isValid(T item) throws Exception;
+  @Override public void deleteAll() throws Exception {
+
+  }
+
+  @Override public boolean isValid(T item) throws Exception {
+    return false;
+  }
 }

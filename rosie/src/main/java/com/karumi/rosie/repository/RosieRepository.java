@@ -16,6 +16,7 @@
 
 package com.karumi.rosie.repository;
 
+import com.karumi.rosie.repository.datasource.DataSource;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;

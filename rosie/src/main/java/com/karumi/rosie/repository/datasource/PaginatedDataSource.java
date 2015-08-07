@@ -14,8 +14,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-package com.karumi.rosie.repository;
+package com.karumi.rosie.repository.datasource;
 
+import com.karumi.rosie.repository.Cacheable;
+import com.karumi.rosie.repository.PaginatedCollection;
+import com.karumi.rosie.repository.datasource.DataSource;
 import java.util.Collection;
 
 /**

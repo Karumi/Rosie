@@ -16,6 +16,7 @@
 
 package com.karumi.rosie.repository;
 
+import com.karumi.rosie.repository.datasource.PaginatedDataSource;
 import java.util.Collection;
 
 /**
