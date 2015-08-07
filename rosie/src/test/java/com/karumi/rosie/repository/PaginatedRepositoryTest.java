@@ -98,6 +98,7 @@ public class PaginatedRepositoryTest extends UnitTest {
     when(cacheDataSource.isValid(any(AnyCacheableItem.class))).thenReturn(true);
     PaginatedCollection<AnyCacheableItem> apiItems = new PaginatedCollection<>(items);
     when(apiDataSource.get(anyInt(), anyInt())).thenReturn(apiItems);
+    when(apiDataSource.isValid(any(AnyCacheableItem.class))).thenReturn(true);
     return apiItems;
   }
 

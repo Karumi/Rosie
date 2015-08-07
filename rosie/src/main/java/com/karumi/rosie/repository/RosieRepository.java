@@ -47,13 +47,10 @@ public class RosieRepository<T extends Cacheable> {
     int firstDataSource = forceLoad ? numberOfDataSources - 1 : 0;
     for (int i = firstDataSource; i < numberOfDataSources; i++) {
       DataSource<T> dataSource = getDataSource(i);
-      boolean isTheLastDataSource = i == numberOfDataSources - 1;
       item = dataSource.getById(id);
-      if (isTheLastDataSource) {
+      if (areValidItems(dataSource, Arrays.asList(item))) {
         populateDataSources(item, i);
         onItemLoadedFromTheLastDataSource(item);
-        break;
-      } else if (areValidItems(dataSource, Arrays.asList(item))) {
         break;
       } else {
         dataSource.deleteById(id);
@@ -72,13 +69,10 @@ public class RosieRepository<T extends Cacheable> {
     int firstDataSource = forceLoad ? numberOfDataSources - 1 : 0;
     for (int i = firstDataSource; i < numberOfDataSources; i++) {
       DataSource<T> dataSource = getDataSource(i);
-      boolean isTheLastDataSource = i == numberOfDataSources - 1;
       items = dataSource.getAll();
-      if (isTheLastDataSource) {
+      if (areValidItems(dataSource, items)) {
         populateDataSources(items, i);
         onItemsLoadedFromTheLastDataSource(items);
-        break;
-      } else if (areValidItems(dataSource, items)) {
         break;
       } else {
         dataSource.deleteAll();
@@ -134,7 +128,7 @@ public class RosieRepository<T extends Cacheable> {
   }
 
   public void deleteAll() throws Exception {
-    for (int i = dataSources.length - 1; i >= 0; i--) {
+    for (int i = 0; i < getNumberOfDataSources(); i++) {
       DataSource dataSource = getDataSource(i);
       dataSource.deleteAll();
     }
@@ -143,7 +137,7 @@ public class RosieRepository<T extends Cacheable> {
   public void deleteById(String id) throws Exception {
     validateId(id);
 
-    for (int i = getNumberOfDataSources() - 1; i >= 0; i--) {
+    for (int i = 0; i < getNumberOfDataSources(); i++) {
       DataSource dataSource = getDataSource(i);
       dataSource.deleteById(id);
     }

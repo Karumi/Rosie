@@ -22,14 +22,12 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import org.junit.Test;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyCollection;
-import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -303,19 +301,17 @@ public class RosieRepositoryTest extends UnitTest {
 
     repository.deleteAll();
 
-    InOrder dataSourceOrder = inOrder(apiDataSource, cacheDataSource);
-    dataSourceOrder.verify(apiDataSource).deleteAll();
-    dataSourceOrder.verify(cacheDataSource).deleteAll();
+    verify(apiDataSource).deleteAll();
+    verify(cacheDataSource).deleteAll();
   }
 
-  @Test public void shouldDeleteAllDataSourcesByIdInDescendantOrder() throws Exception {
+  @Test public void shouldDeleteAllDataSourcesById() throws Exception {
     RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
 
     repository.deleteById(ANY_ID);
 
-    InOrder dataSourceOrder = inOrder(apiDataSource, cacheDataSource);
-    dataSourceOrder.verify(apiDataSource).deleteById(ANY_ID);
-    dataSourceOrder.verify(cacheDataSource).deleteById(ANY_ID);
+    verify(apiDataSource).deleteById(ANY_ID);
+    verify(cacheDataSource).deleteById(ANY_ID);
   }
 
   private void givenItemsNotAdded(Collection<AnyCacheableItem> items) throws Exception {
@@ -353,6 +349,7 @@ public class RosieRepositoryTest extends UnitTest {
     when(cacheDataSource.getById(id)).thenReturn(item);
     when(cacheDataSource.isValid(item)).thenReturn(false);
     when(apiDataSource.getById(id)).thenReturn(item);
+    when(apiDataSource.isValid(any(AnyCacheableItem.class))).thenReturn(true);
     return item;
   }
 
@@ -400,6 +397,7 @@ public class RosieRepositoryTest extends UnitTest {
     when(cacheDataSource.getAll()).thenReturn(cacheData);
     when(cacheDataSource.isValid(any(AnyCacheableItem.class))).thenReturn(false);
     when(apiDataSource.getAll()).thenReturn(apiData);
+    when(apiDataSource.isValid(any(AnyCacheableItem.class))).thenReturn(true);
     return apiData;
   }
 

@@ -39,18 +39,20 @@ public class PaginatedRepository<T extends Cacheable> extends RosieRepository {
     int firstDataSource = forceLoad ? numberOfDataSources - 1 : 0;
     for (int i = firstDataSource; i < numberOfDataSources; i++) {
       PaginatedDataSource<T> dataSource = getPaginatedDataSource(i);
-      boolean isTheLastDataSource = i == numberOfDataSources - 1;
       page = dataSource.get(offset, limit);
-      if (isTheLastDataSource) {
+      if (areValidItems(dataSource, page.getItems())) {
         populateDataSources(offset, limit, page.getItems(), i);
-        break;
-      } else if (areValidItems(dataSource, page.getItems())) {
+        onItemsLoadedFromTheLastDataSource(page);
         break;
       } else {
         dataSource.deleteAll();
       }
     }
     return page;
+  }
+
+  protected void onItemsLoadedFromTheLastDataSource(PaginatedCollection<T> page) {
+
   }
 
   private void populateDataSources(int offset, int limit, Collection<T> items,
