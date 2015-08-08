@@ -18,7 +18,6 @@ package com.karumi.rosie.repository.datasource;
 
 import com.karumi.rosie.repository.Cacheable;
 import com.karumi.rosie.repository.PaginatedCollection;
-import com.karumi.rosie.repository.datasource.DataSource;
 import java.util.Collection;
 
 /**
@@ -28,5 +27,5 @@ public interface PaginatedDataSource<T extends Cacheable> extends DataSource {
 
   PaginatedCollection<T> get(int offset, int limit) throws Exception;
 
-  PaginatedCollection<T> addOrUpdate(int offset, int limit, Collection<T> items);
+  PaginatedCollection<T> addOrUpdate(int offset, int limit, Collection<T> items, boolean hasMore);
 }

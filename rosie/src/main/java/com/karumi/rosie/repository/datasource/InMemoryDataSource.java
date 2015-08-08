@@ -30,7 +30,7 @@ public class InMemoryDataSource<T extends Cacheable> implements DataSource<T> {
   private final TimeProvider timeProvider;
   private final long ttlInMillis;
 
-  private List<T> items;
+  protected List<T> items;
   private long lastItemsUpdate;
 
   public InMemoryDataSource(TimeProvider timeProvider, long ttlInMillis) {

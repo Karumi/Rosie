@@ -42,7 +42,7 @@ public class PaginatedRepository<T extends Cacheable> extends RosieRepository {
       PaginatedDataSource<T> dataSource = getPaginatedDataSource(i);
       page = dataSource.get(offset, limit);
       if (areValidItems(dataSource, page.getItems())) {
-        populateDataSources(offset, limit, page.getItems(), i);
+        populateDataSources(page, i);
         onItemsLoadedFromTheLastDataSource(page);
         break;
       } else {
@@ -56,15 +56,18 @@ public class PaginatedRepository<T extends Cacheable> extends RosieRepository {
 
   }
 
-  private void populateDataSources(int offset, int limit, Collection<T> items,
-      int dataSourceIndex) {
+  private void populateDataSources(PaginatedCollection page, int dataSourceIndex) {
+    Collection items = page.getItems();
     if (items == null) {
       return;
     }
 
     for (int i = 0; i < dataSourceIndex; i++) {
       PaginatedDataSource dataSource = getPaginatedDataSource(i);
-      dataSource.addOrUpdate(offset, limit, items);
+      int offset = page.getOffset();
+      int limit = page.getLimit();
+      boolean hasMore = page.isHasMore();
+      dataSource.addOrUpdate(offset, limit, items, hasMore);
     }
   }
 
