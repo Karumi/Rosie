@@ -36,7 +36,7 @@ public class InMemoryPaginatedDataSource<T extends Cacheable> extends InMemoryDa
     validateOffsetAndLimit(offset, limit);
 
     List<T> result = new LinkedList<>();
-    for (int i = offset; i < limit && offset < items.size() && limit < items.size(); i++) {
+    for (int i = offset; i < limit && offset < items.size(); i++) {
       T item = (T) items.get(i);
       result.add(item);
     }
@@ -51,13 +51,11 @@ public class InMemoryPaginatedDataSource<T extends Cacheable> extends InMemoryDa
   @Override
   public PaginatedCollection addOrUpdate(int offset, int limit, Collection items, boolean hasMore) {
     validateOffsetAndLimit(offset, limit);
-    int itemIndex = offset;
-    for (T item : (Collection<T>) items) {
-      this.items.add(itemIndex, item);
-    }
+    this.items.addAll(items);
+    this.hasMore = hasMore;
     PaginatedCollection<T> paginatedCollection = new PaginatedCollection<>(items);
     paginatedCollection.setOffset(offset);
-    paginatedCollection.setLimit(offset);
+    paginatedCollection.setLimit(limit);
     paginatedCollection.setHasMore(hasMore);
     return paginatedCollection;
   }

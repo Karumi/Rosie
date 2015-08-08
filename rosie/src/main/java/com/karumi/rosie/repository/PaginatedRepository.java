@@ -66,7 +66,7 @@ public class PaginatedRepository<T extends Cacheable> extends RosieRepository {
       PaginatedDataSource dataSource = getPaginatedDataSource(i);
       int offset = page.getOffset();
       int limit = page.getLimit();
-      boolean hasMore = page.isHasMore();
+      boolean hasMore = page.hasMore();
       dataSource.addOrUpdate(offset, limit, items, hasMore);
     }
   }
