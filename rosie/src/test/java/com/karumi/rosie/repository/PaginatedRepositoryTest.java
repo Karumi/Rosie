@@ -79,7 +79,7 @@ public class PaginatedRepositoryTest extends UnitTest {
 
     repository.get(ANY_OFFSET, ANY_LIMIT, true);
 
-    verify(cacheDataSource).addOrUpdate(ANY_OFFSET, ANY_LIMIT, apiItems.getItems());
+    verify(cacheDataSource).addOrUpdate(ANY_OFFSET, ANY_LIMIT, apiItems.getItems(), true);
   }
 
   @Test public void shouldDeleteCacheDataIfItemsAreNotValid() throws Exception {
@@ -95,9 +95,15 @@ public class PaginatedRepositoryTest extends UnitTest {
       throws Exception {
     LinkedList<AnyCacheableItem> items = getSomeItems();
     PaginatedCollection<AnyCacheableItem> cacheItems = new PaginatedCollection<>(items);
+    cacheItems.setHasMore(true);
+    cacheItems.setOffset(ANY_OFFSET);
+    cacheItems.setLimit(ANY_LIMIT);
     when(cacheDataSource.get(anyInt(), anyInt())).thenReturn(cacheItems);
     when(cacheDataSource.isValid(any(AnyCacheableItem.class))).thenReturn(true);
     PaginatedCollection<AnyCacheableItem> apiItems = new PaginatedCollection<>(items);
+    apiItems.setHasMore(true);
+    apiItems.setOffset(ANY_OFFSET);
+    apiItems.setLimit(ANY_LIMIT);
     when(apiDataSource.get(anyInt(), anyInt())).thenReturn(apiItems);
     when(apiDataSource.isValid(any(AnyCacheableItem.class))).thenReturn(true);
     return apiItems;
