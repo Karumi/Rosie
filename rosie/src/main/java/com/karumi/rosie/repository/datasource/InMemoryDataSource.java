@@ -34,6 +34,7 @@ public class InMemoryDataSource<T extends Cacheable> implements DataSource<T> {
   private long lastItemsUpdate;
 
   public InMemoryDataSource(TimeProvider timeProvider, long ttlInMillis) {
+    this.items = new LinkedList<>();
     this.timeProvider = timeProvider;
     this.ttlInMillis = ttlInMillis;
   }
@@ -75,14 +76,14 @@ public class InMemoryDataSource<T extends Cacheable> implements DataSource<T> {
     List<T> newItems = new LinkedList<>();
     for (T item : items) {
       if (!item.getId().equals(id)) {
-        items.add(item);
+        newItems.add(item);
       }
     }
     this.items = newItems;
   }
 
   @Override public synchronized void deleteAll() throws Exception {
-    items = null;
+    items = new LinkedList<>();
     lastItemsUpdate = 0;
   }
 
