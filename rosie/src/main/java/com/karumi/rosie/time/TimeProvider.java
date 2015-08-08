@@ -21,7 +21,7 @@ package com.karumi.rosie.time;
  */
 public class TimeProvider {
 
-  public static long currentTimeMillis() {
+  public long currentTimeMillis() {
     return System.currentTimeMillis();
   }
 }

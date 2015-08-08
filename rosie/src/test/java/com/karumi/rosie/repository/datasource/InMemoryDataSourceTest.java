@@ -27,6 +27,7 @@ import org.mockito.Mock;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 public class InMemoryDataSourceTest extends UnitTest {
 
@@ -82,6 +83,32 @@ public class InMemoryDataSourceTest extends UnitTest {
     dataSource.deleteAll();
 
     assertTrue(dataSource.getAll().isEmpty());
+  }
+
+  @Test public void shouldReturnInvalidItemsIfTheTTLNoHasExpired() throws Exception {
+    DataSource<AnyCacheableItem> dataSource = givenAnInMemoryDataSource();
+    List<AnyCacheableItem> items = givenSomeItems(ANY_ITEMS_COUNT);
+
+    dataSource.addOrUpdate(items);
+    advanceTime(ANY_TTL - 1);
+
+    AnyCacheableItem item = dataSource.getById(ANY_ID);
+    assertTrue(dataSource.isValid(item));
+  }
+
+  @Test public void shouldReturnInvalidItemsIfTheTTLHasExpired() throws Exception {
+    DataSource<AnyCacheableItem> dataSource = givenAnInMemoryDataSource();
+    List<AnyCacheableItem> items = givenSomeItems(ANY_ITEMS_COUNT);
+
+    dataSource.addOrUpdate(items);
+    advanceTime(ANY_TTL + 1);
+
+    AnyCacheableItem item = dataSource.getById(ANY_ID);
+    assertFalse(dataSource.isValid(item));
+  }
+
+  private void advanceTime(long time) {
+    when(timeProvider.currentTimeMillis()).thenReturn(time);
   }
 
   private List<AnyCacheableItem> givenSomeItems(int itemsCount) {

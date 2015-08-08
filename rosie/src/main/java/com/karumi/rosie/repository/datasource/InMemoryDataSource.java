@@ -60,7 +60,7 @@ public class InMemoryDataSource<T extends Cacheable> implements DataSource<T> {
     } else {
       items.add(item);
     }
-    lastItemsUpdate = timeProvider.currentTimeMillis();
+    updateLastItemsUpdateTime();
     return item;
   }
 
@@ -68,7 +68,7 @@ public class InMemoryDataSource<T extends Cacheable> implements DataSource<T> {
     for (T item : items) {
       addOrUpdate(item);
     }
-    lastItemsUpdate = timeProvider.currentTimeMillis();
+    updateLastItemsUpdateTime();
     return items;
   }
 
@@ -88,8 +88,12 @@ public class InMemoryDataSource<T extends Cacheable> implements DataSource<T> {
   }
 
   @Override public boolean isValid(T item) throws Exception {
-    //TODO IMPLEMENT THIS SHIT AND ADD SOME TESTS
-    return false;
+    long now = timeProvider.currentTimeMillis();
+    return now - lastItemsUpdate < ttlInMillis;
+  }
+
+  protected void updateLastItemsUpdateTime() {
+    lastItemsUpdate = timeProvider.currentTimeMillis();
   }
 
   private void updateItem(T item) {
