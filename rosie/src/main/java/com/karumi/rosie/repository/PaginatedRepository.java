@@ -48,7 +48,7 @@ public class PaginatedRepository<T extends Cacheable> extends RosieRepository<T>
           onItemsLoadedFromTheLastDataSource(page);
         }
         break;
-      } else if (page.getItems().size() != 0 && offset == 0) {
+      } else if (!page.getItems().isEmpty() && offset == 0) {
         dataSource.deleteAll();
       }
     }
