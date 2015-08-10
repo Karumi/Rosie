@@ -29,5 +29,4 @@ public interface PaginatedDataSource<T extends Cacheable> extends DataSource {
 
   PaginatedCollection<T> addOrUpdate(int offset, int limit, Collection<T> items, boolean hasMore);
 
-  void deleteAll(int offset, int limit);
 }

@@ -32,7 +32,7 @@ public class InMemoryPaginatedDataSource<T extends Cacheable> extends InMemoryDa
     super(timeProvider, ttlInMillis);
   }
 
-  @Override public PaginatedCollection get(int offset, int limit) throws Exception {
+  @Override public synchronized PaginatedCollection get(int offset, int limit) throws Exception {
     validateOffsetAndLimit(offset, limit);
 
     List<T> result = new LinkedList<>();
@@ -49,7 +49,8 @@ public class InMemoryPaginatedDataSource<T extends Cacheable> extends InMemoryDa
   }
 
   @Override
-  public PaginatedCollection addOrUpdate(int offset, int limit, Collection items, boolean hasMore) {
+  public synchronized PaginatedCollection addOrUpdate(int offset, int limit, Collection items,
+      boolean hasMore) {
     validateOffsetAndLimit(offset, limit);
     this.items.addAll(items);
     this.hasMore = hasMore;
@@ -59,18 +60,6 @@ public class InMemoryPaginatedDataSource<T extends Cacheable> extends InMemoryDa
     paginatedCollection.setHasMore(hasMore);
     updateLastItemsUpdateTime();
     return paginatedCollection;
-  }
-
-  @Override public void deleteAll(int offset, int limit) {
-    validateOffsetAndLimit(offset, limit);
-    List<T> validItems = new LinkedList<>();
-    for (int i = 0; i < items.size(); i++) {
-      if (i < offset || i > limit) {
-        T item = (T) items.get(i);
-        validItems.add(item);
-      }
-    }
-    this.items = validItems;
   }
 
   private void validateOffsetAndLimit(int offset, int limit) {
