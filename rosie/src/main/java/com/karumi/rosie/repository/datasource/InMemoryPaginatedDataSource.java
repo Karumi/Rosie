@@ -57,6 +57,7 @@ public class InMemoryPaginatedDataSource<T extends Cacheable> extends InMemoryDa
     paginatedCollection.setOffset(offset);
     paginatedCollection.setLimit(limit);
     paginatedCollection.setHasMore(hasMore);
+    updateLastItemsUpdateTime();
     return paginatedCollection;
   }
 
