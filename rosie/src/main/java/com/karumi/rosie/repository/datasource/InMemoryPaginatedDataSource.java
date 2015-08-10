@@ -63,18 +63,9 @@ public class InMemoryPaginatedDataSource<T extends Cacheable> extends InMemoryDa
 
   @Override public void deleteAll(int offset, int limit) {
     validateOffsetAndLimit(offset, limit);
-    if (offset > items.size()) {
-      return;
-    }
-
     List<T> validItems = new LinkedList<>();
-    for (int i = 0; i < offset; i++) {
-      T item = (T) items.get(i);
-      validItems.add(item);
-    }
-
-    if (items.size() > offset + limit) {
-      for (int i = limit; i < items.size(); i++) {
+    for (int i = 0; i < items.size(); i++) {
+      if (i < offset || i > limit) {
         T item = (T) items.get(i);
         validItems.add(item);
       }
