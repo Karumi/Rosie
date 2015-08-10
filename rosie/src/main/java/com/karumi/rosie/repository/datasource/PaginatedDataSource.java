@@ -23,10 +23,9 @@ import java.util.Collection;
 /**
  * Paginated version of DataSource.
  */
-public interface PaginatedDataSource<T extends Cacheable> extends DataSource {
+public interface PaginatedDataSource<T extends Cacheable> extends DataSource<T> {
 
   PaginatedCollection<T> get(int offset, int limit) throws Exception;
 
   PaginatedCollection<T> addOrUpdate(int offset, int limit, Collection<T> items, boolean hasMore);
-
 }
