@@ -17,6 +17,7 @@
 package com.karumi.rosie.repository;
 
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Collection of data with additional information related to the page, offset, limit and the next
@@ -30,7 +31,7 @@ public class PaginatedCollection<T> {
   private int limit;
 
   public PaginatedCollection() {
-    this(null);
+    this(Collections.EMPTY_LIST);
   }
 
   public PaginatedCollection(Collection<T> items) {
