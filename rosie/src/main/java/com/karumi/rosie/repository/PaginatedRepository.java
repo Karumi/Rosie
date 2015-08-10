@@ -49,7 +49,7 @@ public class PaginatedRepository<T extends Cacheable> extends RosieRepository<T>
         }
         break;
       } else {
-        dataSource.deleteAll();
+        dataSource.deleteAll(offset,limit);
       }
     }
     return page;

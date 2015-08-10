@@ -61,12 +61,24 @@ public class InMemoryPaginatedDataSource<T extends Cacheable> extends InMemoryDa
     return paginatedCollection;
   }
 
+  @Override public void deleteAll(int offset, int limit) {
+    validateOffsetAndLimit(offset, limit);
+    List<T> validItems = new LinkedList<>();
+    for (int i = 0; i < offset; i++) {
+      T item = (T) items.get(i);
+      validItems.add(item);
+    }
+  }
+
   private void validateOffsetAndLimit(int offset, int limit) {
     if (offset < 0) {
       throw new IllegalArgumentException("The offset can't be negative.");
     }
     if (limit < 0) {
       throw new IllegalArgumentException("The limit can't be negative.");
+    }
+    if (offset < limit) {
+      throw new IllegalArgumentException("The limit can't lower than the offset.");
     }
   }
 }
