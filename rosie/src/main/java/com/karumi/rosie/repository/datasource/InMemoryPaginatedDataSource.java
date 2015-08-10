@@ -69,8 +69,5 @@ public class InMemoryPaginatedDataSource<T extends Cacheable> extends InMemoryDa
     if (limit < 0) {
       throw new IllegalArgumentException("The limit can't be negative.");
     }
-    if (limit < offset) {
-      throw new IllegalArgumentException("The limit can't lower than the offset.");
-    }
   }
 }
