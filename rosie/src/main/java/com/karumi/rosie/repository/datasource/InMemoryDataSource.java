@@ -18,8 +18,9 @@ package com.karumi.rosie.repository.datasource;
 
 import com.karumi.rosie.repository.Cacheable;
 import com.karumi.rosie.time.TimeProvider;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -30,11 +31,11 @@ public class InMemoryDataSource<T extends Cacheable> implements DataSource<T> {
   private final TimeProvider timeProvider;
   private final long ttlInMillis;
 
-  protected List<T> items;
+  protected final List<T> items;
   private long lastItemsUpdate;
 
   public InMemoryDataSource(TimeProvider timeProvider, long ttlInMillis) {
-    this.items = new LinkedList<>();
+    this.items = new ArrayList<>();
     this.timeProvider = timeProvider;
     this.ttlInMillis = ttlInMillis;
   }
@@ -51,7 +52,7 @@ public class InMemoryDataSource<T extends Cacheable> implements DataSource<T> {
   }
 
   @Override public synchronized Collection<T> getAll() throws Exception {
-    return new LinkedList<>(items);
+    return new ArrayList<>(items);
   }
 
   @Override public synchronized T addOrUpdate(T item) throws Exception {
@@ -84,17 +85,17 @@ public class InMemoryDataSource<T extends Cacheable> implements DataSource<T> {
   }
 
   @Override public synchronized void deleteById(String id) throws Exception {
-    List<T> newItems = new LinkedList<>();
-    for (T item : items) {
-      if (!item.getId().equals(id)) {
-        newItems.add(item);
+    Iterator<T> iterator = items.iterator();
+    while (iterator.hasNext()) {
+      T next = iterator.next();
+      if (next.getId().equals(id)) {
+        iterator.remove();
       }
     }
-    this.items = newItems;
   }
 
   @Override public synchronized void deleteAll() throws Exception {
-    items = new LinkedList<>();
+    items.clear();
     lastItemsUpdate = 0;
   }
 
@@ -108,14 +109,11 @@ public class InMemoryDataSource<T extends Cacheable> implements DataSource<T> {
   }
 
   private void updateItem(T item) {
-    List<T> newItems = new LinkedList<>();
-    for (T i : items) {
-      if (i.getId().equals(item.getId())) {
-        newItems.add(item);
-      } else {
-        newItems.add(i);
+    String itemId = item.getId();
+    for (int i = 0; i < items.size(); i++) {
+      if (items.get(i).getId().equals(itemId)) {
+        items.set(i, item);
       }
     }
-    this.items = newItems;
   }
 }
