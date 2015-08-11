@@ -55,13 +55,24 @@ public class InMemoryDataSource<T extends Cacheable> implements DataSource<T> {
   }
 
   @Override public synchronized T addOrUpdate(T item) throws Exception {
-    if (items.contains(item)) {
+    if (contains(item)) {
       updateItem(item);
     } else {
       items.add(item);
     }
     updateLastItemsUpdateTime();
     return item;
+  }
+
+  private boolean contains(T item) {
+    boolean isItemInCache = false;
+    for (T i : items) {
+      if (i.getId().equals(item.getId())) {
+        isItemInCache = true;
+        break;
+      }
+    }
+    return isItemInCache;
   }
 
   @Override public synchronized Collection<T> addOrUpdate(Collection<T> items) throws Exception {
