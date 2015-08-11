@@ -14,58 +14,14 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.repository;
-
-import java.util.Collection;
-import java.util.Collections;
+package com.karumi.rosie.time;
 
 /**
- * Collection of data with additional information related to the page, offset, limit and the next
- * items in the collection.
+ * Abstract the time usage like System.currentTimeMillis for testing purposes.
  */
-public class PaginatedCollection<T> {
+public class TimeProvider {
 
-  private Collection<T> items;
-  private boolean hasMore;
-  private int offset;
-  private int limit;
-
-  public PaginatedCollection() {
-    this(Collections.EMPTY_LIST);
-  }
-
-  public PaginatedCollection(Collection<T> items) {
-    this.items = items;
-  }
-
-  public PaginatedCollection setHasMore(boolean hasMore) {
-    this.hasMore = hasMore;
-    return this;
-  }
-
-  public PaginatedCollection setOffset(int offset) {
-    this.offset = offset;
-    return this;
-  }
-
-  public PaginatedCollection setLimit(int limit) {
-    this.limit = limit;
-    return this;
-  }
-
-  public Collection<T> getItems() {
-    return items;
-  }
-
-  public boolean hasMore() {
-    return hasMore;
-  }
-
-  public int getOffset() {
-    return offset;
-  }
-
-  public int getLimit() {
-    return limit;
+  public long currentTimeMillis() {
+    return System.currentTimeMillis();
   }
 }

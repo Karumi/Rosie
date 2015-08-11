@@ -18,6 +18,7 @@ package com.karumi.rosie.repository;
 
 import com.karumi.rosie.UnitTest;
 import com.karumi.rosie.doubles.AnyCacheableItem;
+import com.karumi.rosie.repository.datasource.DataSource;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,17 +39,6 @@ public class RosieRepositoryTest extends UnitTest {
 
   @Mock private DataSource<AnyCacheableItem> cacheDataSource;
   @Mock private DataSource<AnyCacheableItem> apiDataSource;
-
-  @Test(expected = IllegalArgumentException.class)
-  public void shouldNotAcceptNullRepositoriesAsInput() {
-    new RosieRepository<>(null);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void shouldNotAcceptAnEmptyArrayOfRepositories() {
-    DataSource<AnyCacheableItem>[] dataSources = new DataSource[] {};
-    new RosieRepository<>(dataSources);
-  }
 
   @Test public void shouldReturnNullIfThereAreNoDataSourcesWithData() throws Exception {
     givenTheDataSourcesHasNoData();

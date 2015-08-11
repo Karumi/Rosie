@@ -14,7 +14,7 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.repository;
+package com.karumi.rosie.repository.datasource;
 
 import java.util.Collection;
 

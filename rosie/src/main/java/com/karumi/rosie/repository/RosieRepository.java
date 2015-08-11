@@ -16,6 +16,7 @@
 
 package com.karumi.rosie.repository;
 
+import com.karumi.rosie.repository.datasource.DataSource;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -27,12 +28,9 @@ import java.util.LinkedList;
  */
 public class RosieRepository<T extends Cacheable> {
 
-  private final DataSource<T>[] dataSources;
+  private DataSource<T>[] dataSources;
 
   public RosieRepository(DataSource<T>... dataSources) {
-    if (dataSources == null || dataSources.length == 0) {
-      throw new IllegalArgumentException("The Repository can't be created without data sources.");
-    }
     this.dataSources = dataSources;
   }
 
@@ -50,7 +48,10 @@ public class RosieRepository<T extends Cacheable> {
       item = dataSource.getById(id);
       if (areValidItems(dataSource, Arrays.asList(item))) {
         populateDataSources(item, i);
-        onItemLoadedFromTheLastDataSource(item);
+        boolean isTheLastDataSource = i == getNumberOfDataSources() - 1;
+        if (isTheLastDataSource) {
+          onItemLoadedFromTheLastDataSource(item);
+        }
         break;
       } else {
         dataSource.deleteById(id);
@@ -72,7 +73,10 @@ public class RosieRepository<T extends Cacheable> {
       items = dataSource.getAll();
       if (areValidItems(dataSource, items)) {
         populateDataSources(items, i);
-        onItemsLoadedFromTheLastDataSource(items);
+        boolean isTheLastDataSource = i == getNumberOfDataSources() - 1;
+        if (isTheLastDataSource) {
+          onItemsLoadedFromTheLastDataSource(items);
+        }
         break;
       } else {
         dataSource.deleteAll();
@@ -141,6 +145,10 @@ public class RosieRepository<T extends Cacheable> {
       DataSource dataSource = getDataSource(i);
       dataSource.deleteById(id);
     }
+  }
+
+  protected void setDataSources(DataSource<T>... dataSources) {
+    this.dataSources = dataSources;
   }
 
   protected int getNumberOfDataSources() {

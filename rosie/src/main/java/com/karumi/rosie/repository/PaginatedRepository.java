@@ -16,12 +16,13 @@
 
 package com.karumi.rosie.repository;
 
+import com.karumi.rosie.repository.datasource.PaginatedDataSource;
 import java.util.Collection;
 
 /**
  * Paginated version of RosieRepository.
  */
-public class PaginatedRepository<T extends Cacheable> extends RosieRepository {
+public class PaginatedRepository<T extends Cacheable> extends RosieRepository<T> {
 
   public PaginatedRepository(PaginatedDataSource<T>... dataSources) {
     super(dataSources);
@@ -41,10 +42,13 @@ public class PaginatedRepository<T extends Cacheable> extends RosieRepository {
       PaginatedDataSource<T> dataSource = getPaginatedDataSource(i);
       page = dataSource.get(offset, limit);
       if (areValidItems(dataSource, page.getItems())) {
-        populateDataSources(offset, limit, page.getItems(), i);
-        onItemsLoadedFromTheLastDataSource(page);
+        populateDataSources(page, i);
+        boolean isTheLastDataSource = i == getNumberOfDataSources() - 1;
+        if (isTheLastDataSource) {
+          onItemsLoadedFromTheLastDataSource(page);
+        }
         break;
-      } else {
+      } else if (!page.getItems().isEmpty() && offset == 0) {
         dataSource.deleteAll();
       }
     }
@@ -55,15 +59,18 @@ public class PaginatedRepository<T extends Cacheable> extends RosieRepository {
 
   }
 
-  private void populateDataSources(int offset, int limit, Collection<T> items,
-      int dataSourceIndex) {
+  private void populateDataSources(PaginatedCollection page, int dataSourceIndex) {
+    Collection items = page.getItems();
     if (items == null) {
       return;
     }
 
     for (int i = 0; i < dataSourceIndex; i++) {
       PaginatedDataSource dataSource = getPaginatedDataSource(i);
-      dataSource.addOrUpdate(offset, limit, items);
+      int offset = page.getOffset();
+      int limit = page.getLimit();
+      boolean hasMore = page.hasMore();
+      dataSource.addOrUpdate(offset, limit, items, hasMore);
     }
   }
 
