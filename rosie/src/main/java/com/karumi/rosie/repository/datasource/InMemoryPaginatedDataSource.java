@@ -36,7 +36,7 @@ public class InMemoryPaginatedDataSource<T extends Cacheable> extends InMemoryDa
     validateOffsetAndLimit(offset, limit);
 
     List<T> result = new LinkedList<>();
-    for (int i = offset; i < items.size(); i++) {
+    for (int i = offset; i < items.size() && i < offset + limit; i++) {
       T item = (T) items.get(i);
       result.add(item);
     }
