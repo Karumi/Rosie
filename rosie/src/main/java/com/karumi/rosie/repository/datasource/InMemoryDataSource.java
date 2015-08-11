@@ -100,9 +100,9 @@ public class InMemoryDataSource<T extends Cacheable> implements DataSource<T> {
     List<T> newItems = new LinkedList<>();
     for (T i : items) {
       if (i.equals(item)) {
-        items.add(item);
+        newItems.add(item);
       } else {
-        items.add(i);
+        newItems.add(i);
       }
     }
     this.items = newItems;
