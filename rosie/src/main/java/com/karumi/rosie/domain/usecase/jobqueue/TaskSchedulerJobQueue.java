@@ -28,6 +28,7 @@ public class TaskSchedulerJobQueue implements TaskScheduler {
 
   public TaskSchedulerJobQueue(JobManager jobManager) {
     this.jobManager = jobManager;
+    this.jobManager.start();
   }
 
   @Override public void execute(UseCaseWrapper useCaseWrapper) {
