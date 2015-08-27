@@ -25,6 +25,7 @@ import com.karumi.rosie.domain.usecase.UseCaseHandler;
 import com.karumi.rosie.domain.usecase.error.ErrorHandler;
 import com.karumi.rosie.domain.usecase.jobqueue.TaskSchedulerJobQueue;
 import com.path.android.jobqueue.JobManager;
+import com.path.android.jobqueue.config.Configuration;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
@@ -34,6 +35,11 @@ import javax.inject.Singleton;
  * {@link android.app.Application} to create.
  */
 @Module(library = true, injects = RosieApplication.class) public class RosieAndroidModule {
+
+  private static final int MIN_CONSUMER_COUNT = 1;
+  private static final int MAX_CONSUMER_COUNT = 5;
+  private static final int LOAD_FACTOR = 1;
+
   private final Context context;
 
   public RosieAndroidModule(Application application) {
@@ -59,7 +65,11 @@ import javax.inject.Singleton;
   }
 
   @Provides @Singleton public JobManager provideJobManager(@ForApplication Context context) {
-    return new JobManager(context);
+    Configuration config = new Configuration.Builder(context).minConsumerCount(MIN_CONSUMER_COUNT)
+        .maxConsumerCount(MAX_CONSUMER_COUNT)
+        .loadFactor(LOAD_FACTOR)
+        .build();
+    return new JobManager(context, config);
   }
 
   private void validateApplication(Application application) {
