@@ -107,6 +107,12 @@ public class InMemoryDataSourceTest extends UnitTest {
     assertFalse(dataSource.isValid(item));
   }
 
+  @Test public void shouldReturnInvalidItemIfTheItemIsNull() throws Exception {
+    DataSource<AnyCacheableItem> dataSource = givenAnInMemoryDataSource();
+
+    assertFalse(dataSource.isValid(null));
+  }
+
   private void advanceTime(long time) {
     when(timeProvider.currentTimeMillis()).thenReturn(time);
   }

@@ -100,6 +100,9 @@ public class InMemoryDataSource<T extends Cacheable> implements DataSource<T> {
   }
 
   @Override public boolean isValid(T item) throws Exception {
+    if (item == null) {
+      return false;
+    }
     long now = timeProvider.currentTimeMillis();
     return now - lastItemsUpdate < ttlInMillis;
   }
