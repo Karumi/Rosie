@@ -71,7 +71,7 @@ public class RosieApplication extends Application {
    * graph.
    */
   protected List<Object> getApplicationModules() {
-    return new ArrayList<Object>();
+    return new ArrayList<>();
   }
 
   /**
