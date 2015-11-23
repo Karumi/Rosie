@@ -31,7 +31,7 @@ public class PaginatedCollection<T> {
   private int limit;
 
   public PaginatedCollection() {
-    this(Collections.EMPTY_LIST);
+    this(Collections.<T>emptyList());
   }
 
   public PaginatedCollection(Collection<T> items) {
