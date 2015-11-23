@@ -17,9 +17,9 @@ public class SampleKey {
   }
 
   @Override public String toString() {
-    return "SampleKey{" +
-        "index=" + index +
-        '}';
+    return "SampleKey{"
+        + "index=" + index
+        + '}';
   }
 
   @Override public boolean equals(Object o) {

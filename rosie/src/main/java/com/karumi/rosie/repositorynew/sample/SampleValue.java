@@ -37,11 +37,11 @@ public class SampleValue implements Keyable<SampleKey> {
   }
 
   @Override public String toString() {
-    return "SampleValue{" +
-        "key=" + key +
-        ", name='" + name + '\'' +
-        ", surname='" + surname + '\'' +
-        ", age=" + age +
-        '}';
+    return "SampleValue{"
+        + "key=" + key
+        + ", name='" + name + '\''
+        + ", surname='" + surname + '\''
+        + ", age=" + age
+        + '}';
   }
 }
