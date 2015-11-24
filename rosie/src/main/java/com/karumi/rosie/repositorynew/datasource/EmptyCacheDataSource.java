@@ -14,12 +14,37 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.repositorynew;
+package com.karumi.rosie.repositorynew.datasource;
 
 import java.util.Collection;
 
-public interface Readable<K, V> {
-  V get(K key);
+public class EmptyCacheDataSource<K, V extends Identifiable<K>> implements CacheDataSource<K, V> {
 
-  Collection<V> getAll();
+  @Override public V getByKey(K key) {
+    return null;
+  }
+
+  @Override public Collection<V> getAll() {
+    return null;
+  }
+
+  @Override public V addOrUpdate(V value) {
+    return null;
+  }
+
+  @Override public Collection<V> addOrUpdateAll(Collection<V> values) {
+    return null;
+  }
+
+  @Override public void deleteByKey(K key) {
+
+  }
+
+  @Override public void deleteAll() {
+
+  }
+
+  @Override public boolean isValid(V value) {
+    return false;
+  }
 }

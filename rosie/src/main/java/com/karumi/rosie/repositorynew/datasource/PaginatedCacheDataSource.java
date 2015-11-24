@@ -14,8 +14,9 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.repositorynew;
+package com.karumi.rosie.repositorynew.datasource;
 
-public interface Keyable<K> {
-  K getKey();
+public interface PaginatedCacheDataSource<K, V extends Identifiable<K>>
+    extends PaginatedReadableDataSource<V>, PaginatedWriteableDataSource<K, V> {
+  boolean isValid(V value);
 }

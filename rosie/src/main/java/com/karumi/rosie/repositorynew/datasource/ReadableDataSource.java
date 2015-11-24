@@ -14,7 +14,12 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.repositorynew;
+package com.karumi.rosie.repositorynew.datasource;
 
-public interface Cache<K, V extends Keyable<K>> extends Readable<K, V>, Writeable<K, V> {
+import java.util.Collection;
+
+public interface ReadableDataSource<K, V> {
+  V getByKey(K key);
+
+  Collection<V> getAll();
 }

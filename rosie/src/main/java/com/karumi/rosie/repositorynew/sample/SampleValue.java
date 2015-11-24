@@ -16,9 +16,9 @@
 
 package com.karumi.rosie.repositorynew.sample;
 
-import com.karumi.rosie.repositorynew.Keyable;
+import com.karumi.rosie.repositorynew.datasource.Identifiable;
 
-public class SampleValue implements Keyable<SampleKey> {
+public class SampleValue implements Identifiable<SampleKey> {
 
   private final SampleKey key;
   private final String name;

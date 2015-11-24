@@ -14,11 +14,26 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.repositorynew;
+package com.karumi.rosie.repositorynew.datasource;
 
-import com.karumi.rosie.repository.PaginatedCollection;
 import java.util.Collection;
 
-public interface PaginatedWriteable<K, V extends Keyable<K>> {
-  PaginatedCollection<V> addOrUpdate(int offset, int limit, Collection<V> items, boolean hasMore);
+public class EmptyWriteableDataSource<K, V extends Identifiable<K>> implements
+    WriteableDataSource<K, V> {
+
+  @Override public V addOrUpdate(V value) {
+    return value;
+  }
+
+  @Override public Collection<V> addOrUpdateAll(Collection<V> values) {
+    return values;
+  }
+
+  @Override public void deleteByKey(K key) {
+
+  }
+
+  @Override public void deleteAll() {
+
+  }
 }

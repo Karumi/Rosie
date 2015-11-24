@@ -17,23 +17,33 @@
 package com.karumi.rosie.repositorynew;
 
 import com.karumi.rosie.repository.PaginatedCollection;
+import com.karumi.rosie.repository.RosieRepository;
+import com.karumi.rosie.repositorynew.datasource.Identifiable;
+import com.karumi.rosie.repositorynew.datasource.PaginatedCacheDataSource;
+import com.karumi.rosie.repositorynew.datasource.PaginatedReadableDataSource;
+import com.karumi.rosie.repositorynew.policy.ReadPolicy;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.LinkedList;
 
-public class PaginatedRepository<K, V extends Keyable<K>> extends Repository<K, V> {
+/**
+ * Paginated version of {@link RosieRepository}. It adds methods for retrieving paginated data
+ */
+public class PaginatedRepository<K, V extends Identifiable<K>> extends Repository<K, V> {
 
-  private Collection<PaginatedReadable<V>> paginatedReadables = new LinkedList<>();
-  private Collection<PaginatedCache<K, V>> paginatedCaches = new LinkedList<>();
+  private final Collection<PaginatedReadableDataSource<V>> paginatedReadableDataSources =
+      new LinkedList<>();
+  private final Collection<PaginatedCacheDataSource<K, V>> paginatedCacheDataSources =
+      new LinkedList<>();
 
-  public PaginatedCollection<V> get(int offset, int limit) throws Exception {
-    return get(offset, limit, ReadPolicy.READ_ALL_AND_POPULATE);
+  public PaginatedCollection<V> getPage(int offset, int limit) throws Exception {
+    return getPage(offset, limit, ReadPolicy.READ_ALL_AND_POPULATE);
   }
 
-  public PaginatedCollection<V> get(int offset, int limit, EnumSet<ReadPolicy> policies)
+  public PaginatedCollection<V> getPage(int offset, int limit, EnumSet<ReadPolicy> policies)
       throws Exception {
-    PaginatedCollection<V> values = new PaginatedCollection<>();
+    PaginatedCollection<V> values = null;
 
     if (policies.contains(ReadPolicy.USE_CACHE)) {
       values = getPaginatedValuesFromCaches(offset, limit);
@@ -51,23 +61,32 @@ public class PaginatedRepository<K, V extends Keyable<K>> extends Repository<K, 
   }
 
   @SafeVarargs
-  protected final <R extends PaginatedReadable<V>> void addPaginatedReadables(R... readables) {
-    this.paginatedReadables.addAll(Arrays.asList(readables));
+  protected final <R extends PaginatedReadableDataSource<V>> void addPaginatedReadables(
+      R... readables) {
+    this.paginatedReadableDataSources.addAll(Arrays.asList(readables));
   }
 
   @SafeVarargs
-  protected final <R extends PaginatedCache<K, V>> void addPaginatedCaches(R... caches) {
-    this.paginatedCaches.addAll(Arrays.asList(caches));
+  protected final <R extends PaginatedCacheDataSource<K, V>> void addPaginatedCaches(R... caches) {
+    this.paginatedCacheDataSources.addAll(Arrays.asList(caches));
   }
 
   protected PaginatedCollection<V> getPaginatedValuesFromCaches(int offset, int limit) {
     PaginatedCollection<V> values = null;
 
-    for (PaginatedCache<K, V> cache : paginatedCaches) {
-      values = cache.get(offset, limit);
-      if (!values.getItems().isEmpty()) {
+    for (PaginatedCacheDataSource<K, V> cacheDataSource : paginatedCacheDataSources) {
+      values = cacheDataSource.getPage(offset, limit);
+
+      if (values == null) {
+        continue;
+      }
+
+      if (areValidValues(values, cacheDataSource)) {
         break;
       }
+
+      cacheDataSource.deleteAll();
+      values = null;
     }
 
     return values;
@@ -76,9 +95,10 @@ public class PaginatedRepository<K, V extends Keyable<K>> extends Repository<K, 
   protected PaginatedCollection<V> getPaginatedValuesFromReadables(int offset, int limit) {
     PaginatedCollection<V> values = null;
 
-    for (PaginatedReadable<V> readable : paginatedReadables) {
-      values = readable.get(offset, limit);
-      if (!values.getItems().isEmpty()) {
+    for (PaginatedReadableDataSource<V> readable : paginatedReadableDataSources) {
+      values = readable.getPage(offset, limit);
+
+      if (values != null) {
         break;
       }
     }
@@ -87,8 +107,17 @@ public class PaginatedRepository<K, V extends Keyable<K>> extends Repository<K, 
   }
 
   protected void populatePaginatedCaches(int offset, int limit, PaginatedCollection<V> values) {
-    for (PaginatedCache<K, V> cache : paginatedCaches) {
-      cache.addOrUpdate(offset, limit, values.getItems(), values.hasMore());
+    for (PaginatedCacheDataSource<K, V> cacheDataSource : paginatedCacheDataSources) {
+      cacheDataSource.addOrUpdatePage(offset, limit, values.getItems(), values.hasMore());
     }
+  }
+
+  private boolean areValidValues(PaginatedCollection<V> values,
+      PaginatedCacheDataSource<K, V> cacheDataSource) {
+    boolean areValidValues = false;
+    for (V value : values.getItems()) {
+      areValidValues |= cacheDataSource.isValid(value);
+    }
+    return areValidValues;
   }
 }

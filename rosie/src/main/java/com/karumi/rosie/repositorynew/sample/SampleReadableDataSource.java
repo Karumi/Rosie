@@ -16,31 +16,33 @@
 
 package com.karumi.rosie.repositorynew.sample;
 
-import com.karumi.rosie.repositorynew.Writeable;
+import com.karumi.rosie.repositorynew.datasource.ReadableDataSource;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SampleWriteable implements Writeable<SampleKey, SampleValue> {
+public class SampleReadableDataSource implements ReadableDataSource<SampleKey, SampleValue> {
 
-  private final Map<SampleKey, SampleValue> writes = new HashMap<>();
+  private static final Map<Integer, SampleValue> VALUES = new HashMap<>();
 
-  @Override public SampleValue addOrUpdate(SampleValue value) {
-    return writes.put(value.getKey(), value);
+  static {
+    VALUES.put(0, new SampleValue(new SampleKey(0), "Sergio", "Gutiérrez", 27));
+    VALUES.put(1, new SampleValue(new SampleKey(1), "Jorge", "Barroso", 28));
+    VALUES.put(2, new SampleValue(new SampleKey(2), "Pedro", "Gómez", 29));
+    VALUES.put(3, new SampleValue(new SampleKey(3), "Davide", "Mendolia", 30));
+    VALUES.put(4, new SampleValue(new SampleKey(4), "Alberto", "Gragera", 31));
+    VALUES.put(5, new SampleValue(new SampleKey(5), "Irene", "Herranz", 32));
   }
 
-  @Override public Collection<SampleValue> addOrUpdateAll(Collection<SampleValue> values) {
-    for (SampleValue value : values) {
-      addOrUpdate(value);
-    }
+  @Override public SampleValue getByKey(SampleKey key) {
+    SampleValue sampleValue = VALUES.get(key.getIndex());
+    System.out.println("Get from readable [" + key + "] -> " + sampleValue);
+    return sampleValue;
+  }
+
+  @Override public Collection<SampleValue> getAll() {
+    Collection<SampleValue> values = VALUES.values();
+    System.out.println("Get all from readable -> " + values);
     return values;
-  }
-
-  @Override public void delete(SampleKey key) {
-    writes.remove(key);
-  }
-
-  @Override public void deleteAll() {
-    writes.clear();
   }
 }

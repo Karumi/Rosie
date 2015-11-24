@@ -14,17 +14,33 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.repositorynew;
+package com.karumi.rosie.repositorynew.sample;
 
+import com.karumi.rosie.repositorynew.datasource.WriteableDataSource;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
-public class EmptyReadable<K, V> implements Readable<K, V> {
+public class SampleWriteableDataSource implements WriteableDataSource<SampleKey, SampleValue> {
 
-  @Override public V get(K key) {
-    return null;
+  private final Map<SampleKey, SampleValue> writes = new HashMap<>();
+
+  @Override public SampleValue addOrUpdate(SampleValue value) {
+    return writes.put(value.getKey(), value);
   }
 
-  @Override public Collection<V> getAll() {
-    return null;
+  @Override public Collection<SampleValue> addOrUpdateAll(Collection<SampleValue> values) {
+    for (SampleValue value : values) {
+      addOrUpdate(value);
+    }
+    return values;
+  }
+
+  @Override public void deleteByKey(SampleKey key) {
+    writes.remove(key);
+  }
+
+  @Override public void deleteAll() {
+    writes.clear();
   }
 }

@@ -14,8 +14,14 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.repositorynew;
+package com.karumi.rosie.repositorynew.datasource;
 
-public interface PaginatedCache<K, V extends Keyable<K>>
-    extends PaginatedReadable<V>, PaginatedWriteable<K, V> {
+import com.karumi.rosie.repository.PaginatedCollection;
+import java.util.Collection;
+
+public interface PaginatedWriteableDataSource<K, V extends Identifiable<K>> {
+  PaginatedCollection<V> addOrUpdatePage(int offset, int limit, Collection<V> items,
+      boolean hasMore);
+
+  void deleteAll();
 }

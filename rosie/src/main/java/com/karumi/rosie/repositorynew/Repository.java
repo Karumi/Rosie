@@ -16,23 +16,41 @@
 
 package com.karumi.rosie.repositorynew;
 
+import com.karumi.rosie.repositorynew.datasource.CacheDataSource;
+import com.karumi.rosie.repositorynew.datasource.Identifiable;
+import com.karumi.rosie.repositorynew.datasource.ReadableDataSource;
+import com.karumi.rosie.repositorynew.datasource.WriteableDataSource;
+import com.karumi.rosie.repositorynew.policy.ReadPolicy;
+import com.karumi.rosie.repositorynew.policy.WritePolicy;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.LinkedList;
 
-public class Repository<K, V extends Keyable<K>> implements Readable<K, V>, Writeable<K, V> {
+/**
+ * Repository pattern implementation. This class implements all the data handling logic based on
+ * different data sources. Abstracts the data origin and works as a processor cache system where
+ * different data sources are going to work as different cache levels. It coordinates three
+ * different types of data sources, {@link ReadableDataSource}, {@link WriteableDataSource} and
+ * {@link CacheDataSource}
+ *
+ * @param <K> Class representing the key used to identify items in this repository
+ * @param <V> Class representing the contents of the items held by this repository
+ */
+public class Repository<K, V extends Identifiable<K>>
+    implements ReadableDataSource<K, V>, WriteableDataSource<K, V> {
 
-  private Collection<Readable<K, V>> readables = new LinkedList<>();
-  private Collection<Writeable<K, V>> writeables = new LinkedList<>();
-  private Collection<Cache<K, V>> caches = new LinkedList<>();
+  private final Collection<ReadableDataSource<K, V>> readableDataSources = new LinkedList<>();
+  private final Collection<WriteableDataSource<K, V>> writeableDataSources = new LinkedList<>();
+  private final Collection<CacheDataSource<K, V>> cacheDataSources = new LinkedList<>();
 
-  @Override public V get(K key) {
-    return get(key, ReadPolicy.READ_ALL_AND_POPULATE);
+  @Override public V getByKey(K key) {
+    return getByKey(key, ReadPolicy.READ_ALL_AND_POPULATE);
   }
 
-  public V get(K key, EnumSet<ReadPolicy> policies) {
+  public V getByKey(K key, EnumSet<ReadPolicy> policies) {
+    validateKey(key);
+
     V value = null;
 
     if (policies.contains(ReadPolicy.USE_CACHE)) {
@@ -55,7 +73,7 @@ public class Repository<K, V extends Keyable<K>> implements Readable<K, V>, Writ
   }
 
   public Collection<V> getAll(EnumSet<ReadPolicy> policies) {
-    Collection<V> values = Collections.emptyList();
+    Collection<V> values = null;
 
     if (policies.contains(ReadPolicy.USE_CACHE)) {
       values = getValuesFromCaches();
@@ -73,23 +91,27 @@ public class Repository<K, V extends Keyable<K>> implements Readable<K, V>, Writ
   }
 
   @Override public V addOrUpdate(V value) {
-    return add(value, WritePolicy.WRITE_ONCE_AND_POPULATE);
+    return addOrUpdate(value, WritePolicy.WRITE_ONCE_AND_POPULATE);
   }
 
-  public V add(V value, EnumSet<WritePolicy> policies) {
-    for (Writeable<K, V> writeable : writeables) {
-      writeable.addOrUpdate(value);
+  public V addOrUpdate(V value, EnumSet<WritePolicy> policies) {
+    validateValue(value);
 
-      if (policies.contains(WritePolicy.WRITE_ONCE)) {
+    V updatedValue = null;
+
+    for (WriteableDataSource<K, V> writeableDataSource : writeableDataSources) {
+      updatedValue = writeableDataSource.addOrUpdate(value);
+
+      if (updatedValue != null && policies.contains(WritePolicy.WRITE_ONCE)) {
         break;
       }
     }
 
-    if (policies.contains(WritePolicy.POPULATE_CACHE)) {
-      populateCaches(value);
+    if (updatedValue != null && policies.contains(WritePolicy.POPULATE_CACHE)) {
+      populateCaches(updatedValue);
     }
 
-    return value;
+    return updatedValue;
   }
 
   @Override public Collection<V> addOrUpdateAll(Collection<V> values) {
@@ -97,61 +119,76 @@ public class Repository<K, V extends Keyable<K>> implements Readable<K, V>, Writ
   }
 
   public Collection<V> addOrUpdateAll(Collection<V> values, EnumSet<WritePolicy> policies) {
-    for (Writeable<K, V> writeable : writeables) {
-      writeable.addOrUpdateAll(values);
+    validateValues(values);
 
-      if (policies.contains(WritePolicy.WRITE_ONCE)) {
+    Collection<V> updatedValues = null;
+
+    for (WriteableDataSource<K, V> writeableDataSource : writeableDataSources) {
+      updatedValues = writeableDataSource.addOrUpdateAll(values);
+
+      if (updatedValues != null && policies.contains(WritePolicy.WRITE_ONCE)) {
         break;
       }
     }
 
-    if (policies.contains(WritePolicy.POPULATE_CACHE)) {
+    if (updatedValues != null && policies.contains(WritePolicy.POPULATE_CACHE)) {
       populateCaches(values);
     }
 
-    return values;
+    return updatedValues;
   }
 
-  @Override public void delete(K key) {
-    for (Writeable<K, V> writeable : writeables) {
-      writeable.delete(key);
+  @Override public void deleteByKey(K key) {
+    for (WriteableDataSource<K, V> writeableDataSource : writeableDataSources) {
+      writeableDataSource.deleteByKey(key);
     }
 
-    for (Cache<K, V> cache : caches) {
-      cache.delete(key);
+    for (CacheDataSource<K, V> cacheDataSource : cacheDataSources) {
+      cacheDataSource.deleteByKey(key);
     }
   }
 
   public void deleteAll() {
-    for (Writeable<K, V> writeable : writeables) {
-      writeable.deleteAll();
+    for (WriteableDataSource<K, V> writeableDataSource : writeableDataSources) {
+      writeableDataSource.deleteAll();
     }
 
-    for (Cache<K, V> cache : caches) {
-      cache.deleteAll();
+    for (CacheDataSource<K, V> cacheDataSource : cacheDataSources) {
+      cacheDataSource.deleteAll();
     }
   }
 
-  @SafeVarargs protected final <R extends Readable<K, V>> void addReadables(R... readables) {
-    this.readables.addAll(Arrays.asList(readables));
+  @SafeVarargs protected final <R extends ReadableDataSource<K, V>> void addReadableDataSources(
+      R... readableDataSources) {
+    this.readableDataSources.addAll(Arrays.asList(readableDataSources));
   }
 
-  @SafeVarargs protected final <R extends Writeable<K, V>> void addWriteables(R... writeables) {
-    this.writeables.addAll(Arrays.asList(writeables));
+  @SafeVarargs protected final <R extends WriteableDataSource<K, V>> void addWriteableDataSources(
+      R... writeableDataSources) {
+    this.writeableDataSources.addAll(Arrays.asList(writeableDataSources));
   }
 
-  @SafeVarargs protected final <R extends Cache<K, V>> void addCaches(R... caches) {
-    this.caches.addAll(Arrays.asList(caches));
+  @SafeVarargs protected final <R extends CacheDataSource<K, V>> void addCacheDataSources(
+      R... cacheDataSources) {
+    this.cacheDataSources.addAll(Arrays.asList(cacheDataSources));
   }
 
-  private V getValueFromCaches(K key) {
+  private V getValueFromCaches(K id) {
     V value = null;
 
-    for (Cache<K, V> cache : caches) {
-      value = cache.get(key);
-      if (value != null) {
+    for (CacheDataSource<K, V> cacheDataSource : cacheDataSources) {
+      value = cacheDataSource.getByKey(id);
+
+      if (value == null) {
+        continue;
+      }
+
+      if (cacheDataSource.isValid(value)) {
         break;
       }
+
+      cacheDataSource.deleteByKey(id);
+      value = null;
     }
 
     return value;
@@ -160,11 +197,19 @@ public class Repository<K, V extends Keyable<K>> implements Readable<K, V>, Writ
   private Collection<V> getValuesFromCaches() {
     Collection<V> values = null;
 
-    for (Cache<K, V> cache : caches) {
-      values = cache.getAll();
-      if (!values.isEmpty()) {
+    for (CacheDataSource<K, V> cacheDataSource : cacheDataSources) {
+      values = cacheDataSource.getAll();
+
+      if (values == null) {
+        continue;
+      }
+
+      if (areValidValues(values, cacheDataSource)) {
         break;
       }
+
+      cacheDataSource.deleteAll();
+      values = null;
     }
 
     return values;
@@ -173,8 +218,9 @@ public class Repository<K, V extends Keyable<K>> implements Readable<K, V>, Writ
   private V getValueFromReadables(K key) {
     V value = null;
 
-    for (Readable<K, V> readable : readables) {
-      value = readable.get(key);
+    for (ReadableDataSource<K, V> readableDataSource : readableDataSources) {
+      value = readableDataSource.getByKey(key);
+
       if (value != null) {
         break;
       }
@@ -186,8 +232,9 @@ public class Repository<K, V extends Keyable<K>> implements Readable<K, V>, Writ
   protected Collection<V> getValuesFromReadables() {
     Collection<V> values = null;
 
-    for (Readable<K, V> readable : readables) {
-      values = readable.getAll();
+    for (ReadableDataSource<K, V> readableDataSource : readableDataSources) {
+      values = readableDataSource.getAll();
+
       if (values != null) {
         break;
       }
@@ -197,34 +244,40 @@ public class Repository<K, V extends Keyable<K>> implements Readable<K, V>, Writ
   }
 
   private void populateCaches(V value) {
-    for (Cache<K, V> cache : caches) {
-      cache.addOrUpdate(value);
+    for (CacheDataSource<K, V> cacheDataSource : cacheDataSources) {
+      cacheDataSource.addOrUpdate(value);
     }
   }
 
   protected void populateCaches(Collection<V> values) {
-    for (Cache<K, V> cache : caches) {
-      cache.addOrUpdateAll(values);
+    for (CacheDataSource<K, V> cacheDataSource : cacheDataSources) {
+      cacheDataSource.addOrUpdateAll(values);
     }
   }
 
-  public enum ReadPolicy {
-    USE_CACHE,
-    USE_READABLE,
-    POPULATE_CACHE;
-
-    public static final EnumSet<ReadPolicy> CACHE_ONLY = EnumSet.of(USE_CACHE);
-    public static final EnumSet<ReadPolicy> READABLE_AND_POPULATE =
-        EnumSet.of(USE_READABLE, POPULATE_CACHE);
-    public static final EnumSet<ReadPolicy> READ_ALL_AND_POPULATE = EnumSet.allOf(ReadPolicy.class);
+  private boolean areValidValues(Collection<V> values, CacheDataSource<K, V> cacheDataSource) {
+    boolean areValidValues = false;
+    for (V value : values) {
+      areValidValues |= cacheDataSource.isValid(value);
+    }
+    return areValidValues;
   }
 
-  public enum WritePolicy {
-    WRITE_ONCE,
-    POPULATE_CACHE;
+  private void validateKey(K key) {
+    if (key == null) {
+      throw new IllegalArgumentException("The key used can't be null.");
+    }
+  }
 
-    public static final EnumSet<WritePolicy> WRITE_ONCE_AND_POPULATE =
-        EnumSet.of(WRITE_ONCE, POPULATE_CACHE);
-    public static final EnumSet<WritePolicy> WRITE_IN_ALL_AND_POPULATE = EnumSet.of(POPULATE_CACHE);
+  private void validateValue(V value) {
+    if (value == null) {
+      throw new IllegalArgumentException("The value used can't be null.");
+    }
+  }
+
+  private void validateValues(Collection<V> values) {
+    if (values == null) {
+      throw new IllegalArgumentException("The values used can't be null.");
+    }
   }
 }

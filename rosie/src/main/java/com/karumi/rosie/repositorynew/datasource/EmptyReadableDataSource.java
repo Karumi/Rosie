@@ -14,45 +14,17 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.repositorynew.sample;
+package com.karumi.rosie.repositorynew.datasource;
 
-import com.karumi.rosie.repositorynew.Cache;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
-public class SampleInMemoryCache implements Cache<SampleKey, SampleValue> {
+public class EmptyReadableDataSource<K, V> implements ReadableDataSource<K, V> {
 
-  private final Map<SampleKey, SampleValue> cache = new HashMap<>();
-
-  @Override public SampleValue get(SampleKey key) {
-    SampleValue sampleValue = cache.get(key);
-    System.out.println("Get from cache [" + key + "] -> " + sampleValue);
-    return sampleValue;
+  @Override public V getByKey(K key) {
+    return null;
   }
 
-  @Override public Collection<SampleValue> getAll() {
-    Collection<SampleValue> values = cache.values();
-    System.out.println("Get all from cache -> " + values);
-    return values;
-  }
-
-  @Override public SampleValue addOrUpdate(SampleValue value) {
-    return cache.put(value.getKey(), value);
-  }
-
-  @Override public Collection<SampleValue> addOrUpdateAll(Collection<SampleValue> values) {
-    for (SampleValue value : values) {
-      addOrUpdate(value);
-    }
-    return values;
-  }
-
-  @Override public void delete(SampleKey key) {
-    cache.remove(key);
-  }
-
-  @Override public void deleteAll() {
-    cache.clear();
+  @Override public Collection<V> getAll() {
+    return null;
   }
 }

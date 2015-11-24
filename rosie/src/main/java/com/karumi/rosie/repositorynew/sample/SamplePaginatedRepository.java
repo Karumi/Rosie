@@ -20,7 +20,7 @@ import com.karumi.rosie.repositorynew.PaginatedRepository;
 
 public class SamplePaginatedRepository extends PaginatedRepository<SampleKey, SampleValue> {
 
-  public SamplePaginatedRepository(SamplePaginatedCache cache) {
+  public SamplePaginatedRepository(SamplePaginatedCacheDataSource cache) {
     addPaginatedCaches(cache);
   }
 }

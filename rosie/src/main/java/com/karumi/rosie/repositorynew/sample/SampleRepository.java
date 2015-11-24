@@ -20,10 +20,10 @@ import com.karumi.rosie.repositorynew.Repository;
 
 public class SampleRepository extends Repository<SampleKey, SampleValue> {
 
-  public SampleRepository(SampleReadable sampleReadable, SampleWriteable sampleWriteable,
-      SampleInMemoryCache sampleInMemoryCache) {
-    addReadables(sampleReadable);
-    addWriteables(sampleWriteable);
-    addCaches(sampleInMemoryCache);
+  public SampleRepository(SampleReadableDataSource sampleReadable, SampleWriteableDataSource sampleWriteable,
+      SampleInMemoryCacheDataSource sampleInMemoryCache) {
+    addReadableDataSources(sampleReadable);
+    addWriteableDataSources(sampleWriteable);
+    addCacheDataSources(sampleInMemoryCache);
   }
 }

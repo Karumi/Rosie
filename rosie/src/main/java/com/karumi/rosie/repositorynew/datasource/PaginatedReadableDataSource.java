@@ -14,10 +14,10 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.repositorynew;
+package com.karumi.rosie.repositorynew.datasource;
 
 import com.karumi.rosie.repository.PaginatedCollection;
 
-public interface PaginatedReadable<V> {
-  PaginatedCollection<V> get(int offset, int limit);
+public interface PaginatedReadableDataSource<V> {
+  PaginatedCollection<V> getPage(int offset, int limit);
 }

@@ -17,12 +17,13 @@
 package com.karumi.rosie.repositorynew.sample;
 
 import com.karumi.rosie.repository.PaginatedCollection;
-import com.karumi.rosie.repositorynew.PaginatedCache;
+import com.karumi.rosie.repositorynew.datasource.PaginatedCacheDataSource;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class SamplePaginatedCache implements PaginatedCache<SampleKey, SampleValue> {
+public class SamplePaginatedCacheDataSource
+    implements PaginatedCacheDataSource<SampleKey, SampleValue> {
 
   private static final List<SampleValue> VALUES = new ArrayList<>();
 
@@ -35,7 +36,7 @@ public class SamplePaginatedCache implements PaginatedCache<SampleKey, SampleVal
     VALUES.add(new SampleValue(new SampleKey(5), "Nombre5", "Apellido5", 25));
   }
 
-  @Override public PaginatedCollection<SampleValue> get(int offset, int limit) {
+  @Override public PaginatedCollection<SampleValue> getPage(int offset, int limit) {
     Collection<SampleValue> items = new ArrayList<>();
 
     for (int i = offset; i < offset + limit && i < VALUES.size(); i++) {
@@ -49,7 +50,7 @@ public class SamplePaginatedCache implements PaginatedCache<SampleKey, SampleVal
     return paginatedItems;
   }
 
-  @Override public PaginatedCollection<SampleValue> addOrUpdate(int offset, int limit,
+  @Override public PaginatedCollection<SampleValue> addOrUpdatePage(int offset, int limit,
       Collection<SampleValue> items, boolean hasMore) {
     int i = offset;
     for (SampleValue value : items) {
@@ -58,6 +59,14 @@ public class SamplePaginatedCache implements PaginatedCache<SampleKey, SampleVal
       }
       i++;
     }
-    return get(offset, limit);
+    return getPage(offset, limit);
+  }
+
+  @Override public boolean isValid(SampleValue value) {
+    return true;
+  }
+
+  @Override public void deleteAll() {
+    VALUES.clear();
   }
 }
