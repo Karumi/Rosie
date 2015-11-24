@@ -4,7 +4,7 @@
 
 package com.karumi.rosie.doubles;
 
-import com.karumi.rosie.repositorynew.datasource.Identifiable;
+import com.karumi.rosie.repository.datasource.Identifiable;
 
 public class AnyRepositoryValue implements Identifiable<AnyRepositoryKey> {
 
@@ -25,5 +25,9 @@ public class AnyRepositoryValue implements Identifiable<AnyRepositoryKey> {
     AnyRepositoryValue that = (AnyRepositoryValue) o;
 
     return !(key != null ? !key.equals(that.key) : that.key != null);
+  }
+
+  @Override public int hashCode() {
+    return key != null ? key.hashCode() : 0;
   }
 }

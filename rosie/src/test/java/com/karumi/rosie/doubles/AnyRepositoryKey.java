@@ -24,4 +24,8 @@ public class AnyRepositoryKey {
 
     return key == that.key;
   }
+
+  @Override public int hashCode() {
+    return key;
+  }
 }

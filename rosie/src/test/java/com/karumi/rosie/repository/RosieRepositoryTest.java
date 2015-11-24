@@ -1,426 +1,410 @@
 /*
- * The MIT License (MIT) Copyright (c) 2014 karumi Permission is hereby granted, free of charge,
- * to any person obtaining a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including without limitation the
- * rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to
-  * do so, subject to the following conditions: The above copyright notice and this permission
-  * notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE
-  * IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-  * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (C) 2015 Karumi.
  */
 
 package com.karumi.rosie.repository;
 
+import android.support.annotation.NonNull;
 import com.karumi.rosie.UnitTest;
-import com.karumi.rosie.doubles.AnyCacheableItem;
-import com.karumi.rosie.repository.datasource.DataSource;
+import com.karumi.rosie.doubles.AnyRepositoryKey;
+import com.karumi.rosie.doubles.AnyRepositoryValue;
+import com.karumi.rosie.repository.datasource.CacheDataSource;
+import com.karumi.rosie.repository.datasource.ReadableDataSource;
+import com.karumi.rosie.repository.datasource.WriteableDataSource;
+import com.karumi.rosie.repository.policy.ReadPolicy;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.LinkedList;
-import java.util.List;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyCollection;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class RosieRepositoryTest extends UnitTest {
 
-  private static final String ANY_ID = "1";
+  private static final AnyRepositoryKey ANY_KEY = new AnyRepositoryKey(42);
+  private static final AnyRepositoryValue ANY_VALUE = new AnyRepositoryValue(ANY_KEY);
 
-  @Mock private DataSource<AnyCacheableItem> cacheDataSource;
-  @Mock private DataSource<AnyCacheableItem> apiDataSource;
+  @Mock private ReadableDataSource<AnyRepositoryKey, AnyRepositoryValue> readableDataSource;
+  @Mock private WriteableDataSource<AnyRepositoryKey, AnyRepositoryValue> writeableDataSource;
+  @Mock private CacheDataSource<AnyRepositoryKey, AnyRepositoryValue> cacheDataSource;
 
   @Test public void shouldReturnNullIfThereAreNoDataSourcesWithData() throws Exception {
-    givenTheDataSourcesHasNoData();
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+    givenCacheDataSourceReturnsNull();
+    givenReadableDataSourceReturnsNull();
+    RosieRepository<?, ?> repository = givenAReadableAndCacheRepository();
 
-    Collection<AnyCacheableItem> data = repository.getAll();
+    Collection<?> values = repository.getAll();
 
-    assertNull(data);
+    assertNull(values);
   }
 
-  @Test public void shouldReturnDataFromTheFirstDataSourceIfTheDataIsValid() throws Exception {
-    Collection<AnyCacheableItem> cacheData = givenTheCacheReturnsValidData();
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+  @Test public void shouldReturnDataFromCacheDataSourceIfDataIsValid() throws Exception {
+    Collection<AnyRepositoryValue> cacheValues = givenCacheDataSourceReturnsValidValues();
+    givenReadableDataSourceReturnsNull();
+    RosieRepository<?, AnyRepositoryValue> repository = givenAReadableAndCacheRepository();
 
-    Collection<AnyCacheableItem> data = repository.getAll();
+    Collection<AnyRepositoryValue> values = repository.getAll();
 
-    assertEquals(cacheData, data);
+    assertEquals(cacheValues, values);
   }
 
-  @Test public void shouldReturnDataFromTheLastDataSourceIfTheFirstOneReturnNullOnGetAll()
+  @Test public void shouldReturnDataFromReadableDataSourceIfCacheDataSourceReturnsNullOnGetAll()
       throws Exception {
-    Collection<AnyCacheableItem> apiData = givenTheCacheReturnsNullAndTheApiReturnSomeData();
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+    givenCacheDataSourceReturnsNull();
+    Collection<AnyRepositoryValue> readableValues = givenReadableDataSourceReturnsValidValues();
+    RosieRepository<?, AnyRepositoryValue> repository = givenAReadableAndCacheRepository();
 
-    Collection<AnyCacheableItem> data = repository.getAll();
+    Collection<AnyRepositoryValue> values = repository.getAll();
 
-    assertEquals(apiData, data);
+    Assert.assertEquals(readableValues, values);
   }
 
-  @Test public void shouldReturnDataFromTheLastDataSourceIfTheFirstOneReturnsNoValidData()
+  @Test public void shouldReturnDataFromReadableDataSourceIfTheCacheDataSourceReturnsNoValidData()
       throws Exception {
-    Collection<AnyCacheableItem> apiData = givenTheCacheReturnsNoValidDataAndTheApiReturnsData();
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+    givenCacheDataSourceReturnsNonValidValues();
+    Collection<AnyRepositoryValue> readableValues = givenReadableDataSourceReturnsValidValues();
+    RosieRepository<?, AnyRepositoryValue> repository = givenAReadableAndCacheRepository();
 
-    Collection<AnyCacheableItem> data = repository.getAll();
+    Collection<AnyRepositoryValue> values = repository.getAll();
 
-    assertEquals(apiData, data);
-  }
-
-  @Test public void shouldReturnDataFromTheLastDataSourceEvenIfIsMarkedAsInvalid()
-      throws Exception {
-    Collection<AnyCacheableItem> apiData = givenCachedDataIsNotValidNeitherAPI();
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
-
-    Collection<AnyCacheableItem> data = repository.getAll();
-
-    assertEquals(apiData, data);
+    Assert.assertEquals(readableValues, values);
   }
 
   @Test(expected = Exception.class) public void shouldPropagateExceptionsThrownByAnyDataSource()
       throws Exception {
-    givenAnyDataSourceThrowsAnException();
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+    givenReadableDataSourceThrowsException();
+    RosieRepository<?, ?> repository = givenARepository(EnumSet.of(DataSource.READABLE));
 
     repository.getAll();
   }
 
-  @Test public void shouldGetDataFromTheLastDataSourceIfTheForceLoadFlagIsEnabled()
+  @Test public void shouldGetDataFromReadableDataSourceIfReadPolicyForcesOnlyReadable()
       throws Exception {
-    givenDataSourcesReturnValidData();
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+    givenCacheDataSourceReturnsValidValues();
+    givenReadableDataSourceReturnsValidValues();
+    RosieRepository<?, AnyRepositoryValue> repository = givenAReadableAndCacheRepository();
 
-    boolean forceLoad = true;
-    repository.getAll(forceLoad);
+    repository.getAll(ReadPolicy.READABLE_ONLY_AND_POPULATE);
 
     verify(cacheDataSource, never()).getAll();
-    verify(apiDataSource).getAll();
+    verify(readableDataSource).getAll();
   }
 
-  @Test public void shouldReturnJustDataMatchingWithThePredicate() throws Exception {
-    final Collection<AnyCacheableItem> cacheData = givenTheCacheReturnsValidData();
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
-
-    Collection<AnyCacheableItem> filteredData = repository.get(new Predicate<AnyCacheableItem>() {
-      @Override public boolean isValid(AnyCacheableItem item) {
-        return item.getId().equals("1") || item.getId().equals("2");
-      }
-    });
-
-    assertEquals(2, filteredData.size());
-  }
-
-  @Test public void shouldPopulateFasterDataSources() throws Exception {
-    final Collection<AnyCacheableItem> cacheData =
-        givenTheCacheReturnsNoValidDataAndTheApiReturnsData();
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+  @Test public void shouldPopulateCacheDataSources() throws Exception {
+    givenCacheDataSourceReturnsNull();
+    Collection<AnyRepositoryValue> readableValues = givenReadableDataSourceReturnsValidValues();
+    RosieRepository<?, AnyRepositoryValue> repository = givenAReadableAndCacheRepository();
 
     repository.getAll();
 
-    verify(cacheDataSource).addOrUpdate(cacheData);
+    verify(cacheDataSource).addOrUpdateAll(readableValues);
   }
 
-  @Test public void shouldDeleteAllFromTheDataSourceIfTheDataIsNotValid() throws Exception {
-    givenTheCacheReturnsNoValidDataAndTheApiReturnsData();
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+  @Test public void shouldDeleteAllFromCacheDataSourceIfDataIsNotValid() throws Exception {
+    givenCacheDataSourceReturnsNonValidValues();
+    RosieRepository<?, AnyRepositoryValue> repository = givenAReadableAndCacheRepository();
 
     repository.getAll();
 
     verify(cacheDataSource).deleteAll();
   }
 
-  @Test(expected = IllegalArgumentException.class) public void shouldNotAcceptNullIds()
+  @Test(expected = IllegalArgumentException.class) public void shouldNotAcceptNullKeys()
       throws Exception {
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+    RosieRepository<?, ?> repository = givenAReadableAndCacheRepository();
 
-    String nullId = null;
-    repository.get(nullId);
+    repository.getByKey(null);
   }
 
-  @Test(expected = IllegalArgumentException.class) public void shouldNotAcceptNullPredicates()
+  @Test public void shouldReturnValueByKeyFromCacheDataSource() throws Exception {
+    givenReadableDataSourceReturnsNull();
+    AnyRepositoryValue cacheValue = givenCacheDataSourceReturnsValidValueWithKey(ANY_KEY);
+    RosieRepository<AnyRepositoryKey, AnyRepositoryValue> repository =
+        givenAReadableAndCacheRepository();
+
+    AnyRepositoryValue value = repository.getByKey(ANY_KEY);
+
+    Assert.assertEquals(cacheValue, value);
+  }
+
+  @Test public void shouldReturnValueFromReadableDataSourceIfCacheDataSourceValueIsNull()
       throws Exception {
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+    givenCacheDataSourceReturnsNull();
+    AnyRepositoryValue readableValue = givenReadableDataSourceReturnsValidValueWithKey(ANY_KEY);
+    RosieRepository<AnyRepositoryKey, AnyRepositoryValue> repository =
+        givenAReadableAndCacheRepository();
 
-    Predicate nullPredicate = null;
-    repository.get(nullPredicate);
+    AnyRepositoryValue value = repository.getByKey(ANY_KEY);
+
+    Assert.assertEquals(readableValue, value);
   }
 
-  @Test public void shouldReturnItemByIdFromTheCacheDataSource() throws Exception {
-    AnyCacheableItem cacheItem = givenTheCacheReturnsAValidItemById(ANY_ID);
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+  @Test public void shouldReturnItemFromReadableDataSourceIfCacheDataSourceValueIsNotValid()
+      throws Exception {
+    givenCacheDataSourceReturnsNonValidValueWithKey(ANY_KEY);
+    AnyRepositoryValue readableValue = givenReadableDataSourceReturnsValidValueWithKey(ANY_KEY);
+    RosieRepository<AnyRepositoryKey, AnyRepositoryValue> repository =
+        givenAReadableAndCacheRepository();
 
-    AnyCacheableItem item = repository.get(ANY_ID);
+    AnyRepositoryValue value = repository.getByKey(ANY_KEY);
 
-    assertEquals(cacheItem, item);
+    Assert.assertEquals(readableValue, value);
   }
 
-  @Test public void shouldReturnItemFromTheAPIIfTheCacheContentIsNull() throws Exception {
-    AnyCacheableItem apiItem = givenTheCacheReturnsNullItemsById(ANY_ID);
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+  @Test public void shouldPopulateCacheDataSourceWithValueIfCacheDataSourceIsNotValid()
+      throws Exception {
+    givenCacheDataSourceReturnsNonValidValueWithKey(ANY_KEY);
+    AnyRepositoryValue readableValue = givenReadableDataSourceReturnsValidValueWithKey(ANY_KEY);
+    RosieRepository<AnyRepositoryKey, AnyRepositoryValue> repository =
+        givenAReadableAndCacheRepository();
 
-    AnyCacheableItem item = repository.get(ANY_ID);
+    repository.getByKey(ANY_KEY);
 
-    assertEquals(apiItem, item);
+    verify(cacheDataSource).addOrUpdate(readableValue);
   }
 
-  @Test public void shouldReturnItemFromTheAPIIfTheCacheContentIsNotValid() throws Exception {
-    AnyCacheableItem apiItem = givenTheCacheReturnsNotValidItemById(ANY_ID);
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+  @Test public void shouldDeleteValuesIfAreNotValid() throws Exception {
+    givenCacheDataSourceReturnsNonValidValueWithKey(ANY_KEY);
+    givenReadableDataSourceReturnsValidValueWithKey(ANY_KEY);
+    RosieRepository<AnyRepositoryKey, AnyRepositoryValue> repository =
+        givenAReadableAndCacheRepository();
 
-    AnyCacheableItem item = repository.get(ANY_ID);
+    repository.getByKey(ANY_KEY);
 
-    assertEquals(apiItem, item);
+    verify(cacheDataSource).deleteByKey(ANY_KEY);
   }
 
-  @Test public void shouldPopulateCacheWithItemIfCacheIsNotValid() throws Exception {
-    AnyCacheableItem apiItem = givenTheCacheReturnsNotValidItemById(ANY_ID);
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+  @Test public void shouldLoadItemFromReadableDataSourceIfReadPolicyForcesOnlyReadable()
+      throws Exception {
+    givenCacheDataSourceReturnsValidValueWithKey(ANY_KEY);
+    givenReadableDataSourceReturnsValidValueWithKey(ANY_KEY);
+    RosieRepository<AnyRepositoryKey, AnyRepositoryValue> repository =
+        givenAReadableAndCacheRepository();
 
-    repository.get(ANY_ID);
+    repository.getByKey(ANY_KEY, ReadPolicy.READABLE_ONLY_AND_POPULATE);
 
-    verify(cacheDataSource).addOrUpdate(apiItem);
-  }
-
-  @Test public void shouldDeleteItemsIfAreNotValid() throws Exception {
-    givenTheCacheReturnsNotValidItemById(ANY_ID);
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
-
-    repository.get(ANY_ID);
-
-    verify(cacheDataSource).deleteById(ANY_ID);
-  }
-
-  @Test public void shouldLoadItemFromTheAPIIfTheForceLoadParamIsTrue() throws Exception {
-    AnyCacheableItem apiItem = givenDataSourcesReturnValidData(ANY_ID);
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
-
-    AnyCacheableItem item = repository.get(ANY_ID, true);
-
-    assertEquals(apiItem, item);
+    verify(cacheDataSource, never()).getByKey(ANY_KEY);
+    verify(readableDataSource).getByKey(ANY_KEY);
   }
 
   @Test(expected = IllegalArgumentException.class) public void shouldNotAddOrUpdateNullItems()
       throws Exception {
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+    RosieRepository<?, AnyRepositoryValue> repository = givenAWriteableAndCacheRepository();
 
-    AnyCacheableItem item = null;
-    repository.addOrUpdate(item);
+    repository.addOrUpdate(null);
   }
 
-  @Test public void shouldAddOrUpdateItemToTheAPIDataSource() throws Exception {
-    AnyCacheableItem item = new AnyCacheableItem(ANY_ID);
-    givenItemAddedSuccessfully(item);
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+  @Test public void shouldAddOrUpdateItemToWriteableDataSource() throws Exception {
+    givenWriteableDataSourceWritesValue(ANY_VALUE);
+    RosieRepository<?, AnyRepositoryValue> repository = givenAWriteableAndCacheRepository();
 
-    repository.addOrUpdate(item);
+    repository.addOrUpdate(ANY_VALUE);
 
-    verify(apiDataSource).addOrUpdate(item);
+    verify(writeableDataSource).addOrUpdate(ANY_VALUE);
   }
 
-  @Test public void shouldPopulateCacheDataSourceWithTheAPIDataSourceResult() throws Exception {
-    AnyCacheableItem itemToUpdate = new AnyCacheableItem(ANY_ID);
-    AnyCacheableItem updatedItem = givenItemAddedSuccessfully(itemToUpdate);
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+  @Test public void shouldPopulateCacheDataSourceWithWriteableDataSourceResult() throws Exception {
+    AnyRepositoryValue writeableValue = givenWriteableDataSourceWritesValue(ANY_VALUE);
+    RosieRepository<?, AnyRepositoryValue> repository = givenAWriteableAndCacheRepository();
 
-    repository.addOrUpdate(itemToUpdate);
+    repository.addOrUpdate(ANY_VALUE);
 
-    verify(cacheDataSource).addOrUpdate(updatedItem);
+    verify(cacheDataSource).addOrUpdate(writeableValue);
   }
 
-  @Test public void shouldNotPopulateCacheDataSourceIfTheResultIsNotSuccess() throws Exception {
-    AnyCacheableItem itemToUpdate = new AnyCacheableItem(ANY_ID);
-    givenItemNotAdded(itemToUpdate);
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+  @Test public void shouldNotPopulateCacheDataSourceIfResultIsNotSuccessful() throws Exception {
+    givenWriteableDataSourceDoesNotWriteValue(ANY_VALUE);
+    RosieRepository<?, AnyRepositoryValue> repository = givenAWriteableAndCacheRepository();
 
-    repository.addOrUpdate(itemToUpdate);
+    repository.addOrUpdate(ANY_VALUE);
 
-    verify(cacheDataSource, never()).addOrUpdate(any(AnyCacheableItem.class));
+    verify(cacheDataSource, never()).addOrUpdate(any(AnyRepositoryValue.class));
   }
 
-  @Test(expected = IllegalArgumentException.class) public void shouldNotAcceptNullItems()
+  @Test(expected = IllegalArgumentException.class) public void shouldNotAcceptNullValues()
       throws Exception {
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+    RosieRepository<?, ?> repository = givenAWriteableAndCacheRepository();
 
-    List<AnyCacheableItem> items = null;
-    repository.addOrUpdate(items);
+    repository.addOrUpdate(null);
   }
 
-  @Test public void shouldAddItemsToTheAPIDataSource() throws Exception {
-    Collection<AnyCacheableItem> itemsToUpdate = getSomeItems();
-    givenItemsAddedSuccessfully(itemsToUpdate);
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+  @Test public void shouldAddItemsToWriteableDataSource() throws Exception {
+    Collection<AnyRepositoryValue> values = getSomeValues();
+    givenWriteableDataSourceWritesValues(values);
+    RosieRepository<?, AnyRepositoryValue> repository = givenAWriteableAndCacheRepository();
 
-    repository.addOrUpdate(itemsToUpdate);
+    repository.addOrUpdateAll(values);
 
-    verify(apiDataSource).addOrUpdate(itemsToUpdate);
+    verify(writeableDataSource).addOrUpdateAll(values);
   }
 
-  @Test public void shouldPopulateCacheDataSourceWithTheAPIDataSourceResults() throws Exception {
-    Collection<AnyCacheableItem> itemsToUpdate = getSomeItems();
-    Collection<AnyCacheableItem> updatedItems = givenItemsAddedSuccessfully(itemsToUpdate);
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+  @Test public void shouldPopulateCacheDataSourceWithWriteableDataSourceResults() throws Exception {
+    Collection<AnyRepositoryValue> values = getSomeValues();
+    Collection<AnyRepositoryValue> writeableValues = givenWriteableDataSourceWritesValues(values);
+    RosieRepository<?, AnyRepositoryValue> repository = givenAWriteableAndCacheRepository();
 
-    repository.addOrUpdate(itemsToUpdate);
+    repository.addOrUpdateAll(values);
 
-    verify(cacheDataSource).addOrUpdate(updatedItems);
+    verify(cacheDataSource).addOrUpdateAll(writeableValues);
   }
 
-  @Test public void shouldNotPopulateCacheDataSourceIfTheAPIResultIsNotSuccess() throws Exception {
-    Collection<AnyCacheableItem> itemsToUpdate = getSomeItems();
-    givenItemsNotAdded(itemsToUpdate);
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+  @Test public void shouldNotPopulateCacheDataSourceIfWriteableDataSourceResultIsNotSuccessful()
+      throws Exception {
+    Collection<AnyRepositoryValue> values = getSomeValues();
+    givenWriteableDataSourceDoesNotWriteValues(values);
+    RosieRepository<?, AnyRepositoryValue> repository = givenAWriteableAndCacheRepository();
 
-    repository.addOrUpdate(itemsToUpdate);
+    repository.addOrUpdateAll(values);
 
-    verify(cacheDataSource, never()).addOrUpdate(anyCollection());
+    verify(cacheDataSource, never()).addOrUpdateAll(values);
   }
 
-  @Test public void shouldDeleteAllDataSourcesInDescendantOrder() throws Exception {
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+  @Test public void shouldDeleteAllDataSources() throws Exception {
+    RosieRepository<?, ?> repository = givenAWriteableAndCacheRepository();
 
     repository.deleteAll();
 
-    verify(apiDataSource).deleteAll();
+    verify(writeableDataSource).deleteAll();
     verify(cacheDataSource).deleteAll();
   }
 
-  @Test public void shouldDeleteAllDataSourcesById() throws Exception {
-    RosieRepository<AnyCacheableItem> repository = givenARepositoryWithTwoDataSources();
+  @Test public void shouldDeleteAllDataSourcesByKey() throws Exception {
+    RosieRepository<AnyRepositoryKey, ?> repository = givenAWriteableAndCacheRepository();
 
-    repository.deleteById(ANY_ID);
+    repository.deleteByKey(ANY_KEY);
 
-    verify(apiDataSource).deleteById(ANY_ID);
-    verify(cacheDataSource).deleteById(ANY_ID);
+    verify(writeableDataSource).deleteByKey(ANY_KEY);
+    verify(cacheDataSource).deleteByKey(ANY_KEY);
   }
 
-  private void givenItemsNotAdded(Collection<AnyCacheableItem> items) throws Exception {
-    when(apiDataSource.addOrUpdate(items)).thenReturn(null);
+  private RosieRepository<AnyRepositoryKey, AnyRepositoryValue> givenAReadableAndCacheRepository() {
+    return givenARepository(EnumSet.of(DataSource.READABLE, DataSource.CACHE));
   }
 
-  private Collection<AnyCacheableItem> givenItemsAddedSuccessfully(
-      Collection<AnyCacheableItem> items) throws Exception {
-    Collection<AnyCacheableItem> updatedItems = new LinkedList<>(items);
-    when(apiDataSource.addOrUpdate(items)).thenReturn(updatedItems);
-    return updatedItems;
+  private RosieRepository<AnyRepositoryKey, AnyRepositoryValue> givenAWriteableAndCacheRepository() {
+    return givenARepository(EnumSet.of(DataSource.WRITEABLE, DataSource.CACHE));
   }
 
-  private void givenItemNotAdded(AnyCacheableItem itemToUpdate) throws Exception {
-    when(apiDataSource.addOrUpdate(itemToUpdate)).thenReturn(null);
-  }
+  private RosieRepository<AnyRepositoryKey, AnyRepositoryValue> givenARepository(
+      EnumSet<DataSource> dataSources) {
+    RosieRepository<AnyRepositoryKey, AnyRepositoryValue> repository = new RosieRepository<>();
 
-  private AnyCacheableItem givenItemAddedSuccessfully(AnyCacheableItem item) throws Exception {
-    AnyCacheableItem updatedItem = new AnyCacheableItem(item.getId());
-    when(apiDataSource.addOrUpdate(item)).thenReturn(updatedItem);
-    return updatedItem;
-  }
-
-  private AnyCacheableItem givenDataSourcesReturnValidData(String id) throws Exception {
-    AnyCacheableItem cacheItem = new AnyCacheableItem(id);
-    AnyCacheableItem apiItem = new AnyCacheableItem(id);
-    when(cacheDataSource.getById(id)).thenReturn(cacheItem);
-    when(cacheDataSource.isValid(cacheItem)).thenReturn(true);
-    when(apiDataSource.getById(id)).thenReturn(apiItem);
-    return apiItem;
-  }
-
-  private AnyCacheableItem givenTheCacheReturnsNotValidItemById(String id) throws Exception {
-    AnyCacheableItem item = new AnyCacheableItem(id);
-    when(cacheDataSource.getById(id)).thenReturn(item);
-    when(cacheDataSource.isValid(item)).thenReturn(false);
-    when(apiDataSource.getById(id)).thenReturn(item);
-    when(apiDataSource.isValid(any(AnyCacheableItem.class))).thenReturn(true);
-    return item;
-  }
-
-  private AnyCacheableItem givenTheCacheReturnsNullItemsById(String id) throws Exception {
-    AnyCacheableItem item = new AnyCacheableItem(id);
-    when(cacheDataSource.getById(id)).thenReturn(null);
-    when(apiDataSource.getById(id)).thenReturn(item);
-    return item;
-  }
-
-  private AnyCacheableItem givenTheCacheReturnsAValidItemById(String id) throws Exception {
-    AnyCacheableItem item = new AnyCacheableItem(id);
-    when(cacheDataSource.getById(id)).thenReturn(item);
-    when(cacheDataSource.isValid(item)).thenReturn(true);
-    return item;
-  }
-
-  private void givenDataSourcesReturnValidData() throws Exception {
-    Collection<AnyCacheableItem> cacheData = getSomeItems();
-    Collection<AnyCacheableItem> apiData = getSomeItems();
-    when(cacheDataSource.getAll()).thenReturn(cacheData);
-    when(cacheDataSource.isValid(any(AnyCacheableItem.class))).thenReturn(true);
-    when(apiDataSource.getAll()).thenReturn(apiData);
-    when(apiDataSource.isValid(any(AnyCacheableItem.class))).thenReturn(true);
-  }
-
-  private void givenAnyDataSourceThrowsAnException() throws Exception {
-    when(apiDataSource.getAll()).thenThrow(new Exception());
-  }
-
-  private Collection<AnyCacheableItem> givenCachedDataIsNotValidNeitherAPI() throws Exception {
-    Collection<AnyCacheableItem> cacheData = getSomeItems();
-    Collection<AnyCacheableItem> apiData = getSomeItems();
-    when(cacheDataSource.getAll()).thenReturn(cacheData);
-    when(cacheDataSource.isValid(any(AnyCacheableItem.class))).thenReturn(false);
-    when(apiDataSource.getAll()).thenReturn(apiData);
-    when(apiDataSource.isValid(any(AnyCacheableItem.class))).thenReturn(false);
-    return apiData;
-  }
-
-  private Collection<AnyCacheableItem> givenTheCacheReturnsNoValidDataAndTheApiReturnsData()
-      throws Exception {
-    Collection<AnyCacheableItem> cacheData = getSomeItems();
-    Collection<AnyCacheableItem> apiData = getSomeItems();
-    when(cacheDataSource.getAll()).thenReturn(cacheData);
-    when(cacheDataSource.isValid(any(AnyCacheableItem.class))).thenReturn(false);
-    when(apiDataSource.getAll()).thenReturn(apiData);
-    when(apiDataSource.isValid(any(AnyCacheableItem.class))).thenReturn(true);
-    return apiData;
-  }
-
-  private Collection<AnyCacheableItem> givenTheCacheReturnsValidData() throws Exception {
-    Collection<AnyCacheableItem> data = getSomeItems();
-    when(cacheDataSource.getAll()).thenReturn(data);
-    when(cacheDataSource.isValid(any(AnyCacheableItem.class))).thenReturn(true);
-    when(apiDataSource.getAll()).thenReturn(null);
-    return data;
-  }
-
-  private void givenTheDataSourcesHasNoData() throws Exception {
-    when(cacheDataSource.getAll()).thenReturn(null);
-    when(apiDataSource.getAll()).thenReturn(null);
-  }
-
-  private Collection<AnyCacheableItem> givenTheCacheReturnsNullAndTheApiReturnSomeData()
-      throws Exception {
-    when(cacheDataSource.getAll()).thenReturn(null);
-    Collection<AnyCacheableItem> apiData = getSomeItems();
-    when(apiDataSource.getAll()).thenReturn(apiData);
-    return apiData;
-  }
-
-  private RosieRepository<AnyCacheableItem> givenARepositoryWithTwoDataSources() {
-    return new RosieRepository<>(cacheDataSource, apiDataSource);
-  }
-
-  private LinkedList<AnyCacheableItem> getSomeItems() {
-    LinkedList<AnyCacheableItem> anyCacheableItems = new LinkedList<>();
-    for (int i = 0; i < 10; i++) {
-      anyCacheableItems.add(new AnyCacheableItem(String.valueOf(i)));
+    if (dataSources.contains(DataSource.READABLE)) {
+      repository.addReadableDataSources(readableDataSource);
     }
-    return anyCacheableItems;
+
+    if (dataSources.contains(DataSource.WRITEABLE)) {
+      repository.addWriteableDataSources(writeableDataSource);
+    }
+
+    if (dataSources.contains(DataSource.CACHE)) {
+      repository.addCacheDataSources(cacheDataSource);
+    }
+
+    return repository;
+  }
+
+  private void givenCacheDataSourceReturnsNull() throws Exception {
+    when(cacheDataSource.getByKey(any(AnyRepositoryKey.class))).thenReturn(null);
+    when(cacheDataSource.getAll()).thenReturn(null);
+  }
+
+  private void givenReadableDataSourceReturnsNull() throws Exception {
+    when(readableDataSource.getByKey(any(AnyRepositoryKey.class))).thenReturn(null);
+    when(readableDataSource.getAll()).thenReturn(null);
+  }
+
+  private AnyRepositoryValue givenCacheDataSourceReturnsValidValueWithKey(AnyRepositoryKey key)
+      throws Exception {
+    return givenCacheDataSourceReturnsValueWithKey(key, true);
+  }
+
+  private AnyRepositoryValue givenCacheDataSourceReturnsNonValidValueWithKey(AnyRepositoryKey key)
+      throws Exception {
+    return givenCacheDataSourceReturnsValueWithKey(key, false);
+  }
+
+  @NonNull private AnyRepositoryValue givenCacheDataSourceReturnsValueWithKey(AnyRepositoryKey key,
+      boolean isValidValue) {
+    AnyRepositoryValue value = new AnyRepositoryValue(key);
+    when(cacheDataSource.getByKey(key)).thenReturn(value);
+    when(cacheDataSource.isValid(value)).thenReturn(isValidValue);
+    return value;
+  }
+
+  @NonNull
+  private AnyRepositoryValue givenReadableDataSourceReturnsValidValueWithKey(AnyRepositoryKey key) {
+    AnyRepositoryValue value = new AnyRepositoryValue(key);
+    when(readableDataSource.getByKey(key)).thenReturn(value);
+    return value;
+  }
+
+  private Collection<AnyRepositoryValue> givenCacheDataSourceReturnsValidValues() throws Exception {
+    return givenCacheDataSourceReturnsValues(true);
+  }
+
+  private Collection<AnyRepositoryValue> givenCacheDataSourceReturnsNonValidValues()
+      throws Exception {
+    return givenCacheDataSourceReturnsValues(false);
+  }
+
+  private Collection<AnyRepositoryValue> givenCacheDataSourceReturnsValues(boolean areValidValues) {
+    Collection<AnyRepositoryValue> values = getSomeValues();
+    when(cacheDataSource.getAll()).thenReturn(values);
+    when(cacheDataSource.isValid(any(AnyRepositoryValue.class))).thenReturn(areValidValues);
+    return values;
+  }
+
+  private Collection<AnyRepositoryValue> givenReadableDataSourceReturnsValidValues()
+      throws Exception {
+    Collection<AnyRepositoryValue> values = getSomeValues();
+    when(readableDataSource.getAll()).thenReturn(values);
+    return values;
+  }
+
+  private void givenReadableDataSourceThrowsException() {
+    when(readableDataSource.getAll()).thenThrow(new Exception());
+  }
+
+  private AnyRepositoryValue givenWriteableDataSourceWritesValue(AnyRepositoryValue value) {
+    AnyRepositoryValue writeableValue = new AnyRepositoryValue(value.getKey());
+    when(writeableDataSource.addOrUpdate(value)).thenReturn(writeableValue);
+    return writeableValue;
+  }
+
+  private void givenWriteableDataSourceDoesNotWriteValue(AnyRepositoryValue value) {
+    when(writeableDataSource.addOrUpdate(value)).thenReturn(null);
+  }
+
+  private void givenWriteableDataSourceDoesNotWriteValues(Collection<AnyRepositoryValue> values) {
+    when(writeableDataSource.addOrUpdateAll(values)).thenReturn(null);
+  }
+
+  private Collection<AnyRepositoryValue> givenWriteableDataSourceWritesValues(
+      Collection<AnyRepositoryValue> values) {
+    Collection<AnyRepositoryValue> updatedValues = new LinkedList<>(values);
+    when(writeableDataSource.addOrUpdateAll(values)).thenReturn(values);
+    return updatedValues;
+  }
+
+  private Collection<AnyRepositoryValue> getSomeValues() {
+    LinkedList<AnyRepositoryValue> values = new LinkedList<>();
+    for (int i = 0; i < 10; i++) {
+      values.add(new AnyRepositoryValue(new AnyRepositoryKey(i)));
+    }
+    return values;
+  }
+
+  private enum DataSource {
+    READABLE,
+    WRITEABLE,
+    CACHE
   }
 }
