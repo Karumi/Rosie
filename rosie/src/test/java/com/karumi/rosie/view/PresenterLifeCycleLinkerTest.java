@@ -14,11 +14,9 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.view.presenter;
+package com.karumi.rosie.view;
 
 import com.karumi.rosie.UnitTest;
-import com.karumi.rosie.view.PresenterLifeCycleLinker;
-import com.karumi.rosie.view.RosiePresenter;
 import org.junit.Test;
 import org.mockito.Mock;
 

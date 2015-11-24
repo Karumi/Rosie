@@ -23,18 +23,18 @@ import java.util.HashMap;
  */
 final class ClassUtils {
 
-  private static final HashMap<Class, Class> primitiveWrappers = new HashMap<>();
+  private static final HashMap<Class, Class> PRIMITIVE_WRAPPERS = new HashMap<>();
 
   static {
-    primitiveWrappers.put(Boolean.class, boolean.class);
-    primitiveWrappers.put(Byte.class, byte.class);
-    primitiveWrappers.put(Character.class, char.class);
-    primitiveWrappers.put(Short.class, short.class);
-    primitiveWrappers.put(Integer.class, int.class);
-    primitiveWrappers.put(Long.class, long.class);
-    primitiveWrappers.put(Float.class, float.class);
-    primitiveWrappers.put(Double.class, double.class);
-    primitiveWrappers.put(Void.class, void.class);
+    PRIMITIVE_WRAPPERS.put(Boolean.class, boolean.class);
+    PRIMITIVE_WRAPPERS.put(Byte.class, byte.class);
+    PRIMITIVE_WRAPPERS.put(Character.class, char.class);
+    PRIMITIVE_WRAPPERS.put(Short.class, short.class);
+    PRIMITIVE_WRAPPERS.put(Integer.class, int.class);
+    PRIMITIVE_WRAPPERS.put(Long.class, long.class);
+    PRIMITIVE_WRAPPERS.put(Float.class, float.class);
+    PRIMITIVE_WRAPPERS.put(Double.class, double.class);
+    PRIMITIVE_WRAPPERS.put(Void.class, void.class);
   }
 
   static boolean canAssign(Class<?> baseClass, Class<?> classToCheck) {
@@ -42,12 +42,12 @@ final class ClassUtils {
       return true;
     } else {
       if (baseClass.isPrimitive()) {
-        Class primitiveClass = primitiveWrappers.get(classToCheck);
+        Class primitiveClass = PRIMITIVE_WRAPPERS.get(classToCheck);
         if (primitiveClass != null) {
           return baseClass.isAssignableFrom(primitiveClass);
         }
       } else if (classToCheck.isPrimitive()) {
-        Class primitiveClass = primitiveWrappers.get(baseClass);
+        Class primitiveClass = PRIMITIVE_WRAPPERS.get(baseClass);
         if (primitiveClass != null) {
           return primitiveClass.isAssignableFrom(classToCheck);
         }

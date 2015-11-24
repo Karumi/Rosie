@@ -24,7 +24,7 @@ import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
  * of the Android main thread and the result of the operation will be provided asynchronously using
  * a callback.
  */
-public final class UseCaseHandler {
+public class UseCaseHandler {
 
   private final TaskScheduler taskScheduler;
   private final ErrorHandler errorHandler;

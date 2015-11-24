@@ -14,13 +14,10 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.view.fragment;
+package com.karumi.rosie.view;
 
 import com.karumi.rosie.RobolectricTest;
 import com.karumi.rosie.doubles.FakeActivity;
-import com.karumi.rosie.view.RosieFragment;
-import com.karumi.rosie.view.RosiePresenter;
-import com.karumi.rosie.view.Presenter;
 import org.junit.Test;
 import org.robolectric.util.FragmentTestUtil;
 

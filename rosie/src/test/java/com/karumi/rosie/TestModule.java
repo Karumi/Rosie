@@ -18,7 +18,7 @@ package com.karumi.rosie;
 
 import com.karumi.rosie.doubles.FakeActivity;
 import com.karumi.rosie.doubles.FakeActivityWithPresenter;
-import com.karumi.rosie.view.fragment.RosieFragmentTest;
+import com.karumi.rosie.view.RosieFragmentTest;
 import dagger.Module;
 
 @Module(
