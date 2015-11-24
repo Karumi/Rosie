@@ -24,7 +24,7 @@ import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
  * of the Android main thread and the result of the operation will be provided asynchronously using
  * a callback.
  */
-public class UseCaseHandler {
+public final class UseCaseHandler {
 
   private final TaskScheduler taskScheduler;
   private final ErrorHandler errorHandler;
@@ -35,8 +35,8 @@ public class UseCaseHandler {
   }
 
   /**
-   * Invoke an use case without arguments. This use case will invoke outside the main thread, and
-   * the response comes back to the main thread.
+   * Invoke an use case without arguments. This use case will be invoked out of the main thread,
+   * and the response will be handled in the main thread.
    *
    * @param useCase the use case to invoke.
    */
@@ -46,7 +46,7 @@ public class UseCaseHandler {
 
   /**
    * Given a class configured with UseCase annotation executes the annotated
-   * method out of the UI thread and return the response, if needed it, over the UI thread.
+   * method out of the UI thread and returns the response, if needed, on the UI thread.
    *
    * @param useCase the use case to invoke.
    * @param useCaseParams params to use on the invocation.

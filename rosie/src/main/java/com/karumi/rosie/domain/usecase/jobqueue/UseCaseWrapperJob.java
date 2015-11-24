@@ -21,11 +21,10 @@ import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
 
 /**
- * Job extension created to be able to execute a use case using android-priority-job-queue.
+ * Job extension created to be able to execute a use case using android priority job queues.
  */
 class UseCaseWrapperJob extends Job {
   private static final int PRIORITY_NORMAL = 3;
-  private static final String TAG = "UseCaseWrapperJob";
   private final UseCaseWrapper useCaseWrapper;
 
   public UseCaseWrapperJob(UseCaseWrapper useCaseWrapper) {

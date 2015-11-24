@@ -20,15 +20,14 @@ import com.karumi.rosie.domain.usecase.error.ErrorHandler;
 import java.lang.reflect.Method;
 
 /**
- * This class wrap the use case for invoke it.
+ * This class wrap the use case to invoke it.
  */
-public class UseCaseWrapper {
+public final class UseCaseWrapper {
   private final RosieUseCase useCase;
   private final UseCaseParams useCaseParams;
   private final ErrorHandler errorHandler;
 
-  public UseCaseWrapper(RosieUseCase useCase, UseCaseParams useCaseParams,
-      ErrorHandler errorHandler) {
+  UseCaseWrapper(RosieUseCase useCase, UseCaseParams useCaseParams, ErrorHandler errorHandler) {
     this.useCase = useCase;
     this.useCaseParams = useCaseParams;
     this.errorHandler = errorHandler;

@@ -19,11 +19,11 @@ package com.karumi.rosie.domain.usecase;
 import java.util.HashMap;
 
 /**
- * A set of helper methods related to class comparation.
+ * A set of helper methods related to class comparison.
  */
 final class ClassUtils {
 
-  private static HashMap<Class, Class> primitiveWrappers = new HashMap<Class, Class>();
+  private static final HashMap<Class, Class> primitiveWrappers = new HashMap<>();
 
   static {
     primitiveWrappers.put(Boolean.class, boolean.class);
@@ -37,19 +37,19 @@ final class ClassUtils {
     primitiveWrappers.put(Void.class, void.class);
   }
 
-  public static boolean canAssign(Class<?> baseClass, Class<?> classToCheck) {
+  static boolean canAssign(Class<?> baseClass, Class<?> classToCheck) {
     if (baseClass.isAssignableFrom(classToCheck)) {
       return true;
     } else {
       if (baseClass.isPrimitive()) {
-        Class primitizedClass = primitiveWrappers.get(classToCheck);
-        if (primitizedClass != null) {
-          return baseClass.isAssignableFrom(primitizedClass);
+        Class primitiveClass = primitiveWrappers.get(classToCheck);
+        if (primitiveClass != null) {
+          return baseClass.isAssignableFrom(primitiveClass);
         }
       } else if (classToCheck.isPrimitive()) {
-        Class primitizedClass = primitiveWrappers.get(baseClass);
-        if (primitizedClass != null) {
-          return primitizedClass.isAssignableFrom(classToCheck);
+        Class primitiveClass = primitiveWrappers.get(baseClass);
+        if (primitiveClass != null) {
+          return primitiveClass.isAssignableFrom(classToCheck);
         }
       }
     }

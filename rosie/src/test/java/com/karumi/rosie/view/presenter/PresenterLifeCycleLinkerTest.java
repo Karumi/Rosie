@@ -17,6 +17,8 @@
 package com.karumi.rosie.view.presenter;
 
 import com.karumi.rosie.UnitTest;
+import com.karumi.rosie.view.PresenterLifeCycleLinker;
+import com.karumi.rosie.view.RosiePresenter;
 import org.junit.Test;
 import org.mockito.Mock;
 

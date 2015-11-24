@@ -21,6 +21,7 @@ import com.karumi.rosie.domain.usecase.RosieUseCase;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
 import com.karumi.rosie.domain.usecase.UseCaseParams;
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
+import com.karumi.rosie.view.RosiePresenter;
 import org.junit.Test;
 import org.mockito.Mock;
 

@@ -20,7 +20,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 /**
- * CallbackScheduler implementation used to notify callbacks over the Android Main Thread.
+ * CallbackScheduler implementation used to notify callbacks on the Android Main Thread.
  */
 public class MainThreadCallbackScheduler implements CallbackScheduler {
 

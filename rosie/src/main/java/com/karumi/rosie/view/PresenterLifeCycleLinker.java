@@ -14,7 +14,7 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.view.presenter;
+package com.karumi.rosie.view;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -22,16 +22,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Analyzes a Activity or Fragment with Presenter annotations passed as parameter to obtain a list
+ * Analyzes an Activity or Fragment with Presenter annotations passed as parameter to obtain a list
  * of Presenter instances to be linked to the source lifecycle.
  */
-public class PresenterLifeCycleLinker {
+final class PresenterLifeCycleLinker {
 
   private final Set<RosiePresenter> presenters = new HashSet<>();
 
-  public void addAnnotatedPresenter(Field[] declaredFields, Object source) {
+  void addAnnotatedPresenter(Field[] declaredFields, Object source) {
     for (Field field : declaredFields) {
-      if (field.isAnnotationPresent(com.karumi.rosie.view.presenter.annotation.Presenter.class)) {
+      if (field.isAnnotationPresent(Presenter.class)) {
         if (Modifier.isPrivate(field.getModifiers())) {
           throw new RuntimeException(
               "Presenter must be accessible for this class. The visibility modifier used can't be"
@@ -53,38 +53,38 @@ public class PresenterLifeCycleLinker {
     }
   }
 
-  public void setView(RosiePresenter.View view) {
+  void setView(RosiePresenter.View view) {
     for (RosiePresenter presenter : presenters) {
       presenter.setView(view);
     }
   }
 
-  public void initializePresenters() {
+  void initializePresenters() {
     for (RosiePresenter presenter : presenters) {
       presenter.initialize();
     }
   }
 
-  public void updatePresenters() {
+  void updatePresenters() {
     for (RosiePresenter presenter : presenters) {
       presenter.update();
     }
   }
 
-  public void pausePresenters() {
+  void pausePresenters() {
     for (RosiePresenter presenter : presenters) {
       presenter.pause();
       presenter.resetView();
     }
   }
 
-  public void destroyPresenters() {
+  void destroyPresenters() {
     for (RosiePresenter presenter : presenters) {
       presenter.destroy();
     }
   }
 
-  public void registerPresenter(RosiePresenter presenter) {
+  void registerPresenter(RosiePresenter presenter) {
     presenters.add(presenter);
   }
 }

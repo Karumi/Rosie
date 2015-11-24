@@ -8,7 +8,7 @@ import dagger.Provides;
 
 /**
  * Dagger module created to provide activity scope dependencies like the Context associated to the
- * current Activity. Require a an instance to the current Activity to be able to provde it.
+ * current Activity. Requires an instance of the current Activity to be able to provide it.
  */
 @Module(library = true) public class RosieActivityModule {
 
