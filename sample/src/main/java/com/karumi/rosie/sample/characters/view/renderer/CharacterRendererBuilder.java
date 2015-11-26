@@ -21,10 +21,15 @@ public class CharacterRendererBuilder extends RendererBuilder<CharacterViewModel
     List<Renderer<CharacterViewModel>> prototypes = new LinkedList<>();
     prototypes.add(new CharacterRenderer(presenter));
     rendererMapping.put(CharacterViewModel.class, CharacterRenderer.class);
+    prototypes.add(new LoadMoreCharactersRenderer());
     setPrototypes(prototypes);
   }
 
   @Override protected Class getPrototypeClass(CharacterViewModel content) {
-    return rendererMapping.get(content.getClass());
+    if (content != null) {
+      return rendererMapping.get(content.getClass());
+    } else {
+      return LoadMoreCharactersRenderer.class;
+    }
   }
 }

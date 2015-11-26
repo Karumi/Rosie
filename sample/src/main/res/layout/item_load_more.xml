@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2015 Karumi.
+  -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/holo_blue_dark"
+    >
+
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/character_height"
+      android:text="@string/loading_message"
+      android:gravity="center"
+      style="@style/CharacterName"
+      />
+</LinearLayout>

@@ -10,9 +10,13 @@ import com.karumi.rosie.repository.datasource.paginated.PaginatedReadableDataSou
 import com.karumi.rosie.sample.characters.domain.model.Character;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Random;
 import javax.inject.Inject;
 
 public class CharactersApiDataSource implements PaginatedReadableDataSource<Character> {
+
+  private static final int NUMBER_OF_CHARACTERS = 15;
+  private static final Random random = new Random(System.nanoTime());
 
   @Inject public CharactersApiDataSource() {
   }
@@ -20,17 +24,31 @@ public class CharactersApiDataSource implements PaginatedReadableDataSource<Char
   @Override public PaginatedCollection<Character> getPage(int offset, int limit) {
     Collection<Character> characters = new LinkedList<>();
 
-    characters.add(getSpiderman());
-    characters.add(getCaptainMarvel());
-    characters.add(getHulk());
-    characters.add(getThor());
-    characters.add(getIronMan());
+    // Wait for 0.5ms
+    try {
+      Thread.sleep(500);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+
+    for (int i = offset; i - offset < limit && i < NUMBER_OF_CHARACTERS; i++) {
+      characters.add(getCharacter(i));
+    }
 
     PaginatedCollection<Character> charactersPage = new PaginatedCollection<>(characters);
     charactersPage.setOffset(offset);
     charactersPage.setLimit(limit);
-    charactersPage.setHasMore(offset < 6);
+    charactersPage.setHasMore(offset < NUMBER_OF_CHARACTERS);
     return charactersPage;
+  }
+
+  private Character getCharacter(int i) {
+    Character[] characters =
+        {getSpiderman(), getCaptainMarvel(), getHulk(), getThor(), getIronMan()};
+
+    Character character = characters[random.nextInt(characters.length)];
+    character.setName(character.getName() + " " + i);
+    return character;
   }
 
   @NonNull private Character getSpiderman() {

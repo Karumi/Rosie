@@ -2,7 +2,7 @@
 <!--
   ~ Copyright (C) 2015 Karumi.
   -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,5 +12,16 @@
       android:id="@+id/rv_characters"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:visibility="gone"
       />
-</LinearLayout>
+
+  <TextView
+      android:id="@+id/tv_loading"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:gravity="center"
+      android:text="@string/loading_message"
+      android:visibility="gone"
+      style="@style/LoadingText"
+      />
+</FrameLayout>
