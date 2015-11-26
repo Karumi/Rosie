@@ -57,7 +57,7 @@ public class RosieApplication extends Application {
    * returns a new one with all the dependencies already created plus the one resolved with the
    * list of modules passed as argument.
    */
-  public final ObjectGraph plusGraph(List<Object> activityScopeModules) {
+  public ObjectGraph plusGraph(List<Object> activityScopeModules) {
     if (activityScopeModules == null) {
       throw new IllegalArgumentException(
           "You can't extend the application graph with a null list of modules");

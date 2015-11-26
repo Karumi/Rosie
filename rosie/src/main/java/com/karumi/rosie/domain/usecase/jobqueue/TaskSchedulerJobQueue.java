@@ -21,7 +21,7 @@ import com.karumi.rosie.domain.usecase.UseCaseWrapper;
 import com.path.android.jobqueue.JobManager;
 
 /**
- * This is an implementation for a TaskScheduler based on the android priority job queue
+ * This is an implementation for a TaskScheduler based on the android-priority-job-queue.
  */
 public class TaskSchedulerJobQueue implements TaskScheduler {
   private final JobManager jobManager;
