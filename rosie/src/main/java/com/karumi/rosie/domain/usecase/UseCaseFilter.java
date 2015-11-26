@@ -75,7 +75,8 @@ class UseCaseFilter {
     }
 
     if (methodsFiltered.isEmpty()) {
-      throw new MethodNotFoundException("Not exist any method on this success with this signature");
+      throw new MethodNotFoundException(
+          "No public @Success-annotated method exists with this signature");
     }
 
     if (methodsFiltered.size() > 1) {

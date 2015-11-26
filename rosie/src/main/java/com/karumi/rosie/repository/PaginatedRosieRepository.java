@@ -17,8 +17,8 @@
 package com.karumi.rosie.repository;
 
 import com.karumi.rosie.repository.datasource.Identifiable;
-import com.karumi.rosie.repository.datasource.PaginatedCacheDataSource;
-import com.karumi.rosie.repository.datasource.PaginatedReadableDataSource;
+import com.karumi.rosie.repository.datasource.paginated.PaginatedCacheDataSource;
+import com.karumi.rosie.repository.datasource.paginated.PaginatedReadableDataSource;
 import com.karumi.rosie.repository.policy.ReadPolicy;
 import java.util.Arrays;
 import java.util.Collection;
