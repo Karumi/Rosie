@@ -24,7 +24,6 @@ import com.karumi.rosie.repository.policy.ReadPolicy;
 import com.karumi.rosie.repository.policy.WritePolicy;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.EnumSet;
 import java.util.LinkedList;
 
 /**
@@ -44,24 +43,39 @@ public class RosieRepository<K, V extends Identifiable<K>>
   private final Collection<WriteableDataSource<K, V>> writeableDataSources = new LinkedList<>();
   private final Collection<CacheDataSource<K, V>> cacheDataSources = new LinkedList<>();
 
-  @Override public V getByKey(K key) {
-    return getByKey(key, ReadPolicy.READ_ALL_AND_POPULATE);
+  @SafeVarargs protected final <R extends ReadableDataSource<K, V>> void addReadableDataSources(
+      R... readableDataSources) {
+    this.readableDataSources.addAll(Arrays.asList(readableDataSources));
   }
 
-  public V getByKey(K key, EnumSet<ReadPolicy> policies) {
+  @SafeVarargs protected final <R extends WriteableDataSource<K, V>> void addWriteableDataSources(
+      R... writeableDataSources) {
+    this.writeableDataSources.addAll(Arrays.asList(writeableDataSources));
+  }
+
+  @SafeVarargs protected final <R extends CacheDataSource<K, V>> void addCacheDataSources(
+      R... cacheDataSources) {
+    this.cacheDataSources.addAll(Arrays.asList(cacheDataSources));
+  }
+
+  @Override public V getByKey(K key) {
+    return getByKey(key, ReadPolicy.READ_ALL);
+  }
+
+  public V getByKey(K key, ReadPolicy policy) {
     validateKey(key);
 
     V value = null;
 
-    if (policies.contains(ReadPolicy.USE_CACHE)) {
+    if (policy.useCache()) {
       value = getValueFromCaches(key);
     }
 
-    if (value == null && policies.contains(ReadPolicy.USE_READABLE)) {
+    if (value == null && policy.useReadable()) {
       value = getValueFromReadables(key);
     }
 
-    if (value != null && policies.contains(ReadPolicy.POPULATE_CACHE)) {
+    if (value != null) {
       populateCaches(value);
     }
 
@@ -69,21 +83,21 @@ public class RosieRepository<K, V extends Identifiable<K>>
   }
 
   @Override public Collection<V> getAll() {
-    return getAll(ReadPolicy.READ_ALL_AND_POPULATE);
+    return getAll(ReadPolicy.READ_ALL);
   }
 
-  public Collection<V> getAll(EnumSet<ReadPolicy> policies) {
+  public Collection<V> getAll(ReadPolicy policy) {
     Collection<V> values = null;
 
-    if (policies.contains(ReadPolicy.USE_CACHE)) {
+    if (policy.useCache()) {
       values = getValuesFromCaches();
     }
 
-    if (values == null && policies.contains(ReadPolicy.USE_READABLE)) {
+    if (values == null && policy.useReadable()) {
       values = getValuesFromReadables();
     }
 
-    if (values != null && policies.contains(ReadPolicy.POPULATE_CACHE)) {
+    if (values != null) {
       populateCaches(values);
     }
 
@@ -91,10 +105,10 @@ public class RosieRepository<K, V extends Identifiable<K>>
   }
 
   @Override public V addOrUpdate(V value) {
-    return addOrUpdate(value, WritePolicy.WRITE_ONCE_AND_POPULATE);
+    return addOrUpdate(value, WritePolicy.WRITE_ALL);
   }
 
-  public V addOrUpdate(V value, EnumSet<WritePolicy> policies) {
+  public V addOrUpdate(V value, WritePolicy policy) {
     validateValue(value);
 
     V updatedValue = null;
@@ -102,12 +116,12 @@ public class RosieRepository<K, V extends Identifiable<K>>
     for (WriteableDataSource<K, V> writeableDataSource : writeableDataSources) {
       updatedValue = writeableDataSource.addOrUpdate(value);
 
-      if (updatedValue != null && policies.contains(WritePolicy.WRITE_ONCE)) {
+      if (updatedValue != null && policy == WritePolicy.WRITE_ONCE) {
         break;
       }
     }
 
-    if (updatedValue != null && policies.contains(WritePolicy.POPULATE_CACHE)) {
+    if (updatedValue != null) {
       populateCaches(updatedValue);
     }
 
@@ -115,10 +129,10 @@ public class RosieRepository<K, V extends Identifiable<K>>
   }
 
   @Override public Collection<V> addOrUpdateAll(Collection<V> values) {
-    return addOrUpdateAll(values, WritePolicy.WRITE_IN_ALL_AND_POPULATE);
+    return addOrUpdateAll(values, WritePolicy.WRITE_ALL);
   }
 
-  public Collection<V> addOrUpdateAll(Collection<V> values, EnumSet<WritePolicy> policies) {
+  public Collection<V> addOrUpdateAll(Collection<V> values, WritePolicy policy) {
     validateValues(values);
 
     Collection<V> updatedValues = null;
@@ -126,12 +140,12 @@ public class RosieRepository<K, V extends Identifiable<K>>
     for (WriteableDataSource<K, V> writeableDataSource : writeableDataSources) {
       updatedValues = writeableDataSource.addOrUpdateAll(values);
 
-      if (updatedValues != null && policies.contains(WritePolicy.WRITE_ONCE)) {
+      if (updatedValues != null && policy == WritePolicy.WRITE_ONCE) {
         break;
       }
     }
 
-    if (updatedValues != null && policies.contains(WritePolicy.POPULATE_CACHE)) {
+    if (updatedValues != null) {
       populateCaches(values);
     }
 
@@ -158,37 +172,20 @@ public class RosieRepository<K, V extends Identifiable<K>>
     }
   }
 
-  @SafeVarargs protected final <R extends ReadableDataSource<K, V>> void addReadableDataSources(
-      R... readableDataSources) {
-    this.readableDataSources.addAll(Arrays.asList(readableDataSources));
-  }
-
-  @SafeVarargs protected final <R extends WriteableDataSource<K, V>> void addWriteableDataSources(
-      R... writeableDataSources) {
-    this.writeableDataSources.addAll(Arrays.asList(writeableDataSources));
-  }
-
-  @SafeVarargs protected final <R extends CacheDataSource<K, V>> void addCacheDataSources(
-      R... cacheDataSources) {
-    this.cacheDataSources.addAll(Arrays.asList(cacheDataSources));
-  }
-
   private V getValueFromCaches(K id) {
     V value = null;
 
     for (CacheDataSource<K, V> cacheDataSource : cacheDataSources) {
       value = cacheDataSource.getByKey(id);
 
-      if (value == null) {
-        continue;
+      if (value != null) {
+        if (cacheDataSource.isValid(value)) {
+          break;
+        } else {
+          cacheDataSource.deleteByKey(id);
+          value = null;
+        }
       }
-
-      if (cacheDataSource.isValid(value)) {
-        break;
-      }
-
-      cacheDataSource.deleteByKey(id);
-      value = null;
     }
 
     return value;
@@ -200,16 +197,14 @@ public class RosieRepository<K, V extends Identifiable<K>>
     for (CacheDataSource<K, V> cacheDataSource : cacheDataSources) {
       values = cacheDataSource.getAll();
 
-      if (values == null) {
-        continue;
+      if (values != null) {
+        if (areValidValues(values, cacheDataSource)) {
+          break;
+        } else {
+          cacheDataSource.deleteAll();
+          values = null;
+        }
       }
-
-      if (areValidValues(values, cacheDataSource)) {
-        break;
-      }
-
-      cacheDataSource.deleteAll();
-      values = null;
     }
 
     return values;
