@@ -8,17 +8,17 @@ import com.karumi.rosie.repository.datasource.Identifiable;
 
 public class Character implements Identifiable<String> {
 
-  public String id;
-  public String name;
-  public String description;
-  public String thumbnailUrl;
+  private String key;
+  private String name;
+  private String description;
+  private String thumbnailUrl;
 
   @Override public String getKey() {
-    return id;
+    return key;
   }
 
-  public void setId(String id) {
-    this.id = id;
+  public void setKey(String key) {
+    this.key = key;
   }
 
   public String getName() {

@@ -59,13 +59,14 @@ public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends Rosi
   }
 
   @SafeVarargs
-  protected final <R extends PaginatedReadableDataSource<V>> void addPaginatedReadables(
+  protected final <R extends PaginatedReadableDataSource<V>> void addPaginatedReadableDataSources(
       R... readables) {
     this.paginatedReadableDataSources.addAll(Arrays.asList(readables));
   }
 
   @SafeVarargs
-  protected final <R extends PaginatedCacheDataSource<K, V>> void addPaginatedCaches(R... caches) {
+  protected final <R extends PaginatedCacheDataSource<K, V>> void addPaginatedCacheDataSources(
+      R... caches) {
     this.paginatedCacheDataSources.addAll(Arrays.asList(caches));
   }
 

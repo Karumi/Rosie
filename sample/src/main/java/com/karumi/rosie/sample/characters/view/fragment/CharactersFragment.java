@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 import butterknife.InjectView;
 import com.karumi.rosie.sample.R;
+import com.karumi.rosie.sample.characters.view.activity.CharacterDetailActivity;
 import com.karumi.rosie.sample.characters.view.presenter.CharactersPresenter;
 import com.karumi.rosie.sample.characters.view.renderer.CharacterRendererBuilder;
 import com.karumi.rosie.sample.characters.view.renderer.CharactersAdapteeCollection;
@@ -52,6 +53,10 @@ public class CharactersFragment extends RosieFragment implements CharactersPrese
     loadingView.setVisibility(View.VISIBLE);
   }
 
+  @Override public void hideCharacters() {
+    charactersView.setVisibility(View.GONE);
+  }
+
   @Override public void showCharacters(List<CharacterViewModel> characters) {
     charactersAdapter.addAll(characters);
     charactersAdapter.notifyDataSetChanged();
@@ -62,6 +67,10 @@ public class CharactersFragment extends RosieFragment implements CharactersPrese
     charactersCollection.setShowLoadMore(hasMore);
     loadMoreListener.setLoading(false);
     loadMoreListener.setEnabled(hasMore);
+  }
+
+  @Override public void openCharacterDetails(String characterKey) {
+    CharacterDetailActivity.open(getActivity(), characterKey);
   }
 
   private void initializeCharactersView() {

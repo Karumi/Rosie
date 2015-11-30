@@ -104,8 +104,8 @@ public class PaginatedRosieRepositoryTest extends UnitTest {
   private PaginatedRosieRepository<AnyRepositoryKey, AnyRepositoryValue> givenAPaginatedRepository() {
     PaginatedRosieRepository<AnyRepositoryKey, AnyRepositoryValue> repository =
         new PaginatedRosieRepository<>();
-    repository.addPaginatedCaches(cacheDataSource);
-    repository.addPaginatedReadables(readableDataSource);
+    repository.addPaginatedCacheDataSources(cacheDataSource);
+    repository.addPaginatedReadableDataSources(readableDataSource);
     return repository;
   }
 

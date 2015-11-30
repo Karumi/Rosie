@@ -6,6 +6,7 @@ package com.karumi.rosie.sample.characters.repository.datasource;
 
 import android.support.annotation.NonNull;
 import com.karumi.rosie.repository.PaginatedCollection;
+import com.karumi.rosie.repository.datasource.EmptyReadableDataSource;
 import com.karumi.rosie.repository.datasource.paginated.PaginatedReadableDataSource;
 import com.karumi.rosie.sample.characters.domain.model.Character;
 import java.util.Collection;
@@ -13,23 +14,52 @@ import java.util.LinkedList;
 import java.util.Random;
 import javax.inject.Inject;
 
-public class CharactersApiDataSource implements PaginatedReadableDataSource<Character> {
+public class CharactersApiDataSource extends EmptyReadableDataSource<String, Character>
+    implements PaginatedReadableDataSource<Character> {
 
   private static final int NUMBER_OF_CHARACTERS = 15;
+  private static final long SLEEP_TIME_IN_MILLISECONDS = 750;
   private static final Random random = new Random(System.nanoTime());
+  private static final String SPIDERMAN_KEY = "54";
+  private static final String CAPTAIN_MARVEL_KEY = "9";
+  private static final String HULK_KEY = "25";
+  private static final String THOR_KEY = "60";
+  private static final String IRON_MAN_KEY = "29";
 
   @Inject public CharactersApiDataSource() {
+  }
+
+  @Override public Character getByKey(String key) {
+    Character character;
+
+    fakeDelay();
+
+    switch (key) {
+      case SPIDERMAN_KEY:
+        character = getSpiderman();
+        break;
+      case CAPTAIN_MARVEL_KEY:
+        character = getCaptainMarvel();
+        break;
+      case HULK_KEY:
+        character = getHulk();
+        break;
+      case THOR_KEY:
+        character = getThor();
+        break;
+      case IRON_MAN_KEY:
+      default:
+        character = getIronMan();
+        break;
+    }
+
+    return character;
   }
 
   @Override public PaginatedCollection<Character> getPage(int offset, int limit) {
     Collection<Character> characters = new LinkedList<>();
 
-    // Wait for 0.5ms
-    try {
-      Thread.sleep(500);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+    fakeDelay();
 
     for (int i = offset; i - offset < limit && i < NUMBER_OF_CHARACTERS; i++) {
       characters.add(getCharacter(i));
@@ -53,7 +83,7 @@ public class CharactersApiDataSource implements PaginatedReadableDataSource<Char
 
   @NonNull private Character getSpiderman() {
     Character spiderman = new Character();
-    spiderman.setId("54");
+    spiderman.setKey(SPIDERMAN_KEY);
     spiderman.setName("Spiderman");
     spiderman.setThumbnailUrl("http://x.annihil.us/u/prod/marvel/i/mg/6/60/538cd3628a05e.jpg");
     spiderman.setDescription(
@@ -66,7 +96,7 @@ public class CharactersApiDataSource implements PaginatedReadableDataSource<Char
 
   @NonNull private Character getCaptainMarvel() {
     Character captainMarvel = new Character();
-    captainMarvel.setId("9");
+    captainMarvel.setKey(CAPTAIN_MARVEL_KEY);
     captainMarvel.setName("Captain Marvel");
     captainMarvel.setThumbnailUrl("http://x.annihil.us/u/prod/marvel/i/mg/6/30/537ba61b764b4.jpg");
     captainMarvel.setDescription(
@@ -77,7 +107,7 @@ public class CharactersApiDataSource implements PaginatedReadableDataSource<Char
 
   @NonNull private Character getHulk() {
     Character hulk = new Character();
-    hulk.setId("25");
+    hulk.setKey(HULK_KEY);
     hulk.setName("Hulk");
     hulk.setThumbnailUrl("http://x.annihil.us/u/prod/marvel/i/mg/e/e0/537bafa34baa9.jpg");
     hulk.setDescription(
@@ -90,7 +120,7 @@ public class CharactersApiDataSource implements PaginatedReadableDataSource<Char
 
   @NonNull private Character getThor() {
     Character hulk = new Character();
-    hulk.setId("60");
+    hulk.setKey(THOR_KEY);
     hulk.setName("Thor");
     hulk.setThumbnailUrl("http://x.annihil.us/u/prod/marvel/i/mg/7/10/537bc71e9286f.jpg");
     hulk.setDescription(
@@ -103,7 +133,7 @@ public class CharactersApiDataSource implements PaginatedReadableDataSource<Char
 
   @NonNull private Character getIronMan() {
     Character hulk = new Character();
-    hulk.setId("29");
+    hulk.setKey(IRON_MAN_KEY);
     hulk.setName("Iron Man");
     hulk.setThumbnailUrl("http://i.annihil.us/u/prod/marvel/i/mg/c/60/55b6a28ef24fa.jpg");
     hulk.setDescription(
@@ -112,5 +142,13 @@ public class CharactersApiDataSource implements PaginatedReadableDataSource<Char
             + " captivity. Now with a new outlook on life, Tony uses his money and intelligence"
             + " to make the world a safer, better place as Iron Man.");
     return hulk;
+  }
+
+  private void fakeDelay() {
+    try {
+      Thread.sleep(SLEEP_TIME_IN_MILLISECONDS);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
   }
 }

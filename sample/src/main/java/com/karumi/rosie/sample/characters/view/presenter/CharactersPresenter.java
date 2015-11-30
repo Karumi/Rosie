@@ -4,7 +4,6 @@
 
 package com.karumi.rosie.sample.characters.view.presenter;
 
-import android.util.Log;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
 import com.karumi.rosie.domain.usecase.UseCaseParams;
 import com.karumi.rosie.domain.usecase.annotation.Success;
@@ -40,7 +39,8 @@ public class CharactersPresenter extends RosiePresenter<CharactersPresenter.View
   }
 
   public void onCharacterClicked(CharacterViewModel character) {
-    Log.d("Gersio", "Character clicked: " + character.getName());
+    String characterKey = character.getKey();
+    getView().openCharacterDetails(characterKey);
   }
 
   public void onLoadMore() {
@@ -48,12 +48,10 @@ public class CharactersPresenter extends RosiePresenter<CharactersPresenter.View
   }
 
   private void loadCharacters() {
+    getView().hideCharacters();
     UseCaseParams params = new UseCaseParams.Builder().args(offset, NUMBER_OF_CHARACTERS_PER_PAGE)
         .onSuccess(new OnSuccessCallback() {
           @Success public void onCharactersLoaded(PaginatedCollection<Character> characters) {
-            Log.d("Gersio",
-                "On characters loaded [" + characters.getItems().size() + ", hasMore: " + characters
-                    .hasMore() + "]");
             List<CharacterViewModel> characterViewModels =
                 mapper.mapCharactersToCharacterViewModels(characters);
             getView().showCharacters(characterViewModels);
@@ -63,9 +61,6 @@ public class CharactersPresenter extends RosiePresenter<CharactersPresenter.View
           }
         })
         .build();
-    Log.d("Gersio",
-        "Loading characters [offset: " + offset + ", limit: " + NUMBER_OF_CHARACTERS_PER_PAGE
-            + "]");
     execute(getCharacters, params);
   }
 
@@ -74,8 +69,12 @@ public class CharactersPresenter extends RosiePresenter<CharactersPresenter.View
 
     void showLoading();
 
+    void hideCharacters();
+
     void showCharacters(List<CharacterViewModel> characters);
 
     void showHasMore(boolean hasMore);
+
+    void openCharacterDetails(String characterKey);
   }
 }

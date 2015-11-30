@@ -15,13 +15,5 @@
       android:visibility="gone"
       />
 
-  <TextView
-      android:id="@+id/tv_loading"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:gravity="center"
-      android:text="@string/loading_message"
-      android:visibility="gone"
-      style="@style/LoadingText"
-      />
+  <include layout="@layout/loading_view"/>
 </FrameLayout>

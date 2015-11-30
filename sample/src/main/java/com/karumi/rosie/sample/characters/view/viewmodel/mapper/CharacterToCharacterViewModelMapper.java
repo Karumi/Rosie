@@ -22,6 +22,7 @@ public class CharacterToCharacterViewModelMapper {
 
     for (Character character : characters.getItems()) {
       CharacterViewModel characterViewModel = new CharacterViewModel();
+      characterViewModel.setKey(character.getKey());
       characterViewModel.setName(character.getName());
       characterViewModel.setThumbnailUrl(character.getThumbnailUrl());
       characterViewModels.add(characterViewModel);
