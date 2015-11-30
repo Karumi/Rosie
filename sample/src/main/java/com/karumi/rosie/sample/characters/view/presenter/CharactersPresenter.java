@@ -34,6 +34,7 @@ public class CharactersPresenter extends RosiePresenter<CharactersPresenter.View
 
   @Override protected void update() {
     super.update();
+    getView().hideCharacters();
     getView().showLoading();
     loadCharacters();
   }
@@ -48,7 +49,6 @@ public class CharactersPresenter extends RosiePresenter<CharactersPresenter.View
   }
 
   private void loadCharacters() {
-    getView().hideCharacters();
     UseCaseParams params = new UseCaseParams.Builder().args(offset, NUMBER_OF_CHARACTERS_PER_PAGE)
         .onSuccess(new OnSuccessCallback() {
           @Success public void onCharactersLoaded(PaginatedCollection<Character> characters) {

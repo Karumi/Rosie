@@ -12,14 +12,15 @@ import java.util.List;
 
 public class FragmentAdapter extends FragmentStatePagerAdapter {
 
-  private final List<Fragment> fragments = new ArrayList<>();
+  private final List<ViewPagerFragmentHolder> fragments = new ArrayList<>();
 
   public FragmentAdapter(FragmentManager fm) {
     super(fm);
   }
 
   @Override public Fragment getItem(int position) {
-    return fragments.get(position);
+    ViewPagerFragmentHolder fragmentHolder = fragments.get(position);
+    return fragmentHolder.fragment;
   }
 
   @Override public int getCount() {
@@ -27,10 +28,21 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
   }
 
   @Override public CharSequence getPageTitle(int position) {
-    return "Page " + position;
+    ViewPagerFragmentHolder fragmentHolder = fragments.get(position);
+    return fragmentHolder.pageTitle;
   }
 
-  public void addFragment(Fragment fragment) {
-    fragments.add(fragment);
+  public void addFragment(Fragment fragment, String pageTitle) {
+    fragments.add(new ViewPagerFragmentHolder(fragment, pageTitle));
+  }
+
+  private static class ViewPagerFragmentHolder {
+    public final Fragment fragment;
+    public final String pageTitle;
+
+    public ViewPagerFragmentHolder(Fragment fragment, String pageTitle) {
+      this.fragment = fragment;
+      this.pageTitle = pageTitle;
+    }
   }
 }

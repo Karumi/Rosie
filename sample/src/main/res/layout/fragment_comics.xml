@@ -2,10 +2,18 @@
 <!--
   ~ Copyright (C) 2015 Karumi.
   -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_green_dark"
     >
-</LinearLayout>
+
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/rv_comics"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:visibility="gone"
+      />
+
+  <include layout="@layout/loading_view"/>
+
+</FrameLayout>
