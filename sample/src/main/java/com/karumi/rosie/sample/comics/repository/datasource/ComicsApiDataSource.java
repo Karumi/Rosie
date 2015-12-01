@@ -24,7 +24,7 @@ public class ComicsApiDataSource extends EmptyReadableDataSource<Integer, Comic>
   private static final int RED_WOLF_KEY = 57075;
   private static final int NOVA_KEY = 57042;
   private static final long SLEEP_TIME_IN_MILLISECONDS = 750;
-  private static final Random random = new Random(System.nanoTime());
+  private static final Random RANDOM = new Random(System.nanoTime());
 
   @Inject public ComicsApiDataSource() {
   }
@@ -75,7 +75,7 @@ public class ComicsApiDataSource extends EmptyReadableDataSource<Integer, Comic>
   private Comic getComic(int i) {
     Comic[] comics = {getGuardiansOfInfinity(), getVision(), getSpidey(), getRedWolf(), getNova()};
 
-    Comic comic = comics[random.nextInt(comics.length)];
+    Comic comic = comics[RANDOM.nextInt(comics.length)];
     comic.setName(comic.getName() + " " + i);
     return comic;
   }

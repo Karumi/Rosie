@@ -19,7 +19,7 @@ public class CharactersApiDataSource extends EmptyReadableDataSource<String, Cha
 
   private static final int NUMBER_OF_CHARACTERS = 15;
   private static final long SLEEP_TIME_IN_MILLISECONDS = 750;
-  private static final Random random = new Random(System.nanoTime());
+  private static final Random RANDOM = new Random(System.nanoTime());
   private static final String SPIDERMAN_KEY = "54";
   private static final String CAPTAIN_MARVEL_KEY = "9";
   private static final String HULK_KEY = "25";
@@ -76,7 +76,7 @@ public class CharactersApiDataSource extends EmptyReadableDataSource<String, Cha
     Character[] characters =
         {getSpiderman(), getCaptainMarvel(), getHulk(), getThor(), getIronMan()};
 
-    Character character = characters[random.nextInt(characters.length)];
+    Character character = characters[RANDOM.nextInt(characters.length)];
     character.setName(character.getName() + " " + i);
     return character;
   }
