@@ -22,7 +22,6 @@ import com.karumi.rosie.repository.datasource.paginated.PaginatedReadableDataSou
 import com.karumi.rosie.repository.policy.ReadPolicy;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.EnumSet;
 import java.util.LinkedList;
 
 /**
@@ -34,29 +33,6 @@ public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends Rosi
       new LinkedList<>();
   private final Collection<PaginatedCacheDataSource<K, V>> paginatedCacheDataSources =
       new LinkedList<>();
-
-  public PaginatedCollection<V> getPage(int offset, int limit) throws Exception {
-    return getPage(offset, limit, ReadPolicy.READ_ALL_AND_POPULATE);
-  }
-
-  public PaginatedCollection<V> getPage(int offset, int limit, EnumSet<ReadPolicy> policies)
-      throws Exception {
-    PaginatedCollection<V> values = null;
-
-    if (policies.contains(ReadPolicy.USE_CACHE)) {
-      values = getPaginatedValuesFromCaches(offset, limit);
-    }
-
-    if (values == null && policies.contains(ReadPolicy.USE_READABLE)) {
-      values = getPaginatedValuesFromReadables(offset, limit);
-    }
-
-    if (values != null && policies.contains(ReadPolicy.POPULATE_CACHE)) {
-      populatePaginatedCaches(offset, limit, values);
-    }
-
-    return values;
-  }
 
   @SafeVarargs
   protected final <R extends PaginatedReadableDataSource<V>> void addPaginatedReadableDataSources(
@@ -70,22 +46,42 @@ public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends Rosi
     this.paginatedCacheDataSources.addAll(Arrays.asList(caches));
   }
 
+  public PaginatedCollection<V> getPage(int offset, int limit) throws Exception {
+    return getPage(offset, limit, ReadPolicy.READ_ALL);
+  }
+
+  public PaginatedCollection<V> getPage(int offset, int limit, ReadPolicy policy) throws Exception {
+    PaginatedCollection<V> values = null;
+
+    if (policy.useCache()) {
+      values = getPaginatedValuesFromCaches(offset, limit);
+    }
+
+    if (values == null && policy.useReadable()) {
+      values = getPaginatedValuesFromReadables(offset, limit);
+    }
+
+    if (values != null) {
+      populatePaginatedCaches(offset, limit, values);
+    }
+
+    return values;
+  }
+
   protected PaginatedCollection<V> getPaginatedValuesFromCaches(int offset, int limit) {
     PaginatedCollection<V> values = null;
 
     for (PaginatedCacheDataSource<K, V> cacheDataSource : paginatedCacheDataSources) {
       values = cacheDataSource.getPage(offset, limit);
 
-      if (values == null) {
-        continue;
+      if (values != null) {
+        if (areValidValues(values, cacheDataSource)) {
+          break;
+        } else {
+          cacheDataSource.deleteAll();
+          values = null;
+        }
       }
-
-      if (areValidValues(values, cacheDataSource)) {
-        break;
-      }
-
-      cacheDataSource.deleteAll();
-      values = null;
     }
 
     return values;
