@@ -73,6 +73,12 @@ public class ComicsFragment extends RosieFragment implements ComicsPresenter.Vie
     comicsView.setVisibility(View.VISIBLE);
   }
 
+  @Override public void showHasMore(boolean hasMore) {
+    comicsCollection.setShowLoadMore(hasMore);
+    loadMoreListener.setLoading(false);
+    loadMoreListener.setEnabled(hasMore);
+  }
+
   @Override public void openComicDetails(int comicKey) {
     ComicDetailsActivity.open(getActivity(), comicKey);
   }
@@ -82,7 +88,6 @@ public class ComicsFragment extends RosieFragment implements ComicsPresenter.Vie
     comicsView.setHasFixedSize(true);
     comicsView.setLayoutManager(layoutManager);
     initializeAdapter();
-
     comicsView.addItemDecoration(getDivider());
     comicsView.setAdapter(comicsAdapter);
     loadMoreListener = new LoadMoreListener(layoutManager, new LoadMoreListener.Listener() {

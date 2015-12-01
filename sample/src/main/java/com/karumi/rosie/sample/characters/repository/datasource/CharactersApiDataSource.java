@@ -68,7 +68,7 @@ public class CharactersApiDataSource extends EmptyReadableDataSource<String, Cha
     PaginatedCollection<Character> charactersPage = new PaginatedCollection<>(characters);
     charactersPage.setOffset(offset);
     charactersPage.setLimit(limit);
-    charactersPage.setHasMore(offset < NUMBER_OF_CHARACTERS);
+    charactersPage.setHasMore(offset + characters.size() < NUMBER_OF_CHARACTERS);
     return charactersPage;
   }
 

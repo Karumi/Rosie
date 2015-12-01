@@ -19,7 +19,7 @@ import javax.inject.Inject;
 
 public class ComicsPresenter extends RosiePresenter<ComicsPresenter.View> {
 
-  private static final int NUMBER_OF_COMICS_PER_PAGE = 10;
+  private static final int NUMBER_OF_COMICS_PER_PAGE = 14;
   private final ComicToComicViewModelMapper mapper;
   private final GetComics getComics;
   private int offset = 0;
@@ -52,6 +52,7 @@ public class ComicsPresenter extends RosiePresenter<ComicsPresenter.View> {
           @Success public void onComicsLoaded(PaginatedCollection<Comic> comics) {
             List<ComicViewModel> comicViewModels = mapper.mapComicsToComicViewModels(comics);
             getView().hideLoading();
+            getView().showHasMore(comics.hasMore());
             getView().showComics(comicViewModels);
             offset = comics.getOffset() + NUMBER_OF_COMICS_PER_PAGE;
           }
@@ -64,6 +65,8 @@ public class ComicsPresenter extends RosiePresenter<ComicsPresenter.View> {
     void hideComics();
 
     void showComics(List<ComicViewModel> comics);
+
+    void showHasMore(boolean hasMore);
 
     void openComicDetails(int comicKey);
   }

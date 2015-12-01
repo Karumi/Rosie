@@ -18,7 +18,7 @@ public class ComicToComicDetailsViewModelMapper {
     ComicDetailsViewModel comicDetailsViewModel = new ComicDetailsViewModel();
 
     comicDetailsViewModel.setTitle(
-        comic.getName() + "(" + comic.getReleaseYear() + ") #" + comic.getNumber());
+        comic.getName() + " (" + comic.getReleaseYear() + ") #" + comic.getNumber());
     comicDetailsViewModel.setCoverUrl(comic.getCoverUrl());
     comicDetailsViewModel.setDescription(comic.getDescription());
     comicDetailsViewModel.setRatingNameResourceId(getRatingNameResourceId(comic.getRating()));

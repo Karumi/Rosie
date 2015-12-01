@@ -17,7 +17,7 @@ import javax.inject.Inject;
 public class ComicsApiDataSource extends EmptyReadableDataSource<Integer, Comic>
     implements PaginatedReadableDataSource<Comic> {
 
-  private static final int NUMBER_OF_COMICS = 15;
+  private static final int NUMBER_OF_COMICS = 80;
   private static final int GUARDIANS_OF_INFINITY_KEY = 58086;
   private static final int VISION_KEY = 57309;
   private static final int SPIDEY_KEY = 57137;
@@ -68,7 +68,7 @@ public class ComicsApiDataSource extends EmptyReadableDataSource<Integer, Comic>
     PaginatedCollection<Comic> comicsPage = new PaginatedCollection<>(comics);
     comicsPage.setOffset(offset);
     comicsPage.setLimit(limit);
-    comicsPage.setHasMore(offset < NUMBER_OF_COMICS);
+    comicsPage.setHasMore(offset + comics.size() < NUMBER_OF_COMICS);
     return comicsPage;
   }
 

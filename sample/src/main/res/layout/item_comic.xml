@@ -30,7 +30,7 @@
       android:layout_centerVertical="true"
       android:layout_marginRight="@dimen/comic_next_icon_margin_right"
       android:layout_marginEnd="@dimen/comic_next_icon_margin_right"
-      android:background="@android:drawable/btn_star_big_off"
+      android:background="@drawable/ic_keyboard_arrow_right_white_24dp"
       />
 
 </RelativeLayout>
