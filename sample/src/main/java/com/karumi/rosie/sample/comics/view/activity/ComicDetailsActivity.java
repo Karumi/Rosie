@@ -1,5 +1,17 @@
 /*
  * Copyright (C) 2015 Karumi.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.karumi.rosie.sample.comics.view.activity;
@@ -12,11 +24,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.InjectView;
 import com.karumi.rosie.sample.R;
+import com.karumi.rosie.sample.comics.ComicsModule;
 import com.karumi.rosie.sample.comics.view.presenter.ComicDetailsPresenter;
 import com.karumi.rosie.sample.comics.view.viewmodel.ComicDetailsViewModel;
 import com.karumi.rosie.view.Presenter;
 import com.karumi.rosie.view.RosieActivity;
 import com.squareup.picasso.Picasso;
+import java.util.Arrays;
+import java.util.List;
 import javax.inject.Inject;
 
 public class ComicDetailsActivity extends RosieActivity implements ComicDetailsPresenter.View {
@@ -42,6 +57,10 @@ public class ComicDetailsActivity extends RosieActivity implements ComicDetailsP
     return R.layout.activity_comic_details;
   }
 
+  @Override protected List<Object> getActivityScopeModules() {
+    return Arrays.asList((Object) new ComicsModule());
+  }
+
   @Override public void hideLoading() {
     loadingView.setVisibility(View.GONE);
   }
@@ -55,11 +74,7 @@ public class ComicDetailsActivity extends RosieActivity implements ComicDetailsP
   }
 
   @Override public void showComicDetails(ComicDetailsViewModel comic) {
-    Picasso.with(this)
-        .load(comic.getCoverUrl())
-        .fit()
-        .centerCrop()
-        .into(coverView);
+    Picasso.with(this).load(comic.getCoverUrl()).fit().centerCrop().into(coverView);
     String rating = getString(comic.getRatingNameResourceId());
     ratingView.setText(getString(R.string.marvel_rating_text, rating));
     descriptionView.setText(comic.getDescription());
