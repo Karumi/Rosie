@@ -23,8 +23,7 @@ import com.pedrogomez.renderers.Renderer;
 /**
  * Renderer extension create to provide Butter Knife view injection in a transparent way. Your
  * Renderer classes should extend from this one to be able tu use Butter Knife annotations.
- * Remember
- * to call supper in you overriden render method.
+ * Remember to call super in you overridden render method.
  */
 public abstract class RosieRenderer<T> extends Renderer<T> {
 

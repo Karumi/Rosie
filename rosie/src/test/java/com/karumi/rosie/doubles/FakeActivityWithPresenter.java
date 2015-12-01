@@ -18,8 +18,8 @@ package com.karumi.rosie.doubles;
 
 import android.os.Bundle;
 import com.karumi.rosie.TestModule;
-import com.karumi.rosie.view.activity.RosieActivity;
-import com.karumi.rosie.view.presenter.annotation.Presenter;
+import com.karumi.rosie.view.RosieActivity;
+import com.karumi.rosie.view.Presenter;
 import java.util.Arrays;
 import java.util.List;
 

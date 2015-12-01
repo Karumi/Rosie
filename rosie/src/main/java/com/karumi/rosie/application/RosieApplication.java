@@ -48,13 +48,13 @@ public class RosieApplication extends Application {
    * Given an object passed as argument uses the object graph associated to the application scope
    * to resolve all the dependencies needed by the object and inject them.
    */
-  public void inject(Object object) {
+  public final void inject(Object object) {
     graph.inject(object);
   }
 
   /**
    * Given a List<Object> with Dagger modules inside performs a plus over the application graph and
-   * returns an new one with all the dependencies already created plus the one resolved with the
+   * returns a new one with all the dependencies already created plus the one resolved with the
    * list of modules passed as argument.
    */
   public ObjectGraph plusGraph(List<Object> activityScopeModules) {
@@ -76,7 +76,7 @@ public class RosieApplication extends Application {
 
   /**
    * Indicates if the class has to be injected or not. Override this method and return false to use
-   * RosieApplication without inject any dependency.
+   * RosieApplication without injecting any dependency.
    */
   protected boolean shouldInjectApplication() {
     return true;
@@ -84,7 +84,7 @@ public class RosieApplication extends Application {
 
   private void initGraph() {
     List<Object> rosieModules = getRosieModules();
-    List<Object> modules = new ArrayList<Object>(rosieModules);
+    List<Object> modules = new ArrayList<>(rosieModules);
     List<Object> applicationModules = getApplicationModules();
 
     if (applicationModules != null) {

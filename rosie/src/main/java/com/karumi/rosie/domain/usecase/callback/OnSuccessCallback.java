@@ -17,7 +17,7 @@
 package com.karumi.rosie.domain.usecase.callback;
 
 /**
- * Callback invoked when the UseCase has finished as expected.
+ * Callback invoked when a UseCase has finished without error.
  */
 public interface OnSuccessCallback {
 

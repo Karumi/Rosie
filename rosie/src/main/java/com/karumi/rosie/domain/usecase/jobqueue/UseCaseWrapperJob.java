@@ -25,7 +25,6 @@ import com.path.android.jobqueue.Params;
  */
 class UseCaseWrapperJob extends Job {
   private static final int PRIORITY_NORMAL = 3;
-  private static final String TAG = "UseCaseWrapperJob";
   private final UseCaseWrapper useCaseWrapper;
 
   public UseCaseWrapperJob(UseCaseWrapper useCaseWrapper) {

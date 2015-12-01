@@ -21,9 +21,9 @@ import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 import java.lang.ref.WeakReference;
 
 /**
- * The params value to execute with the use case.
+ * The params value to execute with a use case.
  */
-public class UseCaseParams {
+public final class UseCaseParams {
 
   private final String useCaseName;
   private final Object[] args;
@@ -31,7 +31,7 @@ public class UseCaseParams {
   private WeakReference<OnSuccessCallback> onSuccessCallback;
   private WeakReference<OnErrorCallback> onErrorCallback;
 
-  public UseCaseParams(String useCaseName, Object[] args, OnSuccessCallback onSuccessCallback,
+  private UseCaseParams(String useCaseName, Object[] args, OnSuccessCallback onSuccessCallback,
       OnErrorCallback onErrorCallback) {
     this.args = args;
     this.useCaseName = useCaseName;
@@ -43,20 +43,20 @@ public class UseCaseParams {
     }
   }
 
-  String getUseCaseName() {
-    return useCaseName;
-  }
-
-  public Object[] getArgs() {
-    return args;
-  }
-
   public OnSuccessCallback getOnSuccessCallback() {
     return onSuccessCallback != null ? onSuccessCallback.get() : null;
   }
 
   public OnErrorCallback getOnErrorCallback() {
     return onErrorCallback != null ? onErrorCallback.get() : null;
+  }
+
+  String getUseCaseName() {
+    return useCaseName;
+  }
+
+  Object[] getArgs() {
+    return args;
   }
 
   public static class Builder {

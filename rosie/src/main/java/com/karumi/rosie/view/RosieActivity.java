@@ -14,21 +14,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.view.activity;
+package com.karumi.rosie.view;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import butterknife.ButterKnife;
 import com.karumi.rosie.application.RosieApplication;
 import com.karumi.rosie.module.RosieActivityModule;
-import com.karumi.rosie.view.presenter.PresenterLifeCycleLinker;
-import com.karumi.rosie.view.presenter.RosiePresenter;
 import dagger.ObjectGraph;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Base Activity created to implement some common functionality to every Activity using this
+ * Base Activity created to implement some common functionality for every Activity using this
  * library. All activities in this project should extend from this one to be able to use core
  * features like view injection, dependency injection or Rosie presenters.
  */
@@ -101,10 +99,6 @@ public abstract class RosieActivity extends FragmentActivity implements RosiePre
     activityScopeGraph.injectStatics();
   }
 
-  private boolean shouldInitializeActivityScopeGraph() {
-    return activityScopeGraph == null;
-  }
-
   /**
    * Indicates if the class has to be injected or not. Override this method and return false to use
    * RosieActivity without inject any dependency.
@@ -124,18 +118,25 @@ public abstract class RosieActivity extends FragmentActivity implements RosiePre
    * graph.
    */
   protected List<Object> getActivityScopeModules() {
-    return new ArrayList<Object>();
+    return new ArrayList<>();
   }
 
-  protected void registerPresenter(RosiePresenter presenter) {
+  /**
+   * Registers a presenter to link to this activity
+   */
+  protected final void registerPresenter(RosiePresenter presenter) {
     presenterLifeCycleLinker.registerPresenter(presenter);
+  }
+
+  private boolean shouldInitializeActivityScopeGraph() {
+    return activityScopeGraph == null;
   }
 
   private void injectActivityModules() {
     RosieApplication rosieApplication = (RosieApplication) getApplication();
     List<Object> additionalModules = getActivityScopeModules();
     if (additionalModules == null) {
-      additionalModules = new ArrayList<Object>();
+      additionalModules = new ArrayList<>();
     }
     List<Object> activityScopeModules = new ArrayList<Object>();
     activityScopeModules.add(new RosieActivityModule(this));

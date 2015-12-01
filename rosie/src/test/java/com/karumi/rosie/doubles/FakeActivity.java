@@ -17,9 +17,9 @@
 package com.karumi.rosie.doubles;
 
 import com.karumi.rosie.TestModule;
-import com.karumi.rosie.view.activity.RosieActivity;
-import com.karumi.rosie.view.presenter.RosiePresenter;
-import com.karumi.rosie.view.presenter.annotation.Presenter;
+import com.karumi.rosie.view.RosieActivity;
+import com.karumi.rosie.view.RosiePresenter;
+import com.karumi.rosie.view.Presenter;
 import java.util.Arrays;
 import java.util.List;
 

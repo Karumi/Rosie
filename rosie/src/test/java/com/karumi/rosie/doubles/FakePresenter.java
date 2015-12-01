@@ -21,7 +21,7 @@ import com.karumi.rosie.domain.usecase.UseCaseHandler;
 import com.karumi.rosie.domain.usecase.annotation.UseCase;
 import com.karumi.rosie.domain.usecase.error.ErrorHandler;
 import com.karumi.rosie.testutils.FakeTaskScheduler;
-import com.karumi.rosie.view.presenter.RosiePresenter;
+import com.karumi.rosie.view.RosiePresenter;
 
 /**
  * Double presenter to use on some tests.

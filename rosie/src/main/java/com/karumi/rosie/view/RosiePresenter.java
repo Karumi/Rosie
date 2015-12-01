@@ -1,4 +1,4 @@
-package com.karumi.rosie.view.presenter;
+package com.karumi.rosie.view;
 
 import com.karumi.rosie.domain.usecase.RosieUseCase;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
@@ -19,16 +19,15 @@ import java.util.List;
 public class RosiePresenter<T extends RosiePresenter.View> {
 
   private final UseCaseHandler useCaseHandler;
-
-  private T view;
-  private List<OnSuccessCallback> onSuccessCallbacks = new LinkedList<>();
-  private List<OnErrorCallback> onErrorCallbacks = new LinkedList<>();
-  private boolean shouldRegisterGlobalErrorCallback = true;
+  private final List<OnSuccessCallback> onSuccessCallbacks = new LinkedList<>();
+  private final List<OnErrorCallback> onErrorCallbacks = new LinkedList<>();
   private final OnErrorCallback globalErrorCallback = new OnErrorCallback() {
     @Override public void onError(Error error) {
       RosiePresenter.this.onError(error);
     }
   };
+  private T view;
+  private boolean shouldRegisterGlobalErrorCallback = true;
 
   public RosiePresenter(UseCaseHandler useCaseHandler) {
     this.useCaseHandler = useCaseHandler;
@@ -38,7 +37,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * Method called in the presenter lifecycle. Invoked when the component containing the
    * presenter is initialized.
    */
-  public void initialize() {
+  protected void initialize() {
     registerGlobalErrorCallback();
   }
 
@@ -46,7 +45,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * Method called in the presenter lifecycle. Invoked when the component containing the
    * presenter is resumed.
    */
-  public void update() {
+  protected void update() {
     registerGlobalErrorCallback();
   }
 
@@ -54,7 +53,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * Method called in the presenter lifecycle. Invoked when the component containing the
    * presenter is paused.
    */
-  public void pause() {
+  protected void pause() {
     unregisterGlobalErrorCallback();
   }
 
@@ -62,7 +61,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * Method called in the presenter lifecycle. Invoked when the component containing the
    * presenter is destroyed.
    */
-  public void destroy() {
+  protected void destroy() {
 
   }
 
@@ -70,7 +69,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * Executes a RosieUseCase passed as parameter using the UseCaseHandler instance obtained during
    * the RosiePresenter construction.
    */
-  protected void execute(RosieUseCase useCase) {
+  protected final void execute(RosieUseCase useCase) {
     useCaseHandler.execute(useCase);
   }
 
@@ -81,7 +80,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * This method also keeps a strong reference of OnSuccessCallback and OnErrorCallback parameters
    * because most of the times this method is called using anonymous functions as callbacks
    */
-  protected void execute(RosieUseCase useCase, UseCaseParams useCaseParams) {
+  protected final void execute(RosieUseCase useCase, UseCaseParams useCaseParams) {
     retainCallbackReferences(useCaseParams);
     useCaseHandler.execute(useCase, useCaseParams);
   }
@@ -107,7 +106,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
   /**
    * Returns the UseCaseHandler instance used to create this presenter class.
    */
-  protected UseCaseHandler getUseCaseHandler() {
+  protected final UseCaseHandler getUseCaseHandler() {
     return useCaseHandler;
   }
 

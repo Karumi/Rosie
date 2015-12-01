@@ -14,13 +14,14 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.view.presenter;
+package com.karumi.rosie.view;
 
 import com.karumi.rosie.UnitTest;
 import com.karumi.rosie.domain.usecase.RosieUseCase;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
 import com.karumi.rosie.domain.usecase.UseCaseParams;
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -31,7 +32,11 @@ public class RosiePresenterTest extends UnitTest {
 
   @Mock private UseCaseHandler useCaseHandler;
   @Mock private RosieUseCase anyUseCase;
-  @Mock private UseCaseParams anyUseCaseParams;
+  private UseCaseParams anyUseCaseParams;
+
+  @Before public void setUp() {
+    anyUseCaseParams = new UseCaseParams.Builder().build();
+  }
 
   @Test public void shouldExecuteUseCaseUsingTheUseCaseHandler() {
     RosiePresenter rosiePresenter = givenARosiePresenter();

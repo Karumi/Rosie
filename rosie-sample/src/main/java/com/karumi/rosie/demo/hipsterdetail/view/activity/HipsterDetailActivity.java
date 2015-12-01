@@ -21,7 +21,7 @@ import android.content.Intent;
 import com.karumi.rosie.demo.R;
 import com.karumi.rosie.demo.hipsterdetail.view.fragment.HipsterDetailFragment;
 import com.karumi.rosie.demo.hipsterlist.view.model.Hipster;
-import com.karumi.rosie.view.activity.RosieActivity;
+import com.karumi.rosie.view.RosieActivity;
 
 /**
  * RosieActivity extension created to show a Hipster detailed information.

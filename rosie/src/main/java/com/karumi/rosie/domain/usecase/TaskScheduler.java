@@ -17,8 +17,8 @@
 package com.karumi.rosie.domain.usecase;
 
 /**
- * Implements this interface for provide a system that can execute Use Cases. You need implement
- * the method execute, and put the use case out of the main thread.
+ * Implement this interface to provide a system that can execute Use Cases. You need to implement
+ * the method execute and put the use case out of the main thread.
  */
 public interface TaskScheduler {
   void execute(UseCaseWrapper useCaseWrapper);
