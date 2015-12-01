@@ -31,5 +31,6 @@
   <dimen name="character_height">350dp</dimen>
   <dimen name="character_margin_left">10dp</dimen>
   <dimen name="character_name_font_size">40sp</dimen>
+  <dimen name="character_thumbnail_height">300dp</dimen>
   <dimen name="loading_font_size">80sp</dimen>
 </resources>

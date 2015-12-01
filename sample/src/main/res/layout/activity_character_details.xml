@@ -31,7 +31,7 @@
     <ImageView
         android:id="@+id/iv_character_image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/character_thumbnail_height"
         />
 
     <TextView
