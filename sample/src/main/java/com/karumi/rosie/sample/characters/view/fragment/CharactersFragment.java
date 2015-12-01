@@ -16,10 +16,10 @@ import com.karumi.rosie.sample.characters.view.activity.CharacterDetailsActivity
 import com.karumi.rosie.sample.characters.view.presenter.CharactersPresenter;
 import com.karumi.rosie.sample.characters.view.renderer.CharacterRendererBuilder;
 import com.karumi.rosie.sample.characters.view.renderer.CharactersAdapteeCollection;
-import com.karumi.rosie.sample.characters.view.renderer.LoadMoreListener;
 import com.karumi.rosie.sample.characters.view.viewmodel.CharacterViewModel;
 import com.karumi.rosie.view.Presenter;
 import com.karumi.rosie.view.RosieFragment;
+import com.karumi.rosie.view.paginated.ScrollToBottomListener;
 import com.pedrogomez.renderers.RVRendererAdapter;
 import com.pedrogomez.renderers.RendererBuilder;
 import java.util.List;
@@ -34,7 +34,7 @@ public class CharactersFragment extends RosieFragment implements CharactersPrese
 
   private RVRendererAdapter<CharacterViewModel> charactersAdapter;
   private CharactersAdapteeCollection charactersCollection;
-  private LoadMoreListener loadMoreListener;
+  private ScrollToBottomListener loadMoreListener;
 
   @Override protected int getLayoutId() {
     return R.layout.fragment_characters;
@@ -65,8 +65,8 @@ public class CharactersFragment extends RosieFragment implements CharactersPrese
 
   @Override public void showHasMore(boolean hasMore) {
     charactersCollection.setShowLoadMore(hasMore);
-    loadMoreListener.setLoading(false);
-    loadMoreListener.setEnabled(hasMore);
+    loadMoreListener.setIsProcessing(false);
+    loadMoreListener.setIsEnabled(hasMore);
   }
 
   @Override public void openCharacterDetails(String characterKey) {
@@ -79,11 +79,12 @@ public class CharactersFragment extends RosieFragment implements CharactersPrese
     charactersView.setLayoutManager(layoutManager);
     initializeAdapter();
     charactersView.setAdapter(charactersAdapter);
-    loadMoreListener = new LoadMoreListener(layoutManager, new LoadMoreListener.Listener() {
-      @Override public void onLoadMore() {
-        presenter.onLoadMore();
-      }
-    });
+    loadMoreListener =
+        new ScrollToBottomListener(layoutManager, new ScrollToBottomListener.Listener() {
+          @Override public void onScrolledToBottom() {
+            presenter.onLoadMore();
+          }
+        });
     charactersView.addOnScrollListener(loadMoreListener);
   }
 

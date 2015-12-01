@@ -13,11 +13,11 @@ import com.karumi.rosie.sample.characters.domain.model.Character;
 import com.karumi.rosie.sample.characters.domain.usecase.GetCharacters;
 import com.karumi.rosie.sample.characters.view.viewmodel.CharacterViewModel;
 import com.karumi.rosie.sample.characters.view.viewmodel.mapper.CharacterToCharacterViewModelMapper;
-import com.karumi.rosie.view.RosiePresenter;
+import com.karumi.rosie.view.loading.RosiePresenterWithLoading;
 import java.util.List;
 import javax.inject.Inject;
 
-public class CharactersPresenter extends RosiePresenter<CharactersPresenter.View> {
+public class CharactersPresenter extends RosiePresenterWithLoading<CharactersPresenter.View> {
 
   private static final int NUMBER_OF_CHARACTERS_PER_PAGE = 3;
 
@@ -35,7 +35,7 @@ public class CharactersPresenter extends RosiePresenter<CharactersPresenter.View
   @Override protected void update() {
     super.update();
     getView().hideCharacters();
-    getView().showLoading();
+    showLoading();
     loadCharacters();
   }
 
@@ -56,7 +56,7 @@ public class CharactersPresenter extends RosiePresenter<CharactersPresenter.View
                 mapper.mapCharactersToCharacterViewModels(characters);
             getView().showCharacters(characterViewModels);
             getView().showHasMore(characters.hasMore());
-            getView().hideLoading();
+            hideLoading();
             offset = characters.getOffset() + NUMBER_OF_CHARACTERS_PER_PAGE;
           }
         })
@@ -64,7 +64,7 @@ public class CharactersPresenter extends RosiePresenter<CharactersPresenter.View
     execute(getCharacters, params);
   }
 
-  public interface View extends RosiePresenter.ViewWithLoading {
+  public interface View extends RosiePresenterWithLoading.View {
     void hideCharacters();
 
     void showCharacters(List<CharacterViewModel> characters);

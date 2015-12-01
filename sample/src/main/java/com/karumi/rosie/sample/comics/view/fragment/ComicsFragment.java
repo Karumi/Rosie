@@ -21,7 +21,6 @@ import com.karumi.dividers.Layer;
 import com.karumi.dividers.LayersBuilder;
 import com.karumi.dividers.selector.HeaderSelector;
 import com.karumi.rosie.sample.R;
-import com.karumi.rosie.sample.characters.view.renderer.LoadMoreListener;
 import com.karumi.rosie.sample.comics.view.activity.ComicDetailsActivity;
 import com.karumi.rosie.sample.comics.view.presenter.ComicsPresenter;
 import com.karumi.rosie.sample.comics.view.renderer.ComicRendererBuilder;
@@ -29,6 +28,7 @@ import com.karumi.rosie.sample.comics.view.renderer.ComicsAdapteeCollection;
 import com.karumi.rosie.sample.comics.view.viewmodel.ComicViewModel;
 import com.karumi.rosie.view.Presenter;
 import com.karumi.rosie.view.RosieFragment;
+import com.karumi.rosie.view.paginated.ScrollToBottomListener;
 import com.pedrogomez.renderers.RVRendererAdapter;
 import com.pedrogomez.renderers.RendererBuilder;
 import java.util.Collection;
@@ -44,7 +44,7 @@ public class ComicsFragment extends RosieFragment implements ComicsPresenter.Vie
 
   private RVRendererAdapter<ComicViewModel> comicsAdapter;
   private ComicsAdapteeCollection comicsCollection;
-  private LoadMoreListener loadMoreListener;
+  private ScrollToBottomListener loadMoreListener;
 
   @Override protected int getLayoutId() {
     return R.layout.fragment_comics;
@@ -75,8 +75,8 @@ public class ComicsFragment extends RosieFragment implements ComicsPresenter.Vie
 
   @Override public void showHasMore(boolean hasMore) {
     comicsCollection.setShowLoadMore(hasMore);
-    loadMoreListener.setLoading(false);
-    loadMoreListener.setEnabled(hasMore);
+    loadMoreListener.setIsProcessing(false);
+    loadMoreListener.setIsEnabled(hasMore);
   }
 
   @Override public void openComicDetails(int comicKey) {
@@ -90,11 +90,12 @@ public class ComicsFragment extends RosieFragment implements ComicsPresenter.Vie
     initializeAdapter();
     comicsView.addItemDecoration(getDivider());
     comicsView.setAdapter(comicsAdapter);
-    loadMoreListener = new LoadMoreListener(layoutManager, new LoadMoreListener.Listener() {
-      @Override public void onLoadMore() {
-        presenter.onLoadMore();
-      }
-    });
+    loadMoreListener =
+        new ScrollToBottomListener(layoutManager, new ScrollToBottomListener.Listener() {
+          @Override public void onScrolledToBottom() {
+            presenter.onLoadMore();
+          }
+        });
     comicsView.addOnScrollListener(loadMoreListener);
   }
 

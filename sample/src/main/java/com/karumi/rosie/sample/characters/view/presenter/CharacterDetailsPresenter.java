@@ -12,10 +12,11 @@ import com.karumi.rosie.sample.characters.domain.model.Character;
 import com.karumi.rosie.sample.characters.domain.usecase.GetCharacterDetails;
 import com.karumi.rosie.sample.characters.view.viewmodel.CharacterDetailViewModel;
 import com.karumi.rosie.sample.characters.view.viewmodel.mapper.CharacterToCharacterDetailViewModelMapper;
-import com.karumi.rosie.view.RosiePresenter;
+import com.karumi.rosie.view.loading.RosiePresenterWithLoading;
 import javax.inject.Inject;
 
-public class CharacterDetailsPresenter extends RosiePresenter<CharacterDetailsPresenter.View> {
+public class CharacterDetailsPresenter
+    extends RosiePresenterWithLoading<CharacterDetailsPresenter.View> {
 
   private final GetCharacterDetails getCharacterDetails;
   private final CharacterToCharacterDetailViewModelMapper mapper;
@@ -30,7 +31,7 @@ public class CharacterDetailsPresenter extends RosiePresenter<CharacterDetailsPr
 
   @Override protected void update() {
     super.update();
-    getView().showLoading();
+    showLoading();
     loadCharacterDetails();
   }
 
@@ -43,7 +44,7 @@ public class CharacterDetailsPresenter extends RosiePresenter<CharacterDetailsPr
     UseCaseParams params =
         new UseCaseParams.Builder().args(characterKey).onSuccess(new OnSuccessCallback() {
           @Success public void onCharacterDetailsLoaded(Character character) {
-            getView().hideLoading();
+            hideLoading();
             CharacterDetailViewModel characterDetailViewModel =
                 mapper.mapCharacterToCharacterDetailViewModel(character);
             getView().showCharacterDetail(characterDetailViewModel);
@@ -52,7 +53,7 @@ public class CharacterDetailsPresenter extends RosiePresenter<CharacterDetailsPr
     execute(getCharacterDetails, params);
   }
 
-  public interface View extends RosiePresenter.ViewWithLoading {
+  public interface View extends RosiePresenterWithLoading.View {
     void hideCharacterDetail();
 
     void showCharacterDetail(CharacterDetailViewModel character);

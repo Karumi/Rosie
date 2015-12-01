@@ -2,29 +2,32 @@
  * Copyright (C) 2015 Karumi.
  */
 
-package com.karumi.rosie.sample.characters.view.renderer;
+package com.karumi.rosie.view.paginated;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-public class LoadMoreListener extends RecyclerView.OnScrollListener {
+/**
+ * RecyclerView listener to be notified whenever the user scrolls to the bottom of the view.
+ */
+public class ScrollToBottomListener extends RecyclerView.OnScrollListener {
 
   private final LinearLayoutManager layoutManager;
   private final Listener listener;
-  private boolean enabled;
-  private boolean loading;
+  private boolean isEnabled;
+  private boolean isProcessing;
 
-  public LoadMoreListener(LinearLayoutManager layoutManager, Listener listener) {
+  public ScrollToBottomListener(LinearLayoutManager layoutManager, Listener listener) {
     this.layoutManager = layoutManager;
     this.listener = listener;
   }
 
-  public void setEnabled(boolean enabled) {
-    this.enabled = enabled;
+  public void setIsEnabled(boolean isEnabled) {
+    this.isEnabled = isEnabled;
   }
 
-  public void setLoading(boolean loading) {
-    this.loading = loading;
+  public void setIsProcessing(boolean isProcessing) {
+    this.isProcessing = isProcessing;
   }
 
   @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -32,17 +35,17 @@ public class LoadMoreListener extends RecyclerView.OnScrollListener {
     int totalItemCount = layoutManager.getItemCount();
     int pastVisibleItems = layoutManager.findFirstVisibleItemPosition();
 
-    if (enabled && !loading) {
+    if (isEnabled && !isProcessing) {
       if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
         if (listener != null) {
-          listener.onLoadMore();
-          loading = true;
+          listener.onScrolledToBottom();
+          isProcessing = true;
         }
       }
     }
   }
 
   public interface Listener {
-    void onLoadMore();
+    void onScrolledToBottom();
   }
 }

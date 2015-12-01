@@ -12,10 +12,10 @@ import com.karumi.rosie.sample.comics.domain.model.Comic;
 import com.karumi.rosie.sample.comics.domain.usecase.GetComicDetails;
 import com.karumi.rosie.sample.comics.view.viewmodel.ComicDetailsViewModel;
 import com.karumi.rosie.sample.comics.view.viewmodel.mapper.ComicToComicDetailsViewModelMapper;
-import com.karumi.rosie.view.RosiePresenter;
+import com.karumi.rosie.view.loading.RosiePresenterWithLoading;
 import javax.inject.Inject;
 
-public class ComicDetailsPresenter extends RosiePresenter<ComicDetailsPresenter.View> {
+public class ComicDetailsPresenter extends RosiePresenterWithLoading<ComicDetailsPresenter.View> {
 
   private final GetComicDetails getComicDetails;
   private final ComicToComicDetailsViewModelMapper mapper;
@@ -35,7 +35,8 @@ public class ComicDetailsPresenter extends RosiePresenter<ComicDetailsPresenter.
 
   @Override protected void update() {
     super.update();
-    getView().showLoading();
+    showLoading();
+    getView().hideComicDetails();
     loadComicDetails();
   }
 
@@ -45,14 +46,14 @@ public class ComicDetailsPresenter extends RosiePresenter<ComicDetailsPresenter.
           @Success public void onComicDetailsLoaded(Comic comic) {
             ComicDetailsViewModel comicDetailsViewModel =
                 mapper.mapComicToComicDetailsViewModel(comic);
-            getView().hideLoading();
+            hideLoading();
             getView().showComicDetails(comicDetailsViewModel);
           }
         }).build();
     execute(getComicDetails, params);
   }
 
-  public interface View extends RosiePresenter.ViewWithLoading {
+  public interface View extends RosiePresenterWithLoading.View {
     void hideComicDetails();
 
     void showComicDetails(ComicDetailsViewModel comic);
