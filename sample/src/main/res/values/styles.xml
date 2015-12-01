@@ -40,4 +40,9 @@
     <item name="android:layout_marginLeft">@dimen/comic_margin_left</item>
   </style>
 
+  <style name="ComicDescription">
+    <item name="android:textSize">@dimen/comic_description_text_size</item>
+    <item name="android:textColor">@color/comic_details_description</item>
+  </style>
+
 </resources>

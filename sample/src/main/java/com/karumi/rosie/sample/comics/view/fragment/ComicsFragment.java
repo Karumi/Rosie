@@ -22,6 +22,7 @@ import com.karumi.dividers.LayersBuilder;
 import com.karumi.dividers.selector.HeaderSelector;
 import com.karumi.rosie.sample.R;
 import com.karumi.rosie.sample.characters.view.renderer.LoadMoreListener;
+import com.karumi.rosie.sample.comics.view.activity.ComicDetailsActivity;
 import com.karumi.rosie.sample.comics.view.presenter.ComicsPresenter;
 import com.karumi.rosie.sample.comics.view.renderer.ComicRendererBuilder;
 import com.karumi.rosie.sample.comics.view.renderer.ComicsAdapteeCollection;
@@ -70,6 +71,10 @@ public class ComicsFragment extends RosieFragment implements ComicsPresenter.Vie
     comicsAdapter.addAll(comics);
     comicsAdapter.notifyDataSetChanged();
     comicsView.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void openComicDetails(int comicKey) {
+    ComicDetailsActivity.open(getActivity(), comicKey);
   }
 
   private void initializeComicsView() {

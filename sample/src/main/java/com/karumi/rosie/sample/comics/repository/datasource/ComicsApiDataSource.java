@@ -84,6 +84,7 @@ public class ComicsApiDataSource extends EmptyReadableDataSource<Integer, Comic>
     Comic guardiansOfInfinity = new Comic();
     guardiansOfInfinity.setKey(GUARDIANS_OF_INFINITY_KEY);
     guardiansOfInfinity.setName("Guardians of Infinity");
+    guardiansOfInfinity.setNumber(2);
     guardiansOfInfinity.setCoverUrl(
         "http://i.annihil.us/u/prod/marvel/i/mg/e/70/5655d14851998/detail.jpg");
     guardiansOfInfinity.setDescription(
@@ -97,6 +98,7 @@ public class ComicsApiDataSource extends EmptyReadableDataSource<Integer, Comic>
             + " where culture is based on Earth-style professional wrestling…but the stakes are"
             + " life and death! THIS AIN’T KAYFABE, BROTHER! ");
     guardiansOfInfinity.setReleaseYear(2015);
+    guardiansOfInfinity.setRating(Comic.Rating.ALL_AGES);
     return guardiansOfInfinity;
   }
 
@@ -104,6 +106,7 @@ public class ComicsApiDataSource extends EmptyReadableDataSource<Integer, Comic>
     Comic vision = new Comic();
     vision.setKey(VISION_KEY);
     vision.setName("Vision");
+    vision.setNumber(1);
     vision.setCoverUrl("http://i.annihil.us/u/prod/marvel/i/mg/4/10/5655d4822c8d8/detail.jpg");
     vision.setDescription(
         "WHO ARE THE GUARDIANS 1000?! Defending the galaxy is a good gig, but Drax isn’t thrilled"
@@ -116,6 +119,7 @@ public class ComicsApiDataSource extends EmptyReadableDataSource<Integer, Comic>
             + " where culture is based on Earth-style professional wrestling…but the stakes are"
             + " life and death! THIS AIN’T KAYFABE, BROTHER! ");
     vision.setReleaseYear(2015);
+    vision.setRating(Comic.Rating.T);
     return vision;
   }
 
@@ -123,6 +127,7 @@ public class ComicsApiDataSource extends EmptyReadableDataSource<Integer, Comic>
     Comic spidey = new Comic();
     spidey.setKey(SPIDEY_KEY);
     spidey.setName("Spidey");
+    spidey.setNumber(1);
     spidey.setCoverUrl("http://i.annihil.us/u/prod/marvel/i/mg/6/50/5655d3a0e63d5/detail.jpg");
     spidey.setDescription(
         "WHO ARE THE GUARDIANS 1000?! Defending the galaxy is a good gig, but Drax isn’t thrilled"
@@ -135,6 +140,7 @@ public class ComicsApiDataSource extends EmptyReadableDataSource<Integer, Comic>
             + " where culture is based on Earth-style professional wrestling…but the stakes are"
             + " life and death! THIS AIN’T KAYFABE, BROTHER! ");
     spidey.setReleaseYear(2015);
+    spidey.setRating(Comic.Rating.TEENS_AND_UP);
     return spidey;
   }
 
@@ -142,6 +148,7 @@ public class ComicsApiDataSource extends EmptyReadableDataSource<Integer, Comic>
     Comic redWolf = new Comic();
     redWolf.setKey(RED_WOLF_KEY);
     redWolf.setName("Red Wolf");
+    redWolf.setNumber(2);
     redWolf.setCoverUrl("http://x.annihil.us/u/prod/marvel/i/mg/4/10/5655d353959ad/detail.jpg");
     redWolf.setDescription(
         "WHO ARE THE GUARDIANS 1000?! Defending the galaxy is a good gig, but Drax isn’t thrilled"
@@ -154,6 +161,7 @@ public class ComicsApiDataSource extends EmptyReadableDataSource<Integer, Comic>
             + " where culture is based on Earth-style professional wrestling…but the stakes are"
             + " life and death! THIS AIN’T KAYFABE, BROTHER! ");
     redWolf.setReleaseYear(2015);
+    redWolf.setRating(Comic.Rating.EXPLICIT_CONTENT);
     return redWolf;
   }
 
@@ -161,6 +169,7 @@ public class ComicsApiDataSource extends EmptyReadableDataSource<Integer, Comic>
     Comic nova = new Comic();
     nova.setKey(NOVA_KEY);
     nova.setName("Nova");
+    nova.setNumber(1);
     nova.setCoverUrl("http://i.annihil.us/u/prod/marvel/i/mg/6/10/5655d2a8ba225/detail.jpg");
     nova.setDescription(
         "WHO ARE THE GUARDIANS 1000?! Defending the galaxy is a good gig, but Drax isn’t thrilled"
@@ -173,6 +182,7 @@ public class ComicsApiDataSource extends EmptyReadableDataSource<Integer, Comic>
             + " where culture is based on Earth-style professional wrestling…but the stakes are"
             + " life and death! THIS AIN’T KAYFABE, BROTHER! ");
     nova.setReleaseYear(2015);
+    nova.setRating(Comic.Rating.PARENTAL_ADVISORY);
     return nova;
   }
 

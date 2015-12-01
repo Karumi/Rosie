@@ -8,6 +8,10 @@
   <dimen name="comic_next_icon_margin_right">10dp</dimen>
   <dimen name="comic_next_icon_size">16dp</dimen>
   <dimen name="comic_divider_size">1dp</dimen>
+  <dimen name="comic_cover_height">300dp</dimen>
+  <dimen name="comic_description_text_size">14sp</dimen>
+  <dimen name="comic_description_padding">16dp</dimen>
+  <dimen name="comic_description_margin_top">8dp</dimen>
   <dimen name="character_height">350dp</dimen>
   <dimen name="character_margin_left">10dp</dimen>
   <dimen name="character_name_font_size">40sp</dimen>

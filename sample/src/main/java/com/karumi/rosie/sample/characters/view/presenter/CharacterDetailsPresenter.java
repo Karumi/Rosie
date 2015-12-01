@@ -15,13 +15,13 @@ import com.karumi.rosie.sample.characters.view.viewmodel.mapper.CharacterToChara
 import com.karumi.rosie.view.RosiePresenter;
 import javax.inject.Inject;
 
-public class CharacterDetailPresenter extends RosiePresenter<CharacterDetailPresenter.View> {
+public class CharacterDetailsPresenter extends RosiePresenter<CharacterDetailsPresenter.View> {
 
   private final GetCharacterDetails getCharacterDetails;
   private final CharacterToCharacterDetailViewModelMapper mapper;
   private String characterKey;
 
-  @Inject public CharacterDetailPresenter(UseCaseHandler useCaseHandler,
+  @Inject public CharacterDetailsPresenter(UseCaseHandler useCaseHandler,
       CharacterToCharacterDetailViewModelMapper mapper, GetCharacterDetails getCharacterDetails) {
     super(useCaseHandler);
     this.mapper = mapper;

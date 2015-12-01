@@ -43,7 +43,7 @@ public class ComicsPresenter extends RosiePresenter<ComicsPresenter.View> {
   }
 
   public void onComicClicked(ComicViewModel comic) {
-
+    getView().openComicDetails(comic.getKey());
   }
 
   private void loadComics() {
@@ -64,5 +64,7 @@ public class ComicsPresenter extends RosiePresenter<ComicsPresenter.View> {
     void hideComics();
 
     void showComics(List<ComicViewModel> comics);
+
+    void openComicDetails(int comicKey);
   }
 }

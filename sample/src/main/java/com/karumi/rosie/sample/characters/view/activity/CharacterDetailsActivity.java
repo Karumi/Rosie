@@ -12,24 +12,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.InjectView;
 import com.karumi.rosie.sample.R;
-import com.karumi.rosie.sample.characters.view.presenter.CharacterDetailPresenter;
+import com.karumi.rosie.sample.characters.view.presenter.CharacterDetailsPresenter;
 import com.karumi.rosie.sample.characters.view.viewmodel.CharacterDetailViewModel;
 import com.karumi.rosie.view.Presenter;
 import com.karumi.rosie.view.RosieActivity;
 import com.squareup.picasso.Picasso;
 import javax.inject.Inject;
 
-public class CharacterDetailActivity extends RosieActivity
-    implements CharacterDetailPresenter.View {
+public class CharacterDetailsActivity extends RosieActivity
+    implements CharacterDetailsPresenter.View {
 
-  public static final String CHARACTER_KEY_EXTRA = "CharacterDetailActivity.CharacterKey";
+  private static final String CHARACTER_KEY_EXTRA = "CharacterDetailsActivity.CharacterKey";
 
   @InjectView(R.id.iv_character_image) ImageView characterHeaderView;
   @InjectView(R.id.ll_character_detail) View characterDetailView;
   @InjectView(R.id.tv_description) TextView characterDescriptionView;
   @InjectView(R.id.tv_loading) TextView loadingView;
 
-  @Inject @Presenter CharacterDetailPresenter presenter;
+  @Inject @Presenter CharacterDetailsPresenter presenter;
 
   @Override protected int getLayoutId() {
     return R.layout.activity_character_details;
@@ -61,7 +61,7 @@ public class CharacterDetailActivity extends RosieActivity
   }
 
   public static void open(Context context, String characterKey) {
-    Intent intent = new Intent(context, CharacterDetailActivity.class);
+    Intent intent = new Intent(context, CharacterDetailsActivity.class);
     intent.putExtra(CHARACTER_KEY_EXTRA, characterKey);
     context.startActivity(intent);
   }

@@ -10,9 +10,11 @@ public class Comic implements Identifiable<Integer> {
 
   private int key;
   private String name;
+  private int number;
   private String description;
   private String coverUrl;
   private int releaseYear;
+  private Rating rating;
 
   @Override public Integer getKey() {
     return key;
@@ -28,6 +30,14 @@ public class Comic implements Identifiable<Integer> {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public int getNumber() {
+    return number;
+  }
+
+  public void setNumber(int number) {
+    this.number = number;
   }
 
   public String getDescription() {
@@ -52,5 +62,21 @@ public class Comic implements Identifiable<Integer> {
 
   public void setReleaseYear(int releaseYear) {
     this.releaseYear = releaseYear;
+  }
+
+  public Rating getRating() {
+    return rating;
+  }
+
+  public void setRating(Rating rating) {
+    this.rating = rating;
+  }
+
+  public enum Rating {
+    ALL_AGES,
+    T,
+    TEENS_AND_UP,
+    PARENTAL_ADVISORY,
+    EXPLICIT_CONTENT
   }
 }

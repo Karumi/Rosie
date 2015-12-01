@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 import butterknife.InjectView;
 import com.karumi.rosie.sample.R;
-import com.karumi.rosie.sample.characters.view.activity.CharacterDetailActivity;
+import com.karumi.rosie.sample.characters.view.activity.CharacterDetailsActivity;
 import com.karumi.rosie.sample.characters.view.presenter.CharactersPresenter;
 import com.karumi.rosie.sample.characters.view.renderer.CharacterRendererBuilder;
 import com.karumi.rosie.sample.characters.view.renderer.CharactersAdapteeCollection;
@@ -70,7 +70,7 @@ public class CharactersFragment extends RosieFragment implements CharactersPrese
   }
 
   @Override public void openCharacterDetails(String characterKey) {
-    CharacterDetailActivity.open(getActivity(), characterKey);
+    CharacterDetailsActivity.open(getActivity(), characterKey);
   }
 
   private void initializeCharactersView() {
