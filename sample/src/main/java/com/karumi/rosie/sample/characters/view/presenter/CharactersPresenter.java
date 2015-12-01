@@ -64,11 +64,7 @@ public class CharactersPresenter extends RosiePresenter<CharactersPresenter.View
     execute(getCharacters, params);
   }
 
-  public interface View extends RosiePresenter.View {
-    void hideLoading();
-
-    void showLoading();
-
+  public interface View extends RosiePresenter.ViewWithLoading {
     void hideCharacters();
 
     void showCharacters(List<CharacterViewModel> characters);

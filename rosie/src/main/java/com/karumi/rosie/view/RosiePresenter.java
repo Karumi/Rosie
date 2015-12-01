@@ -177,4 +177,10 @@ public class RosiePresenter<T extends RosiePresenter.View> {
   public interface View {
 
   }
+
+  public interface ViewWithLoading extends View {
+    void hideLoading();
+
+    void showLoading();
+  }
 }

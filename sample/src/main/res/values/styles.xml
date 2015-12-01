@@ -1,20 +1,25 @@
 <resources>
 
-  <style name="AppTheme"
+  <style name="SampleTheme"
       parent="Theme.AppCompat.Light.DarkActionBar">
-    <item name="colorPrimary">@color/colorPrimary</item>
-    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-    <item name="colorAccent">@color/colorAccent</item>
+    <item name="vpiTabPageIndicatorStyle">@style/ViewPagerTabIndicator</item>
   </style>
 
-  <style name="AppTheme.NoActionBar">
+  <style name="SampleTheme.NoActionBar">
     <item name="windowActionBar">false</item>
     <item name="windowNoTitle">true</item>
   </style>
 
-  <style name="ViewPager"
+  <style name="ViewPagerTabIndicator"
       parent="Widget.TabPageIndicator">
-    <item name="android:showDividers">middle</item>
+    <item name="android:background">@drawable/view_pager_tab_background</item>
+    <item name="android:textAppearance">@style/ViewPagerTabIndicator.Text</item>
+  </style>
+
+  <style name="ViewPagerTabIndicator.Text"
+      parent="TextAppearance.TabPageIndicator">
+    <item name="android:textColor">@color/view_pager_tab_text</item>
+    <item name="android:textAllCaps">true</item>
   </style>
 
   <style name="LoadingText">
@@ -32,7 +37,6 @@
   <style name="ComicName">
     <item name="android:textSize">@dimen/comic_name_font_size</item>
     <item name="android:textColor">@color/comic_name</item>
-    <item name="android:textAllCaps">true</item>
     <item name="android:layout_marginLeft">@dimen/comic_margin_left</item>
   </style>
 

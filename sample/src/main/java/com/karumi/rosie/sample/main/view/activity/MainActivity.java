@@ -37,6 +37,5 @@ public class MainActivity extends RosieActivity {
     adapter.notifyDataSetChanged();
 
     pagerTabView.setViewPager(viewPager);
-    pagerTabView.notifyDataSetChanged();
   }
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2015 Karumi.
+  -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:state_selected="false">
+    <color android:color="@color/view_pager_tab_background"/>
+  </item>
+  <item android:state_selected="true">
+    <layer-list>
+      <item>
+        <shape android:shape="rectangle">
+          <solid android:color="@color/view_pager_tab_background"/>
+        </shape>
+      </item>
+      <item
+          android:left="@dimen/pager_title_underline_horizontal_padding"
+          android:right="@dimen/pager_title_underline_horizontal_padding"
+          android:top="@dimen/pager_title_top_to_underline"
+          android:bottom="0dp">
+        <shape android:shape="rectangle">
+          <solid android:color="@color/view_pager_tab_selected_underline"/>
+        </shape>
+      </item>
+    </layer-list>
+  </item>
+</selector>

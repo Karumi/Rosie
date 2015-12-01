@@ -22,7 +22,7 @@ public class ComicToComicViewModelMapper {
     for (Comic comic : comics.getItems()) {
       ComicViewModel comicViewModel = new ComicViewModel();
       comicViewModel.setKey(comic.getKey());
-      comicViewModel.setName(comic.getName());
+      comicViewModel.setTitle(comic.getName() + "(" + comic.getReleaseYear() + ")");
       comicViewModel.setCoverUrl(comic.getCoverUrl());
       comicViewModels.add(comicViewModel);
     }

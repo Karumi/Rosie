@@ -60,11 +60,7 @@ public class ComicsPresenter extends RosiePresenter<ComicsPresenter.View> {
     execute(getComics, params);
   }
 
-  public interface View extends RosiePresenter.View {
-    void hideLoading();
-
-    void showLoading();
-
+  public interface View extends RosiePresenter.ViewWithLoading {
     void hideComics();
 
     void showComics(List<ComicViewModel> comics);

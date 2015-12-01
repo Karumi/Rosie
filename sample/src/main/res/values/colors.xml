@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="colorPrimary">#3F51B5</color>
-  <color name="colorPrimaryDark">#303F9F</color>
-  <color name="colorAccent">#FF4081</color>
+  <color name="view_pager_tab_background">#404B58</color>
+  <color name="view_pager_tab_selected_underline">#00C8FF</color>
+  <color name="view_pager_tab_text">#FFFFFF</color>
+  <color name="character_row_background">#2D353D</color>
   <color name="character_name">#EEEEEE</color>
+  <color name="comic_item_background">#2D353D</color>
+  <color name="comic_item_divider">@color/view_pager_tab_background</color>
   <color name="comic_name">#EEEEEE</color>
 </resources>

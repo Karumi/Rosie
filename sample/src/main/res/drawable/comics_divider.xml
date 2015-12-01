@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2015 Karumi.
+  -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle"
+    >
+
+  <size
+      android:width="@dimen/comic_divider_size"
+      android:height="@dimen/comic_divider_size"
+      />
+
+  <solid android:color="@color/comic_item_divider"/>
+
+</shape>

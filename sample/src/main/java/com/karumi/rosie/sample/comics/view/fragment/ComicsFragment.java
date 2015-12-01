@@ -4,13 +4,22 @@
 
 package com.karumi.rosie.sample.comics.view.fragment;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import butterknife.InjectView;
+import com.karumi.dividers.Direction;
+import com.karumi.dividers.DividerBuilder;
+import com.karumi.dividers.DividerItemDecoration;
+import com.karumi.dividers.Layer;
+import com.karumi.dividers.LayersBuilder;
+import com.karumi.dividers.selector.HeaderSelector;
 import com.karumi.rosie.sample.R;
 import com.karumi.rosie.sample.characters.view.renderer.LoadMoreListener;
 import com.karumi.rosie.sample.comics.view.presenter.ComicsPresenter;
@@ -21,12 +30,11 @@ import com.karumi.rosie.view.Presenter;
 import com.karumi.rosie.view.RosieFragment;
 import com.pedrogomez.renderers.RVRendererAdapter;
 import com.pedrogomez.renderers.RendererBuilder;
+import java.util.Collection;
 import java.util.List;
 import javax.inject.Inject;
 
 public class ComicsFragment extends RosieFragment implements ComicsPresenter.View {
-
-  private static final int NUMBER_OF_COLUMNS = 3;
 
   @InjectView(R.id.rv_comics) RecyclerView comicsView;
   @InjectView(R.id.tv_loading) TextView loadingView;
@@ -65,10 +73,12 @@ public class ComicsFragment extends RosieFragment implements ComicsPresenter.Vie
   }
 
   private void initializeComicsView() {
-    GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), NUMBER_OF_COLUMNS);
+    LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
     comicsView.setHasFixedSize(true);
     comicsView.setLayoutManager(layoutManager);
     initializeAdapter();
+
+    comicsView.addItemDecoration(getDivider());
     comicsView.setAdapter(comicsAdapter);
     loadMoreListener = new LoadMoreListener(layoutManager, new LoadMoreListener.Listener() {
       @Override public void onLoadMore() {
@@ -76,6 +86,16 @@ public class ComicsFragment extends RosieFragment implements ComicsPresenter.Vie
       }
     });
     comicsView.addOnScrollListener(loadMoreListener);
+  }
+
+  @NonNull private DividerItemDecoration getDivider() {
+    Drawable dividerBackground =
+        ContextCompat.getDrawable(getActivity(), R.drawable.comics_divider);
+    Collection<Layer> layers = LayersBuilder.with(
+        new Layer(DividerBuilder.from(dividerBackground).erase(Direction.getVertical()).build()),
+        new Layer(new HeaderSelector(),
+            DividerBuilder.fromEmpty().with(dividerBackground, Direction.SOUTH).build())).build();
+    return new DividerItemDecoration(layers);
   }
 
   private void initializeAdapter() {
