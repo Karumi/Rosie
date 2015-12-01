@@ -42,15 +42,12 @@ public class RosieUseCase {
   }
 
   /**
-   * Notify to the callback onSuccessCallback that something it's work fine. You can invoke the
+   * Notify to the callback onSuccessCallback that the use case has worked fine. You can invoke the
+   * method as many times as you want. You only need on your onSuccessCallback a method with the
+   * same arguments.
    *
-   * method as
-   * many times as you want. You only need on your onSuccessCallback a method with the same
-   * arguments.
-   *
-   * @param values that will be send to the onSuccessCallback callback. Note: By default this
-   * method
-   * return the response to the UI Thread.
+   * @param values values that will be sent to the onSuccessCallback callback. Note: By default
+   * this method returns the response in the UI Thread.
    */
   protected void notifySuccess(Object... values) {
     Method[] methodsArray = onSuccessCallback.get().getClass().getMethods();
@@ -67,17 +64,18 @@ public class RosieUseCase {
 
   /**
    * Notify to the error listener that an error happened, if you don't declare an specific error
-   * handler for you use case, this error will be manage for the generic error system.
+   * handler for your UseCase, this error will be managed by the generic error system.
    *
    * @param error the error to send to the callback.
-   * @throws ErrorNotHandledException this exception launch when the specific error is not
-   * handled. You don't need manage this exception UseCaseHandler do it for you.
+   * @throws ErrorNotHandledException this exception is thrown when the specific error is not
+   * handled. You don't need to manage this exception, UseCaseHandler can do it for you.
    */
 
   protected void notifyError(final Error error) throws ErrorNotHandledException {
     if (onErrorCallback == null) {
       throw new ErrorNotHandledException(error);
     }
+
     final OnErrorCallback callback = this.onErrorCallback.get();
     if (callback != null) {
       try {
@@ -112,7 +110,6 @@ public class RosieUseCase {
    * Activity lifecycle pause-destroy stage. Remember to keep a strong reference of your
    * OnErrorCallback instance if needed.
    */
-
   void setOnErrorCallback(OnErrorCallback onErrorCallback) {
     if (onErrorCallback != null) {
       this.onErrorCallback = new WeakReference<>(onErrorCallback);

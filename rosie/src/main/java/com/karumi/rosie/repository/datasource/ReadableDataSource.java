@@ -14,12 +14,12 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.repository;
+package com.karumi.rosie.repository.datasource;
 
-/**
- * Declares the minimum contract needed to add or get items from a RosieRepository.
- */
-public interface Cacheable {
+import java.util.Collection;
 
-  String getId();
+public interface ReadableDataSource<K, V> {
+  V getByKey(K key);
+
+  Collection<V> getAll();
 }

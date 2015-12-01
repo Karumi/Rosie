@@ -17,9 +17,9 @@
 package com.karumi.rosie.domain.usecase.error;
 
 /**
- * Represents an exception when invoke a method and this does not exist.
+ * Represents an exception thrown when invoking a method that does not exist.
  */
-public class MethodNotFoundException extends RuntimeException {
+public final class MethodNotFoundException extends RuntimeException {
   public MethodNotFoundException(String description) {
     super(description);
   }

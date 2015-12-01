@@ -22,7 +22,7 @@ import com.karumi.rosie.domain.usecase.UseCaseHandler;
 import com.karumi.rosie.domain.usecase.UseCaseParams;
 import com.karumi.rosie.domain.usecase.annotation.Success;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
-import com.karumi.rosie.view.presenter.RosiePresenter;
+import com.karumi.rosie.view.RosiePresenter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;

@@ -34,26 +34,53 @@ class UseCaseFilter {
     List<Method> methodsFiltered = getAnnotatedUseCaseMethods(useCase);
     if (methodsFiltered.isEmpty()) {
       throw new IllegalArgumentException("This object doesn't contain any use case to execute."
-          + "Do you forget add the @UseCase annotation?");
+          + "Did you forget to add the @UseCase annotation?");
     }
 
     methodsFiltered = getMethodMatchingName(useCaseParams, methodsFiltered);
     if (methodsFiltered.isEmpty()) {
-      throw new IllegalArgumentException("The target doesn't contains any use case with this name."
-          + "Do you forget add the @UseCase annotation?");
+      throw new IllegalArgumentException("The target doesn't contain any use case with this name."
+          + "Did you forget to add the @UseCase annotation?");
     }
 
     methodsFiltered = getMethodMatchingArguments(useCaseParams, methodsFiltered);
     if (methodsFiltered.isEmpty()) {
-      throw new IllegalArgumentException(
-          "The target doesn't contains any use case with those args. "
-              + "Do you forget add the @UseCase annotation?");
+      throw new IllegalArgumentException("The target doesn't contain any use case with those args. "
+          + "Did you forget to add the @UseCase annotation?");
     }
 
     if (methodsFiltered.size() > 1) {
       throw new IllegalArgumentException(
-          "The target contains more than one use cases with the same signature. "
-              + "You can use 'name' property in @UseCase and invoke with param name");
+          "The target contains more than one use case with the same signature. "
+              + "You can use the 'name' property in @UseCase and invoke it with a param name");
+    }
+
+    return methodsFiltered.get(0);
+  }
+
+  static Method filterValidMethodArgs(Object[] argsToSend, Method[] methods, Class typeAnnotation) {
+
+    List<Method> methodsFiltered = new ArrayList<>();
+
+    for (Method method : methods) {
+      Annotation annotationValid = method.getAnnotation(typeAnnotation);
+      if (annotationValid != null) {
+        Class<?>[] parameters = method.getParameterTypes();
+        if (parameters.length == argsToSend.length) {
+          if (hasValidArgumentsForReturn(parameters, argsToSend)) {
+            methodsFiltered.add(method);
+          }
+        }
+      }
+    }
+
+    if (methodsFiltered.isEmpty()) {
+      throw new MethodNotFoundException("Not exist any method on this success with this signature");
+    }
+
+    if (methodsFiltered.size() > 1) {
+      throw new RuntimeException(
+          "This success has more than one method with this signature. Remove the ambiguity.");
     }
 
     return methodsFiltered.get(0);
@@ -138,33 +165,5 @@ class UseCaseFilter {
     }
 
     return methodsFiltered;
-  }
-
-  static Method filterValidMethodArgs(Object[] argsToSend, Method[] methods, Class typeAnnotation) {
-
-    List<Method> methodsFiltered = new ArrayList<>();
-
-    for (Method method : methods) {
-      Annotation annotationValid = method.getAnnotation(typeAnnotation);
-      if (annotationValid != null) {
-        Class<?>[] parameters = method.getParameterTypes();
-        if (parameters.length == argsToSend.length) {
-          if (hasValidArgumentsForReturn(parameters, argsToSend)) {
-            methodsFiltered.add(method);
-          }
-        }
-      }
-    }
-
-    if (methodsFiltered.isEmpty()) {
-      throw new MethodNotFoundException("Not exist any method on this success with this signature");
-    }
-
-    if (methodsFiltered.size() > 1) {
-      throw new RuntimeException(
-          "This success has more than one method with this signature. Remove the ambiguity.");
-    }
-
-    return methodsFiltered.get(0);
   }
 }

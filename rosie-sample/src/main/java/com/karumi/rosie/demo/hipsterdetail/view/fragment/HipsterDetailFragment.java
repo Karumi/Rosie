@@ -23,7 +23,7 @@ import android.widget.TextView;
 import butterknife.InjectView;
 import com.karumi.rosie.demo.R;
 import com.karumi.rosie.demo.hipsterlist.view.model.Hipster;
-import com.karumi.rosie.view.fragment.RosieFragment;
+import com.karumi.rosie.view.RosieFragment;
 import com.squareup.picasso.Picasso;
 
 /**

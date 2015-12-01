@@ -14,19 +14,8 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie;
+package com.karumi.rosie.repository.datasource;
 
-import com.karumi.rosie.doubles.FakeActivity;
-import com.karumi.rosie.doubles.FakeActivityWithPresenter;
-import com.karumi.rosie.view.RosieFragmentTest;
-import dagger.Module;
-
-@Module(
-    library = true,
-    complete = false,
-    injects = {
-        FakeActivity.class, FakeActivityWithPresenter.class, RosieFragmentTest.TestFragment.class,
-        Object.class
-    }) public class TestModule {
-
+public interface Identifiable<K> {
+  K getKey();
 }

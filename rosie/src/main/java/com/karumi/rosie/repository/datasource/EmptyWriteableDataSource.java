@@ -14,19 +14,26 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie;
+package com.karumi.rosie.repository.datasource;
 
-import com.karumi.rosie.doubles.FakeActivity;
-import com.karumi.rosie.doubles.FakeActivityWithPresenter;
-import com.karumi.rosie.view.RosieFragmentTest;
-import dagger.Module;
+import java.util.Collection;
 
-@Module(
-    library = true,
-    complete = false,
-    injects = {
-        FakeActivity.class, FakeActivityWithPresenter.class, RosieFragmentTest.TestFragment.class,
-        Object.class
-    }) public class TestModule {
+public class EmptyWriteableDataSource<K, V extends Identifiable<K>> implements
+    WriteableDataSource<K, V> {
 
+  @Override public V addOrUpdate(V value) {
+    return value;
+  }
+
+  @Override public Collection<V> addOrUpdateAll(Collection<V> values) {
+    return values;
+  }
+
+  @Override public void deleteByKey(K key) {
+
+  }
+
+  @Override public void deleteAll() {
+
+  }
 }

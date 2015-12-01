@@ -14,19 +14,18 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie;
+package com.karumi.rosie.repository.policy;
 
-import com.karumi.rosie.doubles.FakeActivity;
-import com.karumi.rosie.doubles.FakeActivityWithPresenter;
-import com.karumi.rosie.view.RosieFragmentTest;
-import dagger.Module;
+public enum ReadPolicy {
+  CACHE_ONLY,
+  READABLE_ONLY,
+  READ_ALL;
 
-@Module(
-    library = true,
-    complete = false,
-    injects = {
-        FakeActivity.class, FakeActivityWithPresenter.class, RosieFragmentTest.TestFragment.class,
-        Object.class
-    }) public class TestModule {
+  public boolean useCache() {
+    return this == CACHE_ONLY || this == READ_ALL;
+  }
 
+  public boolean useReadable() {
+    return this == READABLE_ONLY || this == READ_ALL;
+  }
 }

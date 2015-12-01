@@ -14,9 +14,16 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.repository;
+package com.karumi.rosie.repository.datasource;
 
-public interface Predicate<T extends Cacheable> {
+import java.util.Collection;
 
-  boolean isValid(T item);
+public interface WriteableDataSource<K, V extends Identifiable<K>> {
+  V addOrUpdate(V value);
+
+  Collection<V> addOrUpdateAll(Collection<V> values);
+
+  void deleteByKey(K key);
+
+  void deleteAll();
 }

@@ -14,19 +14,35 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie;
+package com.karumi.rosie.doubles;
 
-import com.karumi.rosie.doubles.FakeActivity;
-import com.karumi.rosie.doubles.FakeActivityWithPresenter;
-import com.karumi.rosie.view.RosieFragmentTest;
-import dagger.Module;
+public class AnyRepositoryKey {
 
-@Module(
-    library = true,
-    complete = false,
-    injects = {
-        FakeActivity.class, FakeActivityWithPresenter.class, RosieFragmentTest.TestFragment.class,
-        Object.class
-    }) public class TestModule {
+  private final int key;
 
+  public AnyRepositoryKey(int key) {
+    this.key = key;
+  }
+
+  public int getKey() {
+    return key;
+  }
+
+  @Override public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    AnyRepositoryKey that = (AnyRepositoryKey) o;
+
+    return key == that.key;
+  }
+
+  @Override public int hashCode() {
+    return key;
+  }
 }

@@ -16,7 +16,12 @@
 
 package com.karumi.rosie.repository;
 
-import com.karumi.rosie.repository.datasource.DataSource;
+import com.karumi.rosie.repository.datasource.CacheDataSource;
+import com.karumi.rosie.repository.datasource.Identifiable;
+import com.karumi.rosie.repository.datasource.ReadableDataSource;
+import com.karumi.rosie.repository.datasource.WriteableDataSource;
+import com.karumi.rosie.repository.policy.ReadPolicy;
+import com.karumi.rosie.repository.policy.WritePolicy;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -24,202 +29,250 @@ import java.util.LinkedList;
 /**
  * Repository pattern implementation. This class implements all the data handling logic based on
  * different data sources. Abstracts the data origin and works as a processor cache system where
- * different data sources are going to work as different cache levels.
+ * different data sources are going to work as different cache levels. It coordinates three
+ * different types of data sources, {@link ReadableDataSource}, {@link WriteableDataSource} and
+ * {@link CacheDataSource}
+ *
+ * @param <K> Class representing the key used to identify items in this repository
+ * @param <V> Class representing the contents of the items held by this repository
  */
-public class RosieRepository<T extends Cacheable> {
+public class RosieRepository<K, V extends Identifiable<K>>
+    implements ReadableDataSource<K, V>, WriteableDataSource<K, V> {
 
-  private DataSource<T>[] dataSources;
+  private final Collection<ReadableDataSource<K, V>> readableDataSources = new LinkedList<>();
+  private final Collection<WriteableDataSource<K, V>> writeableDataSources = new LinkedList<>();
+  private final Collection<CacheDataSource<K, V>> cacheDataSources = new LinkedList<>();
 
-  public RosieRepository(DataSource<T>... dataSources) {
-    this.dataSources = dataSources;
+  @SafeVarargs protected final <R extends ReadableDataSource<K, V>> void addReadableDataSources(
+      R... readableDataSources) {
+    this.readableDataSources.addAll(Arrays.asList(readableDataSources));
   }
 
-  public T get(String id) throws Exception {
-    return get(id, false);
+  @SafeVarargs protected final <R extends WriteableDataSource<K, V>> void addWriteableDataSources(
+      R... writeableDataSources) {
+    this.writeableDataSources.addAll(Arrays.asList(writeableDataSources));
   }
 
-  public T get(String id, boolean forceLoad) throws Exception {
-    validateId(id);
-    T item = null;
-    int numberOfDataSources = getNumberOfDataSources();
-    int firstDataSource = forceLoad ? numberOfDataSources - 1 : 0;
-    for (int i = firstDataSource; i < numberOfDataSources; i++) {
-      DataSource<T> dataSource = getDataSource(i);
-      item = dataSource.getById(id);
-      if (areValidItems(dataSource, Arrays.asList(item))) {
-        populateDataSources(item, i);
-        boolean isTheLastDataSource = i == getNumberOfDataSources() - 1;
-        if (isTheLastDataSource) {
-          onItemLoadedFromTheLastDataSource(item);
-        }
+  @SafeVarargs protected final <R extends CacheDataSource<K, V>> void addCacheDataSources(
+      R... cacheDataSources) {
+    this.cacheDataSources.addAll(Arrays.asList(cacheDataSources));
+  }
+
+  @Override public V getByKey(K key) {
+    return getByKey(key, ReadPolicy.READ_ALL);
+  }
+
+  public V getByKey(K key, ReadPolicy policy) {
+    validateKey(key);
+
+    V value = null;
+
+    if (policy.useCache()) {
+      value = getValueFromCaches(key);
+    }
+
+    if (value == null && policy.useReadable()) {
+      value = getValueFromReadables(key);
+    }
+
+    if (value != null) {
+      populateCaches(value);
+    }
+
+    return value;
+  }
+
+  @Override public Collection<V> getAll() {
+    return getAll(ReadPolicy.READ_ALL);
+  }
+
+  public Collection<V> getAll(ReadPolicy policy) {
+    Collection<V> values = null;
+
+    if (policy.useCache()) {
+      values = getValuesFromCaches();
+    }
+
+    if (values == null && policy.useReadable()) {
+      values = getValuesFromReadables();
+    }
+
+    if (values != null) {
+      populateCaches(values);
+    }
+
+    return values;
+  }
+
+  @Override public V addOrUpdate(V value) {
+    return addOrUpdate(value, WritePolicy.WRITE_ALL);
+  }
+
+  public V addOrUpdate(V value, WritePolicy policy) {
+    validateValue(value);
+
+    V updatedValue = null;
+
+    for (WriteableDataSource<K, V> writeableDataSource : writeableDataSources) {
+      updatedValue = writeableDataSource.addOrUpdate(value);
+
+      if (updatedValue != null && policy == WritePolicy.WRITE_ONCE) {
         break;
-      } else {
-        dataSource.deleteById(id);
       }
     }
-    return item;
+
+    if (updatedValue != null) {
+      populateCaches(updatedValue);
+    }
+
+    return updatedValue;
   }
 
-  public Collection<T> getAll() throws Exception {
-    return getAll(false);
+  @Override public Collection<V> addOrUpdateAll(Collection<V> values) {
+    return addOrUpdateAll(values, WritePolicy.WRITE_ALL);
   }
 
-  public Collection<T> getAll(boolean forceLoad) throws Exception {
-    Collection<T> items = null;
-    int numberOfDataSources = getNumberOfDataSources();
-    int firstDataSource = forceLoad ? numberOfDataSources - 1 : 0;
-    for (int i = firstDataSource; i < numberOfDataSources; i++) {
-      DataSource<T> dataSource = getDataSource(i);
-      items = dataSource.getAll();
-      if (areValidItems(dataSource, items)) {
-        populateDataSources(items, i);
-        boolean isTheLastDataSource = i == getNumberOfDataSources() - 1;
-        if (isTheLastDataSource) {
-          onItemsLoadedFromTheLastDataSource(items);
-        }
+  public Collection<V> addOrUpdateAll(Collection<V> values, WritePolicy policy) {
+    validateValues(values);
+
+    Collection<V> updatedValues = null;
+
+    for (WriteableDataSource<K, V> writeableDataSource : writeableDataSources) {
+      updatedValues = writeableDataSource.addOrUpdateAll(values);
+
+      if (updatedValues != null && policy == WritePolicy.WRITE_ONCE) {
         break;
-      } else {
-        dataSource.deleteAll();
       }
     }
-    return items;
+
+    if (updatedValues != null) {
+      populateCaches(values);
+    }
+
+    return updatedValues;
   }
 
-  public Collection<T> get(Predicate<T> predicate) throws Exception {
-    return get(predicate, false);
+  @Override public void deleteByKey(K key) {
+    for (WriteableDataSource<K, V> writeableDataSource : writeableDataSources) {
+      writeableDataSource.deleteByKey(key);
+    }
+
+    for (CacheDataSource<K, V> cacheDataSource : cacheDataSources) {
+      cacheDataSource.deleteByKey(key);
+    }
   }
 
-  public Collection<T> get(Predicate<T> predicate, boolean forceLoad) throws Exception {
-    validatePredicate(predicate);
+  public void deleteAll() {
+    for (WriteableDataSource<K, V> writeableDataSource : writeableDataSources) {
+      writeableDataSource.deleteAll();
+    }
 
-    Collection<T> filteredItems = new LinkedList<>();
-    for (T item : getAll(forceLoad)) {
-      if (predicate.isValid(item)) {
-        filteredItems.add(item);
+    for (CacheDataSource<K, V> cacheDataSource : cacheDataSources) {
+      cacheDataSource.deleteAll();
+    }
+  }
+
+  private V getValueFromCaches(K id) {
+    V value = null;
+
+    for (CacheDataSource<K, V> cacheDataSource : cacheDataSources) {
+      value = cacheDataSource.getByKey(id);
+
+      if (value != null) {
+        if (cacheDataSource.isValid(value)) {
+          break;
+        } else {
+          cacheDataSource.deleteByKey(id);
+          value = null;
+        }
       }
     }
-    return filteredItems;
+
+    return value;
   }
 
-  public T addOrUpdate(T item) throws Exception {
-    validateItem(item);
+  private Collection<V> getValuesFromCaches() {
+    Collection<V> values = null;
 
-    int lastDataSourceIndex = getNumberOfDataSources() - 1;
-    DataSource<T> lastDataSource = getDataSource(lastDataSourceIndex);
-    item = lastDataSource.addOrUpdate(item);
-    boolean itemAddedSuccessfully = item != null;
-    if (itemAddedSuccessfully) {
-      populateDataSources(item, lastDataSourceIndex);
-    }
-    return item;
-  }
+    for (CacheDataSource<K, V> cacheDataSource : cacheDataSources) {
+      values = cacheDataSource.getAll();
 
-  public Collection<T> addOrUpdate(Collection<T> items) throws Exception {
-    validateItems(items);
-
-    if (items.isEmpty()) {
-      return items;
-    }
-
-    int lastDataSourceIndex = getNumberOfDataSources() - 1;
-    DataSource<T> lastDataSource = getDataSource(lastDataSourceIndex);
-    items = lastDataSource.addOrUpdate(items);
-    boolean itemAddedSuccessfully = items != null && !items.isEmpty();
-    if (itemAddedSuccessfully) {
-      populateDataSources(items, lastDataSourceIndex);
-    }
-    return items;
-  }
-
-  public void deleteAll() throws Exception {
-    for (int i = 0; i < getNumberOfDataSources(); i++) {
-      DataSource dataSource = getDataSource(i);
-      dataSource.deleteAll();
-    }
-  }
-
-  public void deleteById(String id) throws Exception {
-    validateId(id);
-
-    for (int i = 0; i < getNumberOfDataSources(); i++) {
-      DataSource dataSource = getDataSource(i);
-      dataSource.deleteById(id);
-    }
-  }
-
-  protected void setDataSources(DataSource<T>... dataSources) {
-    this.dataSources = dataSources;
-  }
-
-  protected int getNumberOfDataSources() {
-    return dataSources.length;
-  }
-
-  protected DataSource<T> getDataSource(int index) {
-    return dataSources[index];
-  }
-
-  protected boolean areValidItems(DataSource<T> dataSource, Collection<T> items) throws Exception {
-    boolean areValidItems = false;
-    if (items != null) {
-      for (T item : items) {
-        areValidItems |= dataSource.isValid(item);
+      if (values != null) {
+        if (areValidValues(values, cacheDataSource)) {
+          break;
+        } else {
+          cacheDataSource.deleteAll();
+          values = null;
+        }
       }
     }
-    return areValidItems;
+
+    return values;
   }
 
-  protected void onItemsLoadedFromTheLastDataSource(Collection<T> items) {
+  private V getValueFromReadables(K key) {
+    V value = null;
 
-  }
+    for (ReadableDataSource<K, V> readableDataSource : readableDataSources) {
+      value = readableDataSource.getByKey(key);
 
-  protected void onItemLoadedFromTheLastDataSource(T item) {
-
-  }
-
-  private void populateDataSources(T item, int dataSourceIndex) throws Exception {
-    if (item == null) {
-      return;
+      if (value != null) {
+        break;
+      }
     }
 
-    for (int i = 0; i < dataSourceIndex; i++) {
-      DataSource dataSource = getDataSource(i);
-      dataSource.addOrUpdate(item);
-    }
+    return value;
   }
 
-  private void populateDataSources(Collection<T> items, int dataSourceIndex) throws Exception {
-    if (items == null) {
-      return;
+  protected Collection<V> getValuesFromReadables() {
+    Collection<V> values = null;
+
+    for (ReadableDataSource<K, V> readableDataSource : readableDataSources) {
+      values = readableDataSource.getAll();
+
+      if (values != null) {
+        break;
+      }
     }
 
-    for (int i = 0; i < dataSourceIndex; i++) {
-      DataSource dataSource = getDataSource(i);
-      dataSource.addOrUpdate(items);
-    }
+    return values;
   }
 
-  private void validatePredicate(Predicate<T> predicate) {
-    if (predicate == null) {
-      throw new IllegalArgumentException("The predicate used can't be null.");
-    }
-  }
-
-  private void validateId(String id) {
-    if (id == null) {
-      throw new IllegalArgumentException("The id used can't be null.");
+  private void populateCaches(V value) {
+    for (CacheDataSource<K, V> cacheDataSource : cacheDataSources) {
+      cacheDataSource.addOrUpdate(value);
     }
   }
 
-  private void validateItem(T item) {
-    if (item == null) {
-      throw new IllegalArgumentException("The item can't be null.");
+  protected void populateCaches(Collection<V> values) {
+    for (CacheDataSource<K, V> cacheDataSource : cacheDataSources) {
+      cacheDataSource.addOrUpdateAll(values);
     }
   }
 
-  private void validateItems(Collection<T> items) {
-    if (items == null) {
-      throw new IllegalArgumentException("The items can't be null.");
+  private boolean areValidValues(Collection<V> values, CacheDataSource<K, V> cacheDataSource) {
+    boolean areValidValues = false;
+    for (V value : values) {
+      areValidValues |= cacheDataSource.isValid(value);
+    }
+    return areValidValues;
+  }
+
+  private void validateKey(K key) {
+    if (key == null) {
+      throw new IllegalArgumentException("The key used can't be null.");
+    }
+  }
+
+  private void validateValue(V value) {
+    if (value == null) {
+      throw new IllegalArgumentException("The value used can't be null.");
+    }
+  }
+
+  private void validateValues(Collection<V> values) {
+    if (values == null) {
+      throw new IllegalArgumentException("The values used can't be null.");
     }
   }
 }

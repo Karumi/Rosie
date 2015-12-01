@@ -24,9 +24,9 @@ import javax.inject.Inject;
 
 public class ErrorHandler {
 
+  private final List<OnErrorCallback> errorCallbacks = new ArrayList<>();
   private ErrorFactory errorFactory;
   private CallbackScheduler callbackScheduler;
-  private List<OnErrorCallback> errorCallbacks = new ArrayList<>();
 
   @Inject public ErrorHandler() {
     this(new ErrorFactory(), new MainThreadCallbackScheduler());

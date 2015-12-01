@@ -14,7 +14,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.view.fragment;
+package com.karumi.rosie.view;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -24,9 +24,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import butterknife.ButterKnife;
-import com.karumi.rosie.view.activity.RosieActivity;
-import com.karumi.rosie.view.presenter.PresenterLifeCycleLinker;
-import com.karumi.rosie.view.presenter.RosiePresenter;
 
 /**
  * Base Fragment created to implement some common functionality to every Fragment using this
@@ -122,7 +119,10 @@ public abstract class RosieFragment extends Fragment implements RosiePresenter.V
    */
   protected abstract int getLayoutId();
 
-  protected void registerPresenter(RosiePresenter presenter) {
+  /**
+   * Registers a presenter to link to this activity
+   */
+  protected final void registerPresenter(RosiePresenter presenter) {
     presenterLifeCycleLinker.registerPresenter(presenter);
   }
 

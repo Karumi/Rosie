@@ -32,7 +32,7 @@ import javax.inject.Singleton;
 
 /**
  * A module for Android-specific dependencies which require a {@link Context} or
- * {@link android.app.Application} to create.
+ * {@link android.app.Application} to be created.
  */
 @Module(library = true, injects = RosieApplication.class) public class RosieAndroidModule {
 
@@ -48,7 +48,7 @@ import javax.inject.Singleton;
   }
 
   /**
-   * Allow the application context to be injected but require that it be annotated with
+   * Allow the application context to be injected but requires it to be annotated with
    * {@link ForApplication @Annotation} to explicitly differentiate it from an activity context.
    */
   @Provides @ForApplication Context provideApplicationContext() {

@@ -18,22 +18,13 @@ package com.karumi.rosie.repository.datasource;
 
 import java.util.Collection;
 
-/**
- * Declares the contract of all data sources related to a RosieRepository.
- */
-public interface DataSource<T> {
+public class EmptyReadableDataSource<K, V> implements ReadableDataSource<K, V> {
 
-  T getById(String id) throws Exception;
+  @Override public V getByKey(K key) {
+    return null;
+  }
 
-  Collection<T> getAll() throws Exception;
-
-  T addOrUpdate(T item) throws Exception;
-
-  Collection<T> addOrUpdate(Collection<T> items) throws Exception;
-
-  void deleteById(String id) throws Exception;
-
-  void deleteAll() throws Exception;
-
-  boolean isValid(T item) throws Exception;
+  @Override public Collection<V> getAll() {
+    return null;
+  }
 }

@@ -12,20 +12,21 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
+ */
 
-package com.karumi.rosie.repository.datasource;
+package com.karumi.rosie.view;
 
-import com.karumi.rosie.repository.Cacheable;
-import com.karumi.rosie.repository.PaginatedCollection;
-import java.util.Collection;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Paginated version of DataSource.
+ * Annotation to define the designed presenter for a
+ * {@link RosieActivity} or a
+ * {@link RosieFragment}
  */
-public interface PaginatedDataSource<T extends Cacheable> extends DataSource<T> {
-
-  PaginatedCollection<T> get(int offset, int limit) throws Exception;
-
-  PaginatedCollection<T> addOrUpdate(int offset, int limit, Collection<T> items, boolean hasMore);
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface Presenter {
 }

@@ -14,7 +14,7 @@
   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.karumi.rosie.view.activity;
+package com.karumi.rosie.view;
 
 import com.karumi.rosie.RobolectricTest;
 import com.karumi.rosie.doubles.FakeActivity;

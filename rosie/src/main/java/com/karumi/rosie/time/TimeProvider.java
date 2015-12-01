@@ -17,10 +17,9 @@
 package com.karumi.rosie.time;
 
 /**
- * Abstract the time usage like System.currentTimeMillis for testing purposes.
+ * Abstracts the time usage like System.currentTimeMillis for testing purposes.
  */
 public class TimeProvider {
-
   public long currentTimeMillis() {
     return System.currentTimeMillis();
   }

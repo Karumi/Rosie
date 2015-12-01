@@ -22,9 +22,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- *
+ * Annotation for public methods inside a use case
  */
-@Retention(RetentionPolicy.RUNTIME) @Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
 public @interface UseCase {
   String name() default "";
 }
