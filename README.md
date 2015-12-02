@@ -1,7 +1,7 @@
 ![Karumi logo][karumilogo]Rosie
 ======
 
-> Truth can only be found in one place: the code.
+> The only way to make the deadline—the only way to go fast—is to keep the code as clean as possible at all times.
 
 > &mdash; <cite> Robert C. Martin in [Clean Code: A Handbook of Agile Software Craftsmanship](http://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882)</cite>
 
@@ -10,12 +10,13 @@ Introduction
 
 Rosie is an Android framework to create applications following the Clean Architecture [[1] [clean]].
 
-Rosie divides your application in three layers, **view**, **domain** and **repository**. For each layer, Rosie provides plenty of classes that will make defining and separating these concerns much easier. It also comes with Dagger to solve Dependency inversion through Dependency Injection [[2] [di]].
+Rosie divides your application in three layers, **view**, **domain** and **repository**. For each layer, Rosie provides plenty of classes that will make defining and separating these concerns much easier.
 
-* **View**: It contains all your presentation logic, implemented through the Model-View-Presenter pattern [[3] [mvp]]. Rosie provides classes to represent the main components of this layer like ``RosieActivity``, ``RosieFragment`` and ``RosiePresenter``.
-* **Domain**: Holding all your business logic, its main component is ``RosieUseCase`` that gives you an easy way to define your application use cases and execute them in a background thread using the command pattern [[4] [com]].
-* **Repository**: The repository layer gives you an abstraction of how to retrieve and store data in your application following the pattern with the same name [[5] [rep]]. ``RosieRepository`` and the multiple ``DataSource`` classes gives you the base to start building your own repositories.
+* **View**: It contains all your presentation logic, implemented through the Model-View-Presenter pattern [[2] [mvp]]. Rosie provides classes to represent the main components of this layer like ``RosieActivity``, ``RosieFragment`` and ``RosiePresenter``.
+* **Domain**: Holding all your business logic, its main component is ``RosieUseCase`` that gives you an easy way to define your application use cases and execute them in a background thread using the command pattern [[3] [com]].
+* **Repository**: The repository layer gives you an abstraction of how to retrieve and store data in your application following the pattern with the same name [[4] [rep]]. ``RosieRepository`` and the multiple ``DataSource`` classes gives you the base to start building your own repositories.
 
+The framework comes with Dagger to solve Dependency inversion through Dependency Injection [[5] [di]]
 
 Screenshots
 -----------
@@ -27,31 +28,32 @@ Screenshots
 Usage
 -----
 
-Rosie provides several base classes to start implementing your architecture separated in three layers, **view**, **domain** and **repository**. Let's explore them in detail.
-
 First thing you will need to do is to make your own ``Application`` instance extend ``RosieApplication`` in order to provide your global dependencies module to Dagger:
 
 ```java
 public class SampleApplication extends RosieApplication {
-  @Override protected List<Object> getApplicationModules() {
-    return Arrays.asList((Object) new SampleGlobalModule());
-  }
+	@Override protected List<Object> getApplicationModules() {
+		return Arrays.asList((Object) new SampleGlobalModule());
+	}
 }
 ```
+
+
+Rosie provides several base classes to start implementing your architecture separated in three layers, **view**, **domain** and **repository**. Let's explore them in detail.
 
 ###View
 The view package contains all the classes needed to implement your presentation logic following the MVP pattern. To use the view package, make your ``Activity`` extend from ``RosieActivity`` or your ``Fragment`` from ``RosieFragment`` and specify the layout that Rosie will automatically inflate for you:
 
 ```java
 public class SampleActivity extends RosieActivity {
-  @Override protected int getLayoutId() {return R.layout.sample_activity;}
+	@Override protected int getLayoutId() {return R.layout.sample_activity;}
 	/*...*/
 }
 ```
 
 ####Butter Knife
 
-You will also have access to the [ButterKnife] [butterknife] annotations to inject your views:
+You will have access in your activities and fragments to [ButterKnife] [butterknife] annotations to inject your views:
 
 ```java
 public class SampleActivity extends RosieActivity {
@@ -84,11 +86,10 @@ public class InjectedClass {
 ```
 
 ####Presenter
-To follow the MVP pattern, Rosie also provides a ``RosiePresenter`` class that will be responsible for all your presentation logic. Rosie will take care of linking your view (a ``RosieActivity`` or ``RosieFragment`` implementation) with your presenter and subscribing it to its lifecycle. In order to do that create a ``RosiePresenter`` and link it to your view:
+To follow the MVP pattern, Rosie also provides a ``RosiePresenter`` class that will be responsible for all your presentation logic. Rosie will take care of linking your view (a ``RosieActivity`` or ``RosieFragment`` implementation) with your presenter and subscribing it to its lifecycle. In order to do that, create a ``RosiePresenter`` and link it to your view:
 
 ```java
 public class SamplePresenter extends RosiePresenter<SamplePresenter.View> {
-	/*...*/
 	public interface View extends RosiePresenter.View {
 		/*...*/
 	}
@@ -97,12 +98,12 @@ public class SamplePresenter extends RosiePresenter<SamplePresenter.View> {
 
 ```java
 public class SampleActivity extends RosieActivity implements SamplePresenter.View {
-	@Inject @Presenter ComicDetailsPresenter presenter;
+	@Inject @Presenter SamplePresenter presenter;
 	/*...*/
 }
 ```
 
-Once both, view and presenter, are linked you can react to your view lifecycle directly from the presenter. You will be also able to call your view from the presenter:
+Once both, view and presenter, are linked you can react to your view lifecycle directly from the presenter. You will be also able to call your view easily from the presenter:
 
 
 ```java
@@ -134,13 +135,13 @@ To understand when the lifecycle methods are called take a look at the following
 
 ####Renderers
 
-Finally, Rosie includes the [Renderers] [renderers] library to simplify your ``RecyclerView`` handling code. If you decide to use Renderers, remember to extend directly from ``RosieRenderer<T>`` to have ``ButterKnife`` injections for free in your renderer views.
+Finally, Rosie includes the [Renderers] [renderers] library to simplify your ``RecyclerView`` handling code. If you decide to use Renderers, remember to extend directly from ``RosieRenderer<T>`` to have ButterKnife injections for free in your renderer views.
 
 ###Domain
 
 The domain package is meant to contain all your business logic that will change from app to app. For that reason, Rosie only provides a single ``RosieUseCase`` class that will help you execute your use cases in background following the command pattern.
 
-To start using the Rosie domain package, create your use cases extending ``RosieUseCase`` and define the method containing your business logic. Remember to call ``notifySuccess`` or ``notifyError`` to get results back to your presenter:
+To start using the Rosie domain package, create your use cases extending ``RosieUseCase`` and define the method containing your use case logic. Remember to call ``notifySuccess`` or ``notifyError`` to get results back to your presenter:
 
 ```java
 public class DoSomething extends RosieUseCase {
@@ -159,7 +160,7 @@ public class DoSomething extends RosieUseCase {
 
 ####Named use cases
 
-Sometimes you need to specify use cases that are very similar to each other. To avoid creating multiple classes representing every use case, you can create a single ``RosieUseCase`` class with multiple methods. This is achieved by providing a name in the ``@UseCase`` annotation:
+Sometimes you need to specify use cases that are very similar to each other. To avoid creating multiple classes representing every use case configuration, you can create a single ``RosieUseCase`` class with multiple methods. This is achieved by providing a name in the ``@UseCase`` annotation:
 
 ```java
 public class DoSomething extends RosieUseCase {
@@ -180,23 +181,33 @@ The third layer is meant to encapsulate your data sources. To start using it jus
 
 ```java
 public class SampleRepository extends RosieRepository<Key, Value> {
-  @Inject public SampleRepository(SampleApiDataSource sampleApiDataSource,
-      SampleCacheDataSource sampleCacheDataSource) {
-    addReadableDataSources(sampleApiDataSource);
-    addCacheDataSources(sampleCacheDataSource);
-  }
+	@Inject public SampleRepository(SampleApiDataSource sampleApiDataSource,
+			SampleCacheDataSource sampleCacheDataSource) {
+		addReadableDataSources(sampleApiDataSource);
+		addCacheDataSources(sampleCacheDataSource);
+	}
 }
 ```
 
 There are three different types of data sources and each one has its own interface that you can implement to use it in your repository:
 
-* ``ReadableDataSource<K, V>``: Defines data sources where you can read values by a given key or retrieving all of them.
+* ``ReadableDataSource<K, V>``: Defines data sources where you can read values by a given key or retrieving them all.
 * ``WriteableDataSource<K, V>``: Defines data sources where you can persist data with operations to add, update or delete values.
 * ``CacheDataSource<K, V>``: Defines a mix of readable and writeable data sources to speed up access to your values.
 
 There are empty implementations of each data source to simplify your own subclasses by overriding only the methods that make sense in your context. Besides, there is a generic ``InMemoryCacheDataSource`` to store recent values up to a configurable time.
 
-Users of the repositories can retrieve or modify data by using one of the multiple methods available for that matter. There are multiple ways to retrieve and store data using repositories, the following block shows some of the most useful:
+```java
+public class SampleRepository extends RosieRepository<Key, Value> {
+	@Inject public SampleRepository() {
+	PaginatedCacheDataSource<Key, Value> inMemoryCacheDataSource =
+		new InMemoryCacheDataSource<>(new TimeProvider(), MINUTES.toMillis(5));
+	addCacheDataSources(inMemoryCacheDataSource);
+  }
+}
+```
+
+Users of the repositories can retrieve or modify data by using one of the multiple methods available for that matter. There are multiple ways to retrieve and store data using repositories, the following snippet shows some of the most useful:
 
 ```java
 // Initialization
