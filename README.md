@@ -99,12 +99,11 @@ public class SamplePresenter extends RosiePresenter<SamplePresenter.View> {
 ```java
 public class SampleActivity extends RosieActivity implements SamplePresenter.View {
 	@Inject @Presenter SamplePresenter presenter;
-	/*...*/
+	@Override protected void onPreparePresenter() {/*...*/}
 }
 ```
 
-Once both, view and presenter, are linked you can react to your view lifecycle directly from the presenter. You will be also able to call your view easily from the presenter:
-
+Once both, view and presenter, are linked you can react to your view lifecycle directly from the presenter. The ``onPreparePresenter`` method gives you the opportunity to configure your presenter before any of these methods are called (e.g. with your intent parameters). You will be also able to call your view easily from the presenter:
 
 ```java
 public class SamplePresenter extends RosiePresenter<SamplePresenter.View> {
@@ -160,16 +159,18 @@ public class DoSomething extends RosieUseCase {
 
 ####Named use cases
 
-Sometimes you need to specify use cases that are very similar to each other. To avoid creating multiple classes representing every use case configuration, you can create a single ``RosieUseCase`` class with multiple methods. This is achieved by providing a name in the ``@UseCase`` annotation:
+Sometimes you need to specify use cases that are very similar to each other. To avoid creating multiple classes representing every use case configuration, you can create a single ``RosieUseCase`` class with multiple methods. Rosie will be able to identify the use case being called by matching its input parameters. If you create two methods with the ``@UseCase`` annotation that have the same input parameters, you can provide a name to each of them in order to identify them:
 
 ```java
 public class DoSomething extends RosieUseCase {
 	public static final String USE_CASE_NAME = "UseCaseName";
-	@UseCase(name = USE_CASE_NAME) public void doSomething(Object arg) {
-		/*...*/
-	}
+	public static final String OTHER_USE_CASE_NAME = "OtherUseCaseName";
+	@UseCase(name = USE_CASE_NAME) public void doSomething(Object arg) {/*...*/}
+	@UseCase(name = OTHER_USE_CASE_NAME) public void doSomethingElse(Object arg) {/*...*/}
 }
 ```
+
+Even though using names is not mandatory when the method input parameters are different, it's highly recommended to use them just to make its usage more readable.
 
 To call one of those use cases you will need to provide the name in your call:
 
