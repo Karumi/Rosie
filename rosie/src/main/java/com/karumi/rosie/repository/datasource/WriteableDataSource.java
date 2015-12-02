@@ -18,12 +18,38 @@ package com.karumi.rosie.repository.datasource;
 
 import java.util.Collection;
 
+/**
+ * Data source interface meant to be used only to persist data.
+ *
+ * @param <K> The class of the key used by this data source.
+ * @param <V> The class of the values stored into this data source.
+ */
 public interface WriteableDataSource<K, V extends Identifiable<K>> {
+  /**
+   * Adds or update the provided value into this data source.
+   *
+   * @param value The value to be persisted.
+   * @return The value after its addition or update.
+   */
   V addOrUpdate(V value);
 
+  /**
+   * Add or updates all the provided values into this data source.
+   *
+   * @param values A collection of values to be added or persisted.
+   * @return The values that has been persisted.
+   */
   Collection<V> addOrUpdateAll(Collection<V> values);
 
+  /**
+   * Deletes a value given its associated key.
+   *
+   * @param key The key that uniquely identifies the value to be deleted.
+   */
   void deleteByKey(K key);
 
+  /**
+   * Delete all the values stored in this data source.
+   */
   void deleteAll();
 }

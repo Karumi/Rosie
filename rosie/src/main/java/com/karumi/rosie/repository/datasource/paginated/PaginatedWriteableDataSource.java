@@ -20,9 +20,26 @@ import com.karumi.rosie.repository.PaginatedCollection;
 import com.karumi.rosie.repository.datasource.Identifiable;
 import java.util.Collection;
 
+/**
+ * Data source interface meant to be used only to persist page of data.
+ *
+ * @param <K> The class of the key used by this data source.
+ * @param <V> The class of the values stored into this data source.
+ */
 public interface PaginatedWriteableDataSource<K, V extends Identifiable<K>> {
-  PaginatedCollection<V> addOrUpdatePage(int offset, int limit, Collection<V> items,
+  /**
+   * Adds or update a page of values into this data source.
+   *
+   * @param offset Index of the first item to be retrieved
+   * @param limit Number of elements that will be retrieved
+   * @param values Collection of values to be stored
+   * @param hasMore True whether the persisted page has more elements
+   */
+  PaginatedCollection<V> addOrUpdatePage(int offset, int limit, Collection<V> values,
       boolean hasMore);
 
+  /**
+   * Deletes all the pages stored in this data source.
+   */
   void deleteAll();
 }

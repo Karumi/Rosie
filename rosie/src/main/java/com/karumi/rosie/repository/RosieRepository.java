@@ -58,10 +58,18 @@ public class RosieRepository<K, V extends Identifiable<K>>
     this.cacheDataSources.addAll(Arrays.asList(cacheDataSources));
   }
 
+  /**
+   * {@link ReadableDataSource#getByKey(Object)}
+   */
   @Override public V getByKey(K key) {
     return getByKey(key, ReadPolicy.READ_ALL);
   }
 
+  /**
+   * {@link ReadableDataSource#getByKey(Object)}
+   *
+   * @param policy Specifies how the value is going to be retrieved.
+   */
   public V getByKey(K key, ReadPolicy policy) {
     validateKey(key);
 
@@ -82,10 +90,18 @@ public class RosieRepository<K, V extends Identifiable<K>>
     return value;
   }
 
+  /**
+   * {@link ReadableDataSource#getAll()}
+   */
   @Override public Collection<V> getAll() {
     return getAll(ReadPolicy.READ_ALL);
   }
 
+  /**
+   * {@link ReadableDataSource#getAll()}
+   *
+   * @param policy Specifies how the value is going to be retrieved.
+   */
   public Collection<V> getAll(ReadPolicy policy) {
     Collection<V> values = null;
 
@@ -104,10 +120,18 @@ public class RosieRepository<K, V extends Identifiable<K>>
     return values;
   }
 
+  /**
+   * {@link WriteableDataSource#addOrUpdate(Identifiable)}
+   */
   @Override public V addOrUpdate(V value) {
     return addOrUpdate(value, WritePolicy.WRITE_ALL);
   }
 
+  /**
+   * {@link WriteableDataSource#addOrUpdate(Identifiable)}
+   *
+   * @param policy Specifies how the value is going to be stored.
+   */
   public V addOrUpdate(V value, WritePolicy policy) {
     validateValue(value);
 
@@ -128,6 +152,9 @@ public class RosieRepository<K, V extends Identifiable<K>>
     return updatedValue;
   }
 
+  /**
+   * {@link WriteableDataSource#addOrUpdateAll(Collection)}
+   */
   @Override public Collection<V> addOrUpdateAll(Collection<V> values) {
     return addOrUpdateAll(values, WritePolicy.WRITE_ALL);
   }
@@ -152,6 +179,9 @@ public class RosieRepository<K, V extends Identifiable<K>>
     return updatedValues;
   }
 
+  /**
+   * {@link WriteableDataSource#deleteByKey(Object)}
+   */
   @Override public void deleteByKey(K key) {
     for (WriteableDataSource<K, V> writeableDataSource : writeableDataSources) {
       writeableDataSource.deleteByKey(key);
@@ -162,7 +192,10 @@ public class RosieRepository<K, V extends Identifiable<K>>
     }
   }
 
-  public void deleteAll() {
+  /**
+   * {@link WriteableDataSource#deleteAll()}
+   */
+  @Override public void deleteAll() {
     for (WriteableDataSource<K, V> writeableDataSource : writeableDataSources) {
       writeableDataSource.deleteAll();
     }

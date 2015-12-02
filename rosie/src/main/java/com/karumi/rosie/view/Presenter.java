@@ -22,8 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation to define the designed presenter for a
- * {@link RosieActivity} or a
+ * Annotation to define the designed presenter for a {@link RosieActivity} or a
  * {@link RosieFragment}
  */
 @Retention(RetentionPolicy.RUNTIME)

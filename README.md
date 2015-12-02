@@ -29,6 +29,16 @@ Usage
 
 Rosie provides several base classes to start implementing your architecture separated in three layers, **view**, **domain** and **repository**. Let's explore them in detail.
 
+First thing you will need to do is to make your own ``Application`` instance extend ``RosieApplication`` in order to provide your global dependencies module to Dagger:
+
+```java
+public class SampleApplication extends RosieApplication {
+  @Override protected List<Object> getApplicationModules() {
+    return Arrays.asList((Object) new SampleGlobalModule());
+  }
+}
+```
+
 ###View
 The view package contains all the classes needed to implement your presentation logic following the MVP pattern. To use the view package, make your ``Activity`` extend from ``RosieActivity`` or your ``Fragment`` from ``RosieFragment`` and specify the layout that Rosie will automatically inflate for you:
 
@@ -146,6 +156,23 @@ public class DoSomething extends RosieUseCase {
 ```
 
 #~TODO Example of use cases usage with callback~
+
+####Named use cases
+
+Sometimes you need to specify use cases that are very similar to each other. To avoid creating multiple classes representing every use case, you can create a single ``RosieUseCase`` class with multiple methods. This is achieved by providing a name in the ``@UseCase`` annotation:
+
+```java
+public class DoSomething extends RosieUseCase {
+	public static final String USE_CASE_NAME = "UseCaseName";
+	@UseCase(name = USE_CASE_NAME) public void doSomething(Object arg) {
+		/*...*/
+	}
+}
+```
+
+To call one of those use cases you will need to provide the name in your call:
+
+#~TODO Example of use cases usage with names~
 
 ###Repository
 

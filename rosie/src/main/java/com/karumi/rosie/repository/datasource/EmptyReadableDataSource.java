@@ -18,6 +18,10 @@ package com.karumi.rosie.repository.datasource;
 
 import java.util.Collection;
 
+/**
+ * Utility class to only override methods that are needed by your readable data source
+ * implementation.
+ */
 public class EmptyReadableDataSource<K, V> implements ReadableDataSource<K, V> {
 
   @Override public V getByKey(K key) {

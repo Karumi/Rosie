@@ -54,11 +54,11 @@ public class InMemoryPaginatedCacheDataSource<K, V extends Identifiable<K>>
   }
 
   @Override
-  public PaginatedCollection<V> addOrUpdatePage(int offset, int limit, Collection<V> items,
+  public PaginatedCollection<V> addOrUpdatePage(int offset, int limit, Collection<V> values,
       boolean hasMore) {
-    this.items.addAll(items);
+    this.items.addAll(values);
     this.hasMore = hasMore;
-    PaginatedCollection<V> paginatedCollection = new PaginatedCollection<>(items);
+    PaginatedCollection<V> paginatedCollection = new PaginatedCollection<>(values);
     paginatedCollection.setOffset(offset);
     paginatedCollection.setLimit(limit);
     paginatedCollection.setHasMore(hasMore);

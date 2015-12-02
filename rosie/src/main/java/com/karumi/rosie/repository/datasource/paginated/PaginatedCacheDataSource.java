@@ -18,7 +18,20 @@ package com.karumi.rosie.repository.datasource.paginated;
 
 import com.karumi.rosie.repository.datasource.Identifiable;
 
+/**
+ * Mixin paginated data source used to act as a cache. It contains methods to both read and
+ * add/update/delete entire pages.
+ *
+ * @param <K> The class of the key used by this data source.
+ * @param <V> The class of the values retrieved from this data source.
+ */
 public interface PaginatedCacheDataSource<K, V extends Identifiable<K>>
     extends PaginatedReadableDataSource<V>, PaginatedWriteableDataSource<K, V> {
+
+  /**
+   * Returns true whether the value stored in this cache is still valid.
+   *
+   * @param value The value to be checked.
+   */
   boolean isValid(V value);
 }

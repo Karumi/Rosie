@@ -18,8 +18,12 @@ package com.karumi.rosie.repository.datasource;
 
 import java.util.Collection;
 
-public class EmptyWriteableDataSource<K, V extends Identifiable<K>> implements
-    WriteableDataSource<K, V> {
+/**
+ * Utility class to only override methods that are needed by your writeable data source
+ * implementation.
+ */
+public class EmptyWriteableDataSource<K, V extends Identifiable<K>>
+    implements WriteableDataSource<K, V> {
 
   @Override public V addOrUpdate(V value) {
     return value;

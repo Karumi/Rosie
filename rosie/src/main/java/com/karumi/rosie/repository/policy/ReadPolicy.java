@@ -16,6 +16,9 @@
 
 package com.karumi.rosie.repository.policy;
 
+/**
+ * Value to specify modifiers over the retrieval operations on repositories and data sources.
+ */
 public enum ReadPolicy {
   CACHE_ONLY,
   READABLE_ONLY,

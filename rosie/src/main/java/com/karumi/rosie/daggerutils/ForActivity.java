@@ -23,6 +23,9 @@ import javax.inject.Qualifier;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+/**
+ * Provides the {@link android.content.Context} of your current activity.
+ */
 @Qualifier @Retention(RUNTIME)
 @Target({ ElementType.PARAMETER, ElementType.METHOD })
 public @interface ForActivity {

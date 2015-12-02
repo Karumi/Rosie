@@ -26,8 +26,10 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 
 /**
- * This is the base implementation of a UseCase. Every UseCase implementation has to extend from
- * this class.
+ * This is the base implementation of a UseCase. Every UseCase implementation has to extend this
+ * class.
+ * To define the method that will be executed for your RosieUseCase implementation annotate it with
+ * {@link com.karumi.rosie.domain.usecase.annotation.UseCase}.
  */
 public class RosieUseCase {
 

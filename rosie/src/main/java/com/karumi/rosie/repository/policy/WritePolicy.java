@@ -16,6 +16,9 @@
 
 package com.karumi.rosie.repository.policy;
 
+/**
+ * Value to specify modifiers over the store operations on repositories and data sources.
+ */
 public enum WritePolicy {
   WRITE_ONCE,
   WRITE_ALL

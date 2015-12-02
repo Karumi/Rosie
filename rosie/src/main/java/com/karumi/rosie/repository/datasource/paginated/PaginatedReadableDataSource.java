@@ -18,6 +18,16 @@ package com.karumi.rosie.repository.datasource.paginated;
 
 import com.karumi.rosie.repository.PaginatedCollection;
 
+/**
+ * Data source interface meant to be used only to retrieve pages of data.
+ *
+ * @param <V> The class of the values retrieved from this data source.
+ */
 public interface PaginatedReadableDataSource<V> {
+  /**
+   * Returns a page of values bounded by the offset and limit values.
+   * @param offset Index of the first item to be retrieved
+   * @param limit Number of elements that will be retrieved
+   */
   PaginatedCollection<V> getPage(int offset, int limit);
 }

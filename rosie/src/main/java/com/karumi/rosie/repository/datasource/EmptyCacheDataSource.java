@@ -18,6 +18,9 @@ package com.karumi.rosie.repository.datasource;
 
 import java.util.Collection;
 
+/**
+ * Utility class to only override methods that are needed by your cache data source implementation.
+ */
 public class EmptyCacheDataSource<K, V extends Identifiable<K>> implements CacheDataSource<K, V> {
 
   @Override public V getByKey(K key) {

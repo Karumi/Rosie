@@ -18,8 +18,27 @@ package com.karumi.rosie.repository.datasource;
 
 import java.util.Collection;
 
+/**
+ * Data source interface meant to be used only to retrieve data.
+ *
+ * @param <K> The class of the key used by this data source.
+ * @param <V> The class of the values retrieved from this data source.
+ */
 public interface ReadableDataSource<K, V> {
+  /**
+   * Returns the only value that is uniquely identified by the provided key or null if there is
+   * no value associated to it.
+   *
+   * @param key The key that uniquely identifies the requested value.
+   * @return The value associated to the provided key or null if there is not any.
+   */
   V getByKey(K key);
 
+  /**
+   * Returns all the values available in the data source or null if the operation does not make
+   * sense in the context of the data source.
+   *
+   * @return A collection of values or null if the operation is not implemented by this data source.
+   */
   Collection<V> getAll();
 }

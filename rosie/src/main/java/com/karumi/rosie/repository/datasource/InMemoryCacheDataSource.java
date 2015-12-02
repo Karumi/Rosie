@@ -22,6 +22,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * A simple and generic in-memory cache ready to use in your repositories.
+ */
 public class InMemoryCacheDataSource<K, V extends Identifiable<K>>
     implements CacheDataSource<K, V> {
 

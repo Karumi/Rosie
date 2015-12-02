@@ -46,11 +46,22 @@ public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends Rosi
     this.paginatedCacheDataSources.addAll(Arrays.asList(caches));
   }
 
-  public PaginatedCollection<V> getPage(int offset, int limit) throws Exception {
+  /**
+   * Returns a page of values bounded by the offset and limit values.
+   * @param offset Index of the first item to be retrieved
+   * @param limit Number of elements that will be retrieved
+   */
+  public PaginatedCollection<V> getPage(int offset, int limit) {
     return getPage(offset, limit, ReadPolicy.READ_ALL);
   }
 
-  public PaginatedCollection<V> getPage(int offset, int limit, ReadPolicy policy) throws Exception {
+  /**
+   * Returns a page of values bounded by the offset and limit values.
+   * @param offset Index of the first item to be retrieved
+   * @param limit Number of elements that will be retrieved
+   * @param policy Specifies how the value is going to be retrieved.
+   */
+  public PaginatedCollection<V> getPage(int offset, int limit, ReadPolicy policy) {
     PaginatedCollection<V> values = null;
 
     if (policy.useCache()) {

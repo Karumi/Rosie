@@ -20,8 +20,10 @@ import com.karumi.rosie.application.RosieApplication;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Sample application that registers the global application dependencies.
+ */
 public class MainApplication extends RosieApplication {
-
   @Override protected List<Object> getApplicationModules() {
     return Arrays.asList((Object) new ApplicationModule());
   }
