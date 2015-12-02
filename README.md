@@ -57,7 +57,7 @@ You will have access in your activities and fragments to [ButterKnife] [butterkn
 
 ```java
 public class SampleActivity extends RosieActivity {
-	@InjectView(R.id.sample_view) TextView sampleView;
+	@Bind(R.id.sample_view) TextView sampleView;
 	/*...*/
 }
 ```

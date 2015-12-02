@@ -22,7 +22,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import butterknife.InjectView;
+import butterknife.Bind;
 import com.karumi.rosie.sample.R;
 import com.karumi.rosie.sample.characters.CharactersModule;
 import com.karumi.rosie.sample.characters.view.presenter.CharacterDetailsPresenter;
@@ -39,10 +39,10 @@ public class CharacterDetailsActivity extends RosieActivity
 
   private static final String CHARACTER_KEY_EXTRA = "CharacterDetailsActivity.CharacterKey";
 
-  @InjectView(R.id.iv_character_image) ImageView characterHeaderView;
-  @InjectView(R.id.ll_character_detail) View characterDetailView;
-  @InjectView(R.id.tv_description) TextView characterDescriptionView;
-  @InjectView(R.id.tv_loading) TextView loadingView;
+  @Bind(R.id.iv_character_image) ImageView characterHeaderView;
+  @Bind(R.id.ll_character_detail) View characterDetailView;
+  @Bind(R.id.tv_description) TextView characterDescriptionView;
+  @Bind(R.id.tv_loading) TextView loadingView;
 
   @Inject @Presenter CharacterDetailsPresenter presenter;
 

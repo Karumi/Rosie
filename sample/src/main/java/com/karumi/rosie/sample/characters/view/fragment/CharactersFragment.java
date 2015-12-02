@@ -22,7 +22,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-import butterknife.InjectView;
+import butterknife.Bind;
 import com.karumi.rosie.sample.R;
 import com.karumi.rosie.sample.characters.view.activity.CharacterDetailsActivity;
 import com.karumi.rosie.sample.characters.view.presenter.CharactersPresenter;
@@ -39,8 +39,8 @@ import javax.inject.Inject;
 
 public class CharactersFragment extends RosieFragment implements CharactersPresenter.View {
 
-  @InjectView(R.id.rv_characters) RecyclerView charactersView;
-  @InjectView(R.id.tv_loading) TextView loadingView;
+  @Bind(R.id.rv_characters) RecyclerView charactersView;
+  @Bind(R.id.tv_loading) TextView loadingView;
 
   @Inject @Presenter CharactersPresenter presenter;
 

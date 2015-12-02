@@ -20,7 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import butterknife.InjectView;
+import butterknife.Bind;
 import butterknife.OnClick;
 import com.karumi.rosie.renderer.RosieRenderer;
 import com.karumi.rosie.sample.R;
@@ -31,7 +31,7 @@ public class ComicRenderer extends RosieRenderer<ComicViewModel> {
 
   private final ComicsPresenter presenter;
 
-  @InjectView(R.id.tv_comic_name) TextView nameView;
+  @Bind(R.id.tv_comic_name) TextView nameView;
 
   public ComicRenderer(ComicsPresenter presenter) {
     this.presenter = presenter;
