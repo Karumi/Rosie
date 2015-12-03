@@ -176,6 +176,10 @@ To call one of those use cases you will need to provide the name in your call:
 
 #~TODO Example of use cases usage with names~
 
+###Error handling
+
+#~TODO Explain how errors are treated once its redesigned~
+
 ###Repository
 
 The third layer is meant to encapsulate your data sources. To start using it just extend ``RosieRepository`` and configure its data sources in its constructor:
