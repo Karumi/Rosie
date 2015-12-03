@@ -38,13 +38,13 @@ public final class UseCaseWrapper {
       Method methodToInvoke = UseCaseFilter.filter(useCase, useCaseParams);
       methodToInvoke.invoke(useCase, useCaseParams.getArgs());
     } catch (Exception e) {
-      notifyError(e);
+      notifyException(e);
     }
   }
 
-  private void notifyError(Exception exception) {
+  private void notifyException(Exception exception) {
     if (errorHandler != null) {
-      errorHandler.notifyError(exception, useCaseParams.getOnErrorCallback());
+      errorHandler.notifyException(exception, useCaseParams.getOnErrorCallback());
     }
   }
 }

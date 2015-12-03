@@ -178,7 +178,30 @@ To call one of those use cases you will need to provide the name in your call:
 
 ###Error handling
 
-#~TODO Explain how errors are treated once its redesigned~
+Errors can be either manually reported or implicitly notified when an exception is thrown from your use case context. To handle errors, there is a capturing event system that iterates over all your registered ``OnErrorCallback`` implementations and notifies them of the issue. Every callback needs to return a boolean value to inform whether the error has been handled and needs no further management. Callbacks are always called in specific order:
+
+1. Use case specific callback; the ones you register before calling a use case.
+2. Global callbacks; the ones you can register from your presenter constructor.
+
+With this approach you can create an error callback in your presenter that shows a generic error message to your user and create multiple other listeners for specific use cases and/or errors.
+
+To register global callbacks from your presenter, call ``registerOnErrorCallback`` in the constructor:
+
+```java
+public class SamplePresenter extends RosiePresenter<SamplePresenter.View> implements OnErrorCallback {
+	public SamplePresenter(UseCaseHandler useCaseHandler) {
+		super(useCaseHandler);
+		registerOnErrorCallback(this);
+	}
+
+	@Override public boolean onError(Error error) {
+		getView().showGenericError();
+		return true;
+	}
+}
+```
+
+#~TODO Example of registering an error listener in a use case~
 
 ###Repository
 

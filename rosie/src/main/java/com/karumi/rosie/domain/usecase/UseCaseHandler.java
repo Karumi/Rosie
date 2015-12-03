@@ -55,7 +55,8 @@ public class UseCaseHandler {
     UseCaseFilter.filter(useCase, useCaseParams);
 
     useCase.setOnSuccessCallback(useCaseParams.getOnSuccessCallback());
-    useCase.setOnErrorCallback(useCaseParams.getOnErrorCallback());
+    useCase.setOnErrorCallback(
+        new OnErrorCallbackToErrorHandlerAdapter(errorHandler, useCaseParams.getOnErrorCallback()));
     UseCaseWrapper useCaseWrapper = new UseCaseWrapper(useCase, useCaseParams, errorHandler);
     taskScheduler.execute(useCaseWrapper);
   }
@@ -66,5 +67,24 @@ public class UseCaseHandler {
 
   public void unregisterGlobalErrorCallback(OnErrorCallback globalError) {
     errorHandler.unregisterCallback(globalError);
+  }
+
+  /**
+   * Inner class responsible for routing the errors thrown from the use case to the error handler
+   */
+  private static class OnErrorCallbackToErrorHandlerAdapter implements OnErrorCallback {
+    private final ErrorHandler errorHandler;
+    private final OnErrorCallback useCaseOnErrorCallback;
+
+    public OnErrorCallbackToErrorHandlerAdapter(ErrorHandler errorHandler,
+        OnErrorCallback useCaseOnErrorCallback) {
+      this.errorHandler = errorHandler;
+      this.useCaseOnErrorCallback = useCaseOnErrorCallback;
+    }
+
+    @Override public boolean onError(Error error) {
+      errorHandler.notifyError(error, useCaseOnErrorCallback);
+      return true;
+    }
   }
 }

@@ -74,24 +74,7 @@ public class RosieUseCase {
    */
 
   protected void notifyError(final Error error) throws ErrorNotHandledException {
-    if (onErrorCallback == null) {
-      throw new ErrorNotHandledException(error);
-    }
-
-    final OnErrorCallback callback = this.onErrorCallback.get();
-    if (callback != null) {
-      try {
-        getCallbackScheduler().post(new Runnable() {
-          @Override public void run() {
-            callback.onError(error);
-          }
-        });
-      } catch (IllegalArgumentException e) {
-        throw new ErrorNotHandledException(error);
-      }
-    } else {
-      throw new ErrorNotHandledException(error);
-    }
+    onErrorCallback.get().onError(error);
   }
 
   /**

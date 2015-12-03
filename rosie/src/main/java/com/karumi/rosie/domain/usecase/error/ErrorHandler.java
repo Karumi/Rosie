@@ -19,6 +19,7 @@ package com.karumi.rosie.domain.usecase.error;
 import com.karumi.rosie.domain.usecase.callback.CallbackScheduler;
 import com.karumi.rosie.domain.usecase.callback.MainThreadCallbackScheduler;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javax.inject.Inject;
 
@@ -59,23 +60,18 @@ public class ErrorHandler {
     this.callbackScheduler = callbackScheduler;
   }
 
-  public void notifyError(Exception exception, final OnErrorCallback useCaseErrorCallback) {
+  public void notifyException(Exception exception, OnErrorCallback useCaseErrorCallback) {
     final Error error = createError(exception);
-    callbackScheduler.post(new Runnable() {
-      @Override public void run() {
-        if (useCaseErrorCallback != null) {
-          useCaseErrorCallback.onError(error);
-        } else {
-          notifyError(error);
-        }
-      }
-    });
+    notifyError(error, useCaseErrorCallback);
   }
 
-  private void notifyError(final Error error) {
-    for (OnErrorCallback errorCallback : errorCallbacks) {
-      errorCallback.onError(error);
+  public void notifyError(Error error, OnErrorCallback useCaseErrorCallback) {
+    List<OnErrorCallback> callbacks = new ArrayList<>();
+    if (useCaseErrorCallback != null) {
+      callbacks.add(useCaseErrorCallback);
     }
+    callbacks.addAll(errorCallbacks);
+    notifyErrorOnScheduler(error, callbacks);
   }
 
   public void registerCallback(OnErrorCallback onErrorCallback) {
@@ -101,5 +97,20 @@ public class ErrorHandler {
     }
 
     return error;
+  }
+
+  private void notifyErrorOnScheduler(final Error error,
+      final Collection<OnErrorCallback> callbacks) {
+    callbackScheduler.post(new Runnable() {
+      @Override public void run() {
+        boolean isConsumed;
+        for (OnErrorCallback errorCallback : callbacks) {
+          isConsumed = errorCallback.onError(error);
+          if (isConsumed) {
+            break;
+          }
+        }
+      }
+    });
   }
 }
