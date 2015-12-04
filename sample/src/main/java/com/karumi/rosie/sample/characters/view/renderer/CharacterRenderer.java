@@ -21,7 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import butterknife.InjectView;
+import butterknife.Bind;
 import butterknife.OnClick;
 import com.karumi.rosie.renderer.RosieRenderer;
 import com.karumi.rosie.sample.R;
@@ -33,8 +33,8 @@ public class CharacterRenderer extends RosieRenderer<CharacterViewModel> {
 
   private final CharactersPresenter presenter;
 
-  @InjectView(R.id.tv_character_name) TextView nameView;
-  @InjectView(R.id.iv_character_thumbnail) ImageView thumbnailView;
+  @Bind(R.id.tv_character_name) TextView nameView;
+  @Bind(R.id.iv_character_thumbnail) ImageView thumbnailView;
 
   public CharacterRenderer(CharactersPresenter presenter) {
     this.presenter = presenter;

@@ -58,7 +58,7 @@ public abstract class RosieFragment extends Fragment implements RosiePresenter.V
       Bundle savedInstanceState) {
     int layoutId = getLayoutId();
     View view = inflater.inflate(layoutId, container, false);
-    ButterKnife.inject(this, view);
+    ButterKnife.bind(this, view);
     return view;
   }
 

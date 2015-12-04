@@ -28,7 +28,7 @@ import com.pedrogomez.renderers.Renderer;
 public abstract class RosieRenderer<T> extends Renderer<T> {
 
   @Override public void render() {
-    ButterKnife.inject(this, getRootView());
+    ButterKnife.bind(this, getRootView());
   }
 
   @Override protected void setUpView(View view) {
