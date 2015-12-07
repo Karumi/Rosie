@@ -41,7 +41,7 @@ public class UseCaseHandler {
    * @param useCase the use case to invoke.
    * @param useCaseParams params to use on the invocation.
    */
-  public void execute(RosieUseCase useCase, UseCaseParams useCaseParams) {
+  void execute(RosieUseCase useCase, UseCaseParams useCaseParams) {
     UseCaseFilter.filter(useCase, useCaseParams);
 
     useCase.setOnSuccessCallback(useCaseParams.getOnSuccessCallback());

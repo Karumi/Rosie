@@ -23,7 +23,7 @@ import java.lang.ref.WeakReference;
 /**
  * The params value to execute with a use case.
  */
-public final class UseCaseParams {
+final class UseCaseParams {
 
   private final String useCaseName;
   private final Object[] args;
