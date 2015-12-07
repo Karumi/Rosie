@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2015 Karumi.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.karumi.rosie.view;
 
 import com.karumi.rosie.domain.usecase.RosieUseCase;
@@ -19,15 +35,11 @@ import java.util.List;
 public class RosiePresenter<T extends RosiePresenter.View> {
 
   private final UseCaseHandler useCaseHandler;
-  private final List<OnSuccessCallback> onSuccessCallbacks = new LinkedList<>();
-  private final List<OnErrorCallback> onErrorCallbacks = new LinkedList<>();
-  private final OnErrorCallback globalErrorCallback = new OnErrorCallback() {
-    @Override public void onError(Error error) {
-      RosiePresenter.this.onError(error);
-    }
-  };
+  private final List<OnSuccessCallback> useCaseOnSuccessCallbacks = new LinkedList<>();
+  private final List<OnErrorCallback> useCaseOnErrorCallbacks = new LinkedList<>();
+  private final List<OnErrorCallback> globalOnErrorCallbacks = new LinkedList<>();
   private T view;
-  private boolean shouldRegisterGlobalErrorCallback = true;
+  private boolean shouldRegisterGlobalErrorCallbacks = true;
 
   public RosiePresenter(UseCaseHandler useCaseHandler) {
     this.useCaseHandler = useCaseHandler;
@@ -62,7 +74,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * presenter is destroyed.
    */
   protected void destroy() {
-
+    globalOnErrorCallbacks.clear();
   }
 
   /**
@@ -94,20 +106,20 @@ public class RosiePresenter<T extends RosiePresenter.View> {
   }
 
   /**
-   * Notifies that an unexpected error has happened.
-   *
-   * @param error the error.
-   * @return true if the error must be consume.
+   * Returns the UseCaseHandler instance used to create this presenter class.
    */
-  protected boolean onError(Error error) {
-    return false;
+  protected UseCaseHandler getUseCaseHandler() {
+    return useCaseHandler;
   }
 
   /**
-   * Returns the UseCaseHandler instance used to create this presenter class.
+   * Registers a global callback for all the use cases executed from this presenter. Global error
+   * callbacks need to be registered in your constructor.
+   *
+   * @param onErrorCallback The callback being registered
    */
-  protected final UseCaseHandler getUseCaseHandler() {
-    return useCaseHandler;
+  protected void registerOnErrorCallback(OnErrorCallback onErrorCallback) {
+    globalOnErrorCallbacks.add(onErrorCallback);
   }
 
   /**
@@ -146,17 +158,19 @@ public class RosiePresenter<T extends RosiePresenter.View> {
   }
 
   private void registerGlobalErrorCallback() {
-    if (globalErrorCallback != null && shouldRegisterGlobalErrorCallback) {
-      shouldRegisterGlobalErrorCallback = false;
-      useCaseHandler.registerGlobalErrorCallback(globalErrorCallback);
+    if (shouldRegisterGlobalErrorCallbacks) {
+      for (OnErrorCallback onErrorCallback : globalOnErrorCallbacks) {
+        useCaseHandler.registerGlobalErrorCallback(onErrorCallback);
+      }
+      shouldRegisterGlobalErrorCallbacks = false;
     }
   }
 
   private void unregisterGlobalErrorCallback() {
-    if (globalErrorCallback != null) {
-      shouldRegisterGlobalErrorCallback = true;
-      useCaseHandler.unregisterGlobalErrorCallback(globalErrorCallback);
+    for (OnErrorCallback onErrorCallback : globalOnErrorCallbacks) {
+      useCaseHandler.unregisterGlobalErrorCallback(onErrorCallback);
     }
+    shouldRegisterGlobalErrorCallbacks = true;
   }
 
   /**
@@ -166,11 +180,11 @@ public class RosiePresenter<T extends RosiePresenter.View> {
   private void retainCallbackReferences(UseCaseParams useCaseParams) {
     OnSuccessCallback onSuccessCallback = useCaseParams.getOnSuccessCallback();
     if (onSuccessCallback != null) {
-      onSuccessCallbacks.add(onSuccessCallback);
+      useCaseOnSuccessCallbacks.add(onSuccessCallback);
     }
     OnErrorCallback onErrorCallback = useCaseParams.getOnErrorCallback();
     if (onErrorCallback != null) {
-      onErrorCallbacks.add(onErrorCallback);
+      useCaseOnErrorCallbacks.add(onErrorCallback);
     }
   }
 

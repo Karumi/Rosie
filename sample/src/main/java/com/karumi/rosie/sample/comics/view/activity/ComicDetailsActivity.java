@@ -22,7 +22,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import butterknife.InjectView;
+import butterknife.Bind;
 import com.karumi.rosie.sample.R;
 import com.karumi.rosie.sample.comics.ComicsModule;
 import com.karumi.rosie.sample.comics.view.presenter.ComicDetailsPresenter;
@@ -39,11 +39,11 @@ public class ComicDetailsActivity extends RosieActivity implements ComicDetailsP
   private static final String COMIC_KEY_EXTRA = "ComicDetailsActivity.ComicKey";
   private static final int INVALID_COMIC_KEY_EXTRA = -1;
 
-  @InjectView(R.id.ll_comic_detail) View comicView;
-  @InjectView(R.id.iv_cover) ImageView coverView;
-  @InjectView(R.id.tv_rating) TextView ratingView;
-  @InjectView(R.id.tv_description) TextView descriptionView;
-  @InjectView(R.id.tv_loading) TextView loadingView;
+  @Bind(R.id.ll_comic_detail) View comicView;
+  @Bind(R.id.iv_cover) ImageView coverView;
+  @Bind(R.id.tv_rating) TextView ratingView;
+  @Bind(R.id.tv_description) TextView descriptionView;
+  @Bind(R.id.tv_loading) TextView loadingView;
 
   @Inject @Presenter ComicDetailsPresenter presenter;
 

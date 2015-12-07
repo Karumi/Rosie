@@ -23,11 +23,14 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class ErrorHandlerTest {
 
-  @Mock private OnErrorCallback onErrorCallback;
   @Mock private Error error;
 
   @Before public void setUp() {
@@ -35,13 +38,40 @@ public class ErrorHandlerTest {
   }
 
   @Test public void shouldNotifyInvocationTargetExceptionWrappingAnErrorNotHandledExceptionError() {
-    ErrorHandler errorHandler = givenAnErrorHandlerWithOneOnErrorCallback();
+    OnErrorCallback onErrorCallback = givenAnErrorCallbackThatCapturesError();
+    ErrorHandler errorHandler = givenAnErrorHandlerWithOnErrorCallbacks(onErrorCallback);
     InvocationTargetException invocationTargetException =
         givenAnInvocationExceptionWrappingAnErrorNotHandledException();
 
-    errorHandler.notifyError(invocationTargetException, null);
+    errorHandler.notifyException(invocationTargetException, null);
 
     verify(onErrorCallback).onError(error);
+  }
+
+  @Test public void shouldNotifyBothRegisteredOnErrorCallbacksIfNoneCapturesError() {
+    OnErrorCallback firstOnErrorCallback = givenAnErrorCallbackThatDoesNotCaptureError();
+    OnErrorCallback secondOnErrorCallback = givenAnErrorCallbackThatDoesNotCaptureError();
+    ErrorHandler errorHandler =
+        givenAnErrorHandlerWithOnErrorCallbacks(firstOnErrorCallback, secondOnErrorCallback);
+    InvocationTargetException invocationTargetException =
+        givenAnInvocationExceptionWrappingAnErrorNotHandledException();
+
+    errorHandler.notifyException(invocationTargetException, null);
+
+    verify(secondOnErrorCallback).onError(error);
+  }
+
+  @Test public void shouldNotNotifySecondRegisteredOnErrorCallbackIfFirstOneCapturesError() {
+    OnErrorCallback firstOnErrorCallback = givenAnErrorCallbackThatCapturesError();
+    OnErrorCallback secondOnErrorCallback = givenAnErrorCallbackThatDoesNotCaptureError();
+    ErrorHandler errorHandler =
+        givenAnErrorHandlerWithOnErrorCallbacks(firstOnErrorCallback, secondOnErrorCallback);
+    InvocationTargetException invocationTargetException =
+        givenAnInvocationExceptionWrappingAnErrorNotHandledException();
+
+    errorHandler.notifyException(invocationTargetException, null);
+
+    verify(secondOnErrorCallback, never()).onError(error);
   }
 
   private InvocationTargetException givenAnInvocationExceptionWrappingAnErrorNotHandledException() {
@@ -49,9 +79,26 @@ public class ErrorHandlerTest {
     return new InvocationTargetException(errorNotHandledException);
   }
 
-  private ErrorHandler givenAnErrorHandlerWithOneOnErrorCallback() {
+  private OnErrorCallback givenAnErrorCallbackThatDoesNotCaptureError() {
+    return givenAnErrorCallback(false);
+  }
+
+  private OnErrorCallback givenAnErrorCallbackThatCapturesError() {
+    return givenAnErrorCallback(true);
+  }
+
+  private OnErrorCallback givenAnErrorCallback(boolean capturesError) {
+    OnErrorCallback onErrorCallback = mock(OnErrorCallback.class);
+    when(onErrorCallback.onError(any(Error.class))).thenReturn(capturesError);
+    return onErrorCallback;
+  }
+
+  private ErrorHandler givenAnErrorHandlerWithOnErrorCallbacks(
+      OnErrorCallback... onErrorCallbacks) {
     ErrorHandler errorHandler = new ErrorHandler(new ErrorFactory(), new FakeCallbackScheduler());
-    errorHandler.registerCallback(onErrorCallback);
+    for (OnErrorCallback onErrorCallback : onErrorCallbacks) {
+      errorHandler.registerCallback(onErrorCallback);
+    }
     return errorHandler;
   }
 }
