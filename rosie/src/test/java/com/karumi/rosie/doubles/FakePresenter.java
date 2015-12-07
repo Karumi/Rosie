@@ -42,7 +42,7 @@ public class FakePresenter extends RosiePresenter {
 
   public void callErrorUseCase() {
     ErrorUseCase errorUseCase = new ErrorUseCase();
-    useCaseHandler.execute(errorUseCase);
+    createUseCaseCall(errorUseCase).execute();
   }
 
   public void setUi(FakeUi fakeUi) {

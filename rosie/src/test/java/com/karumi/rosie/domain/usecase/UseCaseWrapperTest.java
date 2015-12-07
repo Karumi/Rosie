@@ -38,8 +38,7 @@ public class UseCaseWrapperTest extends UnitTest {
 
   @Test public void testExecuteWithArgs() throws Exception {
     AnyUseCase anyUseCase = new AnyUseCase();
-    UseCaseParams argsParams =
-        new UseCaseParams.Builder().args(ANY_FIRST_ARG, ANY_SECOND_ARG).build();
+    UseCaseParams argsParams = givenUseCaseParamsWithArgs(ANY_FIRST_ARG, ANY_SECOND_ARG);
 
     UseCaseWrapper useCaseWrapper = new UseCaseWrapper(anyUseCase, argsParams, null);
 
@@ -49,11 +48,14 @@ public class UseCaseWrapperTest extends UnitTest {
     assertEquals(2, anyUseCase.getArg2());
   }
 
+  private UseCaseParams givenUseCaseParamsWithArgs(Object... args) {
+    return new UseCaseParams(null, args, null, null);
+  }
+
   @Test public void shouldNotifyErrorNotifiedFromTheUseCase() {
     AnyUseCase anyUseCase = new AnyUseCase();
     anyUseCase.setErrorToNotify(new Error());
-    UseCaseParams argsParams =
-        new UseCaseParams.Builder().args(ANY_FIRST_ARG, ANY_SECOND_ARG).build();
+    UseCaseParams argsParams = givenUseCaseParamsWithArgs(ANY_FIRST_ARG, ANY_SECOND_ARG);
     ErrorHandler errorHandler = mock(ErrorHandler.class);
     UseCaseWrapper useCaseWrapper = new UseCaseWrapper(anyUseCase, argsParams, errorHandler);
 
@@ -67,8 +69,7 @@ public class UseCaseWrapperTest extends UnitTest {
     AnyUseCase anyUseCase = new AnyUseCase();
     Error error = mock(Error.class);
     anyUseCase.setErrorToNotify(error);
-    UseCaseParams argsParams =
-        new UseCaseParams.Builder().args(ANY_FIRST_ARG, ANY_SECOND_ARG).build();
+    UseCaseParams argsParams = givenUseCaseParamsWithArgs(ANY_FIRST_ARG, ANY_SECOND_ARG);
     ErrorHandler errorHandler = mock(ErrorHandler.class);
     UseCaseWrapper useCaseWrapper = new UseCaseWrapper(anyUseCase, argsParams, errorHandler);
     ArgumentCaptor<InvocationTargetException> errorArgumentCaptor =

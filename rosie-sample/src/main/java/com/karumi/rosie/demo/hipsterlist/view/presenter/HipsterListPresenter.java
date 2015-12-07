@@ -19,7 +19,6 @@ package com.karumi.rosie.demo.hipsterlist.view.presenter;
 import com.karumi.rosie.demo.hipsterlist.domain.usecase.ObtainHipsters;
 import com.karumi.rosie.demo.hipsterlist.view.model.Hipster;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
-import com.karumi.rosie.domain.usecase.UseCaseParams;
 import com.karumi.rosie.domain.usecase.annotation.Success;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
 import com.karumi.rosie.view.RosiePresenter;
@@ -48,15 +47,14 @@ public class HipsterListPresenter extends RosiePresenter<HipsterListPresenter.Vi
   }
 
   private void loadHipsters() {
-    UseCaseParams params = new UseCaseParams.Builder().onSuccess(new OnSuccessCallback() {
+    createUseCaseCall(obtainHipsters).onSuccess(new OnSuccessCallback() {
       @Success public void onSuccess(List<Hipster> hipsters) {
         HipsterListPresenter.this.hipsters.clear();
         HipsterListPresenter.this.hipsters.addAll(hipsters);
         getView().updateList(HipsterListPresenter.this.hipsters);
       }
-    }).build();
+    }).execute();
 
-    execute(obtainHipsters, params);
   }
 
   public interface View extends RosiePresenter.View {

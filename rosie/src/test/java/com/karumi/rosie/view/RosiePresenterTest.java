@@ -21,37 +21,24 @@ import com.karumi.rosie.domain.usecase.RosieUseCase;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
 import com.karumi.rosie.domain.usecase.UseCaseParams;
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
 public class RosiePresenterTest extends UnitTest {
 
   @Mock private UseCaseHandler useCaseHandler;
   @Mock private RosieUseCase anyUseCase;
-  private UseCaseParams anyUseCaseParams;
-
-  @Before public void setUp() {
-    anyUseCaseParams = new UseCaseParams.Builder().build();
-  }
 
   @Test public void shouldExecuteUseCaseUsingTheUseCaseHandler() {
     RosiePresenter rosiePresenter = givenARosiePresenter();
 
-    rosiePresenter.execute(anyUseCase);
+    rosiePresenter.createUseCaseCall(anyUseCase).execute();
 
-    verify(useCaseHandler).execute(anyUseCase);
-  }
-
-  @Test public void shouldExecuteUseCaseWithUseCaseParamsUsingTheUseCaseHandler() {
-    RosiePresenter rosiePresenter = givenARosiePresenter();
-
-    rosiePresenter.execute(anyUseCase, anyUseCaseParams);
-
-    verify(useCaseHandler).execute(anyUseCase, anyUseCaseParams);
+    verify(useCaseHandler).execute(eq(anyUseCase), any(UseCaseParams.class));
   }
 
   @Test public void shouldRegisterGlobalErrorCallbackDuringTheInitializeLifecycleStage() {

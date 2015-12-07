@@ -27,20 +27,16 @@ public final class UseCaseParams {
 
   private final String useCaseName;
   private final Object[] args;
+  private final WeakReference<OnSuccessCallback> onSuccessCallback;
+  private final WeakReference<OnErrorCallback> onErrorCallback;
 
-  private WeakReference<OnSuccessCallback> onSuccessCallback;
-  private WeakReference<OnErrorCallback> onErrorCallback;
-
-  private UseCaseParams(String useCaseName, Object[] args, OnSuccessCallback onSuccessCallback,
-      OnErrorCallback onErrorCallback) {
-    this.args = args;
+  UseCaseParams(String useCaseName, Object[] args,
+      WeakReference<OnSuccessCallback> onSuccessCallback,
+      WeakReference<OnErrorCallback> onErrorCallback) {
     this.useCaseName = useCaseName;
-    if (onSuccessCallback != null) {
-      this.onSuccessCallback = new WeakReference<>(onSuccessCallback);
-    }
-    if (onErrorCallback != null) {
-      this.onErrorCallback = new WeakReference<>(onErrorCallback);
-    }
+    this.args = args;
+    this.onSuccessCallback = onSuccessCallback;
+    this.onErrorCallback = onErrorCallback;
   }
 
   public OnSuccessCallback getOnSuccessCallback() {
@@ -57,61 +53,5 @@ public final class UseCaseParams {
 
   Object[] getArgs() {
     return args;
-  }
-
-  public static class Builder {
-
-    private String useCaseName = "";
-    private Object[] args;
-    private OnSuccessCallback onSuccess;
-    private OnErrorCallback errorCallback;
-
-    public Builder useCaseName(String name) {
-      useCaseName = name;
-      return this;
-    }
-
-    public Builder args(Object... args) {
-      this.args = args;
-      return this;
-    }
-
-    /**
-     * The OnSuccessCallback passed as argument in this method will be referenced as a
-     * WeakReference inside RosieUseCase and UseCaseParams to avoid memory leaks during the
-     * Activity lifecycle pause-destroy stage. Remember to keep a strong reference of your
-     * OnSuccessCallback instance if needed.
-     */
-    public Builder onSuccess(OnSuccessCallback onSuccessCallback) {
-      if (onSuccessCallback == null) {
-        throw new IllegalArgumentException(
-            "OnSuccessCallback is null. You can not invoke it with" + " null callback.");
-      }
-
-      this.onSuccess = onSuccessCallback;
-      return this;
-    }
-
-    /**
-     * The OnErrorCallback passed as argument in this method will be referenced as a
-     * WeakReference inside RosieUseCase and UseCaseParams to avoid memory leaks during the
-     * Activity lifecycle pause-destroy stage. Remember to keep a strong reference of your
-     * OnErrorCallback instance if needed.
-     */
-    public Builder onError(OnErrorCallback errorCallback) {
-      if (errorCallback == null) {
-        throw new IllegalArgumentException(
-            "The onErrorCallback used is null, you can't use a null instance as onError callback.");
-      }
-      this.errorCallback = errorCallback;
-      return this;
-    }
-
-    public UseCaseParams build() {
-      if (this.args == null) {
-        args = new Object[0];
-      }
-      return new UseCaseParams(useCaseName, args, onSuccess, errorCallback);
-    }
   }
 }
