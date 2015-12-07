@@ -3,7 +3,6 @@ package com.karumi.rosie.view;
 import com.karumi.rosie.domain.usecase.RosieUseCase;
 import com.karumi.rosie.domain.usecase.UseCaseCall;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
-import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -19,8 +18,7 @@ import java.util.List;
 public class RosiePresenter<T extends RosiePresenter.View> {
 
   private final UseCaseHandler useCaseHandler;
-  private final List<OnSuccessCallback> onSuccessCallbacks = new LinkedList<>();
-  private final List<OnErrorCallback> onErrorCallbacks = new LinkedList<>();
+  private final List<UseCaseCall> useCaseCalls = new LinkedList<>();
   private final OnErrorCallback globalErrorCallback = new OnErrorCallback() {
     @Override
     public void onError(Error error) {
@@ -74,7 +72,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    */
   protected final UseCaseCall createUseCaseCall(RosieUseCase useCase) {
     UseCaseCall useCaseCall = new UseCaseCall(useCase, useCaseHandler);
-    //TODO KEEP A STRONG REFERENCE FOR CALLBACKS.
+    retainUseCaseCall(useCaseCall);
     return useCaseCall;
   }
 
@@ -154,21 +152,14 @@ public class RosiePresenter<T extends RosiePresenter.View> {
     }
   }
 
-  ///**
-  // * Represents the View component inside the Model View Presenter pattern. This interface must be
-  // * used as base interface for every View interface declared.
-  // */
-  //private void retainCallbackReferences(UseCaseParams useCaseParams) {
-  //  OnSuccessCallback onSuccessCallback = useCaseParams.getOnSuccessCallback();
-  //  if (onSuccessCallback != null) {
-  //    onSuccessCallbacks.add(onSuccessCallback);
-  //  }
-  //  OnErrorCallback onErrorCallback = useCaseParams.getOnErrorCallback();
-  //  if (onErrorCallback != null) {
-  //    onErrorCallbacks.add(onErrorCallback);
-  //  }
-  //}
+  private void retainUseCaseCall(UseCaseCall useCaseCall) {
+    useCaseCalls.add(useCaseCall);
+  }
 
+  /**
+   * Represents the View component inside the Model View Presenter pattern. This interface must be
+   * used as base interface for every View interface declared.
+   */
   public interface View {
 
   }
