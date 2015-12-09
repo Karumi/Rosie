@@ -24,7 +24,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 import butterknife.Bind;
 import com.karumi.dividers.Direction;
 import com.karumi.dividers.DividerBuilder;
@@ -43,6 +42,7 @@ import com.karumi.rosie.view.RosieFragment;
 import com.karumi.rosie.view.paginated.ScrollToBottomListener;
 import com.pedrogomez.renderers.RVRendererAdapter;
 import com.pedrogomez.renderers.RendererBuilder;
+import com.victor.loading.rotate.RotateLoading;
 import java.util.Collection;
 import java.util.List;
 import javax.inject.Inject;
@@ -50,7 +50,7 @@ import javax.inject.Inject;
 public class ComicsFragment extends RosieFragment implements ComicsPresenter.View {
 
   @Bind(R.id.rv_comics) RecyclerView comicsView;
-  @Bind(R.id.tv_loading) TextView loadingView;
+  @Bind(R.id.loading) RotateLoading loadingView;
 
   @Inject @Presenter ComicsPresenter presenter;
 
@@ -68,11 +68,13 @@ public class ComicsFragment extends RosieFragment implements ComicsPresenter.Vie
   }
 
   @Override public void hideLoading() {
+    loadingView.stop();
     loadingView.setVisibility(View.GONE);
   }
 
   @Override public void showLoading() {
     loadingView.setVisibility(View.VISIBLE);
+    loadingView.start();
   }
 
   @Override public void hideComics() {
@@ -113,7 +115,7 @@ public class ComicsFragment extends RosieFragment implements ComicsPresenter.Vie
 
   @NonNull private DividerItemDecoration getDivider() {
     Drawable dividerBackground =
-        ContextCompat.getDrawable(getActivity(), R.drawable.comics_divider);
+        ContextCompat.getDrawable(getActivity(), R.drawable.dark_blue_divider);
     Collection<Layer> layers = LayersBuilder.with(
         new Layer(DividerBuilder.from(dividerBackground).erase(Direction.getVertical()).build()),
         new Layer(new HeaderSelector(),

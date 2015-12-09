@@ -15,14 +15,17 @@
   ~ limitations under the License.
   -->
 <resources>
+  <color name="main_background">#2D353D</color>
   <color name="view_pager_tab_background">#404B58</color>
   <color name="view_pager_tab_selected_underline">#00C8FF</color>
   <color name="view_pager_tab_text">#FFFFFF</color>
-  <color name="character_row_background">#2D353D</color>
+  <color name="character_item_background">#2D353D</color>
   <color name="character_name">#EEEEEE</color>
+  <color name="character_details_description">#EEEEEE</color>
   <color name="comic_item_background">#2D353D</color>
   <color name="comic_item_divider">@color/view_pager_tab_background</color>
   <color name="comic_name">#EEEEEE</color>
   <color name="comic_details_background">@color/comic_item_background</color>
   <color name="comic_details_description">#EEEEEE</color>
+  <color name="loading">#FFFFFF</color>
 </resources>

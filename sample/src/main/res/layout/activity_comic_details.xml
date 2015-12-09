@@ -15,23 +15,23 @@
   ~ limitations under the License.
   -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/main_background"
     >
 
   <LinearLayout
       android:id="@+id/ll_comic_detail"
+      android:orientation="vertical"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:orientation="vertical"
-      android:background="@color/comic_details_background"
       >
 
     <ImageView
         android:id="@+id/iv_cover"
         android:layout_width="match_parent"
         android:layout_height="@dimen/comic_cover_height"
+        android:contentDescription="@string/comic_cover_content_description"
         />
 
     <LinearLayout

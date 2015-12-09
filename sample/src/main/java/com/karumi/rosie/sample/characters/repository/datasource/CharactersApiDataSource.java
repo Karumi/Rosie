@@ -29,8 +29,8 @@ import javax.inject.Inject;
 public class CharactersApiDataSource extends EmptyReadableDataSource<String, Character>
     implements PaginatedReadableDataSource<Character> {
 
-  private static final int NUMBER_OF_CHARACTERS = 15;
-  private static final long SLEEP_TIME_IN_MILLISECONDS = 750;
+  private static final int NUMBER_OF_CHARACTERS = 45;
+  private static final long SLEEP_TIME_IN_MILLISECONDS = 1000;
   private static final Random RANDOM = new Random(System.nanoTime());
   private static final String SPIDERMAN_KEY = "54";
   private static final String CAPTAIN_MARVEL_KEY = "9";

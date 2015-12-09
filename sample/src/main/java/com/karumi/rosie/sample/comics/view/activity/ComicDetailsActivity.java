@@ -30,6 +30,7 @@ import com.karumi.rosie.sample.comics.view.viewmodel.ComicDetailsViewModel;
 import com.karumi.rosie.view.Presenter;
 import com.karumi.rosie.view.RosieActivity;
 import com.squareup.picasso.Picasso;
+import com.victor.loading.rotate.RotateLoading;
 import java.util.Arrays;
 import java.util.List;
 import javax.inject.Inject;
@@ -43,7 +44,7 @@ public class ComicDetailsActivity extends RosieActivity implements ComicDetailsP
   @Bind(R.id.iv_cover) ImageView coverView;
   @Bind(R.id.tv_rating) TextView ratingView;
   @Bind(R.id.tv_description) TextView descriptionView;
-  @Bind(R.id.tv_loading) TextView loadingView;
+  @Bind(R.id.loading) RotateLoading loadingView;
 
   @Inject @Presenter ComicDetailsPresenter presenter;
 
@@ -62,11 +63,13 @@ public class ComicDetailsActivity extends RosieActivity implements ComicDetailsP
   }
 
   @Override public void hideLoading() {
+    loadingView.stop();
     loadingView.setVisibility(View.GONE);
   }
 
   @Override public void showLoading() {
     loadingView.setVisibility(View.VISIBLE);
+    loadingView.start();
   }
 
   @Override public void hideComicDetails() {

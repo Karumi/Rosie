@@ -31,7 +31,7 @@ import javax.inject.Inject;
 
 public class CharactersPresenter extends RosiePresenterWithLoading<CharactersPresenter.View> {
 
-  private static final int NUMBER_OF_CHARACTERS_PER_PAGE = 3;
+  private static final int NUMBER_OF_CHARACTERS_PER_PAGE = 15;
 
   private final GetCharacters getCharacters;
   private final CharacterToCharacterViewModelMapper mapper;

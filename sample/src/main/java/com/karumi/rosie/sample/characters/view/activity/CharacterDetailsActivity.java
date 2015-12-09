@@ -30,6 +30,7 @@ import com.karumi.rosie.sample.characters.view.viewmodel.CharacterDetailViewMode
 import com.karumi.rosie.view.Presenter;
 import com.karumi.rosie.view.RosieActivity;
 import com.squareup.picasso.Picasso;
+import com.victor.loading.rotate.RotateLoading;
 import java.util.Arrays;
 import java.util.List;
 import javax.inject.Inject;
@@ -41,8 +42,9 @@ public class CharacterDetailsActivity extends RosieActivity
 
   @Bind(R.id.iv_character_image) ImageView characterHeaderView;
   @Bind(R.id.ll_character_detail) View characterDetailView;
+  @Bind(R.id.tv_character_name) TextView characterNameView;
   @Bind(R.id.tv_description) TextView characterDescriptionView;
-  @Bind(R.id.tv_loading) TextView loadingView;
+  @Bind(R.id.loading) RotateLoading loadingView;
 
   @Inject @Presenter CharacterDetailsPresenter presenter;
 
@@ -62,11 +64,13 @@ public class CharacterDetailsActivity extends RosieActivity
   }
 
   @Override public void hideLoading() {
+    loadingView.stop();
     loadingView.setVisibility(View.GONE);
   }
 
   @Override public void showLoading() {
     loadingView.setVisibility(View.VISIBLE);
+    loadingView.start();
   }
 
   @Override public void hideCharacterDetail() {
@@ -75,7 +79,12 @@ public class CharacterDetailsActivity extends RosieActivity
 
   @Override public void showCharacterDetail(CharacterDetailViewModel character) {
     characterDetailView.setVisibility(View.VISIBLE);
-    Picasso.with(this).load(character.getHeaderImage()).into(characterHeaderView);
+    Picasso.with(this)
+        .load(character.getHeaderImage())
+        .fit()
+        .centerCrop()
+        .into(characterHeaderView);
+    characterNameView.setText(character.getName());
     characterDescriptionView.setText(character.getDescription());
   }
 
