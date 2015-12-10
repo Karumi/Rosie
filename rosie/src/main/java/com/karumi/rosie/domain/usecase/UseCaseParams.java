@@ -27,16 +27,21 @@ final class UseCaseParams {
 
   private final String useCaseName;
   private final Object[] args;
-  private final WeakReference<OnSuccessCallback> onSuccessCallback;
-  private final WeakReference<OnErrorCallback> onErrorCallback;
+  private WeakReference<OnSuccessCallback> onSuccessCallback;
+  private WeakReference<OnErrorCallback> onErrorCallback;
 
   UseCaseParams(String useCaseName, Object[] args,
-      WeakReference<OnSuccessCallback> onSuccessCallback,
-      WeakReference<OnErrorCallback> onErrorCallback) {
+      OnSuccessCallback onSuccessCallback,
+      OnErrorCallback onErrorCallback) {
     this.useCaseName = useCaseName;
     this.args = args;
-    this.onSuccessCallback = onSuccessCallback;
-    this.onErrorCallback = onErrorCallback;
+    if (onSuccessCallback != null) {
+      this.onSuccessCallback = new WeakReference<>(onSuccessCallback);
+    }
+
+    if (onErrorCallback != null) {
+      this.onErrorCallback = new WeakReference<>(onErrorCallback);
+    }
   }
 
   public OnSuccessCallback getOnSuccessCallback() {

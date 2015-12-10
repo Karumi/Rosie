@@ -19,7 +19,6 @@ package com.karumi.rosie.domain.usecase;
 
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
-import java.lang.ref.WeakReference;
 
 public final class UseCaseCall {
   private final RosieUseCase useCase;
@@ -27,8 +26,8 @@ public final class UseCaseCall {
 
   private String useCaseName;
   private Object[] args;
-  private WeakReference<OnSuccessCallback> onSuccessCallback;
-  private WeakReference<OnErrorCallback> onErrorCallback;
+  private OnSuccessCallback onSuccessCallback;
+  private OnErrorCallback onErrorCallback;
 
   public UseCaseCall(RosieUseCase useCase, UseCaseHandler useCaseHandler) {
     this.useCase = useCase;
@@ -57,7 +56,7 @@ public final class UseCaseCall {
           "OnSuccessCallback is null. You can not invoke it with" + " null callback.");
     }
 
-    this.onSuccessCallback = new WeakReference<>(onSuccessCallback);
+    this.onSuccessCallback = onSuccessCallback;
     return this;
   }
 
@@ -72,7 +71,7 @@ public final class UseCaseCall {
       throw new IllegalArgumentException(
           "The onErrorCallback used is null, you can't use a null instance as onError callback.");
     }
-    this.onErrorCallback = new WeakReference<>(errorCallback);
+    this.onErrorCallback = errorCallback;
     return this;
   }
 
