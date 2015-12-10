@@ -19,4 +19,22 @@ public class UseCaseCallTest extends UnitTest {
 
     verify(useCaseHandler).execute(eq(anyUseCase), any(UseCaseParams.class));
   }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void shouldThrowIllegalArgumentExceptionWhenOnSucessCallbackIsNull() {
+    RosieUseCase anyUseCase = mock(RosieUseCase.class);
+    UseCaseHandler useCaseHandler = mock(UseCaseHandler.class);
+    UseCaseCall useCaseCall = new UseCaseCall(anyUseCase, useCaseHandler);
+
+    useCaseCall.onSuccess(null).execute();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void shouldThrowIllegalArgumentExceptionWhenOnErrorCallbackIsNull() {
+    RosieUseCase anyUseCase = mock(RosieUseCase.class);
+    UseCaseHandler useCaseHandler = mock(UseCaseHandler.class);
+    UseCaseCall useCaseCall = new UseCaseCall(anyUseCase, useCaseHandler);
+
+    useCaseCall.onError(null).execute();
+  }
 }
