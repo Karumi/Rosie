@@ -44,7 +44,7 @@ public class FakePresenter extends RosiePresenter implements OnErrorCallback {
 
   public void callErrorUseCase() {
     ErrorUseCase errorUseCase = new ErrorUseCase();
-    useCaseHandler.execute(errorUseCase);
+    createUseCaseCall(errorUseCase).execute();
   }
 
   public void setUi(FakeUi fakeUi) {

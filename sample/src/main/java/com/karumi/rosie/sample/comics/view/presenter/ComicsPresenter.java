@@ -17,7 +17,6 @@
 package com.karumi.rosie.sample.comics.view.presenter;
 
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
-import com.karumi.rosie.domain.usecase.UseCaseParams;
 import com.karumi.rosie.domain.usecase.annotation.Success;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
 import com.karumi.rosie.repository.PaginatedCollection;
@@ -59,7 +58,7 @@ public class ComicsPresenter extends RosiePresenterWithLoading<ComicsPresenter.V
   }
 
   private void loadComics() {
-    UseCaseParams params = new UseCaseParams.Builder().args(offset, NUMBER_OF_COMICS_PER_PAGE)
+    createUseCaseCall(getComics).args(offset, NUMBER_OF_COMICS_PER_PAGE)
         .onSuccess(new OnSuccessCallback() {
           @Success public void onComicsLoaded(PaginatedCollection<Comic> comics) {
             List<ComicViewModel> comicViewModels = mapper.mapComicsToComicViewModels(comics);
@@ -69,8 +68,7 @@ public class ComicsPresenter extends RosiePresenterWithLoading<ComicsPresenter.V
             offset = comics.getOffset() + NUMBER_OF_COMICS_PER_PAGE;
           }
         })
-        .build();
-    execute(getComics, params);
+        .execute();
   }
 
   public interface View extends RosiePresenterWithLoading.View {
