@@ -20,6 +20,8 @@ import com.karumi.rosie.UnitTest;
 import com.karumi.rosie.doubles.AnyRepositoryKey;
 import com.karumi.rosie.doubles.AnyRepositoryValue;
 import com.karumi.rosie.repository.PaginatedCollection;
+import com.karumi.rosie.repository.datasource.paginated.InMemoryPaginatedCacheDataSource;
+import com.karumi.rosie.repository.datasource.paginated.PaginatedCacheDataSource;
 import com.karumi.rosie.time.TimeProvider;
 import java.util.Collection;
 import java.util.LinkedList;

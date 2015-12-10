@@ -20,19 +20,21 @@ import com.karumi.rosie.domain.usecase.RosieUseCase;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
 import com.karumi.rosie.domain.usecase.annotation.UseCase;
 import com.karumi.rosie.domain.usecase.error.ErrorHandler;
+import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 import com.karumi.rosie.testutils.FakeTaskScheduler;
 import com.karumi.rosie.view.RosiePresenter;
 
 /**
  * Double presenter to use on some tests.
  */
-public class FakePresenter extends RosiePresenter {
+public class FakePresenter extends RosiePresenter implements OnErrorCallback {
   private UseCaseHandler useCaseHandler;
   private FakeUi fakeUi;
 
   public FakePresenter() {
     this(
         new UseCaseHandler(new FakeTaskScheduler(), new ErrorHandler(new FakeCallbackScheduler())));
+    registerOnErrorCallback(this);
   }
 
   public FakePresenter(UseCaseHandler useCaseHandler) {
@@ -49,7 +51,7 @@ public class FakePresenter extends RosiePresenter {
     this.fakeUi = fakeUi;
   }
 
-  @Override protected boolean onError(Error error) {
+  @Override public boolean onError(Error error) {
     if (fakeUi != null) {
       fakeUi.showFakeError();
       return true;
@@ -64,7 +66,7 @@ public class FakePresenter extends RosiePresenter {
 
   public class ErrorUseCase extends RosieUseCase {
 
-    @UseCase public void excuteError() throws Exception {
+    @UseCase public void executeError() throws Exception {
       notifyError(new Error("error"));
     }
   }

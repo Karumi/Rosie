@@ -19,8 +19,8 @@ package com.karumi.rosie.repository;
 import com.karumi.rosie.UnitTest;
 import com.karumi.rosie.doubles.AnyRepositoryKey;
 import com.karumi.rosie.doubles.AnyRepositoryValue;
-import com.karumi.rosie.repository.datasource.PaginatedCacheDataSource;
-import com.karumi.rosie.repository.datasource.PaginatedReadableDataSource;
+import com.karumi.rosie.repository.datasource.paginated.PaginatedCacheDataSource;
+import com.karumi.rosie.repository.datasource.paginated.PaginatedReadableDataSource;
 import com.karumi.rosie.repository.policy.ReadPolicy;
 import java.util.LinkedList;
 import org.junit.Test;
@@ -116,8 +116,8 @@ public class PaginatedRosieRepositoryTest extends UnitTest {
   private PaginatedRosieRepository<AnyRepositoryKey, AnyRepositoryValue> givenAPaginatedRepository() {
     PaginatedRosieRepository<AnyRepositoryKey, AnyRepositoryValue> repository =
         new PaginatedRosieRepository<>();
-    repository.addPaginatedCaches(cacheDataSource);
-    repository.addPaginatedReadables(readableDataSource);
+    repository.addPaginatedCacheDataSources(cacheDataSource);
+    repository.addPaginatedReadableDataSources(readableDataSource);
     return repository;
   }
 
