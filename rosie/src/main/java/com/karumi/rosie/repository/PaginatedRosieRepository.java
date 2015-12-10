@@ -1,24 +1,24 @@
 /*
- * The MIT License (MIT) Copyright (c) 2014 karumi Permission is hereby granted, free of charge,
- * to any person obtaining a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including without limitation the
- * rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to
-  * do so, subject to the following conditions: The above copyright notice and this permission
-  * notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE
-  * IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-  * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Copyright (C) 2015 Karumi.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.karumi.rosie.repository;
 
 import com.karumi.rosie.repository.datasource.Identifiable;
-import com.karumi.rosie.repository.datasource.PaginatedCacheDataSource;
-import com.karumi.rosie.repository.datasource.PaginatedReadableDataSource;
+import com.karumi.rosie.repository.datasource.paginated.PaginatedCacheDataSource;
+import com.karumi.rosie.repository.datasource.paginated.PaginatedReadableDataSource;
 import com.karumi.rosie.repository.policy.ReadPolicy;
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,21 +35,33 @@ public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends Rosi
       new LinkedList<>();
 
   @SafeVarargs
-  protected final <R extends PaginatedReadableDataSource<V>> void addPaginatedReadables(
+  protected final <R extends PaginatedReadableDataSource<V>> void addPaginatedReadableDataSources(
       R... readables) {
     this.paginatedReadableDataSources.addAll(Arrays.asList(readables));
   }
 
   @SafeVarargs
-  protected final <R extends PaginatedCacheDataSource<K, V>> void addPaginatedCaches(R... caches) {
+  protected final <R extends PaginatedCacheDataSource<K, V>> void addPaginatedCacheDataSources(
+      R... caches) {
     this.paginatedCacheDataSources.addAll(Arrays.asList(caches));
   }
 
-  public PaginatedCollection<V> getPage(int offset, int limit) throws Exception {
+  /**
+   * Returns a page of values bounded by the offset and limit values.
+   * @param offset Index of the first item to be retrieved
+   * @param limit Number of elements that will be retrieved
+   */
+  public PaginatedCollection<V> getPage(int offset, int limit) {
     return getPage(offset, limit, ReadPolicy.READ_ALL);
   }
 
-  public PaginatedCollection<V> getPage(int offset, int limit, ReadPolicy policy) throws Exception {
+  /**
+   * Returns a page of values bounded by the offset and limit values.
+   * @param offset Index of the first item to be retrieved
+   * @param limit Number of elements that will be retrieved
+   * @param policy Specifies how the value is going to be retrieved.
+   */
+  public PaginatedCollection<V> getPage(int offset, int limit, ReadPolicy policy) {
     PaginatedCollection<V> values = null;
 
     if (policy.useCache()) {

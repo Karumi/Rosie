@@ -31,9 +31,8 @@ public class RosiePresenterTest extends UnitTest {
   @Mock private UseCaseHandler useCaseHandler;
   @Mock private RosieUseCase anyUseCase;
 
-
   @Test public void shouldRegisterGlobalErrorCallbackDuringTheInitializeLifecycleStage() {
-    RosiePresenter rosiePresenter = givenARosiePresenter();
+    RosiePresenter rosiePresenter = givenARosiePresenterWithRegisteredCallback();
 
     rosiePresenter.initialize();
     rosiePresenter.update();
@@ -42,14 +41,26 @@ public class RosiePresenterTest extends UnitTest {
   }
 
   @Test public void shouldUnregisterGlobalErrorCallbackDuringThePauseLifecycleStage() {
-    RosiePresenter rosiePresenter = givenARosiePresenter();
+    RosiePresenter rosiePresenter = givenARosiePresenterWithRegisteredCallback();
 
     rosiePresenter.pause();
 
     verify(useCaseHandler).unregisterGlobalErrorCallback(any(OnErrorCallback.class));
   }
 
-  private RosiePresenter givenARosiePresenter() {
-    return new RosiePresenter(useCaseHandler);
+  private RosiePresenter givenARosiePresenterWithRegisteredCallback() {
+    return new RosiePresenterWithRegisteredCallback(useCaseHandler);
+  }
+
+  private static class RosiePresenterWithRegisteredCallback extends RosiePresenter
+      implements OnErrorCallback {
+    public RosiePresenterWithRegisteredCallback(UseCaseHandler useCaseHandler) {
+      super(useCaseHandler);
+      registerOnErrorCallback(this);
+    }
+
+    @Override public boolean onError(Error error) {
+      return true;
+    }
   }
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2015 Karumi.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<resources>
+  <string name="app_name">Rosie</string>
+  <string name="loading_message">Loading…</string>
+  <string name="characters_page_title">Characters</string>
+  <string name="comics_page_title">Comics</string>
+  <string name="marvel_rating_text">Rating: %1$s</string>
+  <string name="marvel_rating_all_ages">All Ages</string>
+  <string name="marvel_rating_t">T</string>
+  <string name="marvel_rating_teens_and_up">T+</string>
+  <string name="marvel_rating_parental_advisory">Parental Advisory</string>
+  <string name="marvel_rating_explicit_content">Max: Explicit Content</string>
+  <string name="comic_next_icon_content_description">See comic details</string>
+  <string name="comic_cover_content_description">Comic cover</string>
+  <string name="character_next_icon_content_description">See character details</string>
+  <string name="character_thumbnail_content_description">Character thumbnail</string>
+</resources>

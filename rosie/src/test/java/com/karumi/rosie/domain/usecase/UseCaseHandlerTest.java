@@ -21,7 +21,6 @@ import com.karumi.rosie.domain.usecase.annotation.Success;
 import com.karumi.rosie.domain.usecase.annotation.UseCase;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
 import com.karumi.rosie.domain.usecase.error.ErrorHandler;
-import com.karumi.rosie.domain.usecase.error.ErrorNotHandledException;
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 import com.karumi.rosie.doubles.FakeCallbackScheduler;
 import com.karumi.rosie.doubles.NetworkError;
@@ -194,7 +193,7 @@ public class UseCaseHandlerTest extends UnitTest {
     assertNotNull(onSuccessCallback.getValue());
   }
 
-  @Test public void completeCallbackShouldNotBeExecuteWhenNotMatchArgs() {
+  @Test public void completeCallbackShouldNotBeExecutedWhenNotMatchArgs() {
     FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
     AnyUseCase anyUseCase = new AnyUseCase();
     EmptyOnSuccess onSuccessCallback = new EmptyOnSuccess();
@@ -233,7 +232,7 @@ public class UseCaseHandlerTest extends UnitTest {
     verify(errorCallback).onError(any(Error.class));
   }
 
-  @Test public void shouldCallErrorHandlerWhenUseCaseInvokeAnErrorAndDontExistSpecificCallback() {
+  @Test public void shouldCallErrorHandlerWhenUseCaseInvokeAnError() {
     FakeTaskScheduler taskScheduler = new FakeTaskScheduler();
     ErrorUseCase errorUseCase = new ErrorUseCase();
     ErrorHandler errorHandler = mock(ErrorHandler.class);
@@ -242,8 +241,7 @@ public class UseCaseHandlerTest extends UnitTest {
 
     useCaseCall.useCaseName("customError").execute();
 
-    verify(errorHandler).notifyError(any(ErrorNotHandledException.class),
-        eq((OnErrorCallback) null));
+    verify(errorHandler).notifyError(any(Error.class), eq((OnErrorCallback) null));
   }
 
   @Test public void shouldNotifyErrorHandlerWhenUseCaseOnErrorCallbackDoesNotExist() {
@@ -255,8 +253,7 @@ public class UseCaseHandlerTest extends UnitTest {
 
     useCaseCall.useCaseName("customError").onError(specificErrorCallback).execute();
 
-    verify(errorHandler).notifyError(any(ErrorNotHandledException.class),
-        eq(specificErrorCallback));
+    verify(errorHandler).notifyError(any(Error.class), eq(specificErrorCallback));
   }
 
   @Test public void shouldCallErrorHandlerErrorWhenUseCaseThrowsAnException() {
@@ -268,7 +265,7 @@ public class UseCaseHandlerTest extends UnitTest {
 
     useCaseCall.useCaseName("launchException").execute();
 
-    verify(errorHandler).notifyError(any(Exception.class), eq((OnErrorCallback) null));
+    verify(errorHandler).notifyException(any(Exception.class), eq((OnErrorCallback) null));
   }
 
   @Test public void shouldThrowExceptionIfUseCaseNotifiesSuccessButThereIsNoOnSuccessCallback() {
@@ -280,7 +277,8 @@ public class UseCaseHandlerTest extends UnitTest {
 
     useCaseCall.execute();
 
-    verify(errorHandler).notifyError(any(IllegalStateException.class), eq((OnErrorCallback) null));
+    verify(errorHandler).notifyException(any(IllegalStateException.class),
+        eq((OnErrorCallback) null));
   }
 
   @Test public void shouldThrowExceptionIfTheOnSuccessCallbackHasNoMethodsWithSuccessAnnotations() {
@@ -293,7 +291,8 @@ public class UseCaseHandlerTest extends UnitTest {
     useCaseCall.onSuccess(new OnSuccessCallback() {
     }).execute();
 
-    verify(errorHandler).notifyError(any(IllegalStateException.class), eq((OnErrorCallback) null));
+    verify(errorHandler).notifyException(any(IllegalStateException.class),
+        eq((OnErrorCallback) null));
   }
 
   @Test public void shouldSupportNullUseCaseParams() {
@@ -314,21 +313,21 @@ public class UseCaseHandlerTest extends UnitTest {
   }
 
   private OnErrorCallback onErrorCallback = new OnErrorCallback<Error>() {
-
-    @Override public void onError(Error error) {
+    @Override public boolean onError(Error error) {
+      return false;
     }
   };
 
   private OnErrorCallback specificErrorCallback = new OnErrorCallback<NetworkError>() {
-
-    @Override public void onError(NetworkError error) {
+    @Override public boolean onError(NetworkError error) {
+      return false;
     }
   };
 
   private class AnyOnSuccess implements OnSuccessCallback {
     private int value;
 
-    @Success public void onSucess(int value) {
+    @Success public void onSuccess(int value) {
       this.value = value;
     }
 
@@ -352,7 +351,7 @@ public class UseCaseHandlerTest extends UnitTest {
   private class EmptyOnSuccess implements OnSuccessCallback {
     private boolean success = false;
 
-    @Success public void onSucess() {
+    @Success public void onSuccess() {
       success = true;
     }
 

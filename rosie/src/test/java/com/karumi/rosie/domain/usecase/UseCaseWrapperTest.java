@@ -21,9 +21,7 @@ import com.karumi.rosie.domain.usecase.annotation.UseCase;
 import com.karumi.rosie.domain.usecase.error.ErrorHandler;
 import com.karumi.rosie.domain.usecase.error.ErrorNotHandledException;
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
-import java.lang.reflect.InvocationTargetException;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -61,26 +59,8 @@ public class UseCaseWrapperTest extends UnitTest {
 
     useCaseWrapper.execute();
 
-    verify(errorHandler).notifyError(any(ErrorNotHandledException.class),
+    verify(errorHandler).notifyException(any(ErrorNotHandledException.class),
         eq((OnErrorCallback) null));
-  }
-
-  @Test public void shouldNotifyErrorUsingTheErrorGeneratedFromTheUseCase() {
-    AnyUseCase anyUseCase = new AnyUseCase();
-    Error error = mock(Error.class);
-    anyUseCase.setErrorToNotify(error);
-    UseCaseParams argsParams = givenUseCaseParamsWithArgs(ANY_FIRST_ARG, ANY_SECOND_ARG);
-    ErrorHandler errorHandler = mock(ErrorHandler.class);
-    UseCaseWrapper useCaseWrapper = new UseCaseWrapper(anyUseCase, argsParams, errorHandler);
-    ArgumentCaptor<InvocationTargetException> errorArgumentCaptor =
-        ArgumentCaptor.forClass(InvocationTargetException.class);
-
-    useCaseWrapper.execute();
-
-    verify(errorHandler).notifyError(errorArgumentCaptor.capture(), eq((OnErrorCallback) null));
-    ErrorNotHandledException errorNotHandledException =
-        (ErrorNotHandledException) errorArgumentCaptor.getValue().getTargetException();
-    assertEquals(error, errorNotHandledException.getError());
   }
 
   private class AnyUseCase extends RosieUseCase {
