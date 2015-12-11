@@ -17,15 +17,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/load_more_background"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="@dimen/comic_margin_horizontal"
+    android:layout_marginLeft="@dimen/comic_margin_horizontal"
+    android:layout_marginBottom="@dimen/comic_margin_vertical"
+    android:layout_marginTop="@dimen/comic_margin_vertical"
     >
 
-  <TextView
+  <ImageView
+      android:id="@+id/iv_thumbnail"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:text="@string/loading_message"
-      android:gravity="center"
-      style="@style/LoadMore"
+      android:layout_height="@dimen/comic_thumbnail_height"
+      android:contentDescription="@string/comic_thumbnail_content_description"
+      android:background="@drawable/comic_border"
       />
+
+  <TextView
+      android:id="@+id/tv_title"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      style="@style/ComicName"
+      />
+
 </LinearLayout>

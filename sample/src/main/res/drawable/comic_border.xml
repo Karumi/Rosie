@@ -14,18 +14,15 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/load_more_background"
-    >
-
-  <TextView
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:text="@string/loading_message"
-      android:gravity="center"
-      style="@style/LoadMore"
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+  <stroke
+      android:width="@dimen/comic_thumbnail_border_width"
+      android:color="@color/comic_thumbnail_border"
       />
-</LinearLayout>
+  <padding
+      android:left="1dp"
+      android:top="1dp"
+      android:right="1dp"
+      android:bottom="1dp"
+      />
+</shape>

@@ -16,12 +16,12 @@
 
 package com.karumi.rosie.sample.comics.view.viewmodel;
 
-import java.util.List;
-
-public class ComicSeriesDetailsViewModel {
+public class ComicSeriesHeaderDetailViewModel implements ComicSeriesDetailViewModel {
 
   private String title;
-  private List<ComicSeriesDetailViewModel> comicSeriesDetailViewModels;
+  private String coverUrl;
+  private String description;
+  private int ratingNameResourceId;
 
   public String getTitle() {
     return title;
@@ -31,12 +31,27 @@ public class ComicSeriesDetailsViewModel {
     this.title = title;
   }
 
-  public List<ComicSeriesDetailViewModel> getComicSeriesDetailViewModels() {
-    return comicSeriesDetailViewModels;
+  public String getCoverUrl() {
+    return coverUrl;
   }
 
-  public void setComicSeriesDetailViewModels(
-      List<ComicSeriesDetailViewModel> comicSeriesDetailViewModels) {
-    this.comicSeriesDetailViewModels = comicSeriesDetailViewModels;
+  public void setCoverUrl(String coverUrl) {
+    this.coverUrl = coverUrl;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public int getRatingNameResourceId() {
+    return ratingNameResourceId;
+  }
+
+  public void setRatingNameResourceId(int ratingNameResourceId) {
+    this.ratingNameResourceId = ratingNameResourceId;
   }
 }

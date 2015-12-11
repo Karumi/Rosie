@@ -20,15 +20,20 @@ import android.support.annotation.NonNull;
 import com.karumi.rosie.repository.PaginatedCollection;
 import com.karumi.rosie.repository.datasource.EmptyReadableDataSource;
 import com.karumi.rosie.repository.datasource.paginated.PaginatedReadableDataSource;
+import com.karumi.rosie.sample.comics.domain.model.Comic;
 import com.karumi.rosie.sample.comics.domain.model.ComicSeries;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import javax.inject.Inject;
 
 public class ComicSeriesApiDataSource extends EmptyReadableDataSource<Integer, ComicSeries>
     implements PaginatedReadableDataSource<ComicSeries> {
 
+  private static final int MIN_NUMBER_OF_COMICS_PER_COMIC_SERIES = 9;
+  private static final int MAX_NUMBER_OF_COMICS_PER_COMIC_SERIES = 24;
   private static final int NUMBER_OF_COMIC_SERIES = 80;
   private static final int GUARDIANS_OF_INFINITY_KEY = 58086;
   private static final int VISION_KEY = 57309;
@@ -112,6 +117,7 @@ public class ComicSeriesApiDataSource extends EmptyReadableDataSource<Integer, C
             + " life and death! THIS AIN’T KAYFABE, BROTHER! ");
     guardiansOfInfinity.setReleaseYear(2015);
     guardiansOfInfinity.setRating(ComicSeries.Rating.ALL_AGES);
+    guardiansOfInfinity.setComics(getComics(guardiansOfInfinity.getName()));
     return guardiansOfInfinity;
   }
 
@@ -133,6 +139,7 @@ public class ComicSeriesApiDataSource extends EmptyReadableDataSource<Integer, C
             + " life and death! THIS AIN’T KAYFABE, BROTHER! ");
     vision.setReleaseYear(2015);
     vision.setRating(ComicSeries.Rating.T);
+    vision.setComics(getComics(vision.getName()));
     return vision;
   }
 
@@ -154,6 +161,7 @@ public class ComicSeriesApiDataSource extends EmptyReadableDataSource<Integer, C
             + " life and death! THIS AIN’T KAYFABE, BROTHER! ");
     spidey.setReleaseYear(2015);
     spidey.setRating(ComicSeries.Rating.TEENS_AND_UP);
+    spidey.setComics(getComics(spidey.getName()));
     return spidey;
   }
 
@@ -175,6 +183,7 @@ public class ComicSeriesApiDataSource extends EmptyReadableDataSource<Integer, C
             + " life and death! THIS AIN’T KAYFABE, BROTHER! ");
     redWolf.setReleaseYear(2015);
     redWolf.setRating(ComicSeries.Rating.EXPLICIT_CONTENT);
+    redWolf.setComics(getComics(redWolf.getName()));
     return redWolf;
   }
 
@@ -196,7 +205,35 @@ public class ComicSeriesApiDataSource extends EmptyReadableDataSource<Integer, C
             + " life and death! THIS AIN’T KAYFABE, BROTHER! ");
     nova.setReleaseYear(2015);
     nova.setRating(ComicSeries.Rating.PARENTAL_ADVISORY);
+    nova.setComics(getComics(nova.getName()));
     return nova;
+  }
+
+  @NonNull private List<Comic> getComics(String comicSeriesName) {
+    List<Comic> comics = new ArrayList<>();
+
+    String[] allComicThumbnailUrls = {
+        "http://x.annihil.us/u/prod/marvel/i/mg/6/c0/5554eab0886b8/detail.jpg",
+        "http://i.annihil.us/u/prod/marvel/i/mg/c/a0/553514e108202/detail.jpg",
+        "http://i.annihil.us/u/prod/marvel/i/mg/6/30/5503446dc71bf/detail.jpg",
+        "http://i.annihil.us/u/prod/marvel/i/mg/f/10/54cfb2f5f0b2e/detail.jpg",
+        "http://x.annihil.us/u/prod/marvel/i/mg/4/20/54b55c72b7896/detail.jpg",
+        "http://i.annihil.us/u/prod/marvel/i/mg/4/00/5491a1de66768/detail.jpg",
+        "http://x.annihil.us/u/prod/marvel/i/mg/6/c0/5464eabe99180/detail.jpg",
+        "http://x.annihil.us/u/prod/marvel/i/mg/3/00/55b242ad84037/detail.jpg"
+    };
+
+    int numberOfComics = MIN_NUMBER_OF_COMICS_PER_COMIC_SERIES + RANDOM.nextInt(
+        MAX_NUMBER_OF_COMICS_PER_COMIC_SERIES - MIN_NUMBER_OF_COMICS_PER_COMIC_SERIES + 1);
+    for (int i = 0; i < numberOfComics; i++) {
+      Comic comic = new Comic();
+      comic.setKey(i);
+      comic.setName(comicSeriesName + " #" + (i + 1));
+      comic.setThumbnailUrl(allComicThumbnailUrls[RANDOM.nextInt(allComicThumbnailUrls.length)]);
+      comics.add(comic);
+    }
+
+    return comics;
   }
 
   private void fakeDelay() {

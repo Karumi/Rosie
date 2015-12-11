@@ -16,27 +16,5 @@
 
 package com.karumi.rosie.sample.comics.view.viewmodel;
 
-import java.util.List;
-
-public class ComicSeriesDetailsViewModel {
-
-  private String title;
-  private List<ComicSeriesDetailViewModel> comicSeriesDetailViewModels;
-
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
-  }
-
-  public List<ComicSeriesDetailViewModel> getComicSeriesDetailViewModels() {
-    return comicSeriesDetailViewModels;
-  }
-
-  public void setComicSeriesDetailViewModels(
-      List<ComicSeriesDetailViewModel> comicSeriesDetailViewModels) {
-    this.comicSeriesDetailViewModels = comicSeriesDetailViewModels;
-  }
+public interface ComicSeriesDetailViewModel {
 }

@@ -18,14 +18,37 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/load_more_background"
     >
 
-  <TextView
+  <ImageView
+      android:id="@+id/iv_cover"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:text="@string/loading_message"
-      android:gravity="center"
-      style="@style/LoadMore"
+      android:layout_height="@dimen/comic_series_cover_height"
+      android:contentDescription="@string/comic_series_cover_content_description"
       />
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:padding="@dimen/comic_series_description_padding"
+      >
+
+    <TextView
+        android:id="@+id/tv_rating"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/ComicSeriesDescription"
+        />
+
+    <TextView
+        android:id="@+id/tv_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/comic_series_description_margin_top"
+        style="@style/ComicSeriesDescription"
+        />
+
+  </LinearLayout>
+
 </LinearLayout>

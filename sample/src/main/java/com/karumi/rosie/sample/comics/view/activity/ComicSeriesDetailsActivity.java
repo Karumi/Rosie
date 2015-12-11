@@ -21,20 +21,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.OnClick;
 import com.karumi.rosie.sample.R;
 import com.karumi.rosie.sample.comics.ComicsModule;
 import com.karumi.rosie.sample.comics.view.presenter.ComicSeriesDetailsPresenter;
+import com.karumi.rosie.sample.comics.view.renderer.ComicSeriesDetailRendererBuilder;
+import com.karumi.rosie.sample.comics.view.viewmodel.ComicSeriesDetailViewModel;
 import com.karumi.rosie.sample.comics.view.viewmodel.ComicSeriesDetailsViewModel;
-import com.karumi.rosie.sample.comics.view.viewmodel.ComicSeriesViewModel;
 import com.karumi.rosie.view.Presenter;
 import com.karumi.rosie.view.RosieActivity;
+import com.pedrogomez.renderers.ListAdapteeCollection;
 import com.pedrogomez.renderers.RVRendererAdapter;
-import com.squareup.picasso.Picasso;
+import com.pedrogomez.renderers.RendererBuilder;
 import com.victor.loading.rotate.RotateLoading;
 import java.util.Arrays;
 import java.util.List;
@@ -48,16 +50,12 @@ public class ComicSeriesDetailsActivity extends RosieActivity
   private static final int NUMBER_OF_COLUMNS = 3;
 
   @Bind(R.id.tv_toolbar_title) TextView toolbarTitleView;
-  @Bind(R.id.ll_comic_detail) View comicSeriesView;
-  @Bind(R.id.iv_cover) ImageView coverView;
-  @Bind(R.id.tv_rating) TextView ratingView;
-  @Bind(R.id.tv_description) TextView descriptionView;
   @Bind(R.id.loading) RotateLoading loadingView;
   @Bind(R.id.rv_comics) RecyclerView comicsView;
 
   @Inject @Presenter ComicSeriesDetailsPresenter presenter;
 
-  private RVRendererAdapter<ComicSeriesViewModel> comicSeriesAdapter;
+  private RVRendererAdapter<ComicSeriesDetailViewModel> comicDetailsAdapter;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -85,16 +83,15 @@ public class ComicSeriesDetailsActivity extends RosieActivity
   }
 
   @Override public void hideComicSeriesDetails() {
-    comicSeriesView.setVisibility(View.GONE);
+    comicsView.setVisibility(View.GONE);
   }
 
   @Override public void showComicSeriesDetails(ComicSeriesDetailsViewModel comicSeries) {
-    Picasso.with(this).load(comicSeries.getCoverUrl()).fit().centerCrop().into(coverView);
-    String rating = getString(comicSeries.getRatingNameResourceId());
     toolbarTitleView.setText(comicSeries.getTitle());
-    ratingView.setText(getString(R.string.marvel_rating_text, rating));
-    descriptionView.setText(comicSeries.getDescription());
-    comicSeriesView.setVisibility(View.VISIBLE);
+    comicsView.setVisibility(View.VISIBLE);
+    comicDetailsAdapter.clear();
+    comicDetailsAdapter.addAll(comicSeries.getComicSeriesDetailViewModels());
+    comicDetailsAdapter.notifyDataSetChanged();
   }
 
   @Override public void close() {
@@ -113,16 +110,22 @@ public class ComicSeriesDetailsActivity extends RosieActivity
 
   private void initializeComicsView() {
     GridLayoutManager layoutManager = new GridLayoutManager(this, NUMBER_OF_COLUMNS);
+    layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+      @Override public int getSpanSize(int position) {
+        return position == 0 ? NUMBER_OF_COLUMNS : 1;
+      }
+    });
     comicsView.setHasFixedSize(true);
     comicsView.setLayoutManager(layoutManager);
     initializeAdapter();
-    comicsView.setAdapter(comicSeriesAdapter);
+    comicsView.setAdapter(comicDetailsAdapter);
   }
 
   private void initializeAdapter() {
-    //LayoutInflater layoutInflater = LayoutInflater.from(this);
-    //RendererBuilder<ComicSeriesViewModel> rendererBuilder = new ComicSeriesRendererBuilder(presenter);
-    //comicsCollection = new ComicsSeriesAdapteeCollection();
-    //comicSeriesAdapter = new RVRendererAdapter<>(layoutInflater, rendererBuilder, comicsCollection);
+    LayoutInflater layoutInflater = LayoutInflater.from(this);
+    RendererBuilder<ComicSeriesDetailViewModel> rendererBuilder =
+        new ComicSeriesDetailRendererBuilder();
+    comicDetailsAdapter = new RVRendererAdapter<>(layoutInflater, rendererBuilder,
+        new ListAdapteeCollection<ComicSeriesDetailViewModel>());
   }
 }

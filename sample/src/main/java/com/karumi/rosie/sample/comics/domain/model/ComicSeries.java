@@ -17,6 +17,8 @@
 package com.karumi.rosie.sample.comics.domain.model;
 
 import com.karumi.rosie.repository.datasource.Identifiable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ComicSeries implements Identifiable<Integer> {
 
@@ -27,6 +29,7 @@ public class ComicSeries implements Identifiable<Integer> {
   private String coverUrl;
   private int releaseYear;
   private Rating rating;
+  private List<Comic> comics = new ArrayList<>();
 
   @Override public Integer getKey() {
     return key;
@@ -82,6 +85,14 @@ public class ComicSeries implements Identifiable<Integer> {
 
   public void setRating(Rating rating) {
     this.rating = rating;
+  }
+
+  public List<Comic> getComics() {
+    return comics;
+  }
+
+  public void setComics(List<Comic> comics) {
+    this.comics = comics;
   }
 
   public enum Rating {

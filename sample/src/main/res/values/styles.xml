@@ -16,15 +16,18 @@
   -->
 <resources>
 
-  <style name="SampleStyle" parent="Theme.AppCompat.NoActionBar">
+  <style name="SampleStyle"
+      parent="Theme.AppCompat.NoActionBar">
     <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
   </style>
 
-  <style name="SampleActionBar" parent="Widget.AppCompat.ActionBar">
+  <style name="SampleActionBar"
+      parent="Widget.AppCompat.ActionBar">
     <item name="android:background">@color/main_background</item>
   </style>
 
-  <style name="ViewPagerTabLayout" parent="Widget.Design.TabLayout">
+  <style name="ViewPagerTabLayout"
+      parent="Widget.Design.TabLayout">
     <item name="tabBackground">@color/view_pager_tab_background</item>
     <item name="tabIndicatorColor">@color/view_pager_tab_selected_underline</item>
     <item name="android:textAppearance">@style/ViewPagerTabIndicator.Text</item>
@@ -38,7 +41,7 @@
 
   <style name="ToolbarTitle">
     <item name="android:textSize">@dimen/toolbar_title_font_size</item>
-    <item name="android:textColor">@color/toolbar_title_transparent</item>
+    <item name="android:textColor">@color/toolbar_title</item>
     <item name="android:layout_marginLeft">@dimen/character_margin_left</item>
     <item name="android:textAllCaps">true</item>
     <item name="android:ellipsize">end</item>
@@ -67,4 +70,18 @@
     <item name="android:textColor">@color/comic_series_details_description</item>
   </style>
 
+  <style name="ComicName">
+    <item name="android:textColor">@color/comic_name</item>
+    <item name="android:textSize">@dimen/comic_title_font_size</item>
+    <item name="android:layout_marginTop">@dimen/comic_title_margin_top</item>
+    <item name="android:ellipsize">middle</item>
+    <item name="android:lines">1</item>
+  </style>
+
+  <style name="LoadMore">
+    <item name="android:textSize">@dimen/load_more_font_size</item>
+    <item name="android:textColor">@color/load_more_text</item>
+    <item name="android:textAllCaps">true</item>
+    <item name="android:padding">@dimen/load_more_padding</item>
+  </style>
 </resources>

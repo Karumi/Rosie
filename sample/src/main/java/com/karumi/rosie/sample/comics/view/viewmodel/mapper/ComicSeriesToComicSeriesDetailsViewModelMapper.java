@@ -17,8 +17,15 @@
 package com.karumi.rosie.sample.comics.view.viewmodel.mapper;
 
 import com.karumi.rosie.sample.R;
+import com.karumi.rosie.sample.comics.domain.model.Comic;
 import com.karumi.rosie.sample.comics.domain.model.ComicSeries;
+import com.karumi.rosie.sample.comics.view.viewmodel.ComicSeriesDetailViewModel;
 import com.karumi.rosie.sample.comics.view.viewmodel.ComicSeriesDetailsViewModel;
+import com.karumi.rosie.sample.comics.view.viewmodel.ComicSeriesHeaderDetailViewModel;
+import com.karumi.rosie.sample.comics.view.viewmodel.ComicViewModel;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import javax.inject.Inject;
 
 public class ComicSeriesToComicSeriesDetailsViewModelMapper {
@@ -30,16 +37,32 @@ public class ComicSeriesToComicSeriesDetailsViewModelMapper {
       ComicSeries comicSeries) {
     ComicSeriesDetailsViewModel comicSeriesDetailsViewModel = new ComicSeriesDetailsViewModel();
 
-    comicSeriesDetailsViewModel.setTitle(
-        comicSeries.getName() + " (" + comicSeries.getReleaseYear() + ") #" + comicSeries.getNumber());
-    comicSeriesDetailsViewModel.setCoverUrl(comicSeries.getCoverUrl());
-    comicSeriesDetailsViewModel.setDescription(comicSeries.getDescription());
-    comicSeriesDetailsViewModel.setRatingNameResourceId(getRatingNameResourceId(comicSeries.getRating()));
+    comicSeriesDetailsViewModel.setTitle(comicSeries.getName());
+    List<ComicSeriesDetailViewModel> comicSeriesDetailViewModels = new LinkedList<>();
+    comicSeriesDetailViewModels.add(mapComicSeriesToComicSeriesHeaderDetailViewModel(comicSeries));
+    comicSeriesDetailViewModels.addAll(mapComicsToComicViewModels(comicSeries.getComics()));
+    comicSeriesDetailsViewModel.setComicSeriesDetailViewModels(comicSeriesDetailViewModels);
 
     return comicSeriesDetailsViewModel;
   }
 
-  private int getRatingNameResourceId(ComicSeries.Rating rating) {
+  private ComicSeriesHeaderDetailViewModel mapComicSeriesToComicSeriesHeaderDetailViewModel(
+      ComicSeries comicSeries) {
+    ComicSeriesHeaderDetailViewModel comicSeriesHeaderDetailViewModel =
+        new ComicSeriesHeaderDetailViewModel();
+
+    comicSeriesHeaderDetailViewModel.setTitle(
+        comicSeries.getName() + " (" + comicSeries.getReleaseYear() + ") #"
+            + comicSeries.getNumber());
+    comicSeriesHeaderDetailViewModel.setCoverUrl(comicSeries.getCoverUrl());
+    comicSeriesHeaderDetailViewModel.setDescription(comicSeries.getDescription());
+    comicSeriesHeaderDetailViewModel.setRatingNameResourceId(
+        mapRatingToRatingNameResourceId(comicSeries.getRating()));
+
+    return comicSeriesHeaderDetailViewModel;
+  }
+
+  private int mapRatingToRatingNameResourceId(ComicSeries.Rating rating) {
     int ratingNameResourceId;
     switch (rating) {
       case ALL_AGES:
@@ -61,5 +84,19 @@ public class ComicSeriesToComicSeriesDetailsViewModelMapper {
     }
 
     return ratingNameResourceId;
+  }
+
+  private List<ComicViewModel> mapComicsToComicViewModels(List<Comic> comics) {
+    List<ComicViewModel> comicViewModels = new ArrayList<>();
+
+    for (Comic comic : comics) {
+      ComicViewModel comicViewModel = new ComicViewModel();
+      comicViewModel.setKey(comic.getKey());
+      comicViewModel.setTitle(comic.getName());
+      comicViewModel.setThumbnailUrl(comic.getThumbnailUrl());
+      comicViewModels.add(comicViewModel);
+    }
+
+    return comicViewModels;
   }
 }

@@ -27,7 +27,8 @@
   <string name="marvel_rating_parental_advisory">Parental Advisory</string>
   <string name="marvel_rating_explicit_content">Max: Explicit Content</string>
   <string name="comic_series_next_icon_content_description">See comic series details</string>
-  <string name="comic_series_cover_content_description">Comic cover</string>
+  <string name="comic_series_cover_content_description">Comic series cover</string>
+  <string name="comic_thumbnail_content_description">Comic thumbnail</string>
   <string name="character_next_icon_content_description">See character details</string>
   <string name="character_thumbnail_content_description">Character thumbnail</string>
 </resources>

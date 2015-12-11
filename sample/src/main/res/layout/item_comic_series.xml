@@ -19,12 +19,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_root"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/comic_height"
+    android:layout_height="@dimen/comic_series_height"
     android:background="@color/comic_series_item_background"
     >
 
   <TextView
-      android:id="@+id/tv_comic_name"
+      android:id="@+id/tv_comic_series_name"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_alignParentLeft="true"
