@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.Bind;
+import butterknife.OnClick;
 import com.karumi.rosie.sample.R;
 import com.karumi.rosie.sample.comics.ComicsModule;
 import com.karumi.rosie.sample.comics.view.presenter.ComicDetailsPresenter;
@@ -40,6 +41,7 @@ public class ComicDetailsActivity extends RosieActivity implements ComicDetailsP
   private static final String COMIC_KEY_EXTRA = "ComicDetailsActivity.ComicKey";
   private static final int INVALID_COMIC_KEY_EXTRA = -1;
 
+  @Bind(R.id.tv_toolbar_title) TextView toolbarTitleView;
   @Bind(R.id.ll_comic_detail) View comicView;
   @Bind(R.id.iv_cover) ImageView coverView;
   @Bind(R.id.tv_rating) TextView ratingView;
@@ -79,9 +81,18 @@ public class ComicDetailsActivity extends RosieActivity implements ComicDetailsP
   @Override public void showComicDetails(ComicDetailsViewModel comic) {
     Picasso.with(this).load(comic.getCoverUrl()).fit().centerCrop().into(coverView);
     String rating = getString(comic.getRatingNameResourceId());
+    toolbarTitleView.setText(comic.getTitle());
     ratingView.setText(getString(R.string.marvel_rating_text, rating));
     descriptionView.setText(comic.getDescription());
     comicView.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void close() {
+    finish();
+  }
+
+  @OnClick(R.id.iv_toolbar_back) public void onBackButtonClicked() {
+    presenter.onBackButtonClicked();
   }
 
   public static void open(Context context, int comicKey) {

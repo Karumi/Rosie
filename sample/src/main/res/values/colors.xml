@@ -15,7 +15,11 @@
   ~ limitations under the License.
   -->
 <resources>
+  <color name="colorPrimaryDark">#1D252D</color>
   <color name="main_background">#2D353D</color>
+  <color name="toolbar_start_gradient_background">#FF1D252D</color>
+  <color name="toolbar_end_gradient_background">#001D252D</color>
+  <color name="toolbar_title_transparent">#FFFFFF</color>
   <color name="view_pager_tab_background">#404B58</color>
   <color name="view_pager_tab_selected_underline">#00C8FF</color>
   <color name="view_pager_tab_text">#FFFFFF</color>

@@ -44,6 +44,10 @@ public class ComicDetailsPresenter extends RosiePresenterWithLoading<ComicDetail
     this.comicKey = comicKey;
   }
 
+  public void onBackButtonClicked() {
+    getView().close();
+  }
+
   @Override protected void update() {
     super.update();
     showLoading();
@@ -66,5 +70,7 @@ public class ComicDetailsPresenter extends RosiePresenterWithLoading<ComicDetail
     void hideComicDetails();
 
     void showComicDetails(ComicDetailsViewModel comic);
+
+    void close();
   }
 }

@@ -16,6 +16,7 @@
   -->
 <resources>
   <string name="app_name">Rosie</string>
+  <string name="back_button_content_description">Go back</string>
   <string name="loading_message">Loading…</string>
   <string name="characters_page_title">Characters</string>
   <string name="comics_page_title">Comics</string>

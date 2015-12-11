@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.Bind;
+import butterknife.OnClick;
 import com.karumi.rosie.sample.R;
 import com.karumi.rosie.sample.characters.CharactersModule;
 import com.karumi.rosie.sample.characters.view.presenter.CharacterDetailsPresenter;
@@ -40,6 +41,7 @@ public class CharacterDetailsActivity extends RosieActivity
 
   private static final String CHARACTER_KEY_EXTRA = "CharacterDetailsActivity.CharacterKey";
 
+  @Bind(R.id.tv_toolbar_title) TextView toolbarTitleView;
   @Bind(R.id.iv_character_image) ImageView characterHeaderView;
   @Bind(R.id.ll_character_detail) View characterDetailView;
   @Bind(R.id.tv_character_name) TextView characterNameView;
@@ -79,13 +81,20 @@ public class CharacterDetailsActivity extends RosieActivity
 
   @Override public void showCharacterDetail(CharacterDetailViewModel character) {
     characterDetailView.setVisibility(View.VISIBLE);
+    toolbarTitleView.setText(character.getName());
     Picasso.with(this)
-        .load(character.getHeaderImage())
-        .fit()
-        .centerCrop()
+        .load(character.getHeaderImage()).fit().centerCrop()
         .into(characterHeaderView);
     characterNameView.setText(character.getName());
     characterDescriptionView.setText(character.getDescription());
+  }
+
+  @Override public void close() {
+    finish();
+  }
+
+  @OnClick(R.id.iv_toolbar_back) public void onBackButtonClicked() {
+    presenter.onBackButtonClicked();
   }
 
   public static void open(Context context, String characterKey) {

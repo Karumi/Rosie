@@ -50,6 +50,10 @@ public class CharacterDetailsPresenter
     this.characterKey = characterKey;
   }
 
+  public void onBackButtonClicked() {
+    getView().close();
+  }
+
   private void loadCharacterDetails() {
     getView().hideCharacterDetail();
     createUseCaseCall(getCharacterDetails).args(characterKey).onSuccess(new OnSuccessCallback() {
@@ -66,5 +70,7 @@ public class CharacterDetailsPresenter
     void hideCharacterDetail();
 
     void showCharacterDetail(CharacterDetailViewModel character);
+
+    void close();
   }
 }

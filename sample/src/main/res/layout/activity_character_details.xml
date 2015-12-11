@@ -14,7 +14,8 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/main_background"
@@ -34,32 +35,40 @@
         android:contentDescription="@string/character_thumbnail_content_description"
         />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/character_description_padding"
         >
 
-      <TextView
-          android:id="@+id/tv_character_name"
+      <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          style="@style/CharacterDescription"
-          />
+          android:orientation="vertical"
+          android:padding="@dimen/character_description_padding"
+          >
 
-      <TextView
-          android:id="@+id/tv_description"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/character_description_margin_top"
-          style="@style/CharacterDescription"
-          />
+        <TextView
+            android:id="@+id/tv_character_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/CharacterDescription"
+            />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/tv_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/character_description_margin_top"
+            style="@style/CharacterDescription"
+            />
+
+      </LinearLayout>
+    </ScrollView>
 
   </LinearLayout>
 
   <include layout="@layout/loading_view"/>
+
+  <include layout="@layout/toolbar"/>
 
 </FrameLayout>

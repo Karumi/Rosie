@@ -18,6 +18,7 @@ package com.karumi.rosie.sample.main.view.activity;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import butterknife.Bind;
 import com.karumi.rosie.sample.R;
@@ -26,14 +27,13 @@ import com.karumi.rosie.sample.comics.view.fragment.ComicsFragment;
 import com.karumi.rosie.sample.main.MainModule;
 import com.karumi.rosie.sample.main.view.adapter.FragmentAdapter;
 import com.karumi.rosie.view.RosieActivity;
-import com.viewpagerindicator.TabPageIndicator;
 import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends RosieActivity {
 
   @Bind(R.id.vp_main) ViewPager viewPager;
-  @Bind(R.id.tab_page_indicator) TabPageIndicator pagerTabView;
+  @Bind(R.id.tab_page_indicator) TabLayout pagerTabView;
   private FragmentAdapter adapter;
 
   @Override protected int getLayoutId() {
@@ -59,6 +59,6 @@ public class MainActivity extends RosieActivity {
     adapter.addFragment(comicsFragment, getString(R.string.comics_page_title));
     adapter.notifyDataSetChanged();
 
-    pagerTabView.setViewPager(viewPager);
+    pagerTabView.setupWithViewPager(viewPager);
   }
 }

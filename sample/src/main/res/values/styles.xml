@@ -16,26 +16,33 @@
   -->
 <resources>
 
-  <style name="SampleTheme"
-      parent="Theme.AppCompat.Light.DarkActionBar">
-    <item name="vpiTabPageIndicatorStyle">@style/ViewPagerTabIndicator</item>
+  <style name="SampleStyle" parent="Theme.AppCompat.NoActionBar">
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
   </style>
 
-  <style name="SampleTheme.NoActionBar">
-    <item name="windowActionBar">false</item>
-    <item name="windowNoTitle">true</item>
+  <style name="SampleActionBar" parent="Widget.AppCompat.ActionBar">
+    <item name="android:background">@color/main_background</item>
   </style>
 
-  <style name="ViewPagerTabIndicator"
-      parent="Widget.TabPageIndicator">
-    <item name="android:background">@drawable/view_pager_tab_background</item>
+  <style name="ViewPagerTabLayout" parent="Widget.Design.TabLayout">
+    <item name="tabBackground">@color/view_pager_tab_background</item>
+    <item name="tabIndicatorColor">@color/view_pager_tab_selected_underline</item>
     <item name="android:textAppearance">@style/ViewPagerTabIndicator.Text</item>
   </style>
 
   <style name="ViewPagerTabIndicator.Text"
-      parent="TextAppearance.TabPageIndicator">
+      parent="TextAppearance.AppCompat.Button">
     <item name="android:textColor">@color/view_pager_tab_text</item>
     <item name="android:textAllCaps">true</item>
+  </style>
+
+  <style name="ToolbarTitle">
+    <item name="android:textSize">@dimen/toolbar_title_font_size</item>
+    <item name="android:textColor">@color/toolbar_title_transparent</item>
+    <item name="android:layout_marginLeft">@dimen/character_margin_left</item>
+    <item name="android:textAllCaps">true</item>
+    <item name="android:ellipsize">end</item>
+    <item name="android:lines">1</item>
   </style>
 
   <style name="CharacterName">

@@ -36,9 +36,8 @@ dependencies {
   compile 'com.android.support:support-v13:23.1.1'
   compile 'com.android.support:design:23.1.1'
   compile 'com.squareup.picasso:picasso:2.5.2'
-  compile 'fr.avianey.com.viewpagerindicator:library:2.4.1@aar'
   compile 'com.karumi:dividers:1.0.3'
-  compile 'com.victor:lib:1.0.1'
+  compile 'com.victor:lib:1.0.1' // spinner
   provided 'com.squareup.dagger:dagger-compiler:1.2.2'
   compile project(':rosie')
 }
