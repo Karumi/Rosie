@@ -32,11 +32,11 @@ import com.karumi.dividers.Layer;
 import com.karumi.dividers.LayersBuilder;
 import com.karumi.dividers.selector.HeaderSelector;
 import com.karumi.rosie.sample.R;
-import com.karumi.rosie.sample.comics.view.activity.ComicDetailsActivity;
-import com.karumi.rosie.sample.comics.view.presenter.ComicsPresenter;
-import com.karumi.rosie.sample.comics.view.renderer.ComicRendererBuilder;
-import com.karumi.rosie.sample.comics.view.renderer.ComicsAdapteeCollection;
-import com.karumi.rosie.sample.comics.view.viewmodel.ComicViewModel;
+import com.karumi.rosie.sample.comics.view.activity.ComicSeriesDetailsActivity;
+import com.karumi.rosie.sample.comics.view.presenter.ComicsSeriesPresenter;
+import com.karumi.rosie.sample.comics.view.renderer.ComicSeriesRendererBuilder;
+import com.karumi.rosie.sample.comics.view.renderer.ComicsSeriesAdapteeCollection;
+import com.karumi.rosie.sample.comics.view.viewmodel.ComicSeriesViewModel;
 import com.karumi.rosie.view.Presenter;
 import com.karumi.rosie.view.RosieFragment;
 import com.karumi.rosie.view.paginated.ScrollToBottomListener;
@@ -47,24 +47,24 @@ import java.util.Collection;
 import java.util.List;
 import javax.inject.Inject;
 
-public class ComicsFragment extends RosieFragment implements ComicsPresenter.View {
+public class ComicSeriesFragment extends RosieFragment implements ComicsSeriesPresenter.View {
 
-  @Bind(R.id.rv_comics) RecyclerView comicsView;
+  @Bind(R.id.rv_comics) RecyclerView comicSeriesView;
   @Bind(R.id.loading) RotateLoading loadingView;
 
-  @Inject @Presenter ComicsPresenter presenter;
+  @Inject @Presenter ComicsSeriesPresenter presenter;
 
-  private RVRendererAdapter<ComicViewModel> comicsAdapter;
-  private ComicsAdapteeCollection comicsCollection;
+  private RVRendererAdapter<ComicSeriesViewModel> comicSeriesAdapter;
+  private ComicsSeriesAdapteeCollection comicsCollection;
   private ScrollToBottomListener loadMoreListener;
 
   @Override protected int getLayoutId() {
-    return R.layout.fragment_comics;
+    return R.layout.fragment_comic_series;
   }
 
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    initializeComicsView();
+    initializeComicSeriesView();
   }
 
   @Override public void hideLoading() {
@@ -77,14 +77,14 @@ public class ComicsFragment extends RosieFragment implements ComicsPresenter.Vie
     loadingView.start();
   }
 
-  @Override public void hideComics() {
-    comicsView.setVisibility(View.GONE);
+  @Override public void hideComicSeries() {
+    comicSeriesView.setVisibility(View.GONE);
   }
 
-  @Override public void showComics(List<ComicViewModel> comics) {
-    comicsAdapter.addAll(comics);
-    comicsAdapter.notifyDataSetChanged();
-    comicsView.setVisibility(View.VISIBLE);
+  @Override public void showComicSeries(List<ComicSeriesViewModel> comicSeries) {
+    comicSeriesAdapter.addAll(comicSeries);
+    comicSeriesAdapter.notifyDataSetChanged();
+    comicSeriesView.setVisibility(View.VISIBLE);
   }
 
   @Override public void showHasMore(boolean hasMore) {
@@ -93,24 +93,24 @@ public class ComicsFragment extends RosieFragment implements ComicsPresenter.Vie
     loadMoreListener.setIsEnabled(hasMore);
   }
 
-  @Override public void openComicDetails(int comicKey) {
-    ComicDetailsActivity.open(getActivity(), comicKey);
+  @Override public void openComicSeriesDetails(int comicSeriesKey) {
+    ComicSeriesDetailsActivity.open(getActivity(), comicSeriesKey);
   }
 
-  private void initializeComicsView() {
+  private void initializeComicSeriesView() {
     LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-    comicsView.setHasFixedSize(true);
-    comicsView.setLayoutManager(layoutManager);
+    comicSeriesView.setHasFixedSize(true);
+    comicSeriesView.setLayoutManager(layoutManager);
     initializeAdapter();
-    comicsView.addItemDecoration(getDivider());
-    comicsView.setAdapter(comicsAdapter);
+    comicSeriesView.addItemDecoration(getDivider());
+    comicSeriesView.setAdapter(comicSeriesAdapter);
     loadMoreListener =
         new ScrollToBottomListener(layoutManager, new ScrollToBottomListener.Listener() {
           @Override public void onScrolledToBottom() {
             presenter.onLoadMore();
           }
         });
-    comicsView.addOnScrollListener(loadMoreListener);
+    comicSeriesView.addOnScrollListener(loadMoreListener);
   }
 
   @NonNull private DividerItemDecoration getDivider() {
@@ -125,8 +125,8 @@ public class ComicsFragment extends RosieFragment implements ComicsPresenter.Vie
 
   private void initializeAdapter() {
     LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-    RendererBuilder<ComicViewModel> rendererBuilder = new ComicRendererBuilder(presenter);
-    comicsCollection = new ComicsAdapteeCollection();
-    comicsAdapter = new RVRendererAdapter<>(layoutInflater, rendererBuilder, comicsCollection);
+    RendererBuilder<ComicSeriesViewModel> rendererBuilder = new ComicSeriesRendererBuilder(presenter);
+    comicsCollection = new ComicsSeriesAdapteeCollection();
+    comicSeriesAdapter = new RVRendererAdapter<>(layoutInflater, rendererBuilder, comicsCollection);
   }
 }

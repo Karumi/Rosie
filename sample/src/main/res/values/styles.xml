@@ -56,15 +56,15 @@
     <item name="android:textColor">@color/character_details_description</item>
   </style>
 
-  <style name="ComicName">
-    <item name="android:textSize">@dimen/comic_name_font_size</item>
-    <item name="android:textColor">@color/comic_name</item>
-    <item name="android:layout_marginLeft">@dimen/comic_margin_left</item>
+  <style name="ComicSeriesName">
+    <item name="android:textSize">@dimen/comic_series_name_font_size</item>
+    <item name="android:textColor">@color/comic_series_name</item>
+    <item name="android:layout_marginLeft">@dimen/comic_series_margin_left</item>
   </style>
 
-  <style name="ComicDescription">
-    <item name="android:textSize">@dimen/comic_description_text_size</item>
-    <item name="android:textColor">@color/comic_details_description</item>
+  <style name="ComicSeriesDescription">
+    <item name="android:textSize">@dimen/comic_series_description_text_size</item>
+    <item name="android:textColor">@color/comic_series_details_description</item>
   </style>
 
 </resources>

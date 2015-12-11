@@ -41,7 +41,7 @@
     </activity>
 
     <activity android:name=".characters.view.activity.CharacterDetailsActivity"/>
-    <activity android:name=".comics.view.activity.ComicDetailsActivity"/>
+    <activity android:name=".comicSeries.view.activity.ComicSeriesDetailsActivity"/>
   </application>
 
 </manifest>

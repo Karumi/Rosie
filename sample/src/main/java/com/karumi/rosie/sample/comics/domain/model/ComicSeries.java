@@ -18,7 +18,7 @@ package com.karumi.rosie.sample.comics.domain.model;
 
 import com.karumi.rosie.repository.datasource.Identifiable;
 
-public class Comic implements Identifiable<Integer> {
+public class ComicSeries implements Identifiable<Integer> {
 
   private int key;
   private String name;

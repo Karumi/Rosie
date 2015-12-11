@@ -23,7 +23,7 @@ import android.support.v4.view.ViewPager;
 import butterknife.Bind;
 import com.karumi.rosie.sample.R;
 import com.karumi.rosie.sample.characters.view.fragment.CharactersFragment;
-import com.karumi.rosie.sample.comics.view.fragment.ComicsFragment;
+import com.karumi.rosie.sample.comics.view.fragment.ComicSeriesFragment;
 import com.karumi.rosie.sample.main.MainModule;
 import com.karumi.rosie.sample.main.view.adapter.FragmentAdapter;
 import com.karumi.rosie.view.RosieActivity;
@@ -54,9 +54,9 @@ public class MainActivity extends RosieActivity {
     viewPager.setAdapter(adapter);
 
     Fragment charactersFragment = new CharactersFragment();
-    Fragment comicsFragment = new ComicsFragment();
+    Fragment comicsFragment = new ComicSeriesFragment();
     adapter.addFragment(charactersFragment, getString(R.string.characters_page_title));
-    adapter.addFragment(comicsFragment, getString(R.string.comics_page_title));
+    adapter.addFragment(comicsFragment, getString(R.string.comic_series_page_title));
     adapter.notifyDataSetChanged();
 
     pagerTabView.setupWithViewPager(viewPager);

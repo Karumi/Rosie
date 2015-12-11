@@ -19,10 +19,10 @@
     >
 
   <size
-      android:width="@dimen/comic_divider_size"
-      android:height="@dimen/comic_divider_size"
+      android:width="@dimen/comic_series_divider_size"
+      android:height="@dimen/comic_series_divider_size"
       />
 
-  <solid android:color="@color/comic_item_divider"/>
+  <solid android:color="@color/comic_series_item_divider"/>
 
 </shape>

@@ -16,10 +16,10 @@
 
 package com.karumi.rosie.sample.comics.view.renderer;
 
-import com.karumi.rosie.sample.comics.view.viewmodel.ComicViewModel;
+import com.karumi.rosie.sample.comics.view.viewmodel.ComicSeriesViewModel;
 import com.pedrogomez.renderers.ListAdapteeCollection;
 
-public class ComicsAdapteeCollection extends ListAdapteeCollection<ComicViewModel> {
+public class ComicsSeriesAdapteeCollection extends ListAdapteeCollection<ComicSeriesViewModel> {
 
   private boolean showLoadMore = true;
 
@@ -32,8 +32,8 @@ public class ComicsAdapteeCollection extends ListAdapteeCollection<ComicViewMode
     return showLoadMore ? size + 1 : size;
   }
 
-  @Override public ComicViewModel get(int i) {
-    ComicViewModel item = null;
+  @Override public ComicSeriesViewModel get(int i) {
+    ComicSeriesViewModel item = null;
     if (i < super.size()) {
       item = super.get(i);
     }

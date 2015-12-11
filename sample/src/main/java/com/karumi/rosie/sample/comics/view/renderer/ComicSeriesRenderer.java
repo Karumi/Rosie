@@ -24,32 +24,32 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import com.karumi.rosie.renderer.RosieRenderer;
 import com.karumi.rosie.sample.R;
-import com.karumi.rosie.sample.comics.view.presenter.ComicsPresenter;
-import com.karumi.rosie.sample.comics.view.viewmodel.ComicViewModel;
+import com.karumi.rosie.sample.comics.view.presenter.ComicsSeriesPresenter;
+import com.karumi.rosie.sample.comics.view.viewmodel.ComicSeriesViewModel;
 
-public class ComicRenderer extends RosieRenderer<ComicViewModel> {
+public class ComicSeriesRenderer extends RosieRenderer<ComicSeriesViewModel> {
 
-  private final ComicsPresenter presenter;
+  private final ComicsSeriesPresenter presenter;
 
   @Bind(R.id.tv_comic_name) TextView nameView;
 
-  public ComicRenderer(ComicsPresenter presenter) {
+  public ComicSeriesRenderer(ComicsSeriesPresenter presenter) {
     this.presenter = presenter;
   }
 
   @Override public void render() {
     super.render();
 
-    ComicViewModel comic = getContent();
-    nameView.setText(comic.getTitle());
+    ComicSeriesViewModel comicSeries = getContent();
+    nameView.setText(comicSeries.getTitle());
   }
 
   @Override protected View inflate(LayoutInflater inflater, ViewGroup parent) {
-    return inflater.inflate(R.layout.item_comic, parent, false);
+    return inflater.inflate(R.layout.item_comic_series, parent, false);
   }
 
   @OnClick(R.id.ll_root) public void onItemClicked() {
-    ComicViewModel comic = getContent();
-    presenter.onComicClicked(comic);
+    ComicSeriesViewModel comicSeries = getContent();
+    presenter.onComicSeriesClicked(comicSeries);
   }
 }

@@ -16,7 +16,7 @@
 
 package com.karumi.rosie.sample.comics.view.viewmodel;
 
-public class ComicDetailsViewModel {
+public class ComicSeriesDetailsViewModel {
 
   private String title;
   private String coverUrl;

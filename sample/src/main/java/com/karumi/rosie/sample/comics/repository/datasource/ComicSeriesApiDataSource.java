@@ -20,16 +20,16 @@ import android.support.annotation.NonNull;
 import com.karumi.rosie.repository.PaginatedCollection;
 import com.karumi.rosie.repository.datasource.EmptyReadableDataSource;
 import com.karumi.rosie.repository.datasource.paginated.PaginatedReadableDataSource;
-import com.karumi.rosie.sample.comics.domain.model.Comic;
+import com.karumi.rosie.sample.comics.domain.model.ComicSeries;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Random;
 import javax.inject.Inject;
 
-public class ComicsApiDataSource extends EmptyReadableDataSource<Integer, Comic>
-    implements PaginatedReadableDataSource<Comic> {
+public class ComicSeriesApiDataSource extends EmptyReadableDataSource<Integer, ComicSeries>
+    implements PaginatedReadableDataSource<ComicSeries> {
 
-  private static final int NUMBER_OF_COMICS = 80;
+  private static final int NUMBER_OF_COMIC_SERIES = 80;
   private static final int GUARDIANS_OF_INFINITY_KEY = 58086;
   private static final int VISION_KEY = 57309;
   private static final int SPIDEY_KEY = 57137;
@@ -38,62 +38,63 @@ public class ComicsApiDataSource extends EmptyReadableDataSource<Integer, Comic>
   private static final long SLEEP_TIME_IN_MILLISECONDS = 750;
   private static final Random RANDOM = new Random(System.nanoTime());
 
-  @Inject public ComicsApiDataSource() {
+  @Inject public ComicSeriesApiDataSource() {
   }
 
-  @Override public Comic getByKey(Integer key) {
-    Comic comic;
+  @Override public ComicSeries getByKey(Integer key) {
+    ComicSeries comicSeries;
 
     fakeDelay();
 
     switch (key) {
       case GUARDIANS_OF_INFINITY_KEY:
-        comic = getGuardiansOfInfinity();
+        comicSeries = getGuardiansOfInfinity();
         break;
       case VISION_KEY:
-        comic = getVision();
+        comicSeries = getVision();
         break;
       case SPIDEY_KEY:
-        comic = getSpidey();
+        comicSeries = getSpidey();
         break;
       case RED_WOLF_KEY:
-        comic = getRedWolf();
+        comicSeries = getRedWolf();
         break;
       case NOVA_KEY:
       default:
-        comic = getNova();
+        comicSeries = getNova();
         break;
     }
 
-    return comic;
+    return comicSeries;
   }
 
-  @Override public PaginatedCollection<Comic> getPage(int offset, int limit) {
-    Collection<Comic> comics = new LinkedList<>();
+  @Override public PaginatedCollection<ComicSeries> getPage(int offset, int limit) {
+    Collection<ComicSeries> comicSeries = new LinkedList<>();
 
     fakeDelay();
 
-    for (int i = offset; i - offset < limit && i < NUMBER_OF_COMICS; i++) {
-      comics.add(getComic(i));
+    for (int i = offset; i - offset < limit && i < NUMBER_OF_COMIC_SERIES; i++) {
+      comicSeries.add(getComicSeries(i));
     }
 
-    PaginatedCollection<Comic> comicsPage = new PaginatedCollection<>(comics);
-    comicsPage.setOffset(offset);
-    comicsPage.setLimit(limit);
-    comicsPage.setHasMore(offset + comics.size() < NUMBER_OF_COMICS);
-    return comicsPage;
+    PaginatedCollection<ComicSeries> comicSeriesPage = new PaginatedCollection<>(comicSeries);
+    comicSeriesPage.setOffset(offset);
+    comicSeriesPage.setLimit(limit);
+    comicSeriesPage.setHasMore(offset + comicSeries.size() < NUMBER_OF_COMIC_SERIES);
+    return comicSeriesPage;
   }
 
-  private Comic getComic(int i) {
-    Comic[] comics = {getGuardiansOfInfinity(), getVision(), getSpidey(), getRedWolf(), getNova()};
+  private ComicSeries getComicSeries(int i) {
+    ComicSeries[] allComicSeries =
+        {getGuardiansOfInfinity(), getVision(), getSpidey(), getRedWolf(), getNova()};
 
-    Comic comic = comics[RANDOM.nextInt(comics.length)];
-    comic.setName(comic.getName() + " " + i);
-    return comic;
+    ComicSeries comicSeries = allComicSeries[RANDOM.nextInt(allComicSeries.length)];
+    comicSeries.setName(comicSeries.getName() + " " + i);
+    return comicSeries;
   }
 
-  @NonNull private Comic getGuardiansOfInfinity() {
-    Comic guardiansOfInfinity = new Comic();
+  @NonNull private ComicSeries getGuardiansOfInfinity() {
+    ComicSeries guardiansOfInfinity = new ComicSeries();
     guardiansOfInfinity.setKey(GUARDIANS_OF_INFINITY_KEY);
     guardiansOfInfinity.setName("Guardians of Infinity");
     guardiansOfInfinity.setNumber(2);
@@ -110,12 +111,12 @@ public class ComicsApiDataSource extends EmptyReadableDataSource<Integer, Comic>
             + " where culture is based on Earth-style professional wrestling…but the stakes are"
             + " life and death! THIS AIN’T KAYFABE, BROTHER! ");
     guardiansOfInfinity.setReleaseYear(2015);
-    guardiansOfInfinity.setRating(Comic.Rating.ALL_AGES);
+    guardiansOfInfinity.setRating(ComicSeries.Rating.ALL_AGES);
     return guardiansOfInfinity;
   }
 
-  @NonNull private Comic getVision() {
-    Comic vision = new Comic();
+  @NonNull private ComicSeries getVision() {
+    ComicSeries vision = new ComicSeries();
     vision.setKey(VISION_KEY);
     vision.setName("Vision");
     vision.setNumber(1);
@@ -131,12 +132,12 @@ public class ComicsApiDataSource extends EmptyReadableDataSource<Integer, Comic>
             + " where culture is based on Earth-style professional wrestling…but the stakes are"
             + " life and death! THIS AIN’T KAYFABE, BROTHER! ");
     vision.setReleaseYear(2015);
-    vision.setRating(Comic.Rating.T);
+    vision.setRating(ComicSeries.Rating.T);
     return vision;
   }
 
-  @NonNull private Comic getSpidey() {
-    Comic spidey = new Comic();
+  @NonNull private ComicSeries getSpidey() {
+    ComicSeries spidey = new ComicSeries();
     spidey.setKey(SPIDEY_KEY);
     spidey.setName("Spidey");
     spidey.setNumber(1);
@@ -152,12 +153,12 @@ public class ComicsApiDataSource extends EmptyReadableDataSource<Integer, Comic>
             + " where culture is based on Earth-style professional wrestling…but the stakes are"
             + " life and death! THIS AIN’T KAYFABE, BROTHER! ");
     spidey.setReleaseYear(2015);
-    spidey.setRating(Comic.Rating.TEENS_AND_UP);
+    spidey.setRating(ComicSeries.Rating.TEENS_AND_UP);
     return spidey;
   }
 
-  @NonNull private Comic getRedWolf() {
-    Comic redWolf = new Comic();
+  @NonNull private ComicSeries getRedWolf() {
+    ComicSeries redWolf = new ComicSeries();
     redWolf.setKey(RED_WOLF_KEY);
     redWolf.setName("Red Wolf");
     redWolf.setNumber(2);
@@ -173,12 +174,12 @@ public class ComicsApiDataSource extends EmptyReadableDataSource<Integer, Comic>
             + " where culture is based on Earth-style professional wrestling…but the stakes are"
             + " life and death! THIS AIN’T KAYFABE, BROTHER! ");
     redWolf.setReleaseYear(2015);
-    redWolf.setRating(Comic.Rating.EXPLICIT_CONTENT);
+    redWolf.setRating(ComicSeries.Rating.EXPLICIT_CONTENT);
     return redWolf;
   }
 
-  @NonNull private Comic getNova() {
-    Comic nova = new Comic();
+  @NonNull private ComicSeries getNova() {
+    ComicSeries nova = new ComicSeries();
     nova.setKey(NOVA_KEY);
     nova.setName("Nova");
     nova.setNumber(1);
@@ -194,7 +195,7 @@ public class ComicsApiDataSource extends EmptyReadableDataSource<Integer, Comic>
             + " where culture is based on Earth-style professional wrestling…but the stakes are"
             + " life and death! THIS AIN’T KAYFABE, BROTHER! ");
     nova.setReleaseYear(2015);
-    nova.setRating(Comic.Rating.PARENTAL_ADVISORY);
+    nova.setRating(ComicSeries.Rating.PARENTAL_ADVISORY);
     return nova;
   }
 

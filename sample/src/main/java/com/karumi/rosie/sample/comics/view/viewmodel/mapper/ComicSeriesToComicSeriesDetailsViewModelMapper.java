@@ -17,28 +17,29 @@
 package com.karumi.rosie.sample.comics.view.viewmodel.mapper;
 
 import com.karumi.rosie.sample.R;
-import com.karumi.rosie.sample.comics.domain.model.Comic;
-import com.karumi.rosie.sample.comics.view.viewmodel.ComicDetailsViewModel;
+import com.karumi.rosie.sample.comics.domain.model.ComicSeries;
+import com.karumi.rosie.sample.comics.view.viewmodel.ComicSeriesDetailsViewModel;
 import javax.inject.Inject;
 
-public class ComicToComicDetailsViewModelMapper {
+public class ComicSeriesToComicSeriesDetailsViewModelMapper {
 
-  @Inject public ComicToComicDetailsViewModelMapper() {
+  @Inject public ComicSeriesToComicSeriesDetailsViewModelMapper() {
   }
 
-  public ComicDetailsViewModel mapComicToComicDetailsViewModel(Comic comic) {
-    ComicDetailsViewModel comicDetailsViewModel = new ComicDetailsViewModel();
+  public ComicSeriesDetailsViewModel mapComicSeriesToComicSeriesDetailsViewModel(
+      ComicSeries comicSeries) {
+    ComicSeriesDetailsViewModel comicSeriesDetailsViewModel = new ComicSeriesDetailsViewModel();
 
-    comicDetailsViewModel.setTitle(
-        comic.getName() + " (" + comic.getReleaseYear() + ") #" + comic.getNumber());
-    comicDetailsViewModel.setCoverUrl(comic.getCoverUrl());
-    comicDetailsViewModel.setDescription(comic.getDescription());
-    comicDetailsViewModel.setRatingNameResourceId(getRatingNameResourceId(comic.getRating()));
+    comicSeriesDetailsViewModel.setTitle(
+        comicSeries.getName() + " (" + comicSeries.getReleaseYear() + ") #" + comicSeries.getNumber());
+    comicSeriesDetailsViewModel.setCoverUrl(comicSeries.getCoverUrl());
+    comicSeriesDetailsViewModel.setDescription(comicSeries.getDescription());
+    comicSeriesDetailsViewModel.setRatingNameResourceId(getRatingNameResourceId(comicSeries.getRating()));
 
-    return comicDetailsViewModel;
+    return comicSeriesDetailsViewModel;
   }
 
-  private int getRatingNameResourceId(Comic.Rating rating) {
+  private int getRatingNameResourceId(ComicSeries.Rating rating) {
     int ratingNameResourceId;
     switch (rating) {
       case ALL_AGES:
