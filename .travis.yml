@@ -1,9 +1,5 @@
 language: android
 
-env:
-  matrix:
-    - ANDROID_TARGET=android-23  ANDROID_ABI=armeabi-v7a
-
 android:
   components:
     - build-tools-23.0.1
@@ -15,7 +11,7 @@ android:
 
 before_script:
   # Create and start emulator
-  - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
+  - echo no | android create avd --force -n test -t android-23 --abi armeabi-v7a
   - emulator -avd test -no-skin -no-audio -no-window &
   - adb shell input keyevent 82 &
 
