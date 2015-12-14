@@ -30,7 +30,7 @@ import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
 public class RealmCacheDataSourceTest {
@@ -223,7 +223,7 @@ public class RealmCacheDataSourceTest {
     realmCacheDataSource.deleteByKey("1");
 
     FakeObject fakeObject = realmCacheDataSource.getByKey("1");
-    assertNull(fakeObject);
+    assertNotNull(fakeObject);
   }
 
   private FakeObject givenDummyWithId(String id) {
