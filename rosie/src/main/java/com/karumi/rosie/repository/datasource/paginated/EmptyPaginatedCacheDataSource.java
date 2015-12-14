@@ -27,13 +27,12 @@ public class EmptyPaginatedCacheDataSource<K, V extends Identifiable<K>>
     return false;
   }
 
-  @Override public PaginatedCollection<V> getPage(int offset, int limit) {
+  @Override public PaginatedCollection<V> getPage(Page page) {
     return null;
   }
 
   @Override
-  public PaginatedCollection<V> addOrUpdatePage(int offset, int limit, Collection<V> values,
-      boolean hasMore) {
+  public PaginatedCollection<V> addOrUpdatePage(Page page, Collection<V> values, boolean hasMore) {
     return null;
   }
 

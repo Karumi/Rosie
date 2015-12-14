@@ -20,6 +20,7 @@ import com.karumi.rosie.domain.usecase.UseCaseHandler;
 import com.karumi.rosie.domain.usecase.annotation.Success;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
 import com.karumi.rosie.repository.PaginatedCollection;
+import com.karumi.rosie.repository.datasource.paginated.Page;
 import com.karumi.rosie.sample.characters.domain.model.Character;
 import com.karumi.rosie.sample.characters.domain.usecase.GetCharacters;
 import com.karumi.rosie.sample.characters.view.viewmodel.CharacterViewModel;
@@ -60,7 +61,8 @@ public class CharactersPresenter extends RosiePresenterWithLoading<CharactersPre
   }
 
   private void loadCharacters() {
-    createUseCaseCall(getCharacters).args(offset, NUMBER_OF_CHARACTERS_PER_PAGE)
+    createUseCaseCall(getCharacters).args(
+        Page.withOffsetAndLimit(offset, NUMBER_OF_CHARACTERS_PER_PAGE))
         .onSuccess(new OnSuccessCallback() {
           @Success public void onCharactersLoaded(PaginatedCollection<Character> characters) {
             List<CharacterViewModel> characterViewModels =
@@ -68,7 +70,7 @@ public class CharactersPresenter extends RosiePresenterWithLoading<CharactersPre
             getView().showCharacters(characterViewModels);
             getView().showHasMore(characters.hasMore());
             hideLoading();
-            offset = characters.getOffset() + NUMBER_OF_CHARACTERS_PER_PAGE;
+            offset = characters.getPage().getOffset() + NUMBER_OF_CHARACTERS_PER_PAGE;
           }
         })
         .execute();

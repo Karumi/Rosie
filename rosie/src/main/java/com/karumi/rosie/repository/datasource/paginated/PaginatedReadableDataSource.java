@@ -25,9 +25,9 @@ import com.karumi.rosie.repository.PaginatedCollection;
  */
 public interface PaginatedReadableDataSource<V> {
   /**
-   * Returns a page of values bounded by the offset and limit values.
-   * @param offset Index of the first item to be retrieved
-   * @param limit Number of elements that will be retrieved
+   * Returns a page of values bounded by the provided page.
+   *
+   * @param page page to be retrieved
    */
-  PaginatedCollection<V> getPage(int offset, int limit);
+  PaginatedCollection<V> getPage(Page page);
 }

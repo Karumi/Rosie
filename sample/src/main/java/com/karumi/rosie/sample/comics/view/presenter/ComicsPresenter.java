@@ -20,6 +20,7 @@ import com.karumi.rosie.domain.usecase.UseCaseHandler;
 import com.karumi.rosie.domain.usecase.annotation.Success;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
 import com.karumi.rosie.repository.PaginatedCollection;
+import com.karumi.rosie.repository.datasource.paginated.Page;
 import com.karumi.rosie.sample.comics.domain.model.Comic;
 import com.karumi.rosie.sample.comics.domain.usecase.GetComics;
 import com.karumi.rosie.sample.comics.view.viewmodel.ComicViewModel;
@@ -58,14 +59,14 @@ public class ComicsPresenter extends RosiePresenterWithLoading<ComicsPresenter.V
   }
 
   private void loadComics() {
-    createUseCaseCall(getComics).args(offset, NUMBER_OF_COMICS_PER_PAGE)
+    createUseCaseCall(getComics).args(Page.withOffsetAndLimit(offset, NUMBER_OF_COMICS_PER_PAGE))
         .onSuccess(new OnSuccessCallback() {
           @Success public void onComicsLoaded(PaginatedCollection<Comic> comics) {
             List<ComicViewModel> comicViewModels = mapper.mapComicsToComicViewModels(comics);
             hideLoading();
             getView().showHasMore(comics.hasMore());
             getView().showComics(comicViewModels);
-            offset = comics.getOffset() + NUMBER_OF_COMICS_PER_PAGE;
+            offset = comics.getPage().getOffset() + NUMBER_OF_COMICS_PER_PAGE;
           }
         })
         .execute();
