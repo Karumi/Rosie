@@ -19,9 +19,7 @@ package com.karumi.rosie.view;
 import com.karumi.rosie.UnitTest;
 import com.karumi.rosie.domain.usecase.RosieUseCase;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
-import com.karumi.rosie.domain.usecase.UseCaseParams;
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -32,27 +30,6 @@ public class RosiePresenterTest extends UnitTest {
 
   @Mock private UseCaseHandler useCaseHandler;
   @Mock private RosieUseCase anyUseCase;
-  private UseCaseParams anyUseCaseParams;
-
-  @Before public void setUp() {
-    anyUseCaseParams = new UseCaseParams.Builder().build();
-  }
-
-  @Test public void shouldExecuteUseCaseUsingTheUseCaseHandler() {
-    RosiePresenter rosiePresenter = givenARosiePresenterWithRegisteredCallback();
-
-    rosiePresenter.execute(anyUseCase);
-
-    verify(useCaseHandler).execute(anyUseCase);
-  }
-
-  @Test public void shouldExecuteUseCaseWithUseCaseParamsUsingTheUseCaseHandler() {
-    RosiePresenter rosiePresenter = givenARosiePresenterWithRegisteredCallback();
-
-    rosiePresenter.execute(anyUseCase, anyUseCaseParams);
-
-    verify(useCaseHandler).execute(anyUseCase, anyUseCaseParams);
-  }
 
   @Test public void shouldRegisterGlobalErrorCallbackDuringTheInitializeLifecycleStage() {
     RosiePresenter rosiePresenter = givenARosiePresenterWithRegisteredCallback();

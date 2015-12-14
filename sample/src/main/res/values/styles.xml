@@ -38,16 +38,15 @@
     <item name="android:textAllCaps">true</item>
   </style>
 
-  <style name="LoadingText">
-    <item name="android:textSize">@dimen/loading_font_size</item>
-    <item name="android:textAllCaps">true</item>
-  </style>
-
   <style name="CharacterName">
     <item name="android:textSize">@dimen/character_name_font_size</item>
     <item name="android:textColor">@color/character_name</item>
-    <item name="android:textAllCaps">true</item>
     <item name="android:layout_marginLeft">@dimen/character_margin_left</item>
+  </style>
+
+  <style name="CharacterDescription">
+    <item name="android:textSize">@dimen/character_description_text_size</item>
+    <item name="android:textColor">@color/character_details_description</item>
   </style>
 
   <style name="ComicName">

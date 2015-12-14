@@ -25,4 +25,8 @@
   <string name="marvel_rating_teens_and_up">T+</string>
   <string name="marvel_rating_parental_advisory">Parental Advisory</string>
   <string name="marvel_rating_explicit_content">Max: Explicit Content</string>
+  <string name="comic_next_icon_content_description">See comic details</string>
+  <string name="comic_cover_content_description">Comic cover</string>
+  <string name="character_next_icon_content_description">See character details</string>
+  <string name="character_thumbnail_content_description">Character thumbnail</string>
 </resources>

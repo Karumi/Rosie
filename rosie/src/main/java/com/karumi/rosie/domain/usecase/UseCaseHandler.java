@@ -35,23 +35,13 @@ public class UseCaseHandler {
   }
 
   /**
-   * Invoke an use case without arguments. This use case will be invoked out of the main thread,
-   * and the response will be handled in the main thread.
-   *
-   * @param useCase the use case to invoke.
-   */
-  public void execute(RosieUseCase useCase) {
-    execute(useCase, (new UseCaseParams.Builder()).build());
-  }
-
-  /**
    * Given a class configured with UseCase annotation executes the annotated
    * method out of the UI thread and returns the response, if needed, on the UI thread.
    *
    * @param useCase the use case to invoke.
    * @param useCaseParams params to use on the invocation.
    */
-  public void execute(RosieUseCase useCase, UseCaseParams useCaseParams) {
+  void execute(RosieUseCase useCase, UseCaseParams useCaseParams) {
     UseCaseFilter.filter(useCase, useCaseParams);
 
     useCase.setOnSuccessCallback(useCaseParams.getOnSuccessCallback());

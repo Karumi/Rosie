@@ -17,7 +17,6 @@
 package com.karumi.rosie.sample.characters.view.presenter;
 
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
-import com.karumi.rosie.domain.usecase.UseCaseParams;
 import com.karumi.rosie.domain.usecase.annotation.Success;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
 import com.karumi.rosie.repository.PaginatedCollection;
@@ -31,7 +30,7 @@ import javax.inject.Inject;
 
 public class CharactersPresenter extends RosiePresenterWithLoading<CharactersPresenter.View> {
 
-  private static final int NUMBER_OF_CHARACTERS_PER_PAGE = 3;
+  private static final int NUMBER_OF_CHARACTERS_PER_PAGE = 15;
 
   private final GetCharacters getCharacters;
   private final CharacterToCharacterViewModelMapper mapper;
@@ -61,7 +60,7 @@ public class CharactersPresenter extends RosiePresenterWithLoading<CharactersPre
   }
 
   private void loadCharacters() {
-    UseCaseParams params = new UseCaseParams.Builder().args(offset, NUMBER_OF_CHARACTERS_PER_PAGE)
+    createUseCaseCall(getCharacters).args(offset, NUMBER_OF_CHARACTERS_PER_PAGE)
         .onSuccess(new OnSuccessCallback() {
           @Success public void onCharactersLoaded(PaginatedCollection<Character> characters) {
             List<CharacterViewModel> characterViewModels =
@@ -72,8 +71,7 @@ public class CharactersPresenter extends RosiePresenterWithLoading<CharactersPre
             offset = characters.getOffset() + NUMBER_OF_CHARACTERS_PER_PAGE;
           }
         })
-        .build();
-    execute(getCharacters, params);
+        .execute();
   }
 
   public interface View extends RosiePresenterWithLoading.View {

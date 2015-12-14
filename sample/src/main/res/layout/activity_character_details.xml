@@ -17,7 +17,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_blue_light"
+    android:background="@color/main_background"
     >
 
   <LinearLayout
@@ -25,20 +25,38 @@
       android:orientation="vertical"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="@android:color/holo_blue_light"
       >
 
     <ImageView
         android:id="@+id/iv_character_image"
         android:layout_width="match_parent"
         android:layout_height="@dimen/character_thumbnail_height"
+        android:contentDescription="@string/character_thumbnail_content_description"
         />
 
-    <TextView
-        android:id="@+id/tv_description"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
+        android:orientation="vertical"
+        android:padding="@dimen/character_description_padding"
+        >
+
+      <TextView
+          android:id="@+id/tv_character_name"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          style="@style/CharacterDescription"
+          />
+
+      <TextView
+          android:id="@+id/tv_description"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/character_description_margin_top"
+          style="@style/CharacterDescription"
+          />
+
+    </LinearLayout>
 
   </LinearLayout>
 

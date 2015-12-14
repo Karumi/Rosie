@@ -17,7 +17,6 @@
 package com.karumi.rosie.sample.characters.view.presenter;
 
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
-import com.karumi.rosie.domain.usecase.UseCaseParams;
 import com.karumi.rosie.domain.usecase.annotation.Success;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
 import com.karumi.rosie.sample.characters.domain.model.Character;
@@ -53,16 +52,14 @@ public class CharacterDetailsPresenter
 
   private void loadCharacterDetails() {
     getView().hideCharacterDetail();
-    UseCaseParams params =
-        new UseCaseParams.Builder().args(characterKey).onSuccess(new OnSuccessCallback() {
-          @Success public void onCharacterDetailsLoaded(Character character) {
-            hideLoading();
-            CharacterDetailViewModel characterDetailViewModel =
-                mapper.mapCharacterToCharacterDetailViewModel(character);
-            getView().showCharacterDetail(characterDetailViewModel);
-          }
-        }).build();
-    execute(getCharacterDetails, params);
+    createUseCaseCall(getCharacterDetails).args(characterKey).onSuccess(new OnSuccessCallback() {
+      @Success public void onCharacterDetailsLoaded(Character character) {
+        hideLoading();
+        CharacterDetailViewModel characterDetailViewModel =
+            mapper.mapCharacterToCharacterDetailViewModel(character);
+        getView().showCharacterDetail(characterDetailViewModel);
+      }
+    }).execute();
   }
 
   public interface View extends RosiePresenterWithLoading.View {

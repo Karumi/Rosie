@@ -14,13 +14,19 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tv_loading"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:text="@string/loading_message"
-    android:visibility="gone"
-    style="@style/LoadingText"
     >
-</TextView>
+
+  <com.victor.loading.rotate.RotateLoading
+      android:id="@+id/loading"
+      android:layout_width="@dimen/loading_size"
+      android:layout_height="@dimen/loading_size"
+      app:loading_width="@dimen/loading_circle_width"
+      app:loading_color="@color/loading"
+      android:layout_gravity="center"
+      />
+</FrameLayout>
