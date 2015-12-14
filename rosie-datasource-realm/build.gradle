@@ -30,6 +30,10 @@ android {
   packagingOptions {
     exclude 'META-INF/services/javax.annotation.processing.Processor'
   }
+
+  dexOptions {
+    preDexLibraries = Boolean.valueOf(System.getProperty("pre-dex", "true"))
+  }
 }
 
 dependencies {

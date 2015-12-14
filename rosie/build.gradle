@@ -25,6 +25,10 @@ android {
     minSdkVersion 14
     targetSdkVersion 23
   }
+
+  dexOptions {
+    preDexLibraries = Boolean.valueOf(System.getProperty("pre-dex", "true"))
+  }
 }
 
 dependencies {
