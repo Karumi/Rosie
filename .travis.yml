@@ -2,7 +2,7 @@ language: android
 
 env:
   matrix:
-    - ANDROID_TARGET=android-23  ANDROID_ABI=armeabi-v7a-23
+    - ANDROID_TARGET=android-23  ANDROID_ABI=armeabi-v7a-android-23
 
 android:
   components:
@@ -11,7 +11,7 @@ android:
     - extra-android-support
     - extra-google-m2repository
     - extra-android-m2repository
-    - sys-img-armeabi-v7a-23
+    - sys-img-armeabi-v7a-android-23
 
 before_script:
   # Create and start emulator
