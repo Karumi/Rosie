@@ -1,7 +1,7 @@
 language: android
 
 env:
-  global:
+  matrix:
     - ANDROID_TARGET=android-23  ANDROID_ABI=armeabi-v7a
 
 android:
