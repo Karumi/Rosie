@@ -11,6 +11,7 @@ android:
     - extra-android-support
     - extra-google-m2repository
     - extra-android-m2repository
+    - sys-img-armeabi-v7a-addon-google_apis-google-23
 
 before_script:
   # Create and start emulator
