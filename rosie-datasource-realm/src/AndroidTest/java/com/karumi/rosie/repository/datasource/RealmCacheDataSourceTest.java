@@ -17,6 +17,7 @@
 package com.karumi.rosie.repository.datasource;
 
 import android.support.test.InstrumentationRegistry;
+import android.test.AndroidTestCase;
 import com.karumi.rosie.dummy.FakeMapper;
 import com.karumi.rosie.dummy.FakeObject;
 import com.karumi.rosie.dummy.FakeRealmObject;
@@ -29,12 +30,7 @@ import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-
-public class RealmCacheDataSourceTest {
+public class RealmCacheDataSourceTest extends AndroidTestCase {
 
   private static final long ANY_TTL = 500;
   private static final String ANY_VALUE = "any_value";
