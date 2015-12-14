@@ -1,5 +1,9 @@
 language: android
 
+env:
+  global:
+    MALLOC_ARENA_MAX=2
+
 android:
   components:
     - build-tools-23.0.1
@@ -16,4 +20,4 @@ before_script:
   - adb shell input keyevent 82 &
 
 script:
-  ./gradlew connectedCheck
+  ./gradlew checkstyle build connectedCheck
