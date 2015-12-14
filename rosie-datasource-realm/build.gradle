@@ -14,4 +14,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-include ':rosie', ':sample', ':rosie-datasource-realm'
+apply plugin: 'com.android.library'
+apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
+
+android {
+  compileSdkVersion 23
+  buildToolsVersion "22.0.1"
+
+  defaultConfig {
+    minSdkVersion 14
+    targetSdkVersion 22
+    testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+  }
+
+  packagingOptions {
+    exclude 'META-INF/services/javax.annotation.processing.Processor'
+  }
+}
+
+dependencies {
+  compile project(':rosie')
+  compile 'io.realm:realm-android:0.86.0'
+
+  testCompile 'junit:junit:4.12'
+  testCompile 'org.mockito:mockito-all:1.9.5'
+  testCompile 'org.robolectric:robolectric:2.4'
+  androidTestCompile 'com.android.support.test:runner:0.4'
+}
+
