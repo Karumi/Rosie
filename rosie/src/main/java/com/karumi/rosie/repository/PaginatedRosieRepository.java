@@ -50,6 +50,7 @@ public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends Rosi
    * Returns a page of values bounded by the offset and limit values.
    * @param offset Index of the first item to be retrieved
    * @param limit Number of elements that will be retrieved
+   * @return a PaginatedCollection instance with the retrieved content
    */
   public PaginatedCollection<V> getPage(int offset, int limit) {
     return getPage(offset, limit, ReadPolicy.READ_ALL);
@@ -60,6 +61,7 @@ public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends Rosi
    * @param offset Index of the first item to be retrieved
    * @param limit Number of elements that will be retrieved
    * @param policy Specifies how the value is going to be retrieved.
+   * @return a PaginatedCollection instance with the retrieved content
    */
   public PaginatedCollection<V> getPage(int offset, int limit, ReadPolicy policy) {
     PaginatedCollection<V> values = null;
