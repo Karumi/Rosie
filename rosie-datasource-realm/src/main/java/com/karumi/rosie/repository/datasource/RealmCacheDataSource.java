@@ -19,7 +19,6 @@ package com.karumi.rosie.repository.datasource;
 import android.content.Context;
 import com.karumi.rosie.time.TimeProvider;
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 import java.util.Collection;
@@ -34,112 +33,121 @@ public class RealmCacheDataSource<V extends RealmIdentifiable,
   private final Context context;
   private final Class<VR> type;
   private final String primaryKeyName;
-  private Realm realm;
-  private long lastItemsUpdate = 0;
+  private final RosieRealm rosieRealm;
+  private TtlStorage ttlStorage;
   protected final long ttlInMillis;
 
   public RealmCacheDataSource(Mapper<V, VR> mapperToDb, Class<VR> type, String primaryKeyName,
-      TimeProvider timeProvider,
-      long ttlInMillis, Context context) {
+      TimeProvider timeProvider, long ttlInMillis, Context context) {
     this.mapperToDb = mapperToDb;
     this.timeProvider = timeProvider;
     this.ttlInMillis = ttlInMillis;
     this.type = type;
     this.primaryKeyName = primaryKeyName;
     this.context = context;
+    rosieRealm = new RosieRealm(context);
+    ttlStorage = new TtlStorage(rosieRealm, timeProvider);
   }
 
   @Override public V getByKey(String key) {
-    validatePrimaryKeyFieldName();
     V value = null;
-    VR valueRealm = getRealm().where(type).equalTo(primaryKeyName, key).findFirst();
-    if (valueRealm != null) {
-      value = mapperToDb.reverseMap(valueRealm);
+    try {
+      validatePrimaryKeyFieldName();
+      VR valueRealm = rosieRealm.getRealm().where(type).equalTo(primaryKeyName, key).findFirst();
+      if (valueRealm != null) {
+        value = mapperToDb.reverseMap(valueRealm);
+      }
+    } catch (Exception e) {
+      throw e;
+    } finally {
+      rosieRealm.closeRealm();
     }
-    closeRealm();
     return value;
   }
 
   @Override public Collection<V> getAll() {
     Collection<V> values = new LinkedList<>();
-    RealmResults<VR> result = getRealm().allObjects(type);
-    for (VR valueRealm : result) {
-      V value = mapperToDb.reverseMap(valueRealm);
-      values.add(value);
+    try {
+      RealmResults<VR> result = rosieRealm.getRealm().allObjects(type);
+      for (VR valueRealm : result) {
+        V value = mapperToDb.reverseMap(valueRealm);
+        values.add(value);
+      }
+    } catch (Exception e) {
+      throw e;
+    } finally {
+      rosieRealm.closeRealm();
     }
-    closeRealm();
     return values;
   }
 
   @Override public V addOrUpdate(V value) {
-    Realm realm = getRealm();
-    beginTransaction();
-    VR valueRealm = mapperToDb.map(value);
-    realm.copyToRealmOrUpdate(valueRealm);
-    commitTransaction();
-    closeRealm();
-    lastItemsUpdate = timeProvider.currentTimeMillis();
+    try {
+      Realm realm = rosieRealm.getRealm();
+      rosieRealm.beginTransaction();
+      VR valueRealm = mapperToDb.map(value);
+      realm.copyToRealmOrUpdate(valueRealm);
+    } catch (Exception e) {
+      throw e;
+    } finally {
+      rosieRealm.commitTransaction();
+      rosieRealm.closeRealm();
+    }
+    ttlStorage.update(type.getName());
     return value;
   }
 
   @Override public Collection<V> addOrUpdateAll(Collection<V> values) {
-    Realm realm = getRealm();
-    beginTransaction();
-    Collection<VR> valuesRealm = mapperToDb.map(values);
-    realm.copyToRealmOrUpdate(valuesRealm);
-    commitTransaction();
-    closeRealm();
-    lastItemsUpdate = timeProvider.currentTimeMillis();
+    try {
+
+      Realm realm = rosieRealm.getRealm();
+      rosieRealm.beginTransaction();
+      Collection<VR> valuesRealm = mapperToDb.map(values);
+      realm.copyToRealmOrUpdate(valuesRealm);
+    } catch (Exception e) {
+      throw e;
+    } finally {
+      rosieRealm.commitTransaction();
+      rosieRealm.closeRealm();
+    }
+    ttlStorage.update(type.getName());
     return values;
   }
 
   @Override public void deleteByKey(String key) {
     validatePrimaryKeyFieldName();
-    beginTransaction();
-    VR first = getRealm().where(type).equalTo(primaryKeyName, key).findFirst();
-    if (first != null) {
-      first.removeFromRealm();
+    try {
+      rosieRealm.beginTransaction();
+      VR first = rosieRealm.getRealm().where(type).equalTo(primaryKeyName, key).findFirst();
+      if (first != null) {
+        first.removeFromRealm();
+      }
+    } catch (Exception e) {
+      throw e;
+    } finally {
+      rosieRealm.commitTransaction();
+      rosieRealm.closeRealm();
     }
-    commitTransaction();
-    closeRealm();
-    lastItemsUpdate = 0;
+    ttlStorage.delete(type.getName());
   }
 
   @Override public void deleteAll() {
-    Realm realm = getRealm();
-    beginTransaction();
-    realm.allObjects(type).clear();
-    commitTransaction();
-    closeRealm();
-    lastItemsUpdate = 0;
+    try {
+      Realm realm = rosieRealm.getRealm();
+      rosieRealm.beginTransaction();
+      realm.allObjects(type).clear();
+    } catch (Exception e) {
+      throw e;
+    } finally {
+      rosieRealm.commitTransaction();
+      rosieRealm.closeRealm();
+    }
+    ttlStorage.delete(type.getName());
   }
 
   @Override public boolean isValid(V value) {
+    long lastItemsUpdate = ttlStorage.getLastUpdate(type.getName());
     return timeProvider.currentTimeMillis() - lastItemsUpdate < ttlInMillis;
-  }
-
-  protected Realm getRealm() {
-    if (realm == null) {
-      RealmConfiguration config =
-          new RealmConfiguration.Builder(context).deleteRealmIfMigrationNeeded().build();
-      realm = Realm.getInstance(config);
-    }
-    return realm;
-  }
-
-  protected void closeRealm() {
-    if (realm != null) {
-      realm.close();
-      realm = null;
-    }
-  }
-
-  protected void beginTransaction() {
-    getRealm().beginTransaction();
-  }
-
-  protected void commitTransaction() {
-    getRealm().commitTransaction();
   }
 
   private void validatePrimaryKeyFieldName() {
