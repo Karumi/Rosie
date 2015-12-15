@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -203,8 +202,7 @@ import static org.junit.Assert.assertTrue;
 
     assertFalse(realmCacheDataSource.isValid(anyFakeObject));
   }
-
-  @Test @Ignore("Ignored temporally until travis ci config be fixed")
+  
   public void shouldRemoveObjectWhenRemoveById() {
     RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
         givenRealmCacheDataSource(givenDummyTimeProvider());
