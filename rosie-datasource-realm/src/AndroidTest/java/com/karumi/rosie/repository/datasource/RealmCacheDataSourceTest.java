@@ -94,7 +94,7 @@ import static org.junit.Assert.assertTrue;
     assertEquals("Updated Value", result.getValue());
   }
 
-  @Test public void shouldReturnValuesWhenAddTwoValuesAndGetAll() {
+  @Test public void shouldReturnAllPersistedItems() {
     RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
         givenRealmCacheDataSource(givenFakeTimeProvider());
     realmCacheDataSource.addOrUpdate(givenDummyWithId("1"));
@@ -214,7 +214,7 @@ import static org.junit.Assert.assertTrue;
     assertNull(fakeObject);
   }
 
-  @Test public void shouldBeAgnosticWhenRemoveByIdAndIdDoesNotExist() {
+  @Test public void testShouldBeAgnosticWhenRemoveByIdAndIdDoesNotExist() {
     RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
         givenRealmCacheDataSource(givenFakeTimeProvider());
     realmCacheDataSource.addOrUpdate(givenDummyWithId("1"));
