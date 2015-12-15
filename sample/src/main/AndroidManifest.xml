@@ -26,12 +26,12 @@
       android:allowBackup="true"
       android:icon="@mipmap/ic_logo_karumi"
       android:label="@string/app_name"
-      android:theme="@style/SampleStyle"
+      android:theme="@style/SampleTheme"
       >
     <activity
         android:name=".main.view.activity.MainActivity"
         android:label="@string/app_name"
-        android:theme="@style/SampleStyle"
+        android:theme="@style/SampleTheme"
         >
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>

@@ -83,7 +83,9 @@ public class CharacterDetailsActivity extends RosieActivity
     characterDetailView.setVisibility(View.VISIBLE);
     toolbarTitleView.setText(character.getName());
     Picasso.with(this)
-        .load(character.getHeaderImage()).fit().centerCrop()
+        .load(character.getHeaderImage())
+        .fit()
+        .centerCrop()
         .into(characterHeaderView);
     characterNameView.setText(character.getName());
     characterDescriptionView.setText(character.getDescription());

@@ -20,9 +20,9 @@
       android:color="@color/comic_thumbnail_border"
       />
   <padding
-      android:left="1dp"
-      android:top="1dp"
-      android:right="1dp"
-      android:bottom="1dp"
+      android:left="@dimen/comic_border_width"
+      android:top="@dimen/comic_border_width"
+      android:right="@dimen/comic_border_width"
+      android:bottom="@dimen/comic_border_width"
       />
 </shape>

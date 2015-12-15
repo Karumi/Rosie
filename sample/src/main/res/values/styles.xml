@@ -16,7 +16,7 @@
   -->
 <resources>
 
-  <style name="SampleStyle"
+  <style name="SampleTheme"
       parent="Theme.AppCompat.NoActionBar">
     <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
   </style>

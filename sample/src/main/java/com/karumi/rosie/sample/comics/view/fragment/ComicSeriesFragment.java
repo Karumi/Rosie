@@ -82,6 +82,7 @@ public class ComicSeriesFragment extends RosieFragment implements ComicsSeriesPr
   }
 
   @Override public void showComicSeries(List<ComicSeriesViewModel> comicSeries) {
+    comicSeriesAdapter.clear();
     comicSeriesAdapter.addAll(comicSeries);
     comicSeriesAdapter.notifyDataSetChanged();
     comicSeriesView.setVisibility(View.VISIBLE);
