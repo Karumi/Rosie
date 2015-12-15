@@ -53,7 +53,7 @@ public class RosieApplication extends Application {
   }
 
   /**
-   * Given a List<Object> with Dagger modules inside performs a plus over the application graph and
+   * @return a List with Dagger modules inside performs a plus over the application graph and
    * returns a new one with all the dependencies already created plus the one resolved with the
    * list of modules passed as argument.
    */
@@ -66,7 +66,7 @@ public class RosieApplication extends Application {
   }
 
   /**
-   * Returns a List<Object> with the additional modules needed to create the application scope
+   * @return a List with the additional modules needed to create the application scope
    * graph. Override this method to return the list of modules associated to your application
    * graph.
    */

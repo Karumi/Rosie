@@ -1,9 +1,5 @@
 language: android
 
-env:
-  global:
-    MALLOC_ARENA_MAX=2
-    
 android:
   components:
     - build-tools-23.0.1
@@ -14,11 +10,11 @@ android:
     - sys-img-armeabi-v7a-android-21
 
 before_script:
-  # Create and start emulator
-  - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
-  - emulator -avd test -no-skin -no-audio -no-window -gpu off -no-boot-anim &
+  - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a --sdcard 16M
+  - emulator -avd test -no-skin -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
 
 script:
-  ./gradlew checkstyle build connectedCheck -Dpre-dex=false
+  - ./gradlew checkstyle build -Dpre-dex=false
+  - ./gradlew :rosie-datasource-realm:connectedCheck

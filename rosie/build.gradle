@@ -45,4 +45,3 @@ dependencies {
   testCompile 'org.mockito:mockito-all:1.9.5'
   testCompile 'org.robolectric:robolectric:2.4'
 }
-

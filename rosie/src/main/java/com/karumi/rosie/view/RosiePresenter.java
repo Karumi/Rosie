@@ -76,7 +76,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
   }
 
   /**
-   * Create a new call to can execute an use case. <p/>
+   * Create a new call to can execute an use case.
    *
    * @param useCase use case will be execute.
    * @return Call object for invoke the use case.
@@ -86,7 +86,6 @@ public class RosiePresenter<T extends RosiePresenter.View> {
     retainUseCaseCall(useCaseCall);
     return useCaseCall;
   }
-
 
   /**
    * Returns the view configured in the presenter which real implementation is an Activity or
@@ -126,8 +125,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
   void resetView() {
     final Class<?> viewClass = getViewInterfaceClass();
     InvocationHandler emptyHandler = new InvocationHandler() {
-      @Override
-      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+      @Override public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         return null;
       }
     };

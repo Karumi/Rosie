@@ -68,7 +68,9 @@ public class RosieRepository<K, V extends Identifiable<K>>
   /**
    * {@link ReadableDataSource#getByKey(Object)}
    *
+   * @param key used to retrieve an item.
    * @param policy Specifies how the value is going to be retrieved.
+   * @return item matching with the key and the policy passed as param
    */
   public V getByKey(K key, ReadPolicy policy) {
     validateKey(key);
@@ -101,6 +103,7 @@ public class RosieRepository<K, V extends Identifiable<K>>
    * {@link ReadableDataSource#getAll()}
    *
    * @param policy Specifies how the value is going to be retrieved.
+   * @return all the items inside the repository matching with the read policy
    */
   public Collection<V> getAll(ReadPolicy policy) {
     Collection<V> values = null;
@@ -130,7 +133,9 @@ public class RosieRepository<K, V extends Identifiable<K>>
   /**
    * {@link WriteableDataSource#addOrUpdate(Identifiable)}
    *
+   * @param value to add or update
    * @param policy Specifies how the value is going to be stored.
+   * @return item added or updated
    */
   public V addOrUpdate(V value, WritePolicy policy) {
     validateValue(value);
