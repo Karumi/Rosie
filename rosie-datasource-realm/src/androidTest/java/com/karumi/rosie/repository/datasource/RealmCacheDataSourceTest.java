@@ -30,6 +30,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -214,7 +215,7 @@ import static org.junit.Assert.assertTrue;
     assertNull(fakeObject);
   }
 
-  @Test public void testShouldBeAgnosticWhenRemoveByIdAndIdDoesNotExist() {
+  @Test public void shouldBeAgnosticWhenRemoveByIdAndIdDoesNotExist() {
     RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
         givenRealmCacheDataSource(givenFakeTimeProvider());
     realmCacheDataSource.addOrUpdate(givenDummyWithId("1"));
@@ -222,7 +223,7 @@ import static org.junit.Assert.assertTrue;
     realmCacheDataSource.deleteByKey("2");
 
     FakeObject fakeObject = realmCacheDataSource.getByKey("1");
-    assertNull(fakeObject);
+    assertNotNull(fakeObject);
   }
 
   private FakeObject givenDummyWithId(String id) {
