@@ -8,7 +8,6 @@ import io.realm.RealmObject;
 import io.realm.RealmResults;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 
 public class RealmCacheDataSource<V extends RealmIdentifiable,
     VR extends RealmObject>
@@ -35,7 +34,7 @@ public class RealmCacheDataSource<V extends RealmIdentifiable,
   }
 
   @Override public V getByKey(String key) {
-    String keyName = getPrimaryKeyFieldName();
+    validatePrimaryKeyFieldName();
     V value = null;
     VR valueRealm = getRealm().where(type).equalTo(primaryKeyName, key).findFirst();
     if (valueRealm != null) {
@@ -46,7 +45,7 @@ public class RealmCacheDataSource<V extends RealmIdentifiable,
   }
 
   @Override public Collection<V> getAll() {
-    List<V> values = new LinkedList<>();
+    Collection<V> values = new LinkedList<>();
     RealmResults<VR> result = getRealm().allObjects(type);
     for (VR valueRealm : result) {
       V value = mapperToDb.reverseMap(valueRealm);
@@ -79,9 +78,12 @@ public class RealmCacheDataSource<V extends RealmIdentifiable,
   }
 
   @Override public void deleteByKey(String key) {
-    String keyName = getPrimaryKeyFieldName();
+    validatePrimaryKeyFieldName();
     beginTransaction();
-    getRealm().where(type).equalTo(keyName, key).findFirst().removeFromRealm();
+    VR first = getRealm().where(type).equalTo(primaryKeyName, key).findFirst();
+    if (first != null) {
+      first.removeFromRealm();
+    }
     commitTransaction();
     closeRealm();
     lastItemsUpdate = 0;
@@ -124,11 +126,10 @@ public class RealmCacheDataSource<V extends RealmIdentifiable,
     getRealm().commitTransaction();
   }
 
-  private String getPrimaryKeyFieldName() {
+  private void validatePrimaryKeyFieldName() {
     if (primaryKeyName == null || primaryKeyName.isEmpty()) {
       throw new IllegalStateException(
           "You are trying to do an operation by Key, but you Realm model don't have an PrimaryKey ");
     }
-    return primaryKeyName;
   }
 }

@@ -30,9 +30,9 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class) public class RealmCacheDataSourceTest {
@@ -151,7 +151,6 @@ import static org.junit.Assert.assertTrue;
     fakeTimeProvider.setTime(INIT_TIME);
     RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
         givenRealmCacheDataSource(fakeTimeProvider);
-
     FakeObject fakeObject = givenDummyWithId(ANY_ID);
     List<FakeObject> fakeObjects = new ArrayList<>();
     fakeObjects.add(fakeObject);
@@ -167,7 +166,6 @@ import static org.junit.Assert.assertTrue;
     fakeTimeProvider.setTime(INIT_TIME);
     RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
         givenRealmCacheDataSource(fakeTimeProvider);
-
     FakeObject fakeObject = givenDummyWithId(ANY_ID);
     List<FakeObject> fakeObjects = new ArrayList<>();
     fakeObjects.add(fakeObject);
@@ -202,8 +200,8 @@ import static org.junit.Assert.assertTrue;
 
     assertFalse(realmCacheDataSource.isValid(anyFakeObject));
   }
-  
-  public void shouldRemoveObjectWhenRemoveById() {
+
+  @Test public void shouldRemoveObjectWhenRemoveById() {
     RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
         givenRealmCacheDataSource(givenDummyTimeProvider());
     realmCacheDataSource.addOrUpdate(givenDummyWithId("1"));
@@ -211,7 +209,18 @@ import static org.junit.Assert.assertTrue;
     realmCacheDataSource.deleteByKey("1");
 
     FakeObject fakeObject = realmCacheDataSource.getByKey("1");
-    assertNotNull(fakeObject);
+    assertNull(fakeObject);
+  }
+
+  @Test public void shouldBeAgnosticWhenRemoveByIdAndIdDoesNotExist() {
+    RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
+        givenRealmCacheDataSource(givenDummyTimeProvider());
+    realmCacheDataSource.addOrUpdate(givenDummyWithId("1"));
+
+    realmCacheDataSource.deleteByKey("2");
+
+    FakeObject fakeObject = realmCacheDataSource.getByKey("1");
+    assertNull(fakeObject);
   }
 
   private FakeObject givenDummyWithId(String id) {
