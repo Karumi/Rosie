@@ -20,5 +20,5 @@ before_script:
   - adb shell input keyevent 82 &
 
 script:
-  - ./gradlew checkstyle build
+  - ./gradlew checkstyle build -Dpre-dex=false
   - ./gradlew :rosie-datasource-realm:connectedCheck
