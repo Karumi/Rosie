@@ -1,9 +1,5 @@
 language: android
 
-env:
-  global:
-    MALLOC_ARENA_MAX=2
-
 android:
   components:
     - build-tools-23.0.1
