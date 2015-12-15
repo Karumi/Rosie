@@ -44,14 +44,14 @@ import static org.junit.Assert.assertTrue;
 
   @After public void tearDown() throws Exception {
     RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
-        givenRealmCacheDataSource(givenDummyTimeProvider());
+        givenRealmCacheDataSource(givenFakeTimeProvider());
 
     realmCacheDataSource.deleteAll();
   }
 
-  @Test public void shouldReturnValueWhenAddAValueAndGetbyKey() {
+  @Test public void shouldReturnValueWhenAddAValueAndGetByKey() {
     RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
-        givenRealmCacheDataSource(givenDummyTimeProvider());
+        givenRealmCacheDataSource(givenFakeTimeProvider());
     realmCacheDataSource.addOrUpdate(givenDummyWithId("1"));
 
     FakeObject result = realmCacheDataSource.getByKey("1");
@@ -59,31 +59,33 @@ import static org.junit.Assert.assertTrue;
     assertEquals("1", result.getId());
   }
 
-  @Test public void shouldReturnValueWhenAddMoreThanOneValueAndGetById() {
+  @Test public void shouldReturnValueWhenAddMoreThanOneDifferentIdsValueAndGetById() {
     RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
-        givenRealmCacheDataSource(givenDummyTimeProvider());
+        givenRealmCacheDataSource(givenFakeTimeProvider());
     realmCacheDataSource.addOrUpdate(givenDummyWithId("1"));
     realmCacheDataSource.addOrUpdate(givenDummyWithId("2"));
 
-    FakeObject result = realmCacheDataSource.getByKey("2");
+    FakeObject resultForOne = realmCacheDataSource.getByKey("1");
+    FakeObject resultForTwo = realmCacheDataSource.getByKey("2");
 
-    assertEquals("2", result.getId());
+    assertEquals("1", resultForOne.getId());
+    assertEquals("2", resultForTwo.getId());
   }
 
-  @Test public void shouldReturnNullWhenGetByIdUnexistedKey() {
+  @Test public void shouldReturnNullGettingItemsNotPreviouslyAdded() {
     RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
-        givenRealmCacheDataSource(givenDummyTimeProvider());
+        givenRealmCacheDataSource(givenFakeTimeProvider());
     realmCacheDataSource.addOrUpdate(givenDummyWithId("1"));
     realmCacheDataSource.addOrUpdate(givenDummyWithId("2"));
 
     FakeObject result = realmCacheDataSource.getByKey("3");
 
-    assertEquals(null, result);
+    assertNull(result);
   }
 
   @Test public void shouldReturnUpdateObjectWhenAddTwoObjectWithSameId() {
     RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
-        givenRealmCacheDataSource(givenDummyTimeProvider());
+        givenRealmCacheDataSource(givenFakeTimeProvider());
     realmCacheDataSource.addOrUpdate(givenDummyWithId("1"));
     realmCacheDataSource.addOrUpdate(givenDummyWithIdAndValue("1", "Updated Value"));
 
@@ -94,7 +96,7 @@ import static org.junit.Assert.assertTrue;
 
   @Test public void shouldReturnValuesWhenAddTwoValuesAndGetAll() {
     RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
-        givenRealmCacheDataSource(givenDummyTimeProvider());
+        givenRealmCacheDataSource(givenFakeTimeProvider());
     realmCacheDataSource.addOrUpdate(givenDummyWithId("1"));
     realmCacheDataSource.addOrUpdate(givenDummyWithId("2"));
 
@@ -106,9 +108,9 @@ import static org.junit.Assert.assertTrue;
     assertEquals("2", objects.get(1).getId());
   }
 
-  @Test public void shouldReturnValuesWhenAddACollection() {
+  @Test public void shouldPersistACollectionOfItems() {
     RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
-        givenRealmCacheDataSource(givenDummyTimeProvider());
+        givenRealmCacheDataSource(givenFakeTimeProvider());
     List<FakeObject> fakeObjects = new ArrayList<>();
     fakeObjects.add(givenDummyWithId("1"));
     fakeObjects.add(givenDummyWithId("2"));
@@ -123,7 +125,7 @@ import static org.junit.Assert.assertTrue;
   }
 
   @Test public void shouldReturnIsNotValidWhenDataSourceIsInitialized() {
-    FakeTimeProvider fakeTimeProvider = givenDummyTimeProvider();
+    FakeTimeProvider fakeTimeProvider = givenFakeTimeProvider();
     fakeTimeProvider.setTime(INIT_TIME);
     RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
         givenRealmCacheDataSource(fakeTimeProvider);
@@ -133,8 +135,8 @@ import static org.junit.Assert.assertTrue;
     assertFalse(valid);
   }
 
-  @Test public void shouldReturnIsValidWhenDataIsAdded() {
-    FakeTimeProvider fakeTimeProvider = givenDummyTimeProvider();
+  @Test public void shouldReturnIsValidIfTheTtlHasNotExpired() {
+    FakeTimeProvider fakeTimeProvider = givenFakeTimeProvider();
     fakeTimeProvider.setTime(INIT_TIME);
     RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
         givenRealmCacheDataSource(fakeTimeProvider);
@@ -146,8 +148,8 @@ import static org.junit.Assert.assertTrue;
     assertTrue(valid);
   }
 
-  @Test public void shouldReturnIsValidWhenDataIsAddedAsCollection() {
-    FakeTimeProvider fakeTimeProvider = givenDummyTimeProvider();
+  @Test public void shouldReturnIsValidIfTheTtlHasNotExpiredAndTheDataIsAddedAsACollection() {
+    FakeTimeProvider fakeTimeProvider = givenFakeTimeProvider();
     fakeTimeProvider.setTime(INIT_TIME);
     RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
         givenRealmCacheDataSource(fakeTimeProvider);
@@ -162,7 +164,7 @@ import static org.junit.Assert.assertTrue;
   }
 
   @Test public void shouldReturnIsInValidWhenDataIsAddedAndTimePassOverTTL() {
-    FakeTimeProvider fakeTimeProvider = givenDummyTimeProvider();
+    FakeTimeProvider fakeTimeProvider = givenFakeTimeProvider();
     fakeTimeProvider.setTime(INIT_TIME);
     RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
         givenRealmCacheDataSource(fakeTimeProvider);
@@ -177,9 +179,9 @@ import static org.junit.Assert.assertTrue;
     assertFalse(valid);
   }
 
-  @Test public void shouldClearAllDataWhenRemoveAll() {
+  @Test public void shouldClearTheDataBaseOnDeleteAll() {
     RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
-        givenRealmCacheDataSource(givenDummyTimeProvider());
+        givenRealmCacheDataSource(givenFakeTimeProvider());
     realmCacheDataSource.addOrUpdate(givenDummyWithId("1"));
 
     realmCacheDataSource.deleteAll();
@@ -188,8 +190,8 @@ import static org.junit.Assert.assertTrue;
     assertEquals(0, all.size());
   }
 
-  @Test public void shouldIsNotValidWhenRemoveAll() {
-    FakeTimeProvider fakeTimeProvider = givenDummyTimeProvider();
+  @Test public void shouldIsNotValidWhenDeleteAll() {
+    FakeTimeProvider fakeTimeProvider = givenFakeTimeProvider();
     fakeTimeProvider.setTime(INIT_TIME);
     RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
         givenRealmCacheDataSource(fakeTimeProvider);
@@ -203,7 +205,7 @@ import static org.junit.Assert.assertTrue;
 
   @Test public void shouldRemoveObjectWhenRemoveById() {
     RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
-        givenRealmCacheDataSource(givenDummyTimeProvider());
+        givenRealmCacheDataSource(givenFakeTimeProvider());
     realmCacheDataSource.addOrUpdate(givenDummyWithId("1"));
 
     realmCacheDataSource.deleteByKey("1");
@@ -214,7 +216,7 @@ import static org.junit.Assert.assertTrue;
 
   @Test public void shouldBeAgnosticWhenRemoveByIdAndIdDoesNotExist() {
     RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
-        givenRealmCacheDataSource(givenDummyTimeProvider());
+        givenRealmCacheDataSource(givenFakeTimeProvider());
     realmCacheDataSource.addOrUpdate(givenDummyWithId("1"));
 
     realmCacheDataSource.deleteByKey("2");
@@ -231,7 +233,7 @@ import static org.junit.Assert.assertTrue;
     return new FakeObject(id, value);
   }
 
-  private FakeTimeProvider givenDummyTimeProvider() {
+  private FakeTimeProvider givenFakeTimeProvider() {
     return new FakeTimeProvider();
   }
 
