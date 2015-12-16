@@ -237,8 +237,8 @@ import static org.junit.Assert.assertTrue;
     whenCallAsyncRemove("1", realmCacheDataSource, asyncExecutor);
 
     asyncExecutor.waitForExecution();
-    Assert.assertNull(realmCacheDataSource.getByKey("1"));
-    Assert.assertNotNull(realmCacheDataSource.getByKey("2"));
+    assertNull(realmCacheDataSource.getByKey("1"));
+    assertNotNull(realmCacheDataSource.getByKey("2"));
   }
 
   private void whenCallAsyncRemove(final String id,
