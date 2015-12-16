@@ -30,11 +30,10 @@ public class RealmCacheDataSource<V extends RealmIdentifiable,
 
   private final Mapper<V, VR> mapperToDb;
   private final TimeProvider timeProvider;
-  private final Context context;
   private final Class<VR> type;
   private final String primaryKeyName;
   private final RosieRealm rosieRealm;
-  private TtlStorage ttlStorage;
+  private final TtlStorage ttlStorage;
   protected final long ttlInMillis;
 
   public RealmCacheDataSource(Mapper<V, VR> mapperToDb, Class<VR> type, String primaryKeyName,
@@ -44,7 +43,6 @@ public class RealmCacheDataSource<V extends RealmIdentifiable,
     this.ttlInMillis = ttlInMillis;
     this.type = type;
     this.primaryKeyName = primaryKeyName;
-    this.context = context;
     rosieRealm = new RosieRealm(context);
     ttlStorage = new TtlStorage(rosieRealm, timeProvider);
   }
@@ -57,8 +55,6 @@ public class RealmCacheDataSource<V extends RealmIdentifiable,
       if (valueRealm != null) {
         value = mapperToDb.reverseMap(valueRealm);
       }
-    } catch (Exception e) {
-      throw e;
     } finally {
       rosieRealm.closeRealm();
     }
@@ -73,8 +69,6 @@ public class RealmCacheDataSource<V extends RealmIdentifiable,
         V value = mapperToDb.reverseMap(valueRealm);
         values.add(value);
       }
-    } catch (Exception e) {
-      throw e;
     } finally {
       rosieRealm.closeRealm();
     }
@@ -87,10 +81,10 @@ public class RealmCacheDataSource<V extends RealmIdentifiable,
       rosieRealm.beginTransaction();
       VR valueRealm = mapperToDb.map(value);
       realm.copyToRealmOrUpdate(valueRealm);
-    } catch (Exception e) {
-      throw e;
-    } finally {
       rosieRealm.commitTransaction();
+    } catch (Exception e) {
+      rosieRealm.cancelTransaction();
+    } finally {
       rosieRealm.closeRealm();
     }
     ttlStorage.update(type.getName());
@@ -104,10 +98,10 @@ public class RealmCacheDataSource<V extends RealmIdentifiable,
       rosieRealm.beginTransaction();
       Collection<VR> valuesRealm = mapperToDb.map(values);
       realm.copyToRealmOrUpdate(valuesRealm);
-    } catch (Exception e) {
-      throw e;
-    } finally {
       rosieRealm.commitTransaction();
+    } catch (Exception e) {
+      rosieRealm.cancelTransaction();
+    } finally {
       rosieRealm.closeRealm();
     }
     ttlStorage.update(type.getName());
@@ -122,10 +116,10 @@ public class RealmCacheDataSource<V extends RealmIdentifiable,
       if (first != null) {
         first.removeFromRealm();
       }
-    } catch (Exception e) {
-      throw e;
-    } finally {
       rosieRealm.commitTransaction();
+    } catch (Exception e) {
+      rosieRealm.cancelTransaction();
+    } finally {
       rosieRealm.closeRealm();
     }
     ttlStorage.delete(type.getName());
@@ -136,10 +130,10 @@ public class RealmCacheDataSource<V extends RealmIdentifiable,
       Realm realm = rosieRealm.getRealm();
       rosieRealm.beginTransaction();
       realm.allObjects(type).clear();
-    } catch (Exception e) {
-      throw e;
-    } finally {
       rosieRealm.commitTransaction();
+    } catch (Exception e) {
+      rosieRealm.cancelTransaction();
+    } finally {
       rosieRealm.closeRealm();
     }
     ttlStorage.delete(type.getName());

@@ -19,7 +19,7 @@ package com.karumi.rosie.repository.datasource;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class TTL extends RealmObject {
+public class Ttl extends RealmObject {
 
   static final String CLASS_NAME = "className";
 

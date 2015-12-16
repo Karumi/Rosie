@@ -35,14 +35,12 @@ class TtlStorage {
   long getLastUpdate(String tableName) {
     long lastUpdate = 0;
     try {
-      RealmQuery<TTL> query = realm.getRealm().where(TTL.class);
-      query.equalTo(TTL.CLASS_NAME, tableName);
-      TTL getTTL = query.findFirst();
-      if (getTTL != null) {
-        lastUpdate = getTTL.getLastUpdate();
+      RealmQuery<Ttl> query = realm.getRealm().where(Ttl.class);
+      query.equalTo(Ttl.CLASS_NAME, tableName);
+      Ttl getTtl = query.findFirst();
+      if (getTtl != null) {
+        lastUpdate = getTtl.getLastUpdate();
       }
-    } catch (Exception e) {
-      throw e;
     } finally {
       realm.closeRealm();
     }
@@ -57,14 +55,14 @@ class TtlStorage {
     try {
       realm.beginTransaction();
       long now = timeProvider.currentTimeMillis();
-      TTL ttl = new TTL();
+      Ttl ttl = new Ttl();
       ttl.setClassName(tableName);
       ttl.setLastUpdate(now);
       realm.getRealm().copyToRealmOrUpdate(ttl);
-    } catch (Exception e) {
-      throw e;
-    } finally {
       realm.commitTransaction();
+    } catch (Exception e) {
+      realm.cancelTransaction();
+    } finally {
       realm.closeRealm();
     }
   }
@@ -75,11 +73,10 @@ class TtlStorage {
   void delete(String tableName) {
     try {
       realm.beginTransaction();
-      realm.getRealm().where(TTL.class).equalTo(TTL.CLASS_NAME, tableName).findAll().clear();
+      realm.getRealm().where(Ttl.class).equalTo(Ttl.CLASS_NAME, tableName).findAll().clear();
       realm.commitTransaction();
-      realm.closeRealm();
     } catch (Exception e) {
-      throw e;
+      realm.cancelTransaction();
     } finally {
       realm.closeRealm();
     }

@@ -56,4 +56,8 @@ class RosieRealm {
   void commitTransaction() {
     getRealm().commitTransaction();
   }
+
+  public void cancelTransaction() {
+    getRealm().cancelTransaction();
+  }
 }
