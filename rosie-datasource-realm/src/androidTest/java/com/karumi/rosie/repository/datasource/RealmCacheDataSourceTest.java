@@ -18,6 +18,7 @@ package com.karumi.rosie.repository.datasource;
 
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import com.karumi.rosie.AsyncExecutor;
 import com.karumi.rosie.dummy.FakeMapper;
 import com.karumi.rosie.dummy.FakeObject;
 import com.karumi.rosie.dummy.FakeRealmObject;
@@ -224,6 +225,40 @@ import static org.junit.Assert.assertTrue;
 
     FakeObject fakeObject = realmCacheDataSource.getByKey("1");
     assertNotNull(fakeObject);
+  }
+
+  @Test public void shouldReturnValueWhenMakeTwoCallsAsSameTime() throws InterruptedException {
+    RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource =
+        givenRealmCacheDataSource(givenFakeTimeProvider());
+    realmCacheDataSource.addOrUpdate(givenDummyWithId("1"));
+    AsyncExecutor asyncExecutor = new AsyncExecutor();
+
+    whenCallAsyncAdd(givenDummyWithId("2"), realmCacheDataSource, asyncExecutor);
+    whenCallAsyncRemove("1", realmCacheDataSource, asyncExecutor);
+
+    asyncExecutor.waitForExecution();
+    Assert.assertNull(realmCacheDataSource.getByKey("1"));
+    Assert.assertNotNull(realmCacheDataSource.getByKey("2"));
+  }
+
+  private void whenCallAsyncRemove(final String id,
+      final RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource,
+      AsyncExecutor asyncExecutor) {
+    asyncExecutor.execute(new Runnable() {
+      @Override public void run() {
+        realmCacheDataSource.deleteByKey(id);
+      }
+    });
+  }
+
+  private void whenCallAsyncAdd(final FakeObject fakeObject,
+      final RealmCacheDataSource<FakeObject, FakeRealmObject> realmCacheDataSource,
+      AsyncExecutor asyncExecutor) {
+    asyncExecutor.execute(new Runnable() {
+      @Override public void run() {
+        realmCacheDataSource.addOrUpdate(fakeObject);
+      }
+    });
   }
 
   private FakeObject givenDummyWithId(String id) {
