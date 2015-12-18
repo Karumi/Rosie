@@ -318,9 +318,9 @@ PaginatedRosieRepository<Key, Value> repository = /*...*/;
 // Get a value by its key just as with a regular repoitory
 Value value = repository.getByKey(key);
 // Get a page
-page = repository.getPage(offset, limit);
+page = repository.getPage(Page.withOffsetAndLimit(offset, limit));
 // Get a page using only the cache data source
-page = repository.getPage(offset, limit, ReadPolicy.CACHE_ONLY);
+page = repository.getPage(Page.withOffsetAndLimit(offset, limit), ReadPolicy.CACHE_ONLY);
 ```
 
 

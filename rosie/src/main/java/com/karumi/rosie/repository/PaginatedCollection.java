@@ -16,6 +16,7 @@
 
 package com.karumi.rosie.repository;
 
+import com.karumi.rosie.repository.datasource.paginated.Page;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -27,8 +28,7 @@ public class PaginatedCollection<T> {
 
   private Collection<T> items;
   private boolean hasMore;
-  private int offset;
-  private int limit;
+  private Page page;
 
   public PaginatedCollection() {
     this(Collections.<T>emptyList());
@@ -43,13 +43,8 @@ public class PaginatedCollection<T> {
     return this;
   }
 
-  public PaginatedCollection setOffset(int offset) {
-    this.offset = offset;
-    return this;
-  }
-
-  public PaginatedCollection setLimit(int limit) {
-    this.limit = limit;
+  public PaginatedCollection setPage(Page page) {
+    this.page = page;
     return this;
   }
 
@@ -61,11 +56,7 @@ public class PaginatedCollection<T> {
     return hasMore;
   }
 
-  public int getOffset() {
-    return offset;
-  }
-
-  public int getLimit() {
-    return limit;
+  public Page getPage() {
+    return page;
   }
 }

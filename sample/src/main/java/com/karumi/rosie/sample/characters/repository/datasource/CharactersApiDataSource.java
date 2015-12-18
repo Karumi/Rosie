@@ -19,6 +19,7 @@ package com.karumi.rosie.sample.characters.repository.datasource;
 import android.support.annotation.NonNull;
 import com.karumi.rosie.repository.PaginatedCollection;
 import com.karumi.rosie.repository.datasource.EmptyReadableDataSource;
+import com.karumi.rosie.repository.datasource.paginated.Page;
 import com.karumi.rosie.repository.datasource.paginated.PaginatedReadableDataSource;
 import com.karumi.rosie.sample.characters.domain.model.Character;
 import java.util.Collection;
@@ -68,18 +69,20 @@ public class CharactersApiDataSource extends EmptyReadableDataSource<String, Cha
     return character;
   }
 
-  @Override public PaginatedCollection<Character> getPage(int offset, int limit) {
+  @Override public PaginatedCollection<Character> getPage(Page page) {
     Collection<Character> characters = new LinkedList<>();
 
     fakeDelay();
+
+    int offset = page.getOffset();
+    int limit = page.getLimit();
 
     for (int i = offset; i - offset < limit && i < NUMBER_OF_CHARACTERS; i++) {
       characters.add(getCharacter(i));
     }
 
     PaginatedCollection<Character> charactersPage = new PaginatedCollection<>(characters);
-    charactersPage.setOffset(offset);
-    charactersPage.setLimit(limit);
+    charactersPage.setPage(page);
     charactersPage.setHasMore(offset + characters.size() < NUMBER_OF_CHARACTERS);
     return charactersPage;
   }

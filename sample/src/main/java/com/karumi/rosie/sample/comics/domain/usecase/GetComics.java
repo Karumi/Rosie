@@ -19,6 +19,7 @@ package com.karumi.rosie.sample.comics.domain.usecase;
 import com.karumi.rosie.domain.usecase.RosieUseCase;
 import com.karumi.rosie.domain.usecase.annotation.UseCase;
 import com.karumi.rosie.repository.PaginatedCollection;
+import com.karumi.rosie.repository.datasource.paginated.Page;
 import com.karumi.rosie.sample.comics.domain.model.Comic;
 import com.karumi.rosie.sample.comics.repository.ComicsRepository;
 import javax.inject.Inject;
@@ -31,8 +32,8 @@ public class GetComics extends RosieUseCase {
     this.repository = repository;
   }
 
-  @UseCase public void getComics(int offset, int limit) throws Exception {
-    PaginatedCollection<Comic> comics = repository.getPage(offset, limit);
+  @UseCase public void getComics(Page page) throws Exception {
+    PaginatedCollection<Comic> comics = repository.getPage(page);
     notifySuccess(comics);
   }
 }
