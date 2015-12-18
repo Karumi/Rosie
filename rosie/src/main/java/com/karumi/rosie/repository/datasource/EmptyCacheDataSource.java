@@ -23,27 +23,27 @@ import java.util.Collection;
  */
 public class EmptyCacheDataSource<K, V extends Identifiable<K>> implements CacheDataSource<K, V> {
 
-  @Override public V getByKey(K key) {
+  @Override public V getByKey(K key) throws Exception {
     return null;
   }
 
-  @Override public Collection<V> getAll() {
+  @Override public Collection<V> getAll() throws Exception  {
     return null;
   }
 
-  @Override public V addOrUpdate(V value) {
+  @Override public V addOrUpdate(V value) throws Exception  {
     return null;
   }
 
-  @Override public Collection<V> addOrUpdateAll(Collection<V> values) {
+  @Override public Collection<V> addOrUpdateAll(Collection<V> values) throws Exception  {
     return null;
   }
 
-  @Override public void deleteByKey(K key) {
+  @Override public void deleteByKey(K key) throws Exception  {
 
   }
 
-  @Override public void deleteAll() {
+  @Override public void deleteAll() throws Exception  {
 
   }
 

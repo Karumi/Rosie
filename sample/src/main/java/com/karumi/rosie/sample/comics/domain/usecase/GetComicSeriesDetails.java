@@ -30,7 +30,7 @@ public class GetComicSeriesDetails extends RosieUseCase {
     this.repository = repository;
   }
 
-  @UseCase public void getComicSeriesDetails(int comicSeriesKey) {
+  @UseCase public void getComicSeriesDetails(int comicSeriesKey) throws Exception {
     ComicSeries comicSeries = repository.getByKey(comicSeriesKey);
     notifySuccess(comicSeries);
   }

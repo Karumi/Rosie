@@ -136,7 +136,7 @@ public class PaginatedRosieRepositoryTest extends UnitTest {
   }
 
   private PaginatedCollection<AnyRepositoryValue> givenCacheDataSourceReturnsValues(int offset,
-      int limit, boolean areValidValues) {
+      int limit, boolean areValidValues) throws Exception {
     PaginatedCollection<AnyRepositoryValue> values = getSomeValues(offset, limit);
     when(cacheDataSource.getPage(offset, limit)).thenReturn(values);
     when(cacheDataSource.isValid(any(AnyRepositoryValue.class))).thenReturn(areValidValues);
@@ -144,7 +144,7 @@ public class PaginatedRosieRepositoryTest extends UnitTest {
   }
 
   private PaginatedCollection<AnyRepositoryValue> givenReadableDataSourceReturnsValues(int offset,
-      int limit) {
+      int limit) throws Exception {
     PaginatedCollection<AnyRepositoryValue> values = getSomeValues(offset, limit);
     when(readableDataSource.getPage(offset, limit)).thenReturn(values);
     return values;

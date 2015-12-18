@@ -36,10 +36,10 @@ public interface PaginatedWriteableDataSource<K, V extends Identifiable<K>> {
    * @param hasMore True whether the persisted page has more elements
    */
   PaginatedCollection<V> addOrUpdatePage(int offset, int limit, Collection<V> values,
-      boolean hasMore);
+      boolean hasMore) throws Exception;
 
   /**
    * Deletes all the pages stored in this data source.
    */
-  void deleteAll();
+  void deleteAll() throws Exception;
 }

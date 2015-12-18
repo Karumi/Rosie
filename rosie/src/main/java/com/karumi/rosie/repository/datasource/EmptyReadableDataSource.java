@@ -24,11 +24,11 @@ import java.util.Collection;
  */
 public class EmptyReadableDataSource<K, V> implements ReadableDataSource<K, V> {
 
-  @Override public V getByKey(K key) {
+  @Override public V getByKey(K key) throws Exception {
     return null;
   }
 
-  @Override public Collection<V> getAll() {
+  @Override public Collection<V> getAll() throws Exception {
     return null;
   }
 }

@@ -51,7 +51,7 @@ public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends Rosi
    * @param offset Index of the first item to be retrieved
    * @param limit Number of elements that will be retrieved
    */
-  public PaginatedCollection<V> getPage(int offset, int limit) {
+  public PaginatedCollection<V> getPage(int offset, int limit) throws Exception {
     return getPage(offset, limit, ReadPolicy.READ_ALL);
   }
 
@@ -61,7 +61,7 @@ public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends Rosi
    * @param limit Number of elements that will be retrieved
    * @param policy Specifies how the value is going to be retrieved.
    */
-  public PaginatedCollection<V> getPage(int offset, int limit, ReadPolicy policy) {
+  public PaginatedCollection<V> getPage(int offset, int limit, ReadPolicy policy) throws Exception {
     PaginatedCollection<V> values = null;
 
     if (policy.useCache()) {
@@ -79,7 +79,8 @@ public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends Rosi
     return values;
   }
 
-  protected PaginatedCollection<V> getPaginatedValuesFromCaches(int offset, int limit) {
+  protected PaginatedCollection<V> getPaginatedValuesFromCaches(int offset, int limit)
+      throws Exception {
     PaginatedCollection<V> values = null;
 
     for (PaginatedCacheDataSource<K, V> cacheDataSource : paginatedCacheDataSources) {
@@ -98,7 +99,8 @@ public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends Rosi
     return values;
   }
 
-  protected PaginatedCollection<V> getPaginatedValuesFromReadables(int offset, int limit) {
+  protected PaginatedCollection<V> getPaginatedValuesFromReadables(int offset, int limit)
+      throws Exception {
     PaginatedCollection<V> values = null;
 
     for (PaginatedReadableDataSource<V> readable : paginatedReadableDataSources) {
@@ -112,7 +114,8 @@ public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends Rosi
     return values;
   }
 
-  protected void populatePaginatedCaches(int offset, int limit, PaginatedCollection<V> values) {
+  protected void populatePaginatedCaches(int offset, int limit, PaginatedCollection<V> values)
+      throws Exception {
     for (PaginatedCacheDataSource<K, V> cacheDataSource : paginatedCacheDataSources) {
       cacheDataSource.addOrUpdatePage(offset, limit, values.getItems(), values.hasMore());
     }

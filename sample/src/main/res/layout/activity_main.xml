@@ -23,6 +23,13 @@
     android:background="@color/main_background"
     >
 
+  <TextView
+      android:id="@+id/tv_disclaimer"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      style="@style/TextViewDisclaimer"
+      android:text="@string/fake_data_disclaymer"
+      />
   <android.support.design.widget.TabLayout
       android:id="@+id/tab_page_indicator"
       android:layout_width="match_parent"

@@ -16,6 +16,32 @@
 
 apply plugin: 'com.android.application'
 
+private Properties loadMarvelProperties() {
+  Properties props = new Properties()
+  props.load(new FileInputStream("./sample/marvel.properties"))
+  props
+}
+
+private checkMarvelProperties() {
+  new File("./sample/marvel.properties").exists()
+}
+
+def getPublicMarvelKey() {
+  if (checkMarvelProperties()) {
+    Properties props = loadMarvelProperties()
+    return props['MARVEL_PUBLIC_KEY']
+  }
+  "null"
+}
+
+def getPrivateMarvelKey() {
+  if (checkMarvelProperties()) {
+    Properties props = loadMarvelProperties()
+    return props['MARVEL_PRIVATE_KEY']
+  }
+  "null"
+}
+
 android {
   compileSdkVersion 23
   buildToolsVersion "23.0.1"
@@ -26,8 +52,12 @@ android {
     targetSdkVersion 23
     versionCode 1
     versionName "1.0"
+    buildConfigField "String", "MARVEL_PUBLIC_KEY", getPublicMarvelKey()
+    buildConfigField "String", "MARVEL_PRIVATE_KEY", getPrivateMarvelKey()
   }
 }
+
+
 
 dependencies {
   compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -38,6 +68,7 @@ dependencies {
   compile 'com.squareup.picasso:picasso:2.5.2'
   compile 'com.karumi:dividers:1.0.3'
   compile 'com.victor:lib:1.0.1' // spinner
+  compile 'com.karumi:MarvelApiClient:0.0.1'
   provided 'com.squareup.dagger:dagger-compiler:1.2.2'
   compile project(':rosie')
 }

@@ -29,5 +29,5 @@ public interface PaginatedReadableDataSource<V> {
    * @param offset Index of the first item to be retrieved
    * @param limit Number of elements that will be retrieved
    */
-  PaginatedCollection<V> getPage(int offset, int limit);
+  PaginatedCollection<V> getPage(int offset, int limit) throws Exception;
 }
