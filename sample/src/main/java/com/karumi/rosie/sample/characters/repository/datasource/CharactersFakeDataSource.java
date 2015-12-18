@@ -19,6 +19,7 @@ package com.karumi.rosie.sample.characters.repository.datasource;
 import android.support.annotation.NonNull;
 import com.karumi.marvelapiclient.MarvelApiException;
 import com.karumi.rosie.repository.PaginatedCollection;
+import com.karumi.rosie.repository.datasource.paginated.Page;
 import com.karumi.rosie.sample.characters.domain.model.Character;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -65,8 +66,11 @@ public class CharactersFakeDataSource extends CharacterDataSource {
     return character;
   }
 
-  @Override public PaginatedCollection<Character> getPage(int offset, int limit)
+  @Override public PaginatedCollection<Character> getPage(Page page)
       throws MarvelApiException {
+    int offset = page.getOffset();
+    int limit = page.getLimit();
+
     Collection<Character> characters = new LinkedList<>();
     fakeDelay();
 
@@ -75,8 +79,7 @@ public class CharactersFakeDataSource extends CharacterDataSource {
     }
 
     PaginatedCollection<Character> charactersPage = new PaginatedCollection<>(characters);
-    charactersPage.setOffset(offset);
-    charactersPage.setLimit(limit);
+    charactersPage.setPage(page);
     charactersPage.setHasMore(offset + characters.size() < NUMBER_OF_CHARACTERS);
     return charactersPage;
   }

@@ -40,27 +40,28 @@ public class InMemoryPaginatedCacheDataSource<K, V extends Identifiable<K>>
     this.items = new ArrayList<>();
   }
 
-  @Override public PaginatedCollection<V> getPage(int offset, int limit) {
+  @Override public PaginatedCollection<V> getPage(Page page) {
     List<V> result = new LinkedList<>();
+
+    int offset = page.getOffset();
+    int limit = page.getLimit();
+
     for (int i = offset; i < items.size() && i < offset + limit; i++) {
       V value = items.get(i);
       result.add(value);
     }
     PaginatedCollection<V> paginatedCollection = new PaginatedCollection<>(result);
-    paginatedCollection.setOffset(offset);
-    paginatedCollection.setLimit(limit);
+    paginatedCollection.setPage(page);
     paginatedCollection.setHasMore(offset + limit < items.size() || this.hasMore);
     return paginatedCollection;
   }
 
   @Override
-  public PaginatedCollection<V> addOrUpdatePage(int offset, int limit, Collection<V> values,
-      boolean hasMore) {
+  public PaginatedCollection<V> addOrUpdatePage(Page page, Collection<V> values, boolean hasMore) {
     this.items.addAll(values);
     this.hasMore = hasMore;
     PaginatedCollection<V> paginatedCollection = new PaginatedCollection<>(values);
-    paginatedCollection.setOffset(offset);
-    paginatedCollection.setLimit(limit);
+    paginatedCollection.setPage(page);
     paginatedCollection.setHasMore(hasMore);
     lastItemsUpdate = timeProvider.currentTimeMillis();
     return paginatedCollection;

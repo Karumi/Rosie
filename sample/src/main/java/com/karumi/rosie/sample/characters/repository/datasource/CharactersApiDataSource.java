@@ -22,6 +22,7 @@ import com.karumi.marvelapiclient.model.CharacterDto;
 import com.karumi.marvelapiclient.model.CharactersDto;
 import com.karumi.marvelapiclient.model.MarvelResponse;
 import com.karumi.rosie.repository.PaginatedCollection;
+import com.karumi.rosie.repository.datasource.paginated.Page;
 import com.karumi.rosie.sample.characters.domain.model.Character;
 import com.karumi.rosie.sample.characters.repository.datasource.mapper.MapperCharacterToCharacterDto;
 import java.util.Collection;
@@ -52,16 +53,17 @@ public class CharactersApiDataSource extends CharacterDataSource {
     return mapper.reverseMap(characterDto);
   }
 
-  @Override public PaginatedCollection<Character> getPage(int offset, int limit)
+  @Override public PaginatedCollection<Character> getPage(Page page)
       throws MarvelApiException {
+    int offset = page.getOffset();
+    int limit = page.getLimit();
     MarvelResponse<CharactersDto> charactersApiResponse = characterApiClient.getAll(offset, limit);
 
     CharactersDto charactersDto = charactersApiResponse.getResponse();
     Collection<Character> characters = mapper.reverseMap(charactersDto.getCharacters());
 
     PaginatedCollection<Character> charactersPage = new PaginatedCollection<>(characters);
-    charactersPage.setOffset(offset);
-    charactersPage.setLimit(limit);
+    charactersPage.setPage(page);
     charactersPage.setHasMore(
         charactersDto.getOffset() + charactersDto.getCount() < charactersDto.getTotal());
     return charactersPage;

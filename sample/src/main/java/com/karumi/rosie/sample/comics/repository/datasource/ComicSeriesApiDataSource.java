@@ -19,6 +19,7 @@ package com.karumi.rosie.sample.comics.repository.datasource;
 import android.support.annotation.NonNull;
 import com.karumi.rosie.repository.PaginatedCollection;
 import com.karumi.rosie.repository.datasource.EmptyReadableDataSource;
+import com.karumi.rosie.repository.datasource.paginated.Page;
 import com.karumi.rosie.repository.datasource.paginated.PaginatedReadableDataSource;
 import com.karumi.rosie.sample.comics.domain.model.Comic;
 import com.karumi.rosie.sample.comics.domain.model.ComicSeries;
@@ -34,7 +35,7 @@ public class ComicSeriesApiDataSource extends EmptyReadableDataSource<Integer, C
 
   private static final int MIN_NUMBER_OF_COMICS_PER_COMIC_SERIES = 9;
   private static final int MAX_NUMBER_OF_COMICS_PER_COMIC_SERIES = 24;
-  private static final int NUMBER_OF_COMIC_SERIES = 80;
+  private static final int NUMBER_OF_COMICS = 80;
   private static final int GUARDIANS_OF_INFINITY_KEY = 58086;
   private static final int VISION_KEY = 57309;
   private static final int SPIDEY_KEY = 57137;
@@ -73,20 +74,22 @@ public class ComicSeriesApiDataSource extends EmptyReadableDataSource<Integer, C
     return comicSeries;
   }
 
-  @Override public PaginatedCollection<ComicSeries> getPage(int offset, int limit) {
-    Collection<ComicSeries> comicSeries = new LinkedList<>();
+  @Override public PaginatedCollection<ComicSeries> getPage(Page page) {
+    Collection<ComicSeries> comics = new LinkedList<>();
 
     fakeDelay();
 
-    for (int i = offset; i - offset < limit && i < NUMBER_OF_COMIC_SERIES; i++) {
-      comicSeries.add(getComicSeries(i));
+    int offset = page.getOffset();
+    int limit = page.getLimit();
+
+    for (int i = offset; i - offset < limit && i < NUMBER_OF_COMICS; i++) {
+      comics.add(getComicSeries(i));
     }
 
-    PaginatedCollection<ComicSeries> comicSeriesPage = new PaginatedCollection<>(comicSeries);
-    comicSeriesPage.setOffset(offset);
-    comicSeriesPage.setLimit(limit);
-    comicSeriesPage.setHasMore(offset + comicSeries.size() < NUMBER_OF_COMIC_SERIES);
-    return comicSeriesPage;
+    PaginatedCollection<ComicSeries> comicsPage = new PaginatedCollection<>(comics);
+    comicsPage.setPage(page);
+    comicsPage.setHasMore(offset + comics.size() < NUMBER_OF_COMICS);
+    return comicsPage;
   }
 
   private ComicSeries getComicSeries(int i) {

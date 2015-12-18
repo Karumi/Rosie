@@ -20,6 +20,7 @@ import com.karumi.rosie.domain.usecase.UseCaseHandler;
 import com.karumi.rosie.domain.usecase.annotation.Success;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
 import com.karumi.rosie.repository.PaginatedCollection;
+import com.karumi.rosie.repository.datasource.paginated.Page;
 import com.karumi.rosie.sample.comics.domain.model.ComicSeries;
 import com.karumi.rosie.sample.comics.domain.usecase.GetComicSeriesPage;
 import com.karumi.rosie.sample.comics.view.viewmodel.ComicSeriesViewModel;
@@ -58,7 +59,9 @@ public class ComicsSeriesPresenter extends RosiePresenterWithLoading<ComicsSerie
   }
 
   private void loadComics() {
-    createUseCaseCall(getComicSeriesPage).args(offset, NUMBER_OF_COMIC_SERIES_PER_PAGE)
+
+    createUseCaseCall(getComicSeriesPage).args(
+        Page.withOffsetAndLimit(offset, NUMBER_OF_COMIC_SERIES_PER_PAGE))
         .onSuccess(new OnSuccessCallback() {
           @Success public void onComicSeriesLoaded(PaginatedCollection<ComicSeries> comicSeries) {
             List<ComicSeriesViewModel> comicSeriesViewModels =
@@ -66,7 +69,7 @@ public class ComicsSeriesPresenter extends RosiePresenterWithLoading<ComicsSerie
             hideLoading();
             getView().showHasMore(comicSeries.hasMore());
             getView().showComicSeries(comicSeriesViewModels);
-            offset = comicSeries.getOffset() + NUMBER_OF_COMIC_SERIES_PER_PAGE;
+            offset = comicSeries.getPage().getOffset() + NUMBER_OF_COMIC_SERIES_PER_PAGE;
           }
         })
         .execute();

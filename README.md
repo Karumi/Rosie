@@ -12,11 +12,11 @@ Rosie is an Android framework to create applications following the Clean Archite
 
 Rosie divides your application in three layers, **view**, **domain** and **repository**. For each layer, Rosie provides plenty of classes that will make defining and separating these concerns much easier.
 
-* **View**: It contains all your presentation logic, implemented through the Model-View-Presenter pattern [[2] [mvp]]. Rosie provides classes to represent the main components of this layer like ``RosieActivity``, ``RosieFragment`` and ``RosiePresenter``.
+* **View**: It contains all your presentation logic, implemented through the Model-View-Presenter pattern [[2] [mvp]]. Rosie provides classes to represent the main components of this layer like ``RosieActivity``, ``RosieFragment`` or ``RosiePresenter``.
 * **Domain**: Holding all your business logic, its main component is ``RosieUseCase`` that gives you an easy way to define your application use cases and execute them in a background thread using the command pattern [[3] [com]].
-* **Repository**: The repository layer gives you an abstraction of how to retrieve and store data in your application following the pattern with the same name [[4] [rep]]. ``RosieRepository`` and the multiple ``DataSource`` classes gives you the base to start building your own repositories.
+* **Repository**: This layer gives you an abstraction of how to retrieve and store data in your application following the Repository pattern [[4] [rep]]. ``RosieRepository`` and the multiple ``DataSource`` classes gives you the base to start building your own repositories.
 
-The framework comes with Dagger to solve Dependency inversion through Dependency Injection [[5] [di]]
+Finally, Rosie comes with Dagger to solve Dependency inversion through Dependency Injection [[5] [di]]
 
 Screenshots
 -----------
@@ -53,7 +53,7 @@ public class SampleActivity extends RosieActivity {
 
 ####Butter Knife
 
-You will have access in your activities and fragments to [ButterKnife] [butterknife] annotations to inject your views:
+By extending Rosie view classes, you will have access in your activities and fragments to [ButterKnife] [butterknife] annotations to easily inject your views:
 
 ```java
 public class SampleActivity extends RosieActivity {
@@ -79,14 +79,14 @@ There is also two useful annotations to provide ``Context`` dependencies into yo
 
 ```java
 public class InjectedClass {
-	@Inject public InjectedClass(@ForApplication Context context, @ForActivity Context context) {
+	@Inject public InjectedClass(@ForApplication Context applicationContext, @ForActivity Context activityContext) {
 		/*...*/
 	}
 }
 ```
 
 ####Presenter
-To follow the MVP pattern, Rosie also provides a ``RosiePresenter`` class that will be responsible for all your presentation logic. Rosie will take care of linking your view (a ``RosieActivity`` or ``RosieFragment`` implementation) with your presenter and subscribing it to its lifecycle. In order to do that, create a ``RosiePresenter`` and link it to your view:
+To follow the MVP pattern, Rosie provides a ``RosiePresenter`` class that will be responsible for all your presentation logic. Rosie will take care of linking your view (a ``RosieActivity`` or ``RosieFragment`` implementation) with your presenter and subscribing it to its lifecycle. In order to do that, create a ``RosiePresenter`` and inject it into your activity/fragment with the ``@Presenter`` annotation:
 
 ```java
 public class SamplePresenter extends RosiePresenter<SamplePresenter.View> {
@@ -155,7 +155,26 @@ public class DoSomething extends RosieUseCase {
 }
 ```
 
-#~TODO Example of use cases usage with callback~
+To call your use case, create a ``UseCaseCall``, configure it and execute it. Rosie gives you a fluent API to easily do this from your presenters:
+
+```java
+public class SamplePresenter extends RosiePresenter<SamplePresenter.View> {
+	public void callUseCase() {
+		createUseCaseCall(doSomething)
+			.args(arg /*, arg2, arg3, ...*/)
+			.onSuccess(new OnSuccessCallback() {
+				/*...*/
+			})
+			.onError(new OnErrorCallback() {
+				/*...*/
+			})
+			.execute();
+	}
+	/*...*/
+}
+```
+
+All the configuration calls are optional and can be ommited when not needed but keep in mind that provided arguments must match the ones declared in your ``UseCase`` method or an error will be raised. It is important to keep in mind that, by default, your callback methods will be executed in the main thread so you can easily update your UI from them.
 
 ####Named use cases
 
@@ -172,15 +191,25 @@ public class DoSomething extends RosieUseCase {
 
 Even though using names is not mandatory when the method input parameters are different, it's highly recommended to use them just to make its usage more readable.
 
-To call one of those use cases you will need to provide the name in your call:
+To call a named use case just configure its name:
 
-#~TODO Example of use cases usage with names~
+```java
+public class SamplePresenter extends RosiePresenter<SamplePresenter.View> {
+	public void callUseCase() {
+		createUseCaseCall(doSomething)
+			.args(arg)
+			.useCaseName(DoSomething.USE_CASE_NAME)
+			.execute();
+	}
+	/*...*/
+}
+```
 
 ###Error handling
 
-Errors can be either manually reported or implicitly notified when an exception is thrown from your use case context. To handle errors, there is a capturing event system that iterates over all your registered ``OnErrorCallback`` implementations and notifies them of the issue. Every callback needs to return a boolean value to inform whether the error has been handled and needs no further management. Callbacks are always called in specific order:
+Errors can be either manually reported or implicitly notified when an exception is thrown from your use case context. To handle errors, there is a capturing event system that iterates over all your registered ``OnErrorCallback`` implementations and notifies them of the issue. Every callback needs to return a boolean value to inform whether the error has been handled and needs no further management. Callbacks are always called in this specific order:
 
-1. Use case specific callback; the ones you register before calling a use case.
+1. Use case specific callback; the ones you register while calling a use case.
 2. Global callbacks; the ones you can register from your presenter constructor.
 
 With this approach you can create an error callback in your presenter that shows a generic error message to your user and create multiple other listeners for specific use cases and/or errors.
@@ -201,7 +230,24 @@ public class SamplePresenter extends RosiePresenter<SamplePresenter.View> implem
 }
 ```
 
-#~TODO Example of registering an error listener in a use case~
+As explained in the ``UseCase`` section, you can also register error callbacks for a use case call. Rosie will assign those a higher priority:
+
+```java
+public class SamplePresenter extends RosiePresenter<SamplePresenter.View> {
+	public void callUseCase() {
+		createUseCaseCall(doSomething)
+			.args(arg)
+			.onError(new OnErrorCallback() {
+				getView().showSpecificError();
+				// The error has been handled
+				// Avoid calling any other error callback by returning true
+				return true;
+			})
+			.execute();
+	}
+	/*...*/
+}
+```
 
 ###Repository
 
@@ -272,9 +318,9 @@ PaginatedRosieRepository<Key, Value> repository = /*...*/;
 // Get a value by its key just as with a regular repoitory
 Value value = repository.getByKey(key);
 // Get a page
-page = repository.getPage(offset, limit);
+page = repository.getPage(Page.withOffsetAndLimit(offset, limit));
 // Get a page using only the cache data source
-page = repository.getPage(offset, limit, ReadPolicy.CACHE_ONLY);
+page = repository.getPage(Page.withOffsetAndLimit(offset, limit), ReadPolicy.CACHE_ONLY);
 ```
 
 
