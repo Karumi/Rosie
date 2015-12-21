@@ -22,25 +22,19 @@ import com.karumi.marvelapiclient.model.CharacterDto;
 import com.karumi.marvelapiclient.model.CharactersDto;
 import com.karumi.marvelapiclient.model.MarvelResponse;
 import com.karumi.rosie.repository.PaginatedCollection;
+import com.karumi.rosie.repository.datasource.EmptyReadableDataSource;
 import com.karumi.rosie.repository.datasource.paginated.Page;
+import com.karumi.rosie.repository.datasource.paginated.PaginatedReadableDataSource;
 import com.karumi.rosie.sample.characters.domain.model.Character;
-import com.karumi.rosie.sample.characters.repository.datasource.mapper.MapperCharacterToCharacterDto;
+import com.karumi.rosie.sample.characters.repository.datasource.mapper.CharacterToCharacterDtoMapper;
 import java.util.Collection;
-import java.util.Random;
 import javax.inject.Inject;
 
-public class CharactersApiDataSource extends CharacterDataSource {
+public class CharactersApiDataSource extends EmptyReadableDataSource<String, Character>
+    implements PaginatedReadableDataSource<String, Character> {
 
-  private static final int NUMBER_OF_CHARACTERS = 45;
-  private static final long SLEEP_TIME_IN_MILLISECONDS = 1000;
-  private static final Random RANDOM = new Random(System.nanoTime());
-  private static final String SPIDERMAN_KEY = "54";
-  private static final String CAPTAIN_MARVEL_KEY = "9";
-  private static final String HULK_KEY = "25";
-  private static final String THOR_KEY = "60";
-  private static final String IRON_MAN_KEY = "29";
   private final CharacterApiClient characterApiClient;
-  private final MapperCharacterToCharacterDto mapper = new MapperCharacterToCharacterDto();
+  private final CharacterToCharacterDtoMapper mapper = new CharacterToCharacterDtoMapper();
 
   @Inject public CharactersApiDataSource(CharacterApiClient characterApiClient) {
     this.characterApiClient = characterApiClient;

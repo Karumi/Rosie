@@ -16,6 +16,7 @@
 
 package com.karumi.rosie.sample.comics.view.viewmodel.mapper;
 
+import com.karumi.rosie.mapper.Mapper;
 import com.karumi.rosie.sample.R;
 import com.karumi.rosie.sample.comics.domain.model.Comic;
 import com.karumi.rosie.sample.comics.domain.model.ComicSeries;
@@ -28,13 +29,13 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.inject.Inject;
 
-public class ComicSeriesToComicSeriesDetailsViewModelMapper {
+public class ComicSeriesToComicSeriesDetailsViewModelMapper
+    extends Mapper<ComicSeries, ComicSeriesDetailsViewModel> {
 
   @Inject public ComicSeriesToComicSeriesDetailsViewModelMapper() {
   }
 
-  public ComicSeriesDetailsViewModel mapComicSeriesToComicSeriesDetailsViewModel(
-      ComicSeries comicSeries) {
+  @Override public ComicSeriesDetailsViewModel map(ComicSeries comicSeries) {
     ComicSeriesDetailsViewModel comicSeriesDetailsViewModel = new ComicSeriesDetailsViewModel();
 
     comicSeriesDetailsViewModel.setTitle(comicSeries.getName());
@@ -44,6 +45,10 @@ public class ComicSeriesToComicSeriesDetailsViewModelMapper {
     comicSeriesDetailsViewModel.setComicSeriesDetailViewModels(comicSeriesDetailViewModels);
 
     return comicSeriesDetailsViewModel;
+  }
+
+  @Override public ComicSeries reverseMap(ComicSeriesDetailsViewModel value) {
+    throw new UnsupportedOperationException();
   }
 
   private ComicSeriesHeaderDetailViewModel mapComicSeriesToComicSeriesHeaderDetailViewModel(

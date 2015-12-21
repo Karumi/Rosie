@@ -45,10 +45,6 @@ public class ComicSeriesDetailsPresenter
     this.comicSeriesKey = comicKey;
   }
 
-  public void onBackButtonClicked() {
-    getView().close();
-  }
-
   @Override protected void update() {
     super.update();
     showLoading();
@@ -73,7 +69,5 @@ public class ComicSeriesDetailsPresenter
     void hideComicSeriesDetails();
 
     void showComicSeriesDetails(ComicSeriesDetailsViewModel comicSeries);
-
-    void close();
   }
 }

@@ -18,17 +18,16 @@ package com.karumi.rosie.sample.characters.repository.datasource.mapper;
 
 import com.karumi.marvelapiclient.model.CharacterDto;
 import com.karumi.marvelapiclient.model.MarvelImage;
-import com.karumi.rosie.sample.base.mapper.Mapper;
+import com.karumi.rosie.mapper.Mapper;
 import com.karumi.rosie.sample.characters.domain.model.Character;
 
-public class MapperCharacterToCharacterDto extends Mapper<Character, CharacterDto> {
+public class CharacterToCharacterDtoMapper extends Mapper<Character, CharacterDto> {
 
   @Override public CharacterDto map(Character value) {
     throw new UnsupportedOperationException();
   }
 
   @Override public Character reverseMap(CharacterDto value) {
-
     Character character = new Character();
     character.setKey(value.getId());
     character.setName(value.getName());

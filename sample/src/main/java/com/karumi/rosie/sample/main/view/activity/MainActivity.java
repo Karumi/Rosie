@@ -24,18 +24,18 @@ import android.view.View;
 import android.widget.TextView;
 import butterknife.Bind;
 import com.karumi.rosie.sample.R;
+import com.karumi.rosie.sample.base.view.activity.MarvelActivity;
 import com.karumi.rosie.sample.characters.view.fragment.CharactersFragment;
 import com.karumi.rosie.sample.comics.view.fragment.ComicSeriesFragment;
 import com.karumi.rosie.sample.main.MainModule;
 import com.karumi.rosie.sample.main.view.adapter.FragmentAdapter;
 import com.karumi.rosie.sample.main.view.presenter.FakeDataPresenter;
 import com.karumi.rosie.view.Presenter;
-import com.karumi.rosie.view.RosieActivity;
 import java.util.Arrays;
 import java.util.List;
 import javax.inject.Inject;
 
-public class MainActivity extends RosieActivity implements FakeDataPresenter.View {
+public class MainActivity extends MarvelActivity implements FakeDataPresenter.View {
 
   @Bind(R.id.vp_main) ViewPager viewPager;
   @Bind(R.id.tab_page_indicator) TabLayout pagerTabView;
@@ -74,7 +74,7 @@ public class MainActivity extends RosieActivity implements FakeDataPresenter.Vie
     disclaimerView.setVisibility(View.VISIBLE);
   }
 
-  @Override public void hideFakeDisclaymer() {
+  @Override public void hideFakeDisclaimer() {
     disclaimerView.setVisibility(View.GONE);
   }
 

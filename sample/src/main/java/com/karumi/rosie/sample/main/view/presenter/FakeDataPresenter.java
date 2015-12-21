@@ -32,13 +32,13 @@ public class FakeDataPresenter extends RosiePresenter<FakeDataPresenter.View> {
     if (BuildConfig.MARVEL_PUBLIC_KEY == null || BuildConfig.MARVEL_PRIVATE_KEY == null) {
       getView().showFakeDisclaimer();
     } else {
-      getView().hideFakeDisclaymer();
+      getView().hideFakeDisclaimer();
     }
   }
 
   public interface View extends RosiePresenterWithLoading.View {
     void showFakeDisclaimer();
 
-    void hideFakeDisclaymer();
+    void hideFakeDisclaimer();
   }
 }

@@ -19,6 +19,7 @@ package com.karumi.rosie.sample.characters.repository.datasource;
 import android.support.annotation.NonNull;
 import com.karumi.marvelapiclient.MarvelApiException;
 import com.karumi.rosie.repository.PaginatedCollection;
+import com.karumi.rosie.repository.datasource.EmptyPaginatedReadableDataSource;
 import com.karumi.rosie.repository.datasource.paginated.Page;
 import com.karumi.rosie.sample.characters.domain.model.Character;
 import java.util.Collection;
@@ -26,7 +27,7 @@ import java.util.LinkedList;
 import java.util.Random;
 import javax.inject.Inject;
 
-public class CharactersFakeDataSource extends CharacterDataSource {
+public class CharactersFakeDataSource extends EmptyPaginatedReadableDataSource<String, Character> {
 
   private static final int NUMBER_OF_CHARACTERS = 45;
   private static final long SLEEP_TIME_IN_MILLISECONDS = 1000;
@@ -160,7 +161,6 @@ public class CharactersFakeDataSource extends CharacterDataSource {
     try {
       Thread.sleep(SLEEP_TIME_IN_MILLISECONDS);
     } catch (InterruptedException e) {
-      e.printStackTrace();
     }
   }
 }

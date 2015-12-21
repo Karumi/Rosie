@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.karumi.rosie.sample.base.mapper;
+package com.karumi.rosie.mapper;
 
 import java.util.ArrayList;
 import java.util.Collection;

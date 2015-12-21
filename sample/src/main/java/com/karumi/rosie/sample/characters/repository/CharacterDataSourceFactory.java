@@ -18,8 +18,9 @@ package com.karumi.rosie.sample.characters.repository;
 
 import com.karumi.marvelapiclient.CharacterApiClient;
 import com.karumi.marvelapiclient.MarvelApiConfig;
+import com.karumi.rosie.repository.datasource.paginated.PaginatedReadableDataSource;
 import com.karumi.rosie.sample.BuildConfig;
-import com.karumi.rosie.sample.characters.repository.datasource.CharacterDataSource;
+import com.karumi.rosie.sample.characters.domain.model.Character;
 import com.karumi.rosie.sample.characters.repository.datasource.CharactersApiDataSource;
 import com.karumi.rosie.sample.characters.repository.datasource.CharactersFakeDataSource;
 import javax.inject.Inject;
@@ -29,7 +30,7 @@ class CharacterDataSourceFactory {
   @Inject public CharacterDataSourceFactory() {
   }
 
-  CharacterDataSource createDataSource() {
+  PaginatedReadableDataSource<String, Character> createDataSource() {
     if (hasKeys()) {
       MarvelApiConfig marvelApiConfig =
           MarvelApiConfig.with(BuildConfig.MARVEL_PUBLIC_KEY, BuildConfig.MARVEL_PRIVATE_KEY);

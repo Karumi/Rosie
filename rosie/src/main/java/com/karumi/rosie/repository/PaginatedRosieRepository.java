@@ -30,13 +30,13 @@ import java.util.LinkedList;
  */
 public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends RosieRepository<K, V> {
 
-  private final Collection<PaginatedReadableDataSource<V>> paginatedReadableDataSources =
+  private final Collection<PaginatedReadableDataSource<K, V>> paginatedReadableDataSources =
       new LinkedList<>();
   private final Collection<PaginatedCacheDataSource<K, V>> paginatedCacheDataSources =
       new LinkedList<>();
 
   @SafeVarargs
-  protected final <R extends PaginatedReadableDataSource<V>> void addPaginatedReadableDataSources(
+  protected final <R extends PaginatedReadableDataSource<K, V>> void addPaginatedReadableDataSources(
       R... readables) {
     this.paginatedReadableDataSources.addAll(Arrays.asList(readables));
   }
@@ -102,7 +102,7 @@ public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends Rosi
   protected PaginatedCollection<V> getPaginatedValuesFromReadables(Page page) throws Exception {
     PaginatedCollection<V> values = null;
 
-    for (PaginatedReadableDataSource<V> readable : paginatedReadableDataSources) {
+    for (PaginatedReadableDataSource<K, V> readable : paginatedReadableDataSources) {
       values = readable.getPage(page);
 
       if (values != null) {

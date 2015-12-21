@@ -18,26 +18,19 @@ package com.karumi.rosie.repository.datasource.paginated;
 
 import com.karumi.rosie.repository.PaginatedCollection;
 import com.karumi.rosie.repository.datasource.Identifiable;
+import com.karumi.rosie.repository.datasource.InMemoryCacheDataSource;
 import com.karumi.rosie.time.TimeProvider;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 public class InMemoryPaginatedCacheDataSource<K, V extends Identifiable<K>>
-    implements PaginatedCacheDataSource<K, V> {
+    extends InMemoryCacheDataSource<K, V> implements PaginatedCacheDataSource<K, V> {
 
-  private final TimeProvider timeProvider;
-  private final long ttlInMillis;
-  private final List<V> items;
-
-  private long lastItemsUpdate;
   private boolean hasMore;
 
   public InMemoryPaginatedCacheDataSource(TimeProvider timeProvider, long ttlInMillis) {
-    this.timeProvider = timeProvider;
-    this.ttlInMillis = ttlInMillis;
-    this.items = new ArrayList<>();
+    super(timeProvider, ttlInMillis);
   }
 
   @Override public PaginatedCollection<V> getPage(Page page) {

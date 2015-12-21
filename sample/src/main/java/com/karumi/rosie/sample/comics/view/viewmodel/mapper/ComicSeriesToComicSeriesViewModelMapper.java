@@ -35,7 +35,9 @@ public class ComicSeriesToComicSeriesViewModelMapper {
     for (ComicSeries comicSeries : comics.getItems()) {
       ComicSeriesViewModel comicSeriesViewModel = new ComicSeriesViewModel();
       comicSeriesViewModel.setKey(comicSeries.getKey());
-      comicSeriesViewModel.setTitle(comicSeries.getName() + " (" + comicSeries.getReleaseYear() + ")");
+      String titleFormatted =
+          String.format("%1$s (%2$s)", comicSeries.getName(), comicSeries.getReleaseYear());
+      comicSeriesViewModel.setTitle(titleFormatted);
       comicSeriesViewModel.setCoverUrl(comicSeries.getCoverUrl());
       comicSeriesViewModels.add(comicSeriesViewModel);
     }

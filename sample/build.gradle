@@ -57,8 +57,6 @@ android {
   }
 }
 
-
-
 dependencies {
   compile fileTree(include: ['*.jar'], dir: 'libs')
   testCompile 'junit:junit:4.12'
@@ -67,8 +65,8 @@ dependencies {
   compile 'com.android.support:design:23.1.1'
   compile 'com.squareup.picasso:picasso:2.5.2'
   compile 'com.karumi:dividers:1.0.3'
-  compile 'com.victor:lib:1.0.1' // spinner
-  compile 'com.karumi:MarvelApiClient:0.0.1'
+  compile 'com.victor:lib:1.0.1' // https://github.com/yankai-victor/Loading
+  compile 'com.karumi:marvelapiclient:0.0.1'
   provided 'com.squareup.dagger:dagger-compiler:1.2.2'
   compile project(':rosie')
 }

@@ -23,20 +23,19 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.Bind;
-import butterknife.OnClick;
 import com.karumi.rosie.sample.R;
+import com.karumi.rosie.sample.base.view.activity.MarvelActivity;
 import com.karumi.rosie.sample.characters.CharactersModule;
 import com.karumi.rosie.sample.characters.view.presenter.CharacterDetailsPresenter;
 import com.karumi.rosie.sample.characters.view.viewmodel.CharacterDetailViewModel;
 import com.karumi.rosie.view.Presenter;
-import com.karumi.rosie.view.RosieActivity;
 import com.squareup.picasso.Picasso;
 import com.victor.loading.rotate.RotateLoading;
 import java.util.Arrays;
 import java.util.List;
 import javax.inject.Inject;
 
-public class CharacterDetailsActivity extends RosieActivity
+public class CharacterDetailsActivity extends MarvelActivity
     implements CharacterDetailsPresenter.View {
 
   private static final String CHARACTER_KEY_EXTRA = "CharacterDetailsActivity.CharacterKey";
@@ -91,13 +90,6 @@ public class CharacterDetailsActivity extends RosieActivity
     characterDescriptionView.setText(character.getDescription());
   }
 
-  @Override public void close() {
-    finish();
-  }
-
-  @OnClick(R.id.iv_toolbar_back) public void onBackButtonClicked() {
-    presenter.onBackButtonClicked();
-  }
 
   public static void open(Context context, String characterKey) {
     Intent intent = new Intent(context, CharacterDetailsActivity.class);

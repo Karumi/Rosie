@@ -31,7 +31,7 @@ import java.util.Random;
 import javax.inject.Inject;
 
 public class ComicSeriesApiDataSource extends EmptyReadableDataSource<Integer, ComicSeries>
-    implements PaginatedReadableDataSource<ComicSeries> {
+    implements PaginatedReadableDataSource<Integer, ComicSeries> {
 
   private static final int MIN_NUMBER_OF_COMICS_PER_COMIC_SERIES = 9;
   private static final int MAX_NUMBER_OF_COMICS_PER_COMIC_SERIES = 24;

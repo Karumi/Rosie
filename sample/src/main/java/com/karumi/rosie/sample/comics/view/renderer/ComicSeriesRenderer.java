@@ -39,7 +39,6 @@ public class ComicSeriesRenderer extends RosieRenderer<ComicSeriesViewModel> {
 
   @Override public void render() {
     super.render();
-
     ComicSeriesViewModel comicSeries = getContent();
     nameView.setText(comicSeries.getTitle());
   }

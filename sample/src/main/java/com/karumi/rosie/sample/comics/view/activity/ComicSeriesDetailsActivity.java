@@ -25,15 +25,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import butterknife.Bind;
-import butterknife.OnClick;
 import com.karumi.rosie.sample.R;
+import com.karumi.rosie.sample.base.view.activity.MarvelActivity;
 import com.karumi.rosie.sample.comics.ComicsModule;
 import com.karumi.rosie.sample.comics.view.presenter.ComicSeriesDetailsPresenter;
 import com.karumi.rosie.sample.comics.view.renderer.ComicSeriesDetailRendererBuilder;
 import com.karumi.rosie.sample.comics.view.viewmodel.ComicSeriesDetailViewModel;
 import com.karumi.rosie.sample.comics.view.viewmodel.ComicSeriesDetailsViewModel;
 import com.karumi.rosie.view.Presenter;
-import com.karumi.rosie.view.RosieActivity;
 import com.pedrogomez.renderers.ListAdapteeCollection;
 import com.pedrogomez.renderers.RVRendererAdapter;
 import com.pedrogomez.renderers.RendererBuilder;
@@ -42,7 +41,7 @@ import java.util.Arrays;
 import java.util.List;
 import javax.inject.Inject;
 
-public class ComicSeriesDetailsActivity extends RosieActivity
+public class ComicSeriesDetailsActivity extends MarvelActivity
     implements ComicSeriesDetailsPresenter.View {
 
   private static final String COMIC_SERIES_KEY_EXTRA = "ComicSeriesDetailsActivity.ComicSeriesKey";
@@ -92,14 +91,6 @@ public class ComicSeriesDetailsActivity extends RosieActivity
     comicDetailsAdapter.clear();
     comicDetailsAdapter.addAll(comicSeries.getComicSeriesDetailViewModels());
     comicDetailsAdapter.notifyDataSetChanged();
-  }
-
-  @Override public void close() {
-    finish();
-  }
-
-  @OnClick(R.id.iv_toolbar_back) public void onBackButtonClicked() {
-    presenter.onBackButtonClicked();
   }
 
   public static void open(Context context, int comicSeriesKey) {

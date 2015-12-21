@@ -14,12 +14,20 @@
  *  limitations under the License.
  */
 
-package com.karumi.rosie.sample.characters.repository.datasource;
+package com.karumi.rosie.repository.datasource;
 
-import com.karumi.rosie.repository.datasource.EmptyReadableDataSource;
+import com.karumi.rosie.repository.PaginatedCollection;
+import com.karumi.rosie.repository.datasource.paginated.Page;
 import com.karumi.rosie.repository.datasource.paginated.PaginatedReadableDataSource;
-import com.karumi.rosie.sample.characters.domain.model.Character;
 
-public abstract class CharacterDataSource extends EmptyReadableDataSource<String, Character>
-implements PaginatedReadableDataSource<Character> {
+/**
+ * Utility class to only override methods that are needed by your readable data source
+ * implementation.
+ */
+public class EmptyPaginatedReadableDataSource<K, V> extends EmptyReadableDataSource<K, V>
+    implements PaginatedReadableDataSource<K, V> {
+
+    @Override public PaginatedCollection<V> getPage(Page page) throws Exception {
+        return null;
+    }
 }
