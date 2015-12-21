@@ -38,7 +38,8 @@ public class PaginatedRosieRepositoryTest extends UnitTest {
   private static final int ANY_LIMIT = 20;
 
   @Mock private PaginatedCacheDataSource<AnyRepositoryKey, AnyRepositoryValue> cacheDataSource;
-  @Mock private PaginatedReadableDataSource<AnyRepositoryValue> readableDataSource;
+  @Mock private PaginatedReadableDataSource<AnyRepositoryKey, AnyRepositoryValue>
+      readableDataSource;
 
   @Test public void shouldReturnValuesFromCacheDataSourceIfDataIsValid() throws Exception {
     Page page = Page.withOffsetAndLimit(ANY_OFFSET, ANY_LIMIT);

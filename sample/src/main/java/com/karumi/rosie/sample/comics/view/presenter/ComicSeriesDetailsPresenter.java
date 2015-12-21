@@ -57,7 +57,7 @@ public class ComicSeriesDetailsPresenter
         .onSuccess(new OnSuccessCallback() {
           @Success public void onComicSeriesDetailsLoaded(ComicSeries comicSeries) {
             ComicSeriesDetailsViewModel comicSeriesDetailsViewModel =
-                mapper.mapComicSeriesToComicSeriesDetailsViewModel(comicSeries);
+                mapper.map(comicSeries);
             hideLoading();
             getView().showComicSeriesDetails(comicSeriesDetailsViewModel);
           }

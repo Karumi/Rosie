@@ -16,6 +16,7 @@
 
 package com.karumi.rosie.sample.base.view.activity;
 
+import android.support.annotation.Nullable;
 import butterknife.OnClick;
 import com.karumi.rosie.sample.R;
 import com.karumi.rosie.view.RosieActivity;
@@ -23,7 +24,7 @@ import com.karumi.rosie.view.RosieActivity;
 public abstract class MarvelActivity extends RosieActivity {
   @Override protected abstract int getLayoutId();
 
-  @OnClick(R.id.iv_toolbar_back) public void onBackButtonClicked() {
+  @Nullable @OnClick(R.id.iv_toolbar_back) public void onBackButtonClicked() {
     finish();
   }
 
