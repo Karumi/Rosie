@@ -344,7 +344,7 @@ public class RosieRepositoryTest extends UnitTest {
   }
 
   @NonNull private AnyRepositoryValue givenCacheDataSourceReturnsValueWithKey(AnyRepositoryKey key,
-      boolean isValidValue) {
+      boolean isValidValue) throws Exception {
     AnyRepositoryValue value = new AnyRepositoryValue(key);
     when(cacheDataSource.getByKey(key)).thenReturn(value);
     when(cacheDataSource.isValid(value)).thenReturn(isValidValue);
@@ -352,7 +352,8 @@ public class RosieRepositoryTest extends UnitTest {
   }
 
   @NonNull
-  private AnyRepositoryValue givenReadableDataSourceReturnsValidValueWithKey(AnyRepositoryKey key) {
+  private AnyRepositoryValue givenReadableDataSourceReturnsValidValueWithKey(AnyRepositoryKey key)
+      throws Exception {
     AnyRepositoryValue value = new AnyRepositoryValue(key);
     when(readableDataSource.getByKey(key)).thenReturn(value);
     return value;
@@ -367,7 +368,8 @@ public class RosieRepositoryTest extends UnitTest {
     return givenCacheDataSourceReturnsValues(false);
   }
 
-  private Collection<AnyRepositoryValue> givenCacheDataSourceReturnsValues(boolean areValidValues) {
+  private Collection<AnyRepositoryValue> givenCacheDataSourceReturnsValues(boolean areValidValues)
+      throws Exception {
     Collection<AnyRepositoryValue> values = getSomeValues();
     when(cacheDataSource.getAll()).thenReturn(values);
     when(cacheDataSource.isValid(any(AnyRepositoryValue.class))).thenReturn(areValidValues);
@@ -381,26 +383,29 @@ public class RosieRepositoryTest extends UnitTest {
     return values;
   }
 
-  private void givenReadableDataSourceThrowsException() {
+  private void givenReadableDataSourceThrowsException() throws Exception {
     when(readableDataSource.getAll()).thenThrow(new Exception());
   }
 
-  private AnyRepositoryValue givenWriteableDataSourceWritesValue(AnyRepositoryValue value) {
+  private AnyRepositoryValue givenWriteableDataSourceWritesValue(AnyRepositoryValue value)
+      throws Exception {
     AnyRepositoryValue writeableValue = new AnyRepositoryValue(value.getKey());
     when(writeableDataSource.addOrUpdate(value)).thenReturn(writeableValue);
     return writeableValue;
   }
 
-  private void givenWriteableDataSourceDoesNotWriteValue(AnyRepositoryValue value) {
+  private void givenWriteableDataSourceDoesNotWriteValue(AnyRepositoryValue value)
+      throws Exception {
     when(writeableDataSource.addOrUpdate(value)).thenReturn(null);
   }
 
-  private void givenWriteableDataSourceDoesNotWriteValues(Collection<AnyRepositoryValue> values) {
+  private void givenWriteableDataSourceDoesNotWriteValues(Collection<AnyRepositoryValue> values)
+      throws Exception {
     when(writeableDataSource.addOrUpdateAll(values)).thenReturn(null);
   }
 
   private Collection<AnyRepositoryValue> givenWriteableDataSourceWritesValues(
-      Collection<AnyRepositoryValue> values) {
+      Collection<AnyRepositoryValue> values) throws Exception {
     Collection<AnyRepositoryValue> updatedValues = new LinkedList<>(values);
     when(writeableDataSource.addOrUpdateAll(values)).thenReturn(values);
     return updatedValues;

@@ -17,13 +17,13 @@
 package com.karumi.rosie.sample.main;
 
 import com.karumi.rosie.sample.characters.view.fragment.CharactersFragment;
-import com.karumi.rosie.sample.comics.view.fragment.ComicsFragment;
+import com.karumi.rosie.sample.comics.view.fragment.ComicSeriesFragment;
 import com.karumi.rosie.sample.main.view.activity.MainActivity;
 import dagger.Module;
 
 @Module(library = true,
     complete = false,
     injects = {
-        MainActivity.class, CharactersFragment.class, ComicsFragment.class
+        MainActivity.class, CharactersFragment.class, ComicSeriesFragment.class
     }) public class MainModule {
 }

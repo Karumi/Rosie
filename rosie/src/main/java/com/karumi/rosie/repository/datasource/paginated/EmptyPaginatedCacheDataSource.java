@@ -27,16 +27,36 @@ public class EmptyPaginatedCacheDataSource<K, V extends Identifiable<K>>
     return false;
   }
 
-  @Override public PaginatedCollection<V> getPage(Page page) {
+  @Override public PaginatedCollection<V> getPage(Page page)  throws Exception {
     return null;
   }
 
   @Override
-  public PaginatedCollection<V> addOrUpdatePage(Page page, Collection<V> values, boolean hasMore) {
+  public PaginatedCollection<V> addOrUpdatePage(Page page, Collection<V> values, boolean hasMore)  throws Exception {
     return null;
   }
 
-  @Override public void deleteAll() {
+  @Override public V addOrUpdate(V value) throws Exception {
+    return null;
+  }
 
+  @Override public Collection<V> addOrUpdateAll(Collection<V> values) throws Exception {
+    return null;
+  }
+
+  @Override public void deleteByKey(K key) throws Exception {
+
+  }
+
+  @Override public void deleteAll() throws Exception {
+
+  }
+
+  @Override public V getByKey(K key) throws Exception {
+    return null;
+  }
+
+  @Override public Collection<V> getAll() throws Exception {
+    return null;
   }
 }

@@ -28,11 +28,11 @@ import java.util.List;
 public class InMemoryCacheDataSource<K, V extends Identifiable<K>>
     implements CacheDataSource<K, V> {
 
-  private final TimeProvider timeProvider;
-  private final long ttlInMillis;
-  private final List<V> items;
+  protected final TimeProvider timeProvider;
+  protected final long ttlInMillis;
+  protected final List<V> items;
 
-  private long lastItemsUpdate;
+  protected long lastItemsUpdate;
 
   public InMemoryCacheDataSource(TimeProvider timeProvider, long ttlInMillis) {
     this.timeProvider = timeProvider;

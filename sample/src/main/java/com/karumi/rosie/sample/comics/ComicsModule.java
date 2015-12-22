@@ -16,13 +16,13 @@
 
 package com.karumi.rosie.sample.comics;
 
-import com.karumi.rosie.sample.comics.view.activity.ComicDetailsActivity;
+import com.karumi.rosie.sample.comics.view.activity.ComicSeriesDetailsActivity;
 import dagger.Module;
 
 @Module(
     library = true,
     complete = false,
     injects = {
-        ComicDetailsActivity.class
+        ComicSeriesDetailsActivity.class
     }) public class ComicsModule {
 }

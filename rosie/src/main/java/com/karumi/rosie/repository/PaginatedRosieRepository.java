@@ -30,13 +30,13 @@ import java.util.LinkedList;
  */
 public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends RosieRepository<K, V> {
 
-  private final Collection<PaginatedReadableDataSource<V>> paginatedReadableDataSources =
+  private final Collection<PaginatedReadableDataSource<K, V>> paginatedReadableDataSources =
       new LinkedList<>();
   private final Collection<PaginatedCacheDataSource<K, V>> paginatedCacheDataSources =
       new LinkedList<>();
 
   @SafeVarargs
-  protected final <R extends PaginatedReadableDataSource<V>> void addPaginatedReadableDataSources(
+  protected final <R extends PaginatedReadableDataSource<K, V>> void addPaginatedReadableDataSources(
       R... readables) {
     this.paginatedReadableDataSources.addAll(Arrays.asList(readables));
   }
@@ -52,7 +52,7 @@ public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends Rosi
    *
    * @param page Page to be retrieved
    */
-  public PaginatedCollection<V> getPage(Page page) {
+  public PaginatedCollection<V> getPage(Page page) throws Exception {
     return getPage(page, ReadPolicy.READ_ALL);
   }
 
@@ -62,7 +62,7 @@ public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends Rosi
    * @param page Page to be retrieved
    * @param policy Specifies how the value is going to be retrieved.
    */
-  public PaginatedCollection<V> getPage(Page page, ReadPolicy policy) {
+  public PaginatedCollection<V> getPage(Page page, ReadPolicy policy) throws Exception {
     PaginatedCollection<V> values = null;
 
     if (policy.useCache()) {
@@ -80,7 +80,7 @@ public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends Rosi
     return values;
   }
 
-  protected PaginatedCollection<V> getPaginatedValuesFromCaches(Page page) {
+  protected PaginatedCollection<V> getPaginatedValuesFromCaches(Page page) throws Exception {
     PaginatedCollection<V> values = null;
 
     for (PaginatedCacheDataSource<K, V> cacheDataSource : paginatedCacheDataSources) {
@@ -99,10 +99,10 @@ public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends Rosi
     return values;
   }
 
-  protected PaginatedCollection<V> getPaginatedValuesFromReadables(Page page) {
+  protected PaginatedCollection<V> getPaginatedValuesFromReadables(Page page) throws Exception {
     PaginatedCollection<V> values = null;
 
-    for (PaginatedReadableDataSource<V> readable : paginatedReadableDataSources) {
+    for (PaginatedReadableDataSource<K, V> readable : paginatedReadableDataSources) {
       values = readable.getPage(page);
 
       if (values != null) {
@@ -113,7 +113,8 @@ public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends Rosi
     return values;
   }
 
-  protected void populatePaginatedCaches(Page page, PaginatedCollection<V> values) {
+  protected void populatePaginatedCaches(Page page, PaginatedCollection<V> values)
+      throws Exception {
     for (PaginatedCacheDataSource<K, V> cacheDataSource : paginatedCacheDataSources) {
       cacheDataSource.addOrUpdatePage(page, values.getItems(), values.hasMore());
     }

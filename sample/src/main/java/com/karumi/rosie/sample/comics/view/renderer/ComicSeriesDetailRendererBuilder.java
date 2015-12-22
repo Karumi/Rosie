@@ -16,7 +16,8 @@
 
 package com.karumi.rosie.sample.comics.view.renderer;
 
-import com.karumi.rosie.sample.comics.view.presenter.ComicsPresenter;
+import com.karumi.rosie.sample.comics.view.viewmodel.ComicSeriesDetailViewModel;
+import com.karumi.rosie.sample.comics.view.viewmodel.ComicSeriesHeaderDetailViewModel;
 import com.karumi.rosie.sample.comics.view.viewmodel.ComicViewModel;
 import com.pedrogomez.renderers.Renderer;
 import com.pedrogomez.renderers.RendererBuilder;
@@ -25,23 +26,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class ComicRendererBuilder extends RendererBuilder<ComicViewModel> {
+public class ComicSeriesDetailRendererBuilder extends RendererBuilder<ComicSeriesDetailViewModel> {
 
   private Map<Class, Class> rendererMapping = new HashMap<>();
 
-  public ComicRendererBuilder(ComicsPresenter presenter) {
-    List<Renderer<ComicViewModel>> prototypes = new LinkedList<>();
-    prototypes.add(new ComicRenderer(presenter));
+  public ComicSeriesDetailRendererBuilder() {
+    List<Renderer<ComicSeriesDetailViewModel>> prototypes = new LinkedList<>();
+    prototypes.add(new ComicRenderer());
     rendererMapping.put(ComicViewModel.class, ComicRenderer.class);
-    prototypes.add(new LoadMoreComicsRenderer());
+    prototypes.add(new ComicSeriesHeaderDetailRenderer());
+    rendererMapping.put(ComicSeriesHeaderDetailViewModel.class,
+        ComicSeriesHeaderDetailRenderer.class);
     setPrototypes(prototypes);
   }
 
-  @Override protected Class getPrototypeClass(ComicViewModel content) {
-    if (content != null) {
-      return rendererMapping.get(content.getClass());
-    } else {
-      return LoadMoreComicsRenderer.class;
-    }
+  @Override protected Class getPrototypeClass(ComicSeriesDetailViewModel content) {
+    return rendererMapping.get(content.getClass());
   }
 }

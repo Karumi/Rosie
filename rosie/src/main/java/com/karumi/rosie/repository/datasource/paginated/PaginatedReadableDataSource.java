@@ -17,17 +17,18 @@
 package com.karumi.rosie.repository.datasource.paginated;
 
 import com.karumi.rosie.repository.PaginatedCollection;
+import com.karumi.rosie.repository.datasource.ReadableDataSource;
 
 /**
  * Data source interface meant to be used only to retrieve pages of data.
  *
  * @param <V> The class of the values retrieved from this data source.
  */
-public interface PaginatedReadableDataSource<V> {
+public interface PaginatedReadableDataSource<K, V> extends ReadableDataSource<K, V> {
   /**
    * Returns a page of values bounded by the provided page.
    *
    * @param page page to be retrieved
    */
-  PaginatedCollection<V> getPage(Page page);
+  PaginatedCollection<V> getPage(Page page) throws Exception;
 }

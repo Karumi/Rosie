@@ -18,22 +18,20 @@ package com.karumi.rosie.sample.comics.domain.usecase;
 
 import com.karumi.rosie.domain.usecase.RosieUseCase;
 import com.karumi.rosie.domain.usecase.annotation.UseCase;
-import com.karumi.rosie.repository.PaginatedCollection;
-import com.karumi.rosie.repository.datasource.paginated.Page;
-import com.karumi.rosie.sample.comics.domain.model.Comic;
-import com.karumi.rosie.sample.comics.repository.ComicsRepository;
+import com.karumi.rosie.sample.comics.domain.model.ComicSeries;
+import com.karumi.rosie.sample.comics.repository.ComicSeriesRepository;
 import javax.inject.Inject;
 
-public class GetComics extends RosieUseCase {
+public class GetComicSeriesDetails extends RosieUseCase {
 
-  private final ComicsRepository repository;
+  private final ComicSeriesRepository repository;
 
-  @Inject public GetComics(ComicsRepository repository) {
+  @Inject public GetComicSeriesDetails(ComicSeriesRepository repository) {
     this.repository = repository;
   }
 
-  @UseCase public void getComics(Page page) throws Exception {
-    PaginatedCollection<Comic> comics = repository.getPage(page);
-    notifySuccess(comics);
+  @UseCase public void getComicSeriesDetails(int comicSeriesKey) throws Exception {
+    ComicSeries comicSeries = repository.getByKey(comicSeriesKey);
+    notifySuccess(comicSeries);
   }
 }
