@@ -17,4 +17,3 @@ before_script:
 
 script:
   - ./gradlew checkstyle build -Dpre-dex=false
-  - ./gradlew :rosie-datasource-realm:connectedCheck
