@@ -42,8 +42,7 @@ public class ComicSeriesHeaderDetailRenderer extends RosieRenderer<ComicSeriesDe
     ComicSeriesHeaderDetailViewModel comicSeries = (ComicSeriesHeaderDetailViewModel) getContent();
 
     Picasso.with(context).load(comicSeries.getCoverUrl()).fit().centerCrop().into(coverView);
-    String rating = context.getString(comicSeries.getRatingNameResourceId());
-    ratingView.setText(context.getString(R.string.marvel_rating_text, rating));
+    ratingView.setText(context.getString(R.string.marvel_rating_text, comicSeries.getRating()));
     descriptionView.setText(comicSeries.getDescription());
   }
 

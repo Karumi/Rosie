@@ -21,7 +21,7 @@ public class ComicSeriesHeaderDetailViewModel implements ComicSeriesDetailViewMo
   private String title;
   private String coverUrl;
   private String description;
-  private int ratingNameResourceId;
+  private String rating;
 
   public String getTitle() {
     return title;
@@ -47,11 +47,11 @@ public class ComicSeriesHeaderDetailViewModel implements ComicSeriesDetailViewMo
     this.description = description;
   }
 
-  public int getRatingNameResourceId() {
-    return ratingNameResourceId;
+  public String getRating() {
+    return rating;
   }
 
-  public void setRatingNameResourceId(int ratingNameResourceId) {
-    this.ratingNameResourceId = ratingNameResourceId;
+  public void setRating(String rating) {
+    this.rating = rating;
   }
 }

@@ -21,11 +21,6 @@
   <string name="characters_page_title">Characters</string>
   <string name="comic_series_page_title">Comics</string>
   <string name="marvel_rating_text">Rating: %1$s</string>
-  <string name="marvel_rating_all_ages">All Ages</string>
-  <string name="marvel_rating_t">T</string>
-  <string name="marvel_rating_teens_and_up">T+</string>
-  <string name="marvel_rating_parental_advisory">Parental Advisory</string>
-  <string name="marvel_rating_explicit_content">Max: Explicit Content</string>
   <string name="comic_series_next_icon_content_description">See comic series details</string>
   <string name="comic_series_cover_content_description">Comic series cover</string>
   <string name="comic_thumbnail_content_description">Comic thumbnail</string>
