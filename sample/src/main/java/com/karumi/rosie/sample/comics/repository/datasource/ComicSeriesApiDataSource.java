@@ -18,21 +18,27 @@ package com.karumi.rosie.sample.comics.repository.datasource;
 
 import com.karumi.marvelapiclient.MarvelApiException;
 import com.karumi.marvelapiclient.SeriesApiClient;
+import com.karumi.marvelapiclient.model.ComicDto;
+import com.karumi.marvelapiclient.model.ComicsDto;
+import com.karumi.marvelapiclient.model.MarvelImage;
 import com.karumi.marvelapiclient.model.MarvelResponse;
 import com.karumi.marvelapiclient.model.SeriesCollectionDto;
 import com.karumi.marvelapiclient.model.SeriesDto;
 import com.karumi.rosie.repository.PaginatedCollection;
 import com.karumi.rosie.repository.datasource.EmptyReadableDataSource;
 import com.karumi.rosie.repository.datasource.paginated.Page;
-import com.karumi.rosie.repository.datasource.paginated.PaginatedReadableDataSource;
 import com.karumi.rosie.sample.characters.repository.datasource.mapper.ComicSeriesToSeriesDtoMapper;
+import com.karumi.rosie.sample.comics.domain.model.Comic;
 import com.karumi.rosie.sample.comics.domain.model.ComicSeries;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import javax.inject.Inject;
 
 public class ComicSeriesApiDataSource extends EmptyReadableDataSource<Integer, ComicSeries>
-    implements PaginatedReadableDataSource<Integer, ComicSeries> {
+    implements ComicSeriesDataSource {
 
+  private static final int MAX_COMICS_BY_SERIES = 20;
   private final SeriesApiClient seriesApiClient;
   private final ComicSeriesToSeriesDtoMapper mapper = new ComicSeriesToSeriesDtoMapper();
 
@@ -44,7 +50,27 @@ public class ComicSeriesApiDataSource extends EmptyReadableDataSource<Integer, C
     MarvelResponse<SeriesDto> seriesResponse = seriesApiClient.getSeriesById(key.toString());
     SeriesDto seriesDto = seriesResponse.getResponse();
 
-    return mapper.reverseMap(seriesDto);
+    ComicSeries comicSeries = mapper.reverseMap(seriesDto);
+
+    return comicSeries;
+  }
+
+  @Override public List<Comic> getComicBySeries(int key) throws Exception {
+    MarvelResponse<ComicsDto> comicsBySeries =
+        seriesApiClient.getComicsBySeries(Integer.toString(key), 0, MAX_COMICS_BY_SERIES);
+
+    ComicsDto comicsDto = comicsBySeries.getResponse();
+    List<Comic> comics = new ArrayList<>();
+    for (ComicDto comicDto : comicsDto.getComics()) {
+      Comic comic = new Comic();
+      comic.setKey(comicDto.getId());
+      comic.setName(comicDto.getTitle());
+      comic.setThumbnailUrl(comicDto.getThumbnail().getImageUrl(MarvelImage.Size.PORTRAIT_UNCANNY));
+      comics.add(comic);
+    }
+
+    return comics;
+
   }
 
   @Override public PaginatedCollection<ComicSeries> getPage(Page page)
@@ -63,4 +89,5 @@ public class ComicSeriesApiDataSource extends EmptyReadableDataSource<Integer, C
             < seriesCollectionDto.getTotal());
     return comicSeriesPage;
   }
+
 }

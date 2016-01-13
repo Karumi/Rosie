@@ -29,6 +29,7 @@ public class ComicSeries implements Identifiable<Integer> {
   private int releaseYear;
   private String rating;
   private List<Comic> comics = new ArrayList<>();
+  private boolean complete;
 
   @Override public Integer getKey() {
     return key;
@@ -86,4 +87,11 @@ public class ComicSeries implements Identifiable<Integer> {
     this.comics = comics;
   }
 
+  public boolean isComplete() {
+    return complete;
+  }
+
+  public void setComplete(boolean complete) {
+    this.complete = complete;
+  }
 }

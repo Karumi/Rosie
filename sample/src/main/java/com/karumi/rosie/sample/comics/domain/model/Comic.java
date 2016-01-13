@@ -18,17 +18,17 @@ package com.karumi.rosie.sample.comics.domain.model;
 
 import com.karumi.rosie.repository.datasource.Identifiable;
 
-public class Comic implements Identifiable<Integer> {
+public class Comic implements Identifiable<String> {
 
-  private int key;
+  private String key;
   private String name;
   private String thumbnailUrl;
 
-  @Override public Integer getKey() {
+  @Override public String getKey() {
     return key;
   }
 
-  public void setKey(int key) {
+  public void setKey(String key) {
     this.key = key;
   }
 
