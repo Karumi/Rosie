@@ -18,16 +18,20 @@ package com.karumi.rosie.sample.comics.repository;
 
 import com.karumi.rosie.repository.PaginatedRosieRepository;
 import com.karumi.rosie.repository.datasource.paginated.PaginatedCacheDataSource;
+import com.karumi.rosie.repository.datasource.paginated.PaginatedReadableDataSource;
 import com.karumi.rosie.sample.comics.domain.model.ComicSeries;
-import com.karumi.rosie.sample.comics.repository.datasource.ComicSeriesApiDataSource;
 import javax.inject.Inject;
 
 public class ComicSeriesRepository extends PaginatedRosieRepository<Integer, ComicSeries> {
 
-  @Inject public ComicSeriesRepository(ComicSeriesApiDataSource apiDataSource,
+  @Inject public ComicSeriesRepository(ComicSeriesDataSourceFactory comicSeriesDataSourceFactory,
       PaginatedCacheDataSource<Integer, ComicSeries> inMemoryPaginatedCache) {
+
+    PaginatedReadableDataSource<Integer, ComicSeries> apiDataSource =
+        comicSeriesDataSourceFactory.createDataSource();
     addReadableDataSources(apiDataSource);
     addPaginatedReadableDataSources(apiDataSource);
+
     addCacheDataSources(inMemoryPaginatedCache);
     addPaginatedCacheDataSources(inMemoryPaginatedCache);
   }

@@ -24,11 +24,10 @@ public class ComicSeries implements Identifiable<Integer> {
 
   private int key;
   private String name;
-  private int number;
   private String description;
   private String coverUrl;
   private int releaseYear;
-  private Rating rating;
+  private String rating;
   private List<Comic> comics = new ArrayList<>();
 
   @Override public Integer getKey() {
@@ -45,14 +44,6 @@ public class ComicSeries implements Identifiable<Integer> {
 
   public void setName(String name) {
     this.name = name;
-  }
-
-  public int getNumber() {
-    return number;
-  }
-
-  public void setNumber(int number) {
-    this.number = number;
   }
 
   public String getDescription() {
@@ -79,11 +70,11 @@ public class ComicSeries implements Identifiable<Integer> {
     this.releaseYear = releaseYear;
   }
 
-  public Rating getRating() {
+  public String getRating() {
     return rating;
   }
 
-  public void setRating(Rating rating) {
+  public void setRating(String rating) {
     this.rating = rating;
   }
 
@@ -95,11 +86,4 @@ public class ComicSeries implements Identifiable<Integer> {
     this.comics = comics;
   }
 
-  public enum Rating {
-    ALL_AGES,
-    T,
-    TEENS_AND_UP,
-    PARENTAL_ADVISORY,
-    EXPLICIT_CONTENT
-  }
 }

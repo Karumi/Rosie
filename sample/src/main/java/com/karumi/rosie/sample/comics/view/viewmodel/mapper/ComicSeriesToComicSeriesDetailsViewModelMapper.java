@@ -17,7 +17,6 @@
 package com.karumi.rosie.sample.comics.view.viewmodel.mapper;
 
 import com.karumi.rosie.mapper.Mapper;
-import com.karumi.rosie.sample.R;
 import com.karumi.rosie.sample.comics.domain.model.Comic;
 import com.karumi.rosie.sample.comics.domain.model.ComicSeries;
 import com.karumi.rosie.sample.comics.view.viewmodel.ComicSeriesDetailViewModel;
@@ -57,38 +56,12 @@ public class ComicSeriesToComicSeriesDetailsViewModelMapper
         new ComicSeriesHeaderDetailViewModel();
 
     comicSeriesHeaderDetailViewModel.setTitle(
-        comicSeries.getName() + " (" + comicSeries.getReleaseYear() + ") #"
-            + comicSeries.getNumber());
+        comicSeries.getName() + " (" + comicSeries.getReleaseYear() + ")");
     comicSeriesHeaderDetailViewModel.setCoverUrl(comicSeries.getCoverUrl());
     comicSeriesHeaderDetailViewModel.setDescription(comicSeries.getDescription());
-    comicSeriesHeaderDetailViewModel.setRatingNameResourceId(
-        mapRatingToRatingNameResourceId(comicSeries.getRating()));
+    comicSeriesHeaderDetailViewModel.setRating(comicSeries.getRating());
 
     return comicSeriesHeaderDetailViewModel;
-  }
-
-  private int mapRatingToRatingNameResourceId(ComicSeries.Rating rating) {
-    int ratingNameResourceId;
-    switch (rating) {
-      case ALL_AGES:
-        ratingNameResourceId = R.string.marvel_rating_all_ages;
-        break;
-      case T:
-        ratingNameResourceId = R.string.marvel_rating_t;
-        break;
-      case TEENS_AND_UP:
-        ratingNameResourceId = R.string.marvel_rating_teens_and_up;
-        break;
-      case PARENTAL_ADVISORY:
-        ratingNameResourceId = R.string.marvel_rating_parental_advisory;
-        break;
-      case EXPLICIT_CONTENT:
-      default:
-        ratingNameResourceId = R.string.marvel_rating_explicit_content;
-        break;
-    }
-
-    return ratingNameResourceId;
   }
 
   private List<ComicViewModel> mapComicsToComicViewModels(List<Comic> comics) {
