@@ -69,7 +69,7 @@ public class InMemoryCacheDataSource<K, V extends Identifiable<K>>
     lastItemsUpdate = 0;
   }
 
-  @Override public synchronized boolean isValid(V value) {
+  @Override public boolean isValid(V value) {
     return timeProvider.currentTimeMillis() - lastItemsUpdate < ttlInMillis;
   }
 }

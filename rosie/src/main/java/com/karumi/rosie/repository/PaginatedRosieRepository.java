@@ -86,7 +86,7 @@ public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends Rosi
     for (PaginatedCacheDataSource<K, V> cacheDataSource : paginatedCacheDataSources) {
       values = cacheDataSource.getPage(page);
 
-      if (values != null && values.getItems() != null && values.getItems().size() > 0) {
+      if (values != null && values.getItems() != null && !values.getItems().isEmpty()) {
         if (areValidValues(values, cacheDataSource)) {
           break;
         } else {
@@ -107,7 +107,7 @@ public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends Rosi
     for (PaginatedReadableDataSource<K, V> readable : paginatedReadableDataSources) {
       values = readable.getPage(page);
 
-      if (values != null) {
+      if (values != null && values.getItems() != null && !values.getItems().isEmpty()) {
         break;
       }
     }

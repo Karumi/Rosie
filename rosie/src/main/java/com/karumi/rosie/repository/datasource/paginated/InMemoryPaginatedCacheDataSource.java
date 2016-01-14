@@ -34,7 +34,7 @@ public class InMemoryPaginatedCacheDataSource<K, V extends Identifiable<K>>
     super(timeProvider, ttlInMillis);
   }
 
-  @Override public PaginatedCollection<V> getPage(Page page) {
+  @Override public synchronized PaginatedCollection<V> getPage(Page page) {
     List<V> result = new LinkedList<>();
 
     int offset = page.getOffset();
@@ -52,7 +52,7 @@ public class InMemoryPaginatedCacheDataSource<K, V extends Identifiable<K>>
   }
 
   @Override
-  public PaginatedCollection<V> addOrUpdatePage(Page page, Collection<V> values, boolean hasMore) {
+  public synchronized PaginatedCollection<V> addOrUpdatePage(Page page, Collection<V> values, boolean hasMore) {
     for (V value : values) {
       addOrUpdate(value);
     }
@@ -64,7 +64,7 @@ public class InMemoryPaginatedCacheDataSource<K, V extends Identifiable<K>>
     return paginatedCollection;
   }
 
-  @Override public void deleteAll() {
+  @Override public synchronized void deleteAll() {
     items.clear();
     hasMore = false;
     lastItemsUpdate = 0;
