@@ -81,6 +81,24 @@ public class PaginatedRosieRepositoryTest extends UnitTest {
     assertEquals(readableValues, values);
   }
 
+  @Test public void shouldReturnValuesFromReadableDataSourceIfCacheDoNotHaveThisPage()
+      throws Exception {
+    Page page = Page.withOffsetAndLimit(ANY_OFFSET, ANY_LIMIT);
+    givenCacheDataSourceReturnsNonValidValues(page);
+    givenReadableDataSourceReturnsValues(page);
+    PaginatedRosieRepository<AnyRepositoryKey, AnyRepositoryValue> repository =
+        givenAPaginatedRepository();
+    repository.getPage(page);
+
+    Page nextPage = Page.withOffsetAndLimit(ANY_OFFSET + ANY_LIMIT, ANY_LIMIT);
+    repository.getPage(nextPage);
+
+    verify(cacheDataSource).getPage(page);
+    verify(readableDataSource).getPage(page);
+    verify(cacheDataSource).getPage(nextPage);
+    verify(readableDataSource).getPage(nextPage);
+  }
+
   @Test public void shouldReturnValuesFromReadableDataSourceIfPolicyForcesOnlyReadable()
       throws Exception {
     Page page = Page.withOffsetAndLimit(ANY_OFFSET, ANY_LIMIT);
