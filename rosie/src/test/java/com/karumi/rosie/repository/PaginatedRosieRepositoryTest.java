@@ -112,7 +112,7 @@ public class PaginatedRosieRepositoryTest extends UnitTest {
     Page nextPage = Page.withOffsetAndLimit(ANY_OFFSET + ANY_LIMIT, ANY_LIMIT);
     repository.getPage(nextPage);
 
-    verify(cacheDataSource,times(1)).deleteAll();
+    verify(cacheDataSource, times(1)).deleteAll();
   }
 
   @Test public void shouldReturnValuesFromReadableDataSourceIfPolicyForcesOnlyReadable()
