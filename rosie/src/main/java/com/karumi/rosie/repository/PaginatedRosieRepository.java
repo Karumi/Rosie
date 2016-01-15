@@ -61,6 +61,7 @@ public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends Rosi
    *
    * @param page Page to be retrieved
    * @param policy Specifies how the value is going to be retrieved.
+   * @return a PaginatedCollection instance with the retrieved content
    */
   public PaginatedCollection<V> getPage(Page page, ReadPolicy policy) throws Exception {
     PaginatedCollection<V> values = null;

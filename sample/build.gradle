@@ -61,6 +61,10 @@ android {
     buildConfigField "String", "MARVEL_PUBLIC_KEY", getPublicMarvelKey()
     buildConfigField "String", "MARVEL_PRIVATE_KEY", getPrivateMarvelKey()
   }
+
+  dexOptions {
+    preDexLibraries = Boolean.valueOf(System.getProperty("pre-dex", "true"))
+  }
 }
 
 dependencies {
