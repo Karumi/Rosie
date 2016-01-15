@@ -20,7 +20,6 @@ import android.support.annotation.NonNull;
 import com.karumi.rosie.repository.PaginatedCollection;
 import com.karumi.rosie.repository.datasource.EmptyReadableDataSource;
 import com.karumi.rosie.repository.datasource.paginated.Page;
-import com.karumi.rosie.repository.datasource.paginated.PaginatedReadableDataSource;
 import com.karumi.rosie.sample.comics.domain.model.Comic;
 import com.karumi.rosie.sample.comics.domain.model.ComicSeries;
 import java.util.ArrayList;
@@ -31,7 +30,7 @@ import java.util.Random;
 import javax.inject.Inject;
 
 public class ComicSeriesFakeDataSource extends EmptyReadableDataSource<Integer, ComicSeries>
-    implements PaginatedReadableDataSource<Integer, ComicSeries> {
+    implements ComicSeriesDataSource {
 
   private static final int MIN_NUMBER_OF_COMICS_PER_COMIC_SERIES = 9;
   private static final int MAX_NUMBER_OF_COMICS_PER_COMIC_SERIES = 24;
@@ -98,6 +97,7 @@ public class ComicSeriesFakeDataSource extends EmptyReadableDataSource<Integer, 
 
     ComicSeries comicSeries = allComicSeries[RANDOM.nextInt(allComicSeries.length)];
     comicSeries.setName(comicSeries.getName() + " " + i);
+    comicSeries.setComplete(true);
     return comicSeries;
   }
 
@@ -225,7 +225,7 @@ public class ComicSeriesFakeDataSource extends EmptyReadableDataSource<Integer, 
         MAX_NUMBER_OF_COMICS_PER_COMIC_SERIES - MIN_NUMBER_OF_COMICS_PER_COMIC_SERIES + 1);
     for (int i = 0; i < numberOfComics; i++) {
       Comic comic = new Comic();
-      comic.setKey(i);
+      comic.setKey("" + i);
       comic.setName(comicSeriesName + " #" + (i + 1));
       comic.setThumbnailUrl(allComicThumbnailUrls[RANDOM.nextInt(allComicThumbnailUrls.length)]);
       comics.add(comic);
@@ -240,5 +240,9 @@ public class ComicSeriesFakeDataSource extends EmptyReadableDataSource<Integer, 
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
+  }
+
+  @Override public List<Comic> getComicBySeries(int key) throws Exception {
+    throw new UnsupportedOperationException();
   }
 }

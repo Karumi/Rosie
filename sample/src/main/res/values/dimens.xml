@@ -52,4 +52,5 @@
   <dimen name="loading_circle_width">5dp</dimen>
   <dimen name="load_more_font_size">14sp</dimen>
   <dimen name="load_more_padding">14dp</dimen>
+  <dimen name="character_row_height">150dp</dimen>
 </resources>

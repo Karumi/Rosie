@@ -81,6 +81,10 @@ public class ComicSeriesFragment extends RosieFragment implements ComicsSeriesPr
     comicSeriesView.setVisibility(View.GONE);
   }
 
+  @Override public void clearComicSeries() {
+    comicSeriesAdapter.clear();
+  }
+
   @Override public void showComicSeries(List<ComicSeriesViewModel> comicSeries) {
     comicSeriesAdapter.addAll(comicSeries);
     comicSeriesAdapter.notifyDataSetChanged();

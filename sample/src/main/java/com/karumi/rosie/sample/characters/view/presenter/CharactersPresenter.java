@@ -48,7 +48,15 @@ public class CharactersPresenter extends RosiePresenterWithLoading<CharactersPre
     super.update();
     getView().hideCharacters();
     showLoading();
-    loadCharacters();
+
+    PaginatedCollection<Character> allCharactersInCache = getCharacters.getAllCharactersInCache();
+    if (allCharactersInCache.getPage().getLimit() == 0) {
+      loadCharacters();
+    } else {
+      getView().clearCharacters();
+      showCharacters(allCharactersInCache);
+      offset = allCharactersInCache.getItems().size();
+    }
   }
 
   public void onCharacterClicked(CharacterViewModel character) {
@@ -65,15 +73,19 @@ public class CharactersPresenter extends RosiePresenterWithLoading<CharactersPre
         Page.withOffsetAndLimit(offset, NUMBER_OF_CHARACTERS_PER_PAGE))
         .onSuccess(new OnSuccessCallback() {
           @Success public void onCharactersLoaded(PaginatedCollection<Character> characters) {
-            List<CharacterViewModel> characterViewModels =
-                mapper.mapCharactersToCharacterViewModels(characters);
-            getView().showCharacters(characterViewModels);
-            getView().showHasMore(characters.hasMore());
-            hideLoading();
+            showCharacters(characters);
             offset = characters.getPage().getOffset() + NUMBER_OF_CHARACTERS_PER_PAGE;
           }
         })
         .execute();
+  }
+
+  private void showCharacters(PaginatedCollection<Character> characters) {
+    List<CharacterViewModel> characterViewModels =
+        mapper.mapCharactersToCharacterViewModels(characters);
+    getView().showCharacters(characterViewModels);
+    getView().showHasMore(characters.hasMore());
+    hideLoading();
   }
 
   public interface View extends RosiePresenterWithLoading.View {
@@ -84,5 +96,7 @@ public class CharactersPresenter extends RosiePresenterWithLoading<CharactersPre
     void showHasMore(boolean hasMore);
 
     void openCharacterDetails(String characterKey);
+
+    void clearCharacters();
   }
 }

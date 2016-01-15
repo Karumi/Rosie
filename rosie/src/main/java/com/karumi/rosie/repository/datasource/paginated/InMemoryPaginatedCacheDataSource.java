@@ -20,6 +20,7 @@ import com.karumi.rosie.repository.PaginatedCollection;
 import com.karumi.rosie.repository.datasource.Identifiable;
 import com.karumi.rosie.repository.datasource.InMemoryCacheDataSource;
 import com.karumi.rosie.time.TimeProvider;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,14 +34,15 @@ public class InMemoryPaginatedCacheDataSource<K, V extends Identifiable<K>>
     super(timeProvider, ttlInMillis);
   }
 
-  @Override public PaginatedCollection<V> getPage(Page page) {
+  @Override public synchronized PaginatedCollection<V> getPage(Page page) {
     List<V> result = new LinkedList<>();
 
     int offset = page.getOffset();
     int limit = page.getLimit();
 
-    for (int i = offset; i < items.size() && i < offset + limit; i++) {
-      V value = items.get(i);
+    List<V> values = new ArrayList<>(items.values());
+    for (int i = offset; i < values.size() && i < offset + limit; i++) {
+      V value = values.get(i);
       result.add(value);
     }
     PaginatedCollection<V> paginatedCollection = new PaginatedCollection<>(result);
@@ -50,8 +52,10 @@ public class InMemoryPaginatedCacheDataSource<K, V extends Identifiable<K>>
   }
 
   @Override
-  public PaginatedCollection<V> addOrUpdatePage(Page page, Collection<V> values, boolean hasMore) {
-    this.items.addAll(values);
+  public synchronized PaginatedCollection<V> addOrUpdatePage(Page page, Collection<V> values, boolean hasMore) {
+    for (V value : values) {
+      addOrUpdate(value);
+    }
     this.hasMore = hasMore;
     PaginatedCollection<V> paginatedCollection = new PaginatedCollection<>(values);
     paginatedCollection.setPage(page);
@@ -60,7 +64,7 @@ public class InMemoryPaginatedCacheDataSource<K, V extends Identifiable<K>>
     return paginatedCollection;
   }
 
-  @Override public void deleteAll() {
+  @Override public synchronized void deleteAll() {
     items.clear();
     hasMore = false;
     lastItemsUpdate = 0;

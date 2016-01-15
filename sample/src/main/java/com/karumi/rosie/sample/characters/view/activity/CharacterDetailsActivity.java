@@ -87,9 +87,13 @@ public class CharacterDetailsActivity extends MarvelActivity
         .centerCrop()
         .into(characterHeaderView);
     characterNameView.setText(character.getName());
-    characterDescriptionView.setText(character.getDescription());
-  }
 
+    if (!character.getDescription().isEmpty()) {
+      characterDescriptionView.setText(character.getDescription());
+    } else {
+      characterDescriptionView.setText(getString(R.string.no_description));
+    }
+  }
 
   public static void open(Context context, String characterKey) {
     Intent intent = new Intent(context, CharacterDetailsActivity.class);

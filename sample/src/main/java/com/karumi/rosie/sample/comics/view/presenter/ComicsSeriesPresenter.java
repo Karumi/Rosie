@@ -47,7 +47,15 @@ public class ComicsSeriesPresenter extends RosiePresenterWithLoading<ComicsSerie
     super.update();
     getView().hideComicSeries();
     showLoading();
-    loadComics();
+
+    PaginatedCollection<ComicSeries> allComicsInCache = getComicSeriesPage.getAllComicsInCache();
+    if (allComicsInCache.getPage().getLimit() == 0) {
+      loadComics();
+    } else {
+      getView().clearComicSeries();
+      showComics(allComicsInCache);
+      offset = allComicsInCache.getItems().size();
+    }
   }
 
   public void onLoadMore() {
@@ -59,24 +67,29 @@ public class ComicsSeriesPresenter extends RosiePresenterWithLoading<ComicsSerie
   }
 
   private void loadComics() {
-
     createUseCaseCall(getComicSeriesPage).args(
         Page.withOffsetAndLimit(offset, NUMBER_OF_COMIC_SERIES_PER_PAGE))
         .onSuccess(new OnSuccessCallback() {
           @Success public void onComicSeriesLoaded(PaginatedCollection<ComicSeries> comicSeries) {
-            List<ComicSeriesViewModel> comicSeriesViewModels =
-                mapper.mapComicSeriesToComicSeriesViewModels(comicSeries);
-            hideLoading();
-            getView().showHasMore(comicSeries.hasMore());
-            getView().showComicSeries(comicSeriesViewModels);
+            showComics(comicSeries);
             offset = comicSeries.getPage().getOffset() + NUMBER_OF_COMIC_SERIES_PER_PAGE;
           }
         })
         .execute();
   }
 
+  private void showComics(PaginatedCollection<ComicSeries> comicSeries) {
+    List<ComicSeriesViewModel> comicSeriesViewModels =
+        mapper.mapComicSeriesToComicSeriesViewModels(comicSeries);
+    hideLoading();
+    getView().showHasMore(comicSeries.hasMore());
+    getView().showComicSeries(comicSeriesViewModels);
+  }
+
   public interface View extends RosiePresenterWithLoading.View {
     void hideComicSeries();
+
+    void clearComicSeries();
 
     void showComicSeries(List<ComicSeriesViewModel> comicSeries);
 

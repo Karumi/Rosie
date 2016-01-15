@@ -20,8 +20,11 @@ import com.karumi.rosie.domain.usecase.RosieUseCase;
 import com.karumi.rosie.domain.usecase.annotation.UseCase;
 import com.karumi.rosie.repository.PaginatedCollection;
 import com.karumi.rosie.repository.datasource.paginated.Page;
+import com.karumi.rosie.repository.policy.ReadPolicy;
 import com.karumi.rosie.sample.comics.domain.model.ComicSeries;
 import com.karumi.rosie.sample.comics.repository.ComicSeriesRepository;
+import java.util.ArrayList;
+import java.util.Collection;
 import javax.inject.Inject;
 
 public class GetComicSeriesPage extends RosieUseCase {
@@ -30,6 +33,28 @@ public class GetComicSeriesPage extends RosieUseCase {
 
   @Inject public GetComicSeriesPage(ComicSeriesRepository repository) {
     this.repository = repository;
+  }
+
+  public PaginatedCollection<ComicSeries> getAllComicsInCache() {
+
+    Collection<ComicSeries> all;
+    try {
+      all = repository.getAll(ReadPolicy.CACHE_ONLY);
+    } catch (Exception e) {
+      all = new ArrayList<>();
+    }
+
+    if (all == null) {
+      all = new ArrayList<>();
+    }
+
+    Page page = Page.withOffsetAndLimit(0, all.size());
+
+    PaginatedCollection<ComicSeries> comics = new PaginatedCollection<>(all);
+    comics.setPage(page);
+    comics.setHasMore(true);
+
+    return comics;
   }
 
   @UseCase public void getComics(Page page) throws Exception {

@@ -18,21 +18,34 @@ package com.karumi.rosie.sample.comics.repository;
 
 import com.karumi.rosie.repository.PaginatedRosieRepository;
 import com.karumi.rosie.repository.datasource.paginated.PaginatedCacheDataSource;
-import com.karumi.rosie.repository.datasource.paginated.PaginatedReadableDataSource;
+import com.karumi.rosie.sample.comics.domain.model.Comic;
 import com.karumi.rosie.sample.comics.domain.model.ComicSeries;
+import com.karumi.rosie.sample.comics.repository.datasource.ComicSeriesDataSource;
+import java.util.List;
 import javax.inject.Inject;
 
 public class ComicSeriesRepository extends PaginatedRosieRepository<Integer, ComicSeries> {
 
+  private final ComicSeriesDataSource apiDataSource;
+
   @Inject public ComicSeriesRepository(ComicSeriesDataSourceFactory comicSeriesDataSourceFactory,
       PaginatedCacheDataSource<Integer, ComicSeries> inMemoryPaginatedCache) {
 
-    PaginatedReadableDataSource<Integer, ComicSeries> apiDataSource =
-        comicSeriesDataSourceFactory.createDataSource();
-    addReadableDataSources(apiDataSource);
-    addPaginatedReadableDataSources(apiDataSource);
+    this.apiDataSource = comicSeriesDataSourceFactory.createDataSource();
+    addReadableDataSources(this.apiDataSource);
+    addPaginatedReadableDataSources(this.apiDataSource);
 
     addCacheDataSources(inMemoryPaginatedCache);
     addPaginatedCacheDataSources(inMemoryPaginatedCache);
+  }
+
+  public ComicSeries getComicSeriesDetail(Integer key) throws Exception {
+    ComicSeries comicSeries = getByKey(key);
+    if (!comicSeries.isComplete()) {
+      List<Comic> comicBySeries = apiDataSource.getComicBySeries(key);
+      comicSeries.setComics(comicBySeries);
+      comicSeries.setComplete(true);
+    }
+    return comicSeries;
   }
 }

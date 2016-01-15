@@ -50,7 +50,6 @@
     <item name="android:textSize">@dimen/toolbar_title_font_size</item>
     <item name="android:textColor">@color/toolbar_title</item>
     <item name="android:layout_marginLeft">@dimen/character_margin_left</item>
-    <item name="android:textAllCaps">true</item>
     <item name="android:ellipsize">end</item>
     <item name="android:lines">1</item>
   </style>
@@ -59,6 +58,8 @@
     <item name="android:textSize">@dimen/character_name_font_size</item>
     <item name="android:textColor">@color/character_name</item>
     <item name="android:layout_marginLeft">@dimen/character_margin_left</item>
+    <item name="android:layout_marginTop">@dimen/character_margin_top</item>
+    <item name="android:layout_marginBottom">@dimen/character_margin_top</item>
   </style>
 
   <style name="CharacterDescription">
@@ -91,4 +92,5 @@
     <item name="android:textAllCaps">true</item>
     <item name="android:padding">@dimen/load_more_padding</item>
   </style>
+  <dimen name="character_margin_top">16dp</dimen>
 </resources>

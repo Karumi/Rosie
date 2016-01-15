@@ -29,6 +29,7 @@ import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -79,6 +80,39 @@ public class PaginatedRosieRepositoryTest extends UnitTest {
     PaginatedCollection<AnyRepositoryValue> values = repository.getPage(page);
 
     assertEquals(readableValues, values);
+  }
+
+  @Test public void shouldReturnValuesFromReadableDataSourceIfCacheDoNotHaveThisPage()
+      throws Exception {
+    Page page = Page.withOffsetAndLimit(ANY_OFFSET, ANY_LIMIT);
+    givenCacheDataSourceReturnsNonValidValues(page);
+    givenReadableDataSourceReturnsValues(page);
+    PaginatedRosieRepository<AnyRepositoryKey, AnyRepositoryValue> repository =
+        givenAPaginatedRepository();
+    repository.getPage(page);
+
+    Page nextPage = Page.withOffsetAndLimit(ANY_OFFSET + ANY_LIMIT, ANY_LIMIT);
+    repository.getPage(nextPage);
+
+    verify(cacheDataSource).getPage(page);
+    verify(readableDataSource).getPage(page);
+    verify(cacheDataSource).getPage(nextPage);
+    verify(readableDataSource).getPage(nextPage);
+  }
+
+  @Test public void shouldNotRemoveDataFromCacheIfCacheDoNotHaveThisPage()
+      throws Exception {
+    Page page = Page.withOffsetAndLimit(ANY_OFFSET, ANY_LIMIT);
+    givenCacheDataSourceReturnsNonValidValues(page);
+    givenReadableDataSourceReturnsValues(page);
+    PaginatedRosieRepository<AnyRepositoryKey, AnyRepositoryValue> repository =
+        givenAPaginatedRepository();
+    repository.getPage(page);
+
+    Page nextPage = Page.withOffsetAndLimit(ANY_OFFSET + ANY_LIMIT, ANY_LIMIT);
+    repository.getPage(nextPage);
+
+    verify(cacheDataSource, times(1)).deleteAll();
   }
 
   @Test public void shouldReturnValuesFromReadableDataSourceIfPolicyForcesOnlyReadable()

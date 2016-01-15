@@ -37,10 +37,8 @@
       android:id="@+id/tv_toolbar_title"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_gravity="center"
       android:layout_marginRight="@dimen/toolbar_title_margin_right"
       android:layout_marginEnd="@dimen/toolbar_title_margin_right"
-      android:gravity="center"
       style="@style/ToolbarTitle"
       tools:text="SPIDERMAN SOMETHING SOMETHING"
       />

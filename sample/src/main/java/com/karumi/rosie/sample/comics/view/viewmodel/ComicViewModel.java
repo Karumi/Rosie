@@ -18,15 +18,15 @@ package com.karumi.rosie.sample.comics.view.viewmodel;
 
 public class ComicViewModel implements ComicSeriesDetailViewModel {
 
-  private int key;
+  private String key;
   private String title;
   private String thumbnailUrl;
 
-  public int getKey() {
+  public String getKey() {
     return key;
   }
 
-  public void setKey(int key) {
+  public void setKey(String key) {
     this.key = key;
   }
 

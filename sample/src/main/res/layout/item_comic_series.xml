@@ -23,18 +23,8 @@
     android:background="@color/comic_series_item_background"
     >
 
-  <TextView
-      android:id="@+id/tv_comic_series_name"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_alignParentLeft="true"
-      android:layout_alignParentStart="true"
-      android:layout_centerVertical="true"
-      style="@style/ComicSeriesName"
-      tools:text="The Guardians of the Galaxy (2015)"
-      />
-
   <ImageView
+      android:id="@+id/iv_icon_next"
       android:layout_width="@dimen/comic_series_next_icon_size"
       android:layout_height="@dimen/comic_series_next_icon_size"
       android:layout_alignParentRight="true"
@@ -44,6 +34,18 @@
       android:layout_marginEnd="@dimen/comic_series_next_icon_margin_right"
       android:background="@drawable/ic_chevron_right_white_24dp"
       android:contentDescription="@string/comic_series_next_icon_content_description"
+      />
+
+  <TextView
+      android:id="@+id/tv_comic_series_name"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"
+      android:layout_toLeftOf="@id/iv_icon_next"
+      android:layout_centerVertical="true"
+      style="@style/ComicSeriesName"
+      tools:text="The Guardians of the Galaxy (2015)"
       />
 
 </RelativeLayout>
