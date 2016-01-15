@@ -18,11 +18,11 @@ package com.karumi.rosie.sample.main.view.adapter;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v13.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FragmentAdapter extends FragmentStatePagerAdapter {
+public class FragmentAdapter extends FragmentPagerAdapter {
 
   private final List<ViewPagerFragmentHolder> fragments = new ArrayList<>();
 

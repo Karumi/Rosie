@@ -61,7 +61,7 @@ public class RosieRepository<K, V extends Identifiable<K>>
   /**
    * {@link ReadableDataSource#getByKey(Object)}
    */
-  @Override public V getByKey(K key) {
+  @Override public V getByKey(K key) throws Exception {
     return getByKey(key, ReadPolicy.READ_ALL);
   }
 
@@ -72,7 +72,7 @@ public class RosieRepository<K, V extends Identifiable<K>>
    * @param policy Specifies how the value is going to be retrieved.
    * @return item matching with the key and the policy passed as param
    */
-  public V getByKey(K key, ReadPolicy policy) {
+  public V getByKey(K key, ReadPolicy policy) throws Exception {
     validateKey(key);
 
     V value = null;
@@ -95,7 +95,7 @@ public class RosieRepository<K, V extends Identifiable<K>>
   /**
    * {@link ReadableDataSource#getAll()}
    */
-  @Override public Collection<V> getAll() {
+  @Override public Collection<V> getAll() throws Exception {
     return getAll(ReadPolicy.READ_ALL);
   }
 
@@ -105,7 +105,7 @@ public class RosieRepository<K, V extends Identifiable<K>>
    * @param policy Specifies how the value is going to be retrieved.
    * @return all the items inside the repository matching with the read policy
    */
-  public Collection<V> getAll(ReadPolicy policy) {
+  public Collection<V> getAll(ReadPolicy policy) throws Exception {
     Collection<V> values = null;
 
     if (policy.useCache()) {
@@ -126,7 +126,7 @@ public class RosieRepository<K, V extends Identifiable<K>>
   /**
    * {@link WriteableDataSource#addOrUpdate(Identifiable)}
    */
-  @Override public V addOrUpdate(V value) {
+  @Override public V addOrUpdate(V value) throws Exception {
     return addOrUpdate(value, WritePolicy.WRITE_ALL);
   }
 
@@ -137,7 +137,7 @@ public class RosieRepository<K, V extends Identifiable<K>>
    * @param policy Specifies how the value is going to be stored.
    * @return item added or updated
    */
-  public V addOrUpdate(V value, WritePolicy policy) {
+  public V addOrUpdate(V value, WritePolicy policy) throws Exception {
     validateValue(value);
 
     V updatedValue = null;
@@ -160,11 +160,11 @@ public class RosieRepository<K, V extends Identifiable<K>>
   /**
    * {@link WriteableDataSource#addOrUpdateAll(Collection)}
    */
-  @Override public Collection<V> addOrUpdateAll(Collection<V> values) {
+  @Override public Collection<V> addOrUpdateAll(Collection<V> values) throws Exception {
     return addOrUpdateAll(values, WritePolicy.WRITE_ALL);
   }
 
-  public Collection<V> addOrUpdateAll(Collection<V> values, WritePolicy policy) {
+  public Collection<V> addOrUpdateAll(Collection<V> values, WritePolicy policy) throws Exception {
     validateValues(values);
 
     Collection<V> updatedValues = null;
@@ -187,7 +187,7 @@ public class RosieRepository<K, V extends Identifiable<K>>
   /**
    * {@link WriteableDataSource#deleteByKey(Object)}
    */
-  @Override public void deleteByKey(K key) {
+  @Override public void deleteByKey(K key) throws Exception {
     for (WriteableDataSource<K, V> writeableDataSource : writeableDataSources) {
       writeableDataSource.deleteByKey(key);
     }
@@ -200,7 +200,7 @@ public class RosieRepository<K, V extends Identifiable<K>>
   /**
    * {@link WriteableDataSource#deleteAll()}
    */
-  @Override public void deleteAll() {
+  @Override public void deleteAll() throws Exception {
     for (WriteableDataSource<K, V> writeableDataSource : writeableDataSources) {
       writeableDataSource.deleteAll();
     }
@@ -210,7 +210,7 @@ public class RosieRepository<K, V extends Identifiable<K>>
     }
   }
 
-  private V getValueFromCaches(K id) {
+  private V getValueFromCaches(K id) throws Exception {
     V value = null;
 
     for (CacheDataSource<K, V> cacheDataSource : cacheDataSources) {
@@ -229,7 +229,7 @@ public class RosieRepository<K, V extends Identifiable<K>>
     return value;
   }
 
-  private Collection<V> getValuesFromCaches() {
+  private Collection<V> getValuesFromCaches() throws Exception {
     Collection<V> values = null;
 
     for (CacheDataSource<K, V> cacheDataSource : cacheDataSources) {
@@ -248,7 +248,7 @@ public class RosieRepository<K, V extends Identifiable<K>>
     return values;
   }
 
-  private V getValueFromReadables(K key) {
+  private V getValueFromReadables(K key) throws Exception {
     V value = null;
 
     for (ReadableDataSource<K, V> readableDataSource : readableDataSources) {
@@ -262,7 +262,7 @@ public class RosieRepository<K, V extends Identifiable<K>>
     return value;
   }
 
-  protected Collection<V> getValuesFromReadables() {
+  protected Collection<V> getValuesFromReadables() throws Exception {
     Collection<V> values = null;
 
     for (ReadableDataSource<K, V> readableDataSource : readableDataSources) {
@@ -276,13 +276,13 @@ public class RosieRepository<K, V extends Identifiable<K>>
     return values;
   }
 
-  private void populateCaches(V value) {
+  private void populateCaches(V value) throws Exception {
     for (CacheDataSource<K, V> cacheDataSource : cacheDataSources) {
       cacheDataSource.addOrUpdate(value);
     }
   }
 
-  protected void populateCaches(Collection<V> values) {
+  protected void populateCaches(Collection<V> values) throws Exception {
     for (CacheDataSource<K, V> cacheDataSource : cacheDataSources) {
       cacheDataSource.addOrUpdateAll(values);
     }

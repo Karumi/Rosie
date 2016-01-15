@@ -21,6 +21,7 @@ import com.karumi.rosie.doubles.AnyRepositoryKey;
 import com.karumi.rosie.doubles.AnyRepositoryValue;
 import com.karumi.rosie.repository.PaginatedCollection;
 import com.karumi.rosie.repository.datasource.paginated.InMemoryPaginatedCacheDataSource;
+import com.karumi.rosie.repository.datasource.paginated.Page;
 import com.karumi.rosie.repository.datasource.paginated.PaginatedCacheDataSource;
 import com.karumi.rosie.time.TimeProvider;
 import java.util.Collection;
@@ -41,47 +42,51 @@ public class InMemoryPaginatedCacheDataSourceTest extends UnitTest {
   @Mock private TimeProvider timeProvider;
 
   @Test public void shouldAddValuesBasedOnTheOffsetAndLimit() throws Exception {
+    Page page = Page.withOffsetAndLimit(ANY_OFFSET, ANY_LIMIT);
     Collection<AnyRepositoryValue> values = givenSomeItems(ANY_OFFSET + ANY_LIMIT);
     PaginatedCacheDataSource<AnyRepositoryKey, AnyRepositoryValue> cache =
         givenAnInMemoryPaginatedCacheDataSource();
 
-    cache.addOrUpdatePage(ANY_OFFSET, ANY_LIMIT, values, ANY_HAS_MORE);
+    cache.addOrUpdatePage(page, values, ANY_HAS_MORE);
 
-    PaginatedCollection<AnyRepositoryValue> page = cache.getPage(ANY_OFFSET, ANY_LIMIT);
-    assertEquals(values, page.getItems());
+    PaginatedCollection<AnyRepositoryValue> paginatedCollection = cache.getPage(page);
+    assertEquals(values, paginatedCollection.getItems());
   }
 
   @Test public void shouldReturnTheRequestedOffset() throws Exception {
+    Page page = Page.withOffsetAndLimit(ANY_OFFSET, ANY_LIMIT);
     Collection<AnyRepositoryValue> values = givenSomeItems(ANY_OFFSET + ANY_LIMIT);
     PaginatedCacheDataSource<AnyRepositoryKey, AnyRepositoryValue> cache =
         givenAnInMemoryPaginatedCacheDataSource();
 
-    cache.addOrUpdatePage(ANY_OFFSET, ANY_LIMIT, values, ANY_HAS_MORE);
-    PaginatedCollection<AnyRepositoryValue> page = cache.getPage(ANY_OFFSET, ANY_LIMIT);
+    cache.addOrUpdatePage(page, values, ANY_HAS_MORE);
+    PaginatedCollection<AnyRepositoryValue> paginatedCollection = cache.getPage(page);
 
-    assertEquals(ANY_OFFSET, page.getOffset());
+    assertEquals(ANY_OFFSET, paginatedCollection.getPage().getOffset());
   }
 
   @Test public void shouldReturnRequestedLimit() throws Exception {
+    Page page = Page.withOffsetAndLimit(ANY_OFFSET, ANY_LIMIT);
     Collection<AnyRepositoryValue> values = givenSomeItems(ANY_OFFSET + ANY_LIMIT);
     PaginatedCacheDataSource<AnyRepositoryKey, AnyRepositoryValue> cache =
         givenAnInMemoryPaginatedCacheDataSource();
 
-    cache.addOrUpdatePage(ANY_OFFSET, ANY_LIMIT, values, ANY_HAS_MORE);
-    PaginatedCollection<AnyRepositoryValue> page = cache.getPage(ANY_OFFSET, ANY_LIMIT);
+    cache.addOrUpdatePage(page, values, ANY_HAS_MORE);
+    PaginatedCollection<AnyRepositoryValue> paginatedCollection = cache.getPage(page);
 
-    assertEquals(ANY_LIMIT, page.getLimit());
+    assertEquals(ANY_LIMIT, paginatedCollection.getPage().getLimit());
   }
 
   @Test public void shouldReturnHasMoreIfThereAreMoreItemsToLoad() throws Exception {
+    Page page = Page.withOffsetAndLimit(ANY_OFFSET, ANY_LIMIT);
     Collection<AnyRepositoryValue> values = givenSomeItems(ANY_OFFSET + ANY_LIMIT);
     PaginatedCacheDataSource<AnyRepositoryKey, AnyRepositoryValue> cache =
         givenAnInMemoryPaginatedCacheDataSource();
 
-    cache.addOrUpdatePage(ANY_OFFSET, ANY_LIMIT, values, ANY_HAS_MORE);
-    PaginatedCollection<AnyRepositoryValue> page = cache.getPage(ANY_OFFSET, ANY_LIMIT);
+    cache.addOrUpdatePage(page, values, ANY_HAS_MORE);
+    PaginatedCollection<AnyRepositoryValue> paginatedCollection = cache.getPage(page);
 
-    assertEquals(ANY_HAS_MORE, page.hasMore());
+    assertEquals(ANY_HAS_MORE, paginatedCollection.hasMore());
   }
 
   private InMemoryPaginatedCacheDataSource<AnyRepositoryKey, AnyRepositoryValue>

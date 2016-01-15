@@ -20,6 +20,7 @@ import com.karumi.rosie.domain.usecase.UseCaseHandler;
 import com.karumi.rosie.domain.usecase.annotation.Success;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
 import com.karumi.rosie.repository.PaginatedCollection;
+import com.karumi.rosie.repository.datasource.paginated.Page;
 import com.karumi.rosie.sample.characters.domain.model.Character;
 import com.karumi.rosie.sample.characters.domain.usecase.GetCharacters;
 import com.karumi.rosie.sample.characters.view.viewmodel.CharacterViewModel;
@@ -47,7 +48,15 @@ public class CharactersPresenter extends RosiePresenterWithLoading<CharactersPre
     super.update();
     getView().hideCharacters();
     showLoading();
-    loadCharacters();
+
+    PaginatedCollection<Character> allCharactersInCache = getCharacters.getAllCharactersInCache();
+    if (allCharactersInCache.getPage().getLimit() == 0) {
+      loadCharacters();
+    } else {
+      getView().clearCharacters();
+      showCharacters(allCharactersInCache);
+      offset = allCharactersInCache.getItems().size();
+    }
   }
 
   public void onCharacterClicked(CharacterViewModel character) {
@@ -60,18 +69,23 @@ public class CharactersPresenter extends RosiePresenterWithLoading<CharactersPre
   }
 
   private void loadCharacters() {
-    createUseCaseCall(getCharacters).args(offset, NUMBER_OF_CHARACTERS_PER_PAGE)
+    createUseCaseCall(getCharacters).args(
+        Page.withOffsetAndLimit(offset, NUMBER_OF_CHARACTERS_PER_PAGE))
         .onSuccess(new OnSuccessCallback() {
           @Success public void onCharactersLoaded(PaginatedCollection<Character> characters) {
-            List<CharacterViewModel> characterViewModels =
-                mapper.mapCharactersToCharacterViewModels(characters);
-            getView().showCharacters(characterViewModels);
-            getView().showHasMore(characters.hasMore());
-            hideLoading();
-            offset = characters.getOffset() + NUMBER_OF_CHARACTERS_PER_PAGE;
+            showCharacters(characters);
+            offset = characters.getPage().getOffset() + NUMBER_OF_CHARACTERS_PER_PAGE;
           }
         })
         .execute();
+  }
+
+  private void showCharacters(PaginatedCollection<Character> characters) {
+    List<CharacterViewModel> characterViewModels =
+        mapper.mapCharactersToCharacterViewModels(characters);
+    getView().showCharacters(characterViewModels);
+    getView().showHasMore(characters.hasMore());
+    hideLoading();
   }
 
   public interface View extends RosiePresenterWithLoading.View {
@@ -82,5 +96,7 @@ public class CharactersPresenter extends RosiePresenterWithLoading<CharactersPre
     void showHasMore(boolean hasMore);
 
     void openCharacterDetails(String characterKey);
+
+    void clearCharacters();
   }
 }

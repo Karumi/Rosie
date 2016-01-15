@@ -97,6 +97,10 @@ public class CharactersFragment extends RosieFragment implements CharactersPrese
     CharacterDetailsActivity.open(getActivity(), characterKey);
   }
 
+  @Override public void clearCharacters() {
+    charactersAdapter.clear();
+  }
+
   private void initializeCharactersView() {
     LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
     charactersView.setHasFixedSize(true);

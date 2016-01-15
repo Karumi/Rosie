@@ -15,17 +15,27 @@
   ~ limitations under the License.
   -->
 <resources>
+  <color name="colorPrimaryDark">#1D252D</color>
   <color name="main_background">#2D353D</color>
+  <color name="black_alpha_80">#80000000</color>
+  <color name="transparent">#00000000</color>
+  <color name="toolbar_start_gradient_background">#FF1D252D</color>
+  <color name="toolbar_end_gradient_background">#001D252D</color>
+  <color name="toolbar_title">#FFFFFF</color>
   <color name="view_pager_tab_background">#404B58</color>
   <color name="view_pager_tab_selected_underline">#00C8FF</color>
   <color name="view_pager_tab_text">#FFFFFF</color>
   <color name="character_item_background">#2D353D</color>
   <color name="character_name">#EEEEEE</color>
   <color name="character_details_description">#EEEEEE</color>
-  <color name="comic_item_background">#2D353D</color>
-  <color name="comic_item_divider">@color/view_pager_tab_background</color>
   <color name="comic_name">#EEEEEE</color>
-  <color name="comic_details_background">@color/comic_item_background</color>
-  <color name="comic_details_description">#EEEEEE</color>
+  <color name="comic_thumbnail_border">#404B58</color>
+  <color name="comic_series_item_background">#2D353D</color>
+  <color name="comic_series_item_divider">@color/view_pager_tab_background</color>
+  <color name="comic_series_name">#EEEEEE</color>
+  <color name="comic_series_details_background">@color/comic_series_item_background</color>
+  <color name="comic_series_details_description">#EEEEEE</color>
+  <color name="load_more_background">@color/character_item_background</color>
+  <color name="load_more_text">@android:color/white</color>
   <color name="loading">#FFFFFF</color>
 </resources>

@@ -30,7 +30,7 @@ public class GetCharacterDetails extends RosieUseCase {
     this.charactersRepository = charactersRepository;
   }
 
-  @UseCase public void getCharacterDetails(String characterKey) {
+  @UseCase public void getCharacterDetails(String characterKey) throws Exception {
     Character character = charactersRepository.getByKey(characterKey);
     notifySuccess(character);
   }

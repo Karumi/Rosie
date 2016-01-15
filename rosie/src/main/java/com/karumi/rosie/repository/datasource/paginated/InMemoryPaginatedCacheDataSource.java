@@ -18,6 +18,7 @@ package com.karumi.rosie.repository.datasource.paginated;
 
 import com.karumi.rosie.repository.PaginatedCollection;
 import com.karumi.rosie.repository.datasource.Identifiable;
+import com.karumi.rosie.repository.datasource.InMemoryCacheDataSource;
 import com.karumi.rosie.time.TimeProvider;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,48 +26,45 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class InMemoryPaginatedCacheDataSource<K, V extends Identifiable<K>>
-    implements PaginatedCacheDataSource<K, V> {
+    extends InMemoryCacheDataSource<K, V> implements PaginatedCacheDataSource<K, V> {
 
-  private final TimeProvider timeProvider;
-  private final long ttlInMillis;
-  private final List<V> items;
-
-  private long lastItemsUpdate;
   private boolean hasMore;
 
   public InMemoryPaginatedCacheDataSource(TimeProvider timeProvider, long ttlInMillis) {
-    this.timeProvider = timeProvider;
-    this.ttlInMillis = ttlInMillis;
-    this.items = new ArrayList<>();
+    super(timeProvider, ttlInMillis);
   }
 
-  @Override public PaginatedCollection<V> getPage(int offset, int limit) {
+  @Override public synchronized PaginatedCollection<V> getPage(Page page) {
     List<V> result = new LinkedList<>();
-    for (int i = offset; i < items.size() && i < offset + limit; i++) {
-      V value = items.get(i);
+
+    int offset = page.getOffset();
+    int limit = page.getLimit();
+
+    List<V> values = new ArrayList<>(items.values());
+    for (int i = offset; i < values.size() && i < offset + limit; i++) {
+      V value = values.get(i);
       result.add(value);
     }
     PaginatedCollection<V> paginatedCollection = new PaginatedCollection<>(result);
-    paginatedCollection.setOffset(offset);
-    paginatedCollection.setLimit(limit);
+    paginatedCollection.setPage(page);
     paginatedCollection.setHasMore(offset + limit < items.size() || this.hasMore);
     return paginatedCollection;
   }
 
   @Override
-  public PaginatedCollection<V> addOrUpdatePage(int offset, int limit, Collection<V> values,
-      boolean hasMore) {
-    this.items.addAll(values);
+  public synchronized PaginatedCollection<V> addOrUpdatePage(Page page, Collection<V> values, boolean hasMore) {
+    for (V value : values) {
+      addOrUpdate(value);
+    }
     this.hasMore = hasMore;
     PaginatedCollection<V> paginatedCollection = new PaginatedCollection<>(values);
-    paginatedCollection.setOffset(offset);
-    paginatedCollection.setLimit(limit);
+    paginatedCollection.setPage(page);
     paginatedCollection.setHasMore(hasMore);
     lastItemsUpdate = timeProvider.currentTimeMillis();
     return paginatedCollection;
   }
 
-  @Override public void deleteAll() {
+  @Override public synchronized void deleteAll() {
     items.clear();
     hasMore = false;
     lastItemsUpdate = 0;

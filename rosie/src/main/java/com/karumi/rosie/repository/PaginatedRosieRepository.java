@@ -17,6 +17,7 @@
 package com.karumi.rosie.repository;
 
 import com.karumi.rosie.repository.datasource.Identifiable;
+import com.karumi.rosie.repository.datasource.paginated.Page;
 import com.karumi.rosie.repository.datasource.paginated.PaginatedCacheDataSource;
 import com.karumi.rosie.repository.datasource.paginated.PaginatedReadableDataSource;
 import com.karumi.rosie.repository.policy.ReadPolicy;
@@ -29,13 +30,13 @@ import java.util.LinkedList;
  */
 public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends RosieRepository<K, V> {
 
-  private final Collection<PaginatedReadableDataSource<V>> paginatedReadableDataSources =
+  private final Collection<PaginatedReadableDataSource<K, V>> paginatedReadableDataSources =
       new LinkedList<>();
   private final Collection<PaginatedCacheDataSource<K, V>> paginatedCacheDataSources =
       new LinkedList<>();
 
   @SafeVarargs
-  protected final <R extends PaginatedReadableDataSource<V>> void addPaginatedReadableDataSources(
+  protected final <R extends PaginatedReadableDataSource<K, V>> void addPaginatedReadableDataSources(
       R... readables) {
     this.paginatedReadableDataSources.addAll(Arrays.asList(readables));
   }
@@ -47,66 +48,67 @@ public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends Rosi
   }
 
   /**
-   * Returns a page of values bounded by the offset and limit values.
-   * @param offset Index of the first item to be retrieved
-   * @param limit Number of elements that will be retrieved
-   * @return a PaginatedCollection instance with the retrieved content
+   * Returns a page of values bounded by the provided page.
+   *
+   * @param page Page to be retrieved
    */
-  public PaginatedCollection<V> getPage(int offset, int limit) {
-    return getPage(offset, limit, ReadPolicy.READ_ALL);
+  public PaginatedCollection<V> getPage(Page page) throws Exception {
+    return getPage(page, ReadPolicy.READ_ALL);
   }
 
   /**
-   * Returns a page of values bounded by the offset and limit values.
-   * @param offset Index of the first item to be retrieved
-   * @param limit Number of elements that will be retrieved
+   * Returns a page of values bounded by the provided page.
+   *
+   * @param page Page to be retrieved
    * @param policy Specifies how the value is going to be retrieved.
    * @return a PaginatedCollection instance with the retrieved content
    */
-  public PaginatedCollection<V> getPage(int offset, int limit, ReadPolicy policy) {
+  public PaginatedCollection<V> getPage(Page page, ReadPolicy policy) throws Exception {
     PaginatedCollection<V> values = null;
 
     if (policy.useCache()) {
-      values = getPaginatedValuesFromCaches(offset, limit);
+      values = getPaginatedValuesFromCaches(page);
     }
 
     if (values == null && policy.useReadable()) {
-      values = getPaginatedValuesFromReadables(offset, limit);
+      values = getPaginatedValuesFromReadables(page);
     }
 
     if (values != null) {
-      populatePaginatedCaches(offset, limit, values);
+      populatePaginatedCaches(page, values);
     }
 
     return values;
   }
 
-  protected PaginatedCollection<V> getPaginatedValuesFromCaches(int offset, int limit) {
+  protected PaginatedCollection<V> getPaginatedValuesFromCaches(Page page) throws Exception {
     PaginatedCollection<V> values = null;
 
     for (PaginatedCacheDataSource<K, V> cacheDataSource : paginatedCacheDataSources) {
-      values = cacheDataSource.getPage(offset, limit);
+      values = cacheDataSource.getPage(page);
 
-      if (values != null) {
+      if (values != null && values.getItems() != null && !values.getItems().isEmpty()) {
         if (areValidValues(values, cacheDataSource)) {
           break;
         } else {
           cacheDataSource.deleteAll();
           values = null;
         }
+      } else {
+        values = null;
       }
     }
 
     return values;
   }
 
-  protected PaginatedCollection<V> getPaginatedValuesFromReadables(int offset, int limit) {
+  protected PaginatedCollection<V> getPaginatedValuesFromReadables(Page page) throws Exception {
     PaginatedCollection<V> values = null;
 
-    for (PaginatedReadableDataSource<V> readable : paginatedReadableDataSources) {
-      values = readable.getPage(offset, limit);
+    for (PaginatedReadableDataSource<K, V> readable : paginatedReadableDataSources) {
+      values = readable.getPage(page);
 
-      if (values != null) {
+      if (values != null && values.getItems() != null && !values.getItems().isEmpty()) {
         break;
       }
     }
@@ -114,9 +116,10 @@ public class PaginatedRosieRepository<K, V extends Identifiable<K>> extends Rosi
     return values;
   }
 
-  protected void populatePaginatedCaches(int offset, int limit, PaginatedCollection<V> values) {
+  protected void populatePaginatedCaches(Page page, PaginatedCollection<V> values)
+      throws Exception {
     for (PaginatedCacheDataSource<K, V> cacheDataSource : paginatedCacheDataSources) {
-      cacheDataSource.addOrUpdatePage(offset, limit, values.getItems(), values.hasMore());
+      cacheDataSource.addOrUpdatePage(page, values.getItems(), values.hasMore());
     }
   }
 

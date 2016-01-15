@@ -32,7 +32,7 @@ public interface ReadableDataSource<K, V> {
    * @param key The key that uniquely identifies the requested value.
    * @return The value associated to the provided key or null if there is not any.
    */
-  V getByKey(K key);
+  V getByKey(K key) throws Exception;
 
   /**
    * Returns all the values available in the data source or null if the operation does not make
@@ -40,5 +40,5 @@ public interface ReadableDataSource<K, V> {
    *
    * @return A collection of values or null if the operation is not implemented by this data source.
    */
-  Collection<V> getAll();
+  Collection<V> getAll() throws Exception;
 }

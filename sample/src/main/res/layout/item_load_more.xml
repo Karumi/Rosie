@@ -18,7 +18,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_blue_dark"
+    android:background="@color/load_more_background"
     >
 
   <TextView
@@ -26,6 +26,6 @@
       android:layout_height="match_parent"
       android:text="@string/loading_message"
       android:gravity="center"
-      style="@style/CharacterName"
+      style="@style/LoadMore"
       />
 </LinearLayout>

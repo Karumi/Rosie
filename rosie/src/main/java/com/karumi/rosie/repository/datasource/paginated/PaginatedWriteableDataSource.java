@@ -30,16 +30,15 @@ public interface PaginatedWriteableDataSource<K, V extends Identifiable<K>> {
   /**
    * Adds or update a page of values into this data source.
    *
-   * @param offset Index of the first item to be retrieved
-   * @param limit Number of elements that will be retrieved
+   * @param page Page to be stored
    * @param values Collection of values to be stored
    * @param hasMore True whether the persisted page has more elements
    */
-  PaginatedCollection<V> addOrUpdatePage(int offset, int limit, Collection<V> values,
-      boolean hasMore);
+  PaginatedCollection<V> addOrUpdatePage(Page page, Collection<V> values, boolean hasMore)
+      throws Exception;
 
   /**
    * Deletes all the pages stored in this data source.
    */
-  void deleteAll();
+  void deleteAll() throws Exception;
 }

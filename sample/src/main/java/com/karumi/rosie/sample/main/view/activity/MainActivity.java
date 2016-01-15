@@ -18,23 +18,31 @@ package com.karumi.rosie.sample.main.view.activity;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.widget.TextView;
 import butterknife.Bind;
 import com.karumi.rosie.sample.R;
+import com.karumi.rosie.sample.base.view.activity.MarvelActivity;
 import com.karumi.rosie.sample.characters.view.fragment.CharactersFragment;
-import com.karumi.rosie.sample.comics.view.fragment.ComicsFragment;
+import com.karumi.rosie.sample.comics.view.fragment.ComicSeriesFragment;
 import com.karumi.rosie.sample.main.MainModule;
 import com.karumi.rosie.sample.main.view.adapter.FragmentAdapter;
-import com.karumi.rosie.view.RosieActivity;
-import com.viewpagerindicator.TabPageIndicator;
+import com.karumi.rosie.sample.main.view.presenter.FakeDataPresenter;
+import com.karumi.rosie.view.Presenter;
 import java.util.Arrays;
 import java.util.List;
+import javax.inject.Inject;
 
-public class MainActivity extends RosieActivity {
+public class MainActivity extends MarvelActivity implements FakeDataPresenter.View {
 
   @Bind(R.id.vp_main) ViewPager viewPager;
-  @Bind(R.id.tab_page_indicator) TabPageIndicator pagerTabView;
+  @Bind(R.id.tab_page_indicator) TabLayout pagerTabView;
+  @Bind(R.id.tv_disclaimer) TextView disclaimerView;
+
   private FragmentAdapter adapter;
+  @Inject @Presenter FakeDataPresenter fakeDataPresenter;
 
   @Override protected int getLayoutId() {
     return R.layout.activity_main;
@@ -54,11 +62,25 @@ public class MainActivity extends RosieActivity {
     viewPager.setAdapter(adapter);
 
     Fragment charactersFragment = new CharactersFragment();
-    Fragment comicsFragment = new ComicsFragment();
+    Fragment comicsFragment = new ComicSeriesFragment();
     adapter.addFragment(charactersFragment, getString(R.string.characters_page_title));
-    adapter.addFragment(comicsFragment, getString(R.string.comics_page_title));
+    adapter.addFragment(comicsFragment, getString(R.string.comic_series_page_title));
     adapter.notifyDataSetChanged();
 
-    pagerTabView.setViewPager(viewPager);
+    pagerTabView.setupWithViewPager(viewPager);
+  }
+
+  @Override public void showFakeDisclaimer() {
+    disclaimerView.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void hideFakeDisclaimer() {
+    disclaimerView.setVisibility(View.GONE);
+  }
+
+  @Override public void hideLoading() {
+  }
+
+  @Override public void showLoading() {
   }
 }

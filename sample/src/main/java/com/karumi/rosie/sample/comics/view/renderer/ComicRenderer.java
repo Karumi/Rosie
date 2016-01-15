@@ -19,37 +19,33 @@ package com.karumi.rosie.sample.comics.view.renderer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.Bind;
-import butterknife.OnClick;
 import com.karumi.rosie.renderer.RosieRenderer;
 import com.karumi.rosie.sample.R;
-import com.karumi.rosie.sample.comics.view.presenter.ComicsPresenter;
+import com.karumi.rosie.sample.comics.view.viewmodel.ComicSeriesDetailViewModel;
 import com.karumi.rosie.sample.comics.view.viewmodel.ComicViewModel;
+import com.squareup.picasso.Picasso;
 
-public class ComicRenderer extends RosieRenderer<ComicViewModel> {
+public class ComicRenderer extends RosieRenderer<ComicSeriesDetailViewModel> {
 
-  private final ComicsPresenter presenter;
-
-  @Bind(R.id.tv_comic_name) TextView nameView;
-
-  public ComicRenderer(ComicsPresenter presenter) {
-    this.presenter = presenter;
-  }
+  @Bind(R.id.iv_thumbnail) ImageView thumbnailView;
+  @Bind(R.id.tv_title) TextView titleView;
 
   @Override public void render() {
     super.render();
 
-    ComicViewModel comic = getContent();
-    nameView.setText(comic.getTitle());
+    ComicViewModel comic = (ComicViewModel) getContent();
+    titleView.setText(comic.getTitle());
+    Picasso.with(getRootView().getContext())
+        .load(comic.getThumbnailUrl())
+        .fit()
+        .centerCrop()
+        .into(thumbnailView);
   }
 
   @Override protected View inflate(LayoutInflater inflater, ViewGroup parent) {
     return inflater.inflate(R.layout.item_comic, parent, false);
-  }
-
-  @OnClick(R.id.ll_root) public void onItemClicked() {
-    ComicViewModel comic = getContent();
-    presenter.onComicClicked(comic);
   }
 }

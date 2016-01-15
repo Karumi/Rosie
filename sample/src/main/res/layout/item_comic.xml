@@ -14,36 +14,29 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/ll_root"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/comic_height"
-    android:background="@color/comic_item_background"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="@dimen/comic_margin_horizontal"
+    android:layout_marginLeft="@dimen/comic_margin_horizontal"
+    android:layout_marginBottom="@dimen/comic_margin_vertical"
+    android:layout_marginTop="@dimen/comic_margin_vertical"
     >
 
+  <ImageView
+      android:id="@+id/iv_thumbnail"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/comic_thumbnail_height"
+      android:contentDescription="@string/comic_thumbnail_content_description"
+      android:background="@drawable/comic_border"
+      />
+
   <TextView
-      android:id="@+id/tv_comic_name"
+      android:id="@+id/tv_title"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_alignParentLeft="true"
-      android:layout_alignParentStart="true"
-      android:layout_centerVertical="true"
       style="@style/ComicName"
-      tools:text="The Guardians of the Galaxy (2015)"
       />
 
-  <ImageView
-      android:layout_width="@dimen/comic_next_icon_size"
-      android:layout_height="@dimen/comic_next_icon_size"
-      android:layout_alignParentRight="true"
-      android:layout_alignParentEnd="true"
-      android:layout_centerVertical="true"
-      android:layout_marginRight="@dimen/comic_next_icon_margin_right"
-      android:layout_marginEnd="@dimen/comic_next_icon_margin_right"
-      android:background="@drawable/ic_keyboard_arrow_right_white_24dp"
-      android:contentDescription="@string/comic_next_icon_content_description"
-      />
-
-</RelativeLayout>
+</LinearLayout>

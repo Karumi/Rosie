@@ -16,17 +16,17 @@
 
 package com.karumi.rosie.sample.comics.view.viewmodel;
 
-public class ComicViewModel {
+public class ComicViewModel implements ComicSeriesDetailViewModel {
 
-  private int key;
+  private String key;
   private String title;
-  private String coverUrl;
+  private String thumbnailUrl;
 
-  public int getKey() {
+  public String getKey() {
     return key;
   }
 
-  public void setKey(int key) {
+  public void setKey(String key) {
     this.key = key;
   }
 
@@ -38,11 +38,11 @@ public class ComicViewModel {
     this.title = title;
   }
 
-  public String getCoverUrl() {
-    return coverUrl;
+  public String getThumbnailUrl() {
+    return thumbnailUrl;
   }
 
-  public void setCoverUrl(String coverUrl) {
-    this.coverUrl = coverUrl;
+  public void setThumbnailUrl(String thumbnailUrl) {
+    this.thumbnailUrl = thumbnailUrl;
   }
 }

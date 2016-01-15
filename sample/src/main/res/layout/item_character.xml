@@ -19,31 +19,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_root"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/character_height"
+    android:layout_height="wrap_content"
     android:background="@color/character_item_background"
     >
 
-  <TextView
-      android:id="@+id/tv_character_name"
+  <ImageView
+      android:id="@+id/iv_character_image"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_alignParentLeft="true"
-      android:layout_alignParentStart="true"
-      android:layout_centerVertical="true"
-      style="@style/CharacterName"
-      tools:text="Spiderman"
+      android:layout_height="@dimen/character_row_height"
+      android:scaleType="centerCrop"
       />
 
-  <ImageView
-      android:layout_width="@dimen/character_next_icon_size"
-      android:layout_height="@dimen/character_next_icon_size"
-      android:layout_alignParentRight="true"
-      android:layout_alignParentEnd="true"
-      android:layout_centerVertical="true"
-      android:layout_marginRight="@dimen/character_next_icon_margin_right"
-      android:layout_marginEnd="@dimen/character_next_icon_margin_right"
-      android:background="@drawable/ic_keyboard_arrow_right_white_24dp"
-      android:contentDescription="@string/character_next_icon_content_description"
-      />
+  <RelativeLayout
+      android:background="@drawable/black_gradient_background"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true">
+    <TextView
+        android:id="@+id/tv_character_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        style="@style/CharacterName"
+        tools:text="Spiderman"
+        />
+  </RelativeLayout>
 
 </RelativeLayout>

@@ -16,6 +16,7 @@
 
 package com.karumi.rosie.repository.datasource.paginated;
 
+import com.karumi.rosie.repository.datasource.CacheDataSource;
 import com.karumi.rosie.repository.datasource.Identifiable;
 
 /**
@@ -26,7 +27,8 @@ import com.karumi.rosie.repository.datasource.Identifiable;
  * @param <V> The class of the values retrieved from this data source.
  */
 public interface PaginatedCacheDataSource<K, V extends Identifiable<K>>
-    extends PaginatedReadableDataSource<V>, PaginatedWriteableDataSource<K, V> {
+    extends PaginatedReadableDataSource<K, V>, CacheDataSource<K, V>,
+    PaginatedWriteableDataSource<K, V> {
 
   /**
    * Returns true whether the value stored in this cache is still valid.

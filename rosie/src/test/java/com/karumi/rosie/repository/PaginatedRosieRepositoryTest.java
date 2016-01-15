@@ -19,6 +19,7 @@ package com.karumi.rosie.repository;
 import com.karumi.rosie.UnitTest;
 import com.karumi.rosie.doubles.AnyRepositoryKey;
 import com.karumi.rosie.doubles.AnyRepositoryValue;
+import com.karumi.rosie.repository.datasource.paginated.Page;
 import com.karumi.rosie.repository.datasource.paginated.PaginatedCacheDataSource;
 import com.karumi.rosie.repository.datasource.paginated.PaginatedReadableDataSource;
 import com.karumi.rosie.repository.policy.ReadPolicy;
@@ -28,6 +29,7 @@ import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -37,78 +39,118 @@ public class PaginatedRosieRepositoryTest extends UnitTest {
   private static final int ANY_LIMIT = 20;
 
   @Mock private PaginatedCacheDataSource<AnyRepositoryKey, AnyRepositoryValue> cacheDataSource;
-  @Mock private PaginatedReadableDataSource<AnyRepositoryValue> readableDataSource;
+  @Mock private PaginatedReadableDataSource<AnyRepositoryKey, AnyRepositoryValue>
+      readableDataSource;
 
   @Test public void shouldReturnValuesFromCacheDataSourceIfDataIsValid() throws Exception {
+    Page page = Page.withOffsetAndLimit(ANY_OFFSET, ANY_LIMIT);
     PaginatedCollection<AnyRepositoryValue> cacheValues =
-        givenCacheDataSourceReturnsValidValues(ANY_OFFSET, ANY_LIMIT);
+        givenCacheDataSourceReturnsValidValues(page);
     PaginatedRosieRepository<AnyRepositoryKey, AnyRepositoryValue> repository =
         givenAPaginatedRepository();
 
-    PaginatedCollection<AnyRepositoryValue> values = repository.getPage(ANY_OFFSET, ANY_LIMIT);
+    PaginatedCollection<AnyRepositoryValue> values = repository.getPage(page);
 
     assertEquals(cacheValues, values);
   }
 
   @Test public void shouldReturnItemsFromReadableDataSourceIfCacheDataSourceHasNoData()
       throws Exception {
-    givenCacheDataSourceReturnsNull(ANY_OFFSET, ANY_LIMIT);
+    Page page = Page.withOffsetAndLimit(ANY_OFFSET, ANY_LIMIT);
+    givenCacheDataSourceReturnsNull(page);
     PaginatedCollection<AnyRepositoryValue> readableValues =
-        givenReadableDataSourceReturnsValues(ANY_OFFSET, ANY_LIMIT);
+        givenReadableDataSourceReturnsValues(page);
     PaginatedRosieRepository<AnyRepositoryKey, AnyRepositoryValue> repository =
         givenAPaginatedRepository();
 
-    PaginatedCollection<AnyRepositoryValue> values = repository.getPage(ANY_OFFSET, ANY_LIMIT);
+    PaginatedCollection<AnyRepositoryValue> values = repository.getPage(page);
 
     assertEquals(readableValues, values);
   }
 
   @Test public void shouldReturnValuesFromReadableDataSourceIfCacheDataSourceIsNotValid()
       throws Exception {
-    givenCacheDataSourceReturnsNonValidValues(ANY_OFFSET, ANY_LIMIT);
+    Page page = Page.withOffsetAndLimit(ANY_OFFSET, ANY_LIMIT);
+    givenCacheDataSourceReturnsNonValidValues(page);
     PaginatedCollection<AnyRepositoryValue> readableValues =
-        givenReadableDataSourceReturnsValues(ANY_OFFSET, ANY_LIMIT);
+        givenReadableDataSourceReturnsValues(page);
     PaginatedRosieRepository<AnyRepositoryKey, AnyRepositoryValue> repository =
         givenAPaginatedRepository();
 
-    PaginatedCollection<AnyRepositoryValue> values = repository.getPage(ANY_OFFSET, ANY_LIMIT);
+    PaginatedCollection<AnyRepositoryValue> values = repository.getPage(page);
 
     assertEquals(readableValues, values);
   }
 
+  @Test public void shouldReturnValuesFromReadableDataSourceIfCacheDoNotHaveThisPage()
+      throws Exception {
+    Page page = Page.withOffsetAndLimit(ANY_OFFSET, ANY_LIMIT);
+    givenCacheDataSourceReturnsNonValidValues(page);
+    givenReadableDataSourceReturnsValues(page);
+    PaginatedRosieRepository<AnyRepositoryKey, AnyRepositoryValue> repository =
+        givenAPaginatedRepository();
+    repository.getPage(page);
+
+    Page nextPage = Page.withOffsetAndLimit(ANY_OFFSET + ANY_LIMIT, ANY_LIMIT);
+    repository.getPage(nextPage);
+
+    verify(cacheDataSource).getPage(page);
+    verify(readableDataSource).getPage(page);
+    verify(cacheDataSource).getPage(nextPage);
+    verify(readableDataSource).getPage(nextPage);
+  }
+
+  @Test public void shouldNotRemoveDataFromCacheIfCacheDoNotHaveThisPage()
+      throws Exception {
+    Page page = Page.withOffsetAndLimit(ANY_OFFSET, ANY_LIMIT);
+    givenCacheDataSourceReturnsNonValidValues(page);
+    givenReadableDataSourceReturnsValues(page);
+    PaginatedRosieRepository<AnyRepositoryKey, AnyRepositoryValue> repository =
+        givenAPaginatedRepository();
+    repository.getPage(page);
+
+    Page nextPage = Page.withOffsetAndLimit(ANY_OFFSET + ANY_LIMIT, ANY_LIMIT);
+    repository.getPage(nextPage);
+
+    verify(cacheDataSource, times(1)).deleteAll();
+  }
+
   @Test public void shouldReturnValuesFromReadableDataSourceIfPolicyForcesOnlyReadable()
       throws Exception {
-    givenCacheDataSourceReturnsValidValues(ANY_OFFSET, ANY_LIMIT);
+    Page page = Page.withOffsetAndLimit(ANY_OFFSET, ANY_LIMIT);
+    givenCacheDataSourceReturnsValidValues(page);
     PaginatedCollection<AnyRepositoryValue> readableValues =
-        givenReadableDataSourceReturnsValues(ANY_OFFSET, ANY_LIMIT);
+        givenReadableDataSourceReturnsValues(page);
     PaginatedRosieRepository<AnyRepositoryKey, AnyRepositoryValue> repository =
         givenAPaginatedRepository();
 
     PaginatedCollection<AnyRepositoryValue> values =
-        repository.getPage(ANY_OFFSET, ANY_LIMIT, ReadPolicy.READABLE_ONLY);
+        repository.getPage(page, ReadPolicy.READABLE_ONLY);
 
     assertEquals(readableValues, values);
   }
 
   @Test public void shouldPopulateCacheDataSourceAfterGetPageFromReadableDataSource()
       throws Exception {
-    givenCacheDataSourceReturnsNull(ANY_OFFSET, ANY_LIMIT);
+    Page page = Page.withOffsetAndLimit(ANY_OFFSET, ANY_LIMIT);
+    givenCacheDataSourceReturnsNull(page);
     PaginatedCollection<AnyRepositoryValue> readableValues =
-        givenReadableDataSourceReturnsValues(ANY_OFFSET, ANY_LIMIT);
+        givenReadableDataSourceReturnsValues(page);
     PaginatedRosieRepository<AnyRepositoryKey, AnyRepositoryValue> repository =
         givenAPaginatedRepository();
 
-    repository.getPage(ANY_OFFSET, ANY_LIMIT);
+    repository.getPage(page);
 
-    verify(cacheDataSource).addOrUpdatePage(ANY_OFFSET, ANY_LIMIT, readableValues.getItems(), true);
+    verify(cacheDataSource).addOrUpdatePage(page, readableValues.getItems(), true);
   }
 
   @Test public void shouldDeleteCacheDataIfItemsAreNotValid() throws Exception {
-    givenCacheDataSourceReturnsNonValidValues(ANY_OFFSET, ANY_LIMIT);
+    Page page = Page.withOffsetAndLimit(ANY_OFFSET, ANY_LIMIT);
+    givenCacheDataSourceReturnsNonValidValues(page);
     PaginatedRosieRepository<AnyRepositoryKey, AnyRepositoryValue> repository =
         givenAPaginatedRepository();
 
-    repository.getPage(ANY_OFFSET, ANY_LIMIT);
+    repository.getPage(page);
 
     verify(cacheDataSource).deleteAll();
   }
@@ -121,44 +163,43 @@ public class PaginatedRosieRepositoryTest extends UnitTest {
     return repository;
   }
 
-  private void givenCacheDataSourceReturnsNull(int offset, int limit) throws Exception {
-    when(cacheDataSource.getPage(offset, limit)).thenReturn(null);
+  private void givenCacheDataSourceReturnsNull(Page page) throws Exception {
+    when(cacheDataSource.getPage(page)).thenReturn(null);
   }
 
-  private PaginatedCollection<AnyRepositoryValue> givenCacheDataSourceReturnsValidValues(int offset,
-      int limit) throws Exception {
-    return givenCacheDataSourceReturnsValues(offset, limit, true);
+  private PaginatedCollection<AnyRepositoryValue> givenCacheDataSourceReturnsValidValues(Page page)
+      throws Exception {
+    return givenCacheDataSourceReturnsValues(page, true);
   }
 
   private PaginatedCollection<AnyRepositoryValue> givenCacheDataSourceReturnsNonValidValues(
-      int offset, int limit) throws Exception {
-    return givenCacheDataSourceReturnsValues(offset, limit, false);
+      Page page) throws Exception {
+    return givenCacheDataSourceReturnsValues(page, false);
   }
 
-  private PaginatedCollection<AnyRepositoryValue> givenCacheDataSourceReturnsValues(int offset,
-      int limit, boolean areValidValues) {
-    PaginatedCollection<AnyRepositoryValue> values = getSomeValues(offset, limit);
-    when(cacheDataSource.getPage(offset, limit)).thenReturn(values);
+  private PaginatedCollection<AnyRepositoryValue> givenCacheDataSourceReturnsValues(Page page,
+      boolean areValidValues) throws Exception {
+    PaginatedCollection<AnyRepositoryValue> values = getSomeValues(page);
+    when(cacheDataSource.getPage(page)).thenReturn(values);
     when(cacheDataSource.isValid(any(AnyRepositoryValue.class))).thenReturn(areValidValues);
     return values;
   }
 
-  private PaginatedCollection<AnyRepositoryValue> givenReadableDataSourceReturnsValues(int offset,
-      int limit) {
-    PaginatedCollection<AnyRepositoryValue> values = getSomeValues(offset, limit);
-    when(readableDataSource.getPage(offset, limit)).thenReturn(values);
+  private PaginatedCollection<AnyRepositoryValue> givenReadableDataSourceReturnsValues(Page page)
+      throws Exception {
+    PaginatedCollection<AnyRepositoryValue> values = getSomeValues(page);
+    when(readableDataSource.getPage(page)).thenReturn(values);
     return values;
   }
 
-  private PaginatedCollection<AnyRepositoryValue> getSomeValues(int offset, int limit) {
+  private PaginatedCollection<AnyRepositoryValue> getSomeValues(Page page) {
     LinkedList<AnyRepositoryValue> values = new LinkedList<>();
     for (int i = 0; i < 10; i++) {
       values.add(new AnyRepositoryValue(new AnyRepositoryKey(i)));
     }
     PaginatedCollection<AnyRepositoryValue> paginatedValues = new PaginatedCollection<>(values);
     paginatedValues.setHasMore(true);
-    paginatedValues.setOffset(offset);
-    paginatedValues.setLimit(limit);
+    paginatedValues.setPage(page);
     return paginatedValues;
   }
 }

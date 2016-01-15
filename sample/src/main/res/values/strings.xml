@@ -16,17 +16,18 @@
   -->
 <resources>
   <string name="app_name">Rosie</string>
+  <string name="back_button_content_description">Go back</string>
   <string name="loading_message">Loading…</string>
   <string name="characters_page_title">Characters</string>
-  <string name="comics_page_title">Comics</string>
+  <string name="comic_series_page_title">Comics</string>
   <string name="marvel_rating_text">Rating: %1$s</string>
-  <string name="marvel_rating_all_ages">All Ages</string>
-  <string name="marvel_rating_t">T</string>
-  <string name="marvel_rating_teens_and_up">T+</string>
-  <string name="marvel_rating_parental_advisory">Parental Advisory</string>
-  <string name="marvel_rating_explicit_content">Max: Explicit Content</string>
-  <string name="comic_next_icon_content_description">See comic details</string>
-  <string name="comic_cover_content_description">Comic cover</string>
+  <string name="comic_series_next_icon_content_description">See comic series details</string>
+  <string name="comic_series_cover_content_description">Comic series cover</string>
+  <string name="comic_thumbnail_content_description">Comic thumbnail</string>
   <string name="character_next_icon_content_description">See character details</string>
   <string name="character_thumbnail_content_description">Character thumbnail</string>
+  <string name="fake_data_disclaymer">Mavel keys doesn\'t exist, you need it to access to real data.
+    This is the DEMO mode with fake information.
+  </string>
+  <string name="no_description">Description is not available.</string>
 </resources>
