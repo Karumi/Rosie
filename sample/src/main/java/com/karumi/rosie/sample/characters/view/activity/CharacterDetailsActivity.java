@@ -88,7 +88,7 @@ public class CharacterDetailsActivity extends MarvelActivity
         .into(characterHeaderView);
     characterNameView.setText(character.getName());
 
-    if (!character.getDescription().equals("")) {
+    if (!character.getDescription().isEmpty()) {
       characterDescriptionView.setText(character.getDescription());
     } else {
       characterDescriptionView.setText(getString(R.string.no_description));

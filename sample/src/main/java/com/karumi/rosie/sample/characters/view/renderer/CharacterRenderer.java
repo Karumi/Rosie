@@ -45,7 +45,11 @@ public class CharacterRenderer extends RosieRenderer<CharacterViewModel> {
 
     CharacterViewModel character = getContent();
     nameView.setText(character.getName());
-    Picasso.with(getRootView().getContext()).load(character.getThumbnailUrl()).into(avatarView);
+    Picasso.with(getRootView().getContext())
+        .load(character.getThumbnailUrl())
+        .fit()
+        .centerCrop()
+        .into(avatarView);
   }
 
   @Override protected View inflate(LayoutInflater inflater, ViewGroup parent) {

@@ -20,6 +20,7 @@ import com.karumi.rosie.time.TimeProvider;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * A simple and generic in-memory cache ready to use in your repositories.
@@ -29,7 +30,7 @@ public class InMemoryCacheDataSource<K, V extends Identifiable<K>>
 
   protected final TimeProvider timeProvider;
   protected final long ttlInMillis;
-  protected final LinkedHashMap<K, V> items;
+  protected final Map<K, V> items;
 
   protected long lastItemsUpdate;
 

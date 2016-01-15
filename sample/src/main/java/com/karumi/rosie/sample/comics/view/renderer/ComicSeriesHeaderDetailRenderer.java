@@ -44,7 +44,7 @@ public class ComicSeriesHeaderDetailRenderer extends RosieRenderer<ComicSeriesDe
     Picasso.with(context).load(comicSeries.getCoverUrl()).fit().centerCrop().into(coverView);
     ratingView.setText(context.getString(R.string.marvel_rating_text, comicSeries.getRating()));
 
-    if (comicSeries.getDescription() != null && !comicSeries.getDescription().equals("")) {
+    if (comicSeries.getDescription() != null && !comicSeries.getDescription().isEmpty()) {
       descriptionView.setText(comicSeries.getDescription());
     } else {
       descriptionView.setText(getRootView().getResources().getString(R.string.no_description));
