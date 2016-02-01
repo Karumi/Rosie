@@ -38,6 +38,7 @@ import com.karumi.rosie.sample.comics.view.fragment.ComicSeriesFragment;
 import com.karumi.rosie.sample.recyclerview.RecyclerViewInteraction;
 import dagger.Module;
 import dagger.Provides;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -86,6 +87,16 @@ import static org.mockito.Mockito.when;
 
     startActivity();
     onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("¯\\_(ツ)_/¯")))
+        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+  }
+
+  @Test public void shouldShowsConnectionErrorIfHaveConnectionThroubles() throws Exception {
+    givenConnectionExceptionObtainingCharacters();
+    givenEmptyComicSeries();
+
+    startActivity();
+    onView(allOf(withId(android.support.design.R.id.snackbar_text),
+        withText("Connection troubles. Ask to Ironman!")))
         .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
   }
 
@@ -143,6 +154,12 @@ import static org.mockito.Mockito.when;
 
     when(charactersRepository.getPage(any(Page.class))).thenThrow(
         new MarvelApiException(ANY_EXCEPTION, null));
+  }
+
+  private void givenConnectionExceptionObtainingCharacters() throws Exception {
+
+    when(charactersRepository.getPage(any(Page.class))).thenThrow(
+        new MarvelApiException(ANY_EXCEPTION, new UnknownHostException()));
   }
 
   private void givenEmptyComicSeries() throws Exception {

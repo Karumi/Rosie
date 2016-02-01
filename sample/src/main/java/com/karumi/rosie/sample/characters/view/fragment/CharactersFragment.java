@@ -19,7 +19,6 @@ package com.karumi.rosie.sample.characters.view.fragment;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,13 +32,13 @@ import com.karumi.dividers.Layer;
 import com.karumi.dividers.LayersBuilder;
 import com.karumi.dividers.selector.HeaderSelector;
 import com.karumi.rosie.sample.R;
+import com.karumi.rosie.sample.base.view.fragment.MarvelFragment;
 import com.karumi.rosie.sample.characters.view.activity.CharacterDetailsActivity;
 import com.karumi.rosie.sample.characters.view.presenter.CharactersPresenter;
 import com.karumi.rosie.sample.characters.view.renderer.CharacterRendererBuilder;
 import com.karumi.rosie.sample.characters.view.renderer.CharactersAdapteeCollection;
 import com.karumi.rosie.sample.characters.view.viewmodel.CharacterViewModel;
 import com.karumi.rosie.view.Presenter;
-import com.karumi.rosie.view.RosieFragment;
 import com.karumi.rosie.view.paginated.ScrollToBottomListener;
 import com.pedrogomez.renderers.RVRendererAdapter;
 import com.pedrogomez.renderers.RendererBuilder;
@@ -48,7 +47,7 @@ import java.util.Collection;
 import java.util.List;
 import javax.inject.Inject;
 
-public class CharactersFragment extends RosieFragment implements CharactersPresenter.View {
+public class CharactersFragment extends MarvelFragment implements CharactersPresenter.View {
 
   @Bind(R.id.rv_characters) RecyclerView charactersView;
   @Bind(R.id.loading) RotateLoading loadingView;
@@ -100,10 +99,6 @@ public class CharactersFragment extends RosieFragment implements CharactersPrese
 
   @Override public void clearCharacters() {
     charactersAdapter.clear();
-  }
-
-  @Override public void showGenericError() {
-    Snackbar.make(getView(), getString(R.string.generic_error), Snackbar.LENGTH_SHORT).show();
   }
 
   private void initializeCharactersView() {

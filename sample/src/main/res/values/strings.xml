@@ -31,4 +31,5 @@
   </string>
   <string name="no_description">Description is not available.</string>
   <string name="generic_error">¯\\_(ツ)_/¯</string>
+  <string name="connection_error">Connection troubles. Ask to Ironman!</string>
 </resources>
