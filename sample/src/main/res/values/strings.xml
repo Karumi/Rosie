@@ -30,4 +30,5 @@
     This is the DEMO mode with fake information.
   </string>
   <string name="no_description">Description is not available.</string>
+  <string name="generic_error">¯\\_(ツ)_/¯</string>
 </resources>

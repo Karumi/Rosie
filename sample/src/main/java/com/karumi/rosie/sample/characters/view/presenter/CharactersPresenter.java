@@ -19,6 +19,7 @@ package com.karumi.rosie.sample.characters.view.presenter;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
 import com.karumi.rosie.domain.usecase.annotation.Success;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
+import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 import com.karumi.rosie.repository.PaginatedCollection;
 import com.karumi.rosie.repository.datasource.paginated.Page;
 import com.karumi.rosie.sample.characters.domain.model.Character;
@@ -42,6 +43,7 @@ public class CharactersPresenter extends RosiePresenterWithLoading<CharactersPre
     super(useCaseHandler);
     this.getCharacters = getCharacters;
     this.mapper = mapper;
+    registerOnErrorCallback(onErrorCallback);
   }
 
   @Override protected void update() {
@@ -88,6 +90,13 @@ public class CharactersPresenter extends RosiePresenterWithLoading<CharactersPre
     hideLoading();
   }
 
+  private final OnErrorCallback onErrorCallback = new OnErrorCallback() {
+    @Override public boolean onError(Error error) {
+      getView().showGenericError();
+      return true;
+    }
+  };
+
   public interface View extends RosiePresenterWithLoading.View {
     void hideCharacters();
 
@@ -98,5 +107,7 @@ public class CharactersPresenter extends RosiePresenterWithLoading<CharactersPre
     void openCharacterDetails(String characterKey);
 
     void clearCharacters();
+
+    void showGenericError();
   }
 }

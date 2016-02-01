@@ -16,9 +16,14 @@
 
 package com.karumi.rosie.sample.main.view.activity;
 
+import android.support.annotation.NonNull;
+import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
+import android.view.View;
+import com.karumi.marvelapiclient.MarvelApiException;
 import com.karumi.rosie.repository.PaginatedCollection;
 import com.karumi.rosie.repository.datasource.paginated.Page;
 import com.karumi.rosie.repository.policy.ReadPolicy;
@@ -30,10 +35,12 @@ import com.karumi.rosie.sample.characters.view.fragment.CharactersFragment;
 import com.karumi.rosie.sample.comics.domain.model.ComicSeries;
 import com.karumi.rosie.sample.comics.repository.ComicSeriesRepository;
 import com.karumi.rosie.sample.comics.view.fragment.ComicSeriesFragment;
+import com.karumi.rosie.sample.recyclerview.RecyclerViewInteraction;
 import dagger.Module;
 import dagger.Provides;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -43,9 +50,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.karumi.rosie.sample.AncestorMatcher.withAncestor;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.not;
@@ -56,6 +67,9 @@ import static org.mockito.Mockito.when;
 @RunWith(AndroidJUnit4.class) @LargeTest public class MainActivityTest
     extends InjectedInstrumentationTest {
 
+  private static final int ANY_NUMBER_OF_CHARACTERS = 10;
+  private static final int ANY_NUMBER_OF_COMIC_SERIES = 10;
+  private static final String ANY_EXCEPTION = "AnyException";
   @Inject CharactersRepository charactersRepository;
   @Inject ComicSeriesRepository comicSeriesRepository;
 
@@ -64,6 +78,15 @@ import static org.mockito.Mockito.when;
 
   @Before public void setUp() {
     super.setUp();
+  }
+
+  @Test public void shouldShowsErrorIfSomethingWrongHappend() throws Exception {
+    givenExceptionObtainingCharacters();
+    givenEmptyComicSeries();
+
+    startActivity();
+    onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("¯\\_(ツ)_/¯")))
+        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
   }
 
   @Test public void shouldHideLoadingWhenDataIsLoaded() throws Exception {
@@ -75,12 +98,51 @@ import static org.mockito.Mockito.when;
         matches(not(isDisplayed())));
   }
 
+  @Test public void shouldShowsCharacterNameIfThereAreCharacters() throws Exception {
+    List<Character> superHeroes = givenThereAreSomeCharacters(ANY_NUMBER_OF_CHARACTERS);
+
+    startActivity();
+
+    RecyclerViewInteraction.<Character>onRecyclerView(withId(R.id.rv_characters))
+        .withItems(superHeroes)
+        .check(new RecyclerViewInteraction.ItemViewAssertion<Character>() {
+          @Override public void check(Character character, View view, NoMatchingViewException e) {
+            matches(hasDescendant(withText(character.getName()))).check(view, e);
+          }
+        });
+  }
+
+  @Test public void shouldShowsComicSeriesIfTheAreComicSeriesAndTabIsShowed() throws Exception {
+    givenThereAreSomeCharacters(ANY_NUMBER_OF_CHARACTERS);
+    List<ComicSeries> comicSeries = givenThereAreSomeComicSeries(ANY_NUMBER_OF_COMIC_SERIES);
+
+    startActivity();
+
+    onView(withId(R.id.vp_main)).perform(swipeLeft());
+
+    RecyclerViewInteraction.<ComicSeries>onRecyclerView(withId(R.id.rv_comics))
+        .withItems(comicSeries)
+        .check(new RecyclerViewInteraction.ItemViewAssertion<ComicSeries>() {
+          @Override public void check(ComicSeries comic, View view, NoMatchingViewException e) {
+            String textMatch =
+                String.format("%1$s (%2$s)", comic.getName(), comic.getReleaseYear());
+            matches(hasDescendant(withText(textMatch))).check(view, e);
+          }
+        });
+  }
+
   private void givenEmptyCharacters() throws Exception {
     when(charactersRepository.getAll(ReadPolicy.CACHE_ONLY)).thenReturn(new ArrayList<Character>());
     PaginatedCollection<Character> emptyPage = new PaginatedCollection<>();
     emptyPage.setPage(Page.withOffsetAndLimit(0, 0));
     emptyPage.setHasMore(false);
     when(charactersRepository.getPage(any(Page.class))).thenReturn(emptyPage);
+  }
+
+  private void givenExceptionObtainingCharacters() throws Exception {
+
+    when(charactersRepository.getPage(any(Page.class))).thenThrow(
+        new MarvelApiException(ANY_EXCEPTION, null));
   }
 
   private void givenEmptyComicSeries() throws Exception {
@@ -90,6 +152,49 @@ import static org.mockito.Mockito.when;
     emptyPage.setPage(Page.withOffsetAndLimit(0, 0));
     emptyPage.setHasMore(false);
     when(comicSeriesRepository.getPage(any(Page.class))).thenReturn(emptyPage);
+  }
+
+  private List<Character> givenThereAreSomeCharacters(int numberOfCharacters) throws Exception {
+    List<Character> characters = new LinkedList<>();
+    for (int i = 0; i < numberOfCharacters; i++) {
+      Character character = getCharacter(i);
+      characters.add(character);
+    }
+    PaginatedCollection<Character> paginatedCollection = new PaginatedCollection<>(characters);
+    paginatedCollection.setPage(Page.withOffsetAndLimit(0, numberOfCharacters));
+    paginatedCollection.setHasMore(false);
+    when(charactersRepository.getPage(any(Page.class))).thenReturn(paginatedCollection);
+    return characters;
+  }
+
+  private List<ComicSeries> givenThereAreSomeComicSeries(int numberOfComicSeries) throws Exception {
+    List<ComicSeries> comics = new LinkedList<>();
+    for (int i = 0; i < numberOfComicSeries; i++) {
+      ComicSeries comic = getComicSeries(i);
+      comics.add(comic);
+    }
+    PaginatedCollection<ComicSeries> paginatedCollection = new PaginatedCollection<>(comics);
+    paginatedCollection.setPage(Page.withOffsetAndLimit(0, numberOfComicSeries));
+    paginatedCollection.setHasMore(false);
+    when(comicSeriesRepository.getPage(any(Page.class))).thenReturn(paginatedCollection);
+    return comics;
+  }
+
+  @NonNull private Character getCharacter(int i) {
+    Character character = new Character();
+    character.setKey("" + i);
+    character.setName("SuperHero - " + i);
+    character.setDescription("Description Super Hero - " + i);
+    character.setThumbnailUrl("https://i.annihil.us/u/prod/marvel/i/mg/c/60/55b6a28ef24fa.jpg");
+    return character;
+  }
+
+  @NonNull private ComicSeries getComicSeries(int i) {
+    ComicSeries comicSeries = new ComicSeries();
+    comicSeries.setKey(i);
+    comicSeries.setName("ComicSeries - " + i);
+    comicSeries.setDescription("Description Comic Serie - " + i);
+    return comicSeries;
   }
 
   private MainActivity startActivity() {
