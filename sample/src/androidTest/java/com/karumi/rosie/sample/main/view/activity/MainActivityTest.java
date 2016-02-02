@@ -18,6 +18,7 @@ package com.karumi.rosie.sample.main.view.activity;
 
 import android.support.annotation.NonNull;
 import android.support.test.espresso.NoMatchingViewException;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.AndroidJUnit4;
@@ -31,10 +32,14 @@ import com.karumi.rosie.sample.InjectedInstrumentationTest;
 import com.karumi.rosie.sample.R;
 import com.karumi.rosie.sample.characters.domain.model.Character;
 import com.karumi.rosie.sample.characters.repository.CharactersRepository;
+import com.karumi.rosie.sample.characters.view.activity.CharacterDetailsActivity;
 import com.karumi.rosie.sample.characters.view.fragment.CharactersFragment;
+import com.karumi.rosie.sample.comics.domain.model.Comic;
 import com.karumi.rosie.sample.comics.domain.model.ComicSeries;
 import com.karumi.rosie.sample.comics.repository.ComicSeriesRepository;
+import com.karumi.rosie.sample.comics.view.activity.ComicSeriesDetailsActivity;
 import com.karumi.rosie.sample.comics.view.fragment.ComicSeriesFragment;
+import com.karumi.rosie.sample.main.domain.usecase.GetMarvelSettings;
 import com.karumi.rosie.sample.recyclerview.RecyclerViewInteraction;
 import dagger.Module;
 import dagger.Provides;
@@ -51,8 +56,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
@@ -73,12 +82,23 @@ import static org.mockito.Mockito.when;
   private static final String ANY_EXCEPTION = "AnyException";
   @Inject CharactersRepository charactersRepository;
   @Inject ComicSeriesRepository comicSeriesRepository;
+  @Inject GetMarvelSettings getMarvelSettings;
 
   @Rule public IntentsTestRule<MainActivity> activityRule =
       new IntentsTestRule<>(MainActivity.class, true, false);
 
   @Before public void setUp() {
     super.setUp();
+  }
+
+  @Test public void shouldShowsFakeDataBarWhenMarvelKeysNotHasBeenProvided() throws Exception {
+    givenFakeDataIsEnable();
+
+    startActivity();
+
+    onView(withId(R.id.tv_disclaimer)).check(matches(isDisplayed()));
+    onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("¯\\_(ツ)_/¯")))
+        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
   }
 
   @Test public void shouldShowsErrorIfSomethingWrongHappend() throws Exception {
@@ -123,6 +143,19 @@ import static org.mockito.Mockito.when;
         });
   }
 
+  @Test public void shouldOpenCharacterDetailActivityOnRecyclerViewItemClicked() throws Exception {
+    List<Character> characters = givenThereAreSomeCharacters(ANY_NUMBER_OF_CHARACTERS);
+    int characterIndex = 0;
+    startActivity();
+
+    onView(withId(R.id.rv_characters)).
+        perform(RecyclerViewActions.actionOnItemAtPosition(characterIndex, click()));
+
+    Character characterSelected = characters.get(characterIndex);
+    intended(hasComponent(CharacterDetailsActivity.class.getCanonicalName()));
+    intended(hasExtra("CharacterDetailsActivity.CharacterKey", characterSelected.getKey()));
+  }
+
   @Test public void shouldShowsComicSeriesIfTheAreComicSeriesAndTabIsShowed() throws Exception {
     givenThereAreSomeCharacters(ANY_NUMBER_OF_CHARACTERS);
     List<ComicSeries> comicSeries = givenThereAreSomeComicSeries(ANY_NUMBER_OF_COMIC_SERIES);
@@ -140,6 +173,41 @@ import static org.mockito.Mockito.when;
             matches(hasDescendant(withText(textMatch))).check(view, e);
           }
         });
+  }
+
+  @Test public void shouldOpenComicSeriesDetailActivityOnRecyclerViewItemClicked()
+      throws Exception {
+    givenThereAreSomeCharacters(ANY_NUMBER_OF_CHARACTERS);
+    List<ComicSeries> comicSeries = givenThereAreSomeComicSeries(ANY_NUMBER_OF_COMIC_SERIES);
+    givenAnyComicSeriesDetail();
+    int comicSeriesIndex = 0;
+    startActivity();
+
+    onView(withId(R.id.vp_main)).perform(swipeLeft());
+
+    onView(withId(R.id.rv_comics)).
+        perform(RecyclerViewActions.actionOnItemAtPosition(comicSeriesIndex, click()));
+
+    ComicSeries comicSeriesSelected = comicSeries.get(comicSeriesIndex);
+    intended(hasComponent(ComicSeriesDetailsActivity.class.getCanonicalName()));
+    intended(hasExtra("ComicSeriesDetailsActivity.ComicSeriesKey",
+        comicSeriesSelected.getKey().intValue()));
+  }
+
+  private void givenAnyComicSeriesDetail() throws Exception {
+    ComicSeries comicSeries = new ComicSeries();
+    comicSeries.setKey(0);
+    comicSeries.setDescription("desc - " + 0);
+    comicSeries.setName("name - " + 0);
+    comicSeries.setComplete(true);
+    comicSeries.setComics(new ArrayList<Comic>());
+    comicSeries.setCoverUrl("https://i.annihil.us/u/prod/marvel/i/mg/c/60/55b6a28ef24fa.jpg");
+
+    when(comicSeriesRepository.getComicSeriesDetail(any(Integer.class))).thenReturn(comicSeries);
+  }
+
+  private void givenFakeDataIsEnable() {
+    when(getMarvelSettings.haveKeys()).thenReturn(false);
   }
 
   private void givenEmptyCharacters() throws Exception {
@@ -238,6 +306,12 @@ import static org.mockito.Mockito.when;
     @Singleton
     public ComicSeriesRepository provideComicSeriesRepository() {
       return mock(ComicSeriesRepository.class);
+    }
+
+    @Provides
+    @Singleton
+    public GetMarvelSettings provideGetMarvelSettings() {
+      return mock(GetMarvelSettings.class);
     }
   }
 }

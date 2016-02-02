@@ -17,19 +17,24 @@
 package com.karumi.rosie.sample.main.view.presenter;
 
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
-import com.karumi.rosie.sample.BuildConfig;
+import com.karumi.rosie.sample.main.domain.usecase.GetMarvelSettings;
 import com.karumi.rosie.view.RosiePresenter;
 import com.karumi.rosie.view.loading.RosiePresenterWithLoading;
 import javax.inject.Inject;
 
 public class FakeDataPresenter extends RosiePresenter<FakeDataPresenter.View> {
-  @Inject public FakeDataPresenter(UseCaseHandler useCaseHandler) {
+
+  private final GetMarvelSettings getMarvelSettings;
+
+  @Inject
+  public FakeDataPresenter(GetMarvelSettings getMarvelSettings, UseCaseHandler useCaseHandler) {
     super(useCaseHandler);
+    this.getMarvelSettings = getMarvelSettings;
   }
 
   @Override protected void initialize() {
     super.initialize();
-    if (BuildConfig.MARVEL_PUBLIC_KEY == null || BuildConfig.MARVEL_PRIVATE_KEY == null) {
+    if (!getMarvelSettings.haveKeys()) {
       getView().showFakeDisclaimer();
     } else {
       getView().hideFakeDisclaimer();

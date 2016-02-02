@@ -22,6 +22,7 @@ import com.karumi.rosie.repository.datasource.paginated.PaginatedCacheDataSource
 import com.karumi.rosie.sample.base.view.error.MarvelErrorFactory;
 import com.karumi.rosie.sample.characters.domain.model.Character;
 import com.karumi.rosie.sample.comics.domain.model.ComicSeries;
+import com.karumi.rosie.sample.main.domain.usecase.GetMarvelSettings;
 import com.karumi.rosie.time.TimeProvider;
 import dagger.Module;
 import dagger.Provides;
@@ -51,6 +52,10 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 
   @Provides public ErrorHandler providesErrorHandler(MarvelErrorFactory errorFactory) {
     return new ErrorHandler(errorFactory);
+  }
+
+  @Provides @Singleton public GetMarvelSettings provideGetMarvelSettings() {
+    return new GetMarvelSettings();
   }
 
 }
