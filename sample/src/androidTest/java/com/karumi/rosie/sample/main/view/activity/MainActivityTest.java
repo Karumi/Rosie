@@ -16,12 +16,15 @@
 
 package com.karumi.rosie.sample.main.view.activity;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v4.view.ViewPager;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
 import com.karumi.marvelapiclient.MarvelApiException;
@@ -39,6 +42,7 @@ import com.karumi.rosie.sample.comics.domain.model.ComicSeries;
 import com.karumi.rosie.sample.comics.repository.ComicSeriesRepository;
 import com.karumi.rosie.sample.comics.view.activity.ComicSeriesDetailsActivity;
 import com.karumi.rosie.sample.comics.view.fragment.ComicSeriesFragment;
+import com.karumi.rosie.sample.idlingresources.ViewPagerIdlingResource;
 import com.karumi.rosie.sample.main.domain.usecase.GetMarvelSettings;
 import com.karumi.rosie.sample.recyclerview.RecyclerViewInteraction;
 import dagger.Module;
@@ -50,12 +54,15 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.junit.Before;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.Espresso.getIdlingResources;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.registerIdlingResources;
+import static android.support.test.espresso.Espresso.unregisterIdlingResources;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -87,8 +94,12 @@ import static org.mockito.Mockito.when;
   @Rule public IntentsTestRule<MainActivity> activityRule =
       new IntentsTestRule<>(MainActivity.class, true, false);
 
-  @Before public void setUp() {
-    super.setUp();
+  @After public void tearDown() throws Exception {
+    List<IdlingResource> idlingResources = getIdlingResources();
+    for (IdlingResource resource : idlingResources) {
+      unregisterIdlingResources(resource);
+    }
+    super.tearDown();
   }
 
   @Test public void shouldShowsFakeDataBarWhenMarvelKeysNotHasBeenProvided() throws Exception {
@@ -97,8 +108,8 @@ import static org.mockito.Mockito.when;
     startActivity();
 
     onView(withId(R.id.tv_disclaimer)).check(matches(isDisplayed()));
-    onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("¯\\_(ツ)_/¯")))
-        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+    onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("¯\\_(ツ)_/¯"))).check(
+        matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
   }
 
   @Test public void shouldShowsErrorIfSomethingWrongHappend() throws Exception {
@@ -106,8 +117,8 @@ import static org.mockito.Mockito.when;
     givenEmptyComicSeries();
 
     startActivity();
-    onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("¯\\_(ツ)_/¯")))
-        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+    onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("¯\\_(ツ)_/¯"))).check(
+        matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
   }
 
   @Test public void shouldShowsConnectionErrorIfHaveConnectionThroubles() throws Exception {
@@ -116,8 +127,8 @@ import static org.mockito.Mockito.when;
 
     startActivity();
     onView(allOf(withId(android.support.design.R.id.snackbar_text),
-        withText("Connection troubles. Ask to Ironman!")))
-        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        withText("Connection troubles. Ask to Ironman!"))).check(
+        matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
   }
 
   @Test public void shouldHideLoadingWhenDataIsLoaded() throws Exception {
@@ -181,8 +192,9 @@ import static org.mockito.Mockito.when;
     List<ComicSeries> comicSeries = givenThereAreSomeComicSeries(ANY_NUMBER_OF_COMIC_SERIES);
     givenAnyComicSeriesDetail();
     int comicSeriesIndex = 0;
-    startActivity();
-
+    Activity activity = startActivity();
+    registerIdlingResources(
+        new ViewPagerIdlingResource((ViewPager) activity.findViewById(R.id.vp_main)));
     onView(withId(R.id.vp_main)).perform(swipeLeft());
 
     onView(withId(R.id.rv_comics)).
@@ -296,21 +308,15 @@ import static org.mockito.Mockito.when;
           MainActivityTest.class
       }) class TestModule {
 
-    @Provides
-    @Singleton
-    public CharactersRepository provideCharactersRepository() {
+    @Provides @Singleton public CharactersRepository provideCharactersRepository() {
       return mock(CharactersRepository.class);
     }
 
-    @Provides
-    @Singleton
-    public ComicSeriesRepository provideComicSeriesRepository() {
+    @Provides @Singleton public ComicSeriesRepository provideComicSeriesRepository() {
       return mock(ComicSeriesRepository.class);
     }
 
-    @Provides
-    @Singleton
-    public GetMarvelSettings provideGetMarvelSettings() {
+    @Provides @Singleton public GetMarvelSettings provideGetMarvelSettings() {
       return mock(GetMarvelSettings.class);
     }
   }
