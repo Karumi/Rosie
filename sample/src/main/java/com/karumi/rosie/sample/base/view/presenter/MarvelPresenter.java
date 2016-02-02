@@ -29,7 +29,7 @@ public class MarvelPresenter<T extends MarvelPresenter.View> extends RosiePresen
 
   private final OnErrorCallback onErrorCallback = new OnErrorCallback() {
     @Override public boolean onError(Error error) {
-      if(error instanceof ConnectionError) {
+      if (error instanceof ConnectionError) {
         getView().showConnectionError();
       } else {
         getView().showGenericError();
@@ -40,6 +40,7 @@ public class MarvelPresenter<T extends MarvelPresenter.View> extends RosiePresen
 
   public interface View extends RosiePresenterWithLoading.View {
     void showGenericError();
+
     void showConnectionError();
   }
 }
