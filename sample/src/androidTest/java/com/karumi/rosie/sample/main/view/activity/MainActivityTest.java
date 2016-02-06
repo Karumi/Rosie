@@ -45,7 +45,6 @@ import com.karumi.rosie.sample.comics.view.fragment.ComicSeriesFragment;
 import com.karumi.rosie.sample.idlingresources.ViewPagerIdlingResource;
 import com.karumi.rosie.sample.main.domain.usecase.GetMarvelSettings;
 import com.karumi.rosie.sample.recyclerview.RecyclerViewInteraction;
-import com.karumi.rosie.sample.testutils.ViewVisibilityIdlingResource;
 import dagger.Module;
 import dagger.Provides;
 import java.net.UnknownHostException;
