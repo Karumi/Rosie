@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.karumi.rosie.sample.testutils;
+package com.karumi.rosie.testutils;
 
 import com.karumi.rosie.domain.usecase.TaskScheduler;
 import com.karumi.rosie.domain.usecase.UseCaseWrapper;
