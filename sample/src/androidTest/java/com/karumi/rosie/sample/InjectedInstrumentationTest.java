@@ -60,8 +60,8 @@ public abstract class InjectedInstrumentationTest {
 
   private MainApplication getApplication() {
     Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-    MainApplication app = (MainApplication) instrumentation.getTargetContext()
-        .getApplicationContext();
+    MainApplication app =
+        (MainApplication) instrumentation.getTargetContext().getApplicationContext();
     return app;
   }
 
