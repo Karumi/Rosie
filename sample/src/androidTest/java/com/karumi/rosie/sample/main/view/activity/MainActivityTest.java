@@ -18,7 +18,6 @@ package com.karumi.rosie.sample.main.view.activity;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
-import android.support.test.espresso.Espresso;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
@@ -115,16 +114,11 @@ import static org.mockito.Mockito.when;
     givenConnectionExceptionObtainingCharacters();
     givenEmptyComicSeries();
 
-    MainActivity mainActivity = startActivity();
+    startActivity();
 
-    ViewVisibilityIdlingResource viewVisibilityIdlingResource =
-        new ViewVisibilityIdlingResource(mainActivity, android.support.design.R.id.snackbar_text,
-            View.VISIBLE);
-    Espresso.registerIdlingResources(viewVisibilityIdlingResource);
     onView(allOf(withId(android.support.design.R.id.snackbar_text),
         withText("Connection troubles. Ask to Ironman!"))).check(
         matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-    Espresso.unregisterIdlingResources(viewVisibilityIdlingResource);
   }
 
   @Test public void shouldHideLoadingWhenDataIsLoaded() throws Exception {
