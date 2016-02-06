@@ -96,14 +96,6 @@ import static org.mockito.Mockito.when;
   @Rule public IntentsTestRule<MainActivity> activityRule =
       new IntentsTestRule<>(MainActivity.class, true, false);
 
-  @After public void tearDown() throws Exception {
-    List<IdlingResource> idlingResources = getIdlingResources();
-    for (IdlingResource resource : idlingResources) {
-      unregisterIdlingResources(resource);
-    }
-    super.tearDown();
-  }
-
   @Test public void shouldShowsFakeDataBarWhenMarvelKeysNotHasBeenProvided() throws Exception {
     givenFakeDataIsEnable();
     givenEmptyCharacters();

@@ -18,16 +18,9 @@ package com.karumi.rosie.sample;
 
 import android.content.Context;
 import com.karumi.rosie.daggerutils.ForActivity;
-import com.karumi.rosie.domain.usecase.TaskScheduler;
-import com.karumi.rosie.domain.usecase.UseCaseHandler;
-import com.karumi.rosie.domain.usecase.error.ErrorHandler;
-import com.karumi.rosie.domain.usecase.jobqueue.TestTaskSchedulerJobQueueImpl;
-import com.karumi.rosie.sample.base.view.error.MarvelErrorFactory;
 import com.karumi.rosie.sample.main.MainModule;
-import com.path.android.jobqueue.JobManager;
 import dagger.Module;
 import dagger.Provides;
-import javax.inject.Singleton;
 
 @Module(overrides = true, complete = false, library = true, includes = {
     MainModule.class
@@ -42,13 +35,4 @@ import javax.inject.Singleton;
   @Provides @ForActivity Context provideActivityContext() {
     return context;
   }
-
-  @Provides @Singleton UseCaseHandler provideUseCaseHandler(JobManager jobManager) {
-    TaskScheduler taskScheduler = getFakeTaskScheduler(jobManager);
-    return new UseCaseHandler(taskScheduler, new ErrorHandler(new MarvelErrorFactory()));
-  }
-  private TaskScheduler getFakeTaskScheduler(JobManager jobManager) {
-    return new TestTaskSchedulerJobQueueImpl(jobManager);
-  }
-
 }
