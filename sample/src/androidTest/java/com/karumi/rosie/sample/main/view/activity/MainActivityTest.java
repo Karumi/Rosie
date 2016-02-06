@@ -124,8 +124,8 @@ import static org.mockito.Mockito.when;
         new ViewVisibilityIdlingResource(mainActivity, android.support.design.R.id.snackbar_text,
             View.VISIBLE);
     Espresso.registerIdlingResources(viewVisibilityIdlingResource);
-    onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("¯\\_(ツ)_/¯")))
-        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+    onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("¯\\_(ツ)_/¯"))).check(
+        matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     Espresso.unregisterIdlingResources(viewVisibilityIdlingResource);
   }
 
@@ -140,8 +140,8 @@ import static org.mockito.Mockito.when;
             View.VISIBLE);
     Espresso.registerIdlingResources(viewVisibilityIdlingResource);
     onView(allOf(withId(android.support.design.R.id.snackbar_text),
-        withText("Connection troubles. Ask to Ironman!")))
-        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        withText("Connection troubles. Ask to Ironman!"))).check(
+        matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     Espresso.unregisterIdlingResources(viewVisibilityIdlingResource);
   }
 
@@ -270,6 +270,7 @@ import static org.mockito.Mockito.when;
     for (int i = 0; i < numberOfCharacters; i++) {
       Character character = getCharacter(i);
       characters.add(character);
+      when(charactersRepository.getByKey(String.valueOf(i))).thenReturn(character);
     }
     PaginatedCollection<Character> paginatedCollection = new PaginatedCollection<>(characters);
     paginatedCollection.setPage(Page.withOffsetAndLimit(0, numberOfCharacters));
@@ -319,7 +320,7 @@ import static org.mockito.Mockito.when;
   @Module(overrides = true, library = true, complete = false,
       injects = {
           MainActivity.class, CharactersFragment.class, ComicSeriesFragment.class,
-          MainActivityTest.class
+          MainActivityTest.class, CharacterDetailsActivity.class
       }) class TestModule {
 
     @Provides @Singleton public CharactersRepository provideCharactersRepository() {
