@@ -19,6 +19,7 @@ package com.karumi.rosie.sample.characters.view.presenter;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
 import com.karumi.rosie.domain.usecase.annotation.Success;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
+import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 import com.karumi.rosie.repository.PaginatedCollection;
 import com.karumi.rosie.repository.datasource.paginated.Page;
 import com.karumi.rosie.sample.base.view.presenter.MarvelPresenter;
@@ -76,7 +77,12 @@ public class CharactersPresenter extends MarvelPresenter<CharactersPresenter.Vie
             showCharacters(characters);
             offset = characters.getPage().getOffset() + NUMBER_OF_CHARACTERS_PER_PAGE;
           }
-        })
+        }).onError(new OnErrorCallback() {
+      @Override public boolean onError(Error error) {
+        getView().hideLoading();
+        return false;
+      }
+    })
         .execute();
   }
 
