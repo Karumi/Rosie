@@ -19,7 +19,9 @@ package com.karumi.rosie.sample;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Espresso;
 import com.karumi.rosie.sample.main.MainApplication;
+import com.karumi.rosie.sample.testutils.PriorityJobQueueIdleMonitor;
 import dagger.ObjectGraph;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,7 +35,12 @@ import org.junit.Before;
 
 public abstract class InjectedInstrumentationTest {
 
+  private PriorityJobQueueIdleMonitor priorityJobQueueIdleMonitor;
+
   @Before public void setUp() {
+    priorityJobQueueIdleMonitor = new PriorityJobQueueIdleMonitor();
+    Espresso.registerIdlingResources(priorityJobQueueIdleMonitor);
+
     MainApplication application = getApplication();
     List<Object> childTestModules = getTestModules();
     Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
@@ -45,6 +52,8 @@ public abstract class InjectedInstrumentationTest {
   }
 
   @After public void tearDown() throws Exception {
+    Espresso.unregisterIdlingResources(priorityJobQueueIdleMonitor);
+
     MainApplication application = getApplication();
     application.resetFakeGraph();
   }

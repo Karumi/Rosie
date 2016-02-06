@@ -36,7 +36,7 @@ public class MainApplication extends RosieApplication {
   }
 
   @Override public ObjectGraph plusGraph(List<Object> activityScopeModules) {
-    ObjectGraph newObjectGraph = null;
+    ObjectGraph newObjectGraph;
     if (fakeObjectGraph == null) {
       newObjectGraph = super.plusGraph(activityScopeModules);
     } else {

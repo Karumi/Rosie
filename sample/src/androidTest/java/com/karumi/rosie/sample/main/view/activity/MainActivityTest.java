@@ -18,6 +18,7 @@ package com.karumi.rosie.sample.main.view.activity;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.contrib.RecyclerViewActions;
@@ -45,6 +46,7 @@ import com.karumi.rosie.sample.comics.view.fragment.ComicSeriesFragment;
 import com.karumi.rosie.sample.idlingresources.ViewPagerIdlingResource;
 import com.karumi.rosie.sample.main.domain.usecase.GetMarvelSettings;
 import com.karumi.rosie.sample.recyclerview.RecyclerViewInteraction;
+import com.karumi.rosie.sample.testutils.ViewVisibilityIdlingResource;
 import dagger.Module;
 import dagger.Provides;
 import java.net.UnknownHostException;
@@ -104,31 +106,43 @@ import static org.mockito.Mockito.when;
 
   @Test public void shouldShowsFakeDataBarWhenMarvelKeysNotHasBeenProvided() throws Exception {
     givenFakeDataIsEnable();
+    givenEmptyCharacters();
+    givenEmptyComicSeries();
 
     startActivity();
 
     onView(withId(R.id.tv_disclaimer)).check(matches(isDisplayed()));
-    onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("¯\\_(ツ)_/¯"))).check(
-        matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
   }
 
   @Test public void shouldShowsErrorIfSomethingWrongHappend() throws Exception {
     givenExceptionObtainingCharacters();
     givenEmptyComicSeries();
 
-    startActivity();
-    onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("¯\\_(ツ)_/¯"))).check(
-        matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+    MainActivity mainActivity = startActivity();
+
+    ViewVisibilityIdlingResource viewVisibilityIdlingResource =
+        new ViewVisibilityIdlingResource(mainActivity, android.support.design.R.id.snackbar_text,
+            View.VISIBLE);
+    Espresso.registerIdlingResources(viewVisibilityIdlingResource);
+    onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("¯\\_(ツ)_/¯")))
+        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+    Espresso.unregisterIdlingResources(viewVisibilityIdlingResource);
   }
 
   @Test public void shouldShowsConnectionErrorIfHaveConnectionThroubles() throws Exception {
     givenConnectionExceptionObtainingCharacters();
     givenEmptyComicSeries();
 
-    startActivity();
+    MainActivity mainActivity = startActivity();
+
+    ViewVisibilityIdlingResource viewVisibilityIdlingResource =
+        new ViewVisibilityIdlingResource(mainActivity, android.support.design.R.id.snackbar_text,
+            View.VISIBLE);
+    Espresso.registerIdlingResources(viewVisibilityIdlingResource);
     onView(allOf(withId(android.support.design.R.id.snackbar_text),
-        withText("Connection troubles. Ask to Ironman!"))).check(
-        matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        withText("Connection troubles. Ask to Ironman!")))
+        .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+    Espresso.unregisterIdlingResources(viewVisibilityIdlingResource);
   }
 
   @Test public void shouldHideLoadingWhenDataIsLoaded() throws Exception {
@@ -231,13 +245,13 @@ import static org.mockito.Mockito.when;
   }
 
   private void givenExceptionObtainingCharacters() throws Exception {
-
+    when(charactersRepository.getAll(ReadPolicy.CACHE_ONLY)).thenReturn(new ArrayList<Character>());
     when(charactersRepository.getPage(any(Page.class))).thenThrow(
         new MarvelApiException(ANY_EXCEPTION, null));
   }
 
   private void givenConnectionExceptionObtainingCharacters() throws Exception {
-
+    when(charactersRepository.getAll(ReadPolicy.CACHE_ONLY)).thenReturn(new ArrayList<Character>());
     when(charactersRepository.getPage(any(Page.class))).thenThrow(
         new MarvelApiException(ANY_EXCEPTION, new UnknownHostException()));
   }
