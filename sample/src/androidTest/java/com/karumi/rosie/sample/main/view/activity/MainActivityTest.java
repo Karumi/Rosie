@@ -19,7 +19,6 @@ package com.karumi.rosie.sample.main.view.activity;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.test.espresso.Espresso;
-import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
@@ -56,15 +55,12 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.getIdlingResources;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.registerIdlingResources;
-import static android.support.test.espresso.Espresso.unregisterIdlingResources;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -110,15 +106,10 @@ import static org.mockito.Mockito.when;
     givenExceptionObtainingCharacters();
     givenEmptyComicSeries();
 
-    MainActivity mainActivity = startActivity();
+    startActivity();
 
-    ViewVisibilityIdlingResource viewVisibilityIdlingResource =
-        new ViewVisibilityIdlingResource(mainActivity, android.support.design.R.id.snackbar_text,
-            View.VISIBLE);
-    Espresso.registerIdlingResources(viewVisibilityIdlingResource);
     onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("¯\\_(ツ)_/¯"))).check(
         matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-    Espresso.unregisterIdlingResources(viewVisibilityIdlingResource);
   }
 
   @Test public void shouldShowsConnectionErrorIfHaveConnectionThroubles() throws Exception {
