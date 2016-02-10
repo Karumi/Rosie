@@ -19,15 +19,16 @@ package com.karumi.rosie.sample.characters.view.presenter;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
 import com.karumi.rosie.domain.usecase.annotation.Success;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
+import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
+import com.karumi.rosie.sample.base.view.presenter.MarvelPresenter;
 import com.karumi.rosie.sample.characters.domain.model.Character;
 import com.karumi.rosie.sample.characters.domain.usecase.GetCharacterDetails;
 import com.karumi.rosie.sample.characters.view.viewmodel.CharacterDetailViewModel;
 import com.karumi.rosie.sample.characters.view.viewmodel.mapper.CharacterToCharacterDetailViewModelMapper;
-import com.karumi.rosie.view.loading.RosiePresenterWithLoading;
 import javax.inject.Inject;
 
 public class CharacterDetailsPresenter
-    extends RosiePresenterWithLoading<CharacterDetailsPresenter.View> {
+    extends MarvelPresenter<CharacterDetailsPresenter.View> {
 
   private final GetCharacterDetails getCharacterDetails;
   private final CharacterToCharacterDetailViewModelMapper mapper;
@@ -59,10 +60,17 @@ public class CharacterDetailsPresenter
             mapper.mapCharacterToCharacterDetailViewModel(character);
         getView().showCharacterDetail(characterDetailViewModel);
       }
-    }).execute();
+    })
+        .onError(new OnErrorCallback() {
+          @Override public boolean onError(Error error) {
+            getView().hideLoading();
+            return false;
+          }
+        })
+        .execute();
   }
 
-  public interface View extends RosiePresenterWithLoading.View {
+  public interface View extends MarvelPresenter.View {
     void hideCharacterDetail();
 
     void showCharacterDetail(CharacterDetailViewModel character);
