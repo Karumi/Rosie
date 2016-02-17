@@ -268,20 +268,20 @@ import static org.mockito.Mockito.when;
     return comics;
   }
 
-  @NonNull private Character getCharacter(int i) {
+  @NonNull private Character getCharacter(int id) {
     Character character = new Character();
-    character.setKey("" + i);
-    character.setName("SuperHero - " + i);
-    character.setDescription("Description Super Hero - " + i);
-    character.setThumbnailUrl("https://i.annihil.us/u/prod/marvel/i/mg/c/60/55b6a28ef24fa.jpg");
+    character.setKey("" + id);
+    character.setName("SuperHero - " + id);
+    character.setDescription("Description Super Hero - " + id);
+    character.setThumbnailUrl("https://id.annihil.us/u/prod/marvel/id/mg/c/60/55b6a28ef24fa.jpg");
     return character;
   }
 
-  @NonNull private ComicSeries getComicSeries(int i) {
+  @NonNull private ComicSeries getComicSeries(int id) {
     ComicSeries comicSeries = new ComicSeries();
-    comicSeries.setKey(i);
-    comicSeries.setName("ComicSeries - " + i);
-    comicSeries.setDescription("Description Comic Serie - " + i);
+    comicSeries.setKey(id);
+    comicSeries.setName("ComicSeries - " + id);
+    comicSeries.setDescription("Description Comic Serie - " + id);
     return comicSeries;
   }
 

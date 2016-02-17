@@ -79,7 +79,7 @@ public class ComicSeriesDetailsActivityTest extends InjectedInstrumentationTest 
 
   @Test public void shouldShowComicIfComicSerieHaveComics() throws Exception {
     ComicSeries comicSeries = givenValidComicSeries();
-    List<ComicSeriesDetailViewModel> comics = prepareComicData(comicSeries);
+    List<ComicSeriesDetailViewModel> comics = givenComicData(comicSeries);
 
     startActivity();
     onView(withId(R.id.rv_comics)).perform(RecyclerViewActions.scrollToPosition(1));
@@ -140,13 +140,13 @@ public class ComicSeriesDetailsActivityTest extends InjectedInstrumentationTest 
         new MarvelApiException(ANY_EXCEPTION, new UnknownHostException()));
   }
 
-  @NonNull private ComicSeries getComicSeries(int i) {
+  @NonNull private ComicSeries getComicSeries(int id) {
     ComicSeries comicSeries = new ComicSeries();
-    comicSeries.setKey(i);
-    comicSeries.setDescription("desc - " + i);
-    comicSeries.setName("name - " + i);
+    comicSeries.setKey(id);
+    comicSeries.setDescription("desc - " + id);
+    comicSeries.setName("name - " + id);
     comicSeries.setComplete(true);
-    comicSeries.setCoverUrl("https://i.annihil.us/u/prod/marvel/i/mg/c/60/55b6a28ef24fa.jpg");
+    comicSeries.setCoverUrl("https://id.annihil.us/u/prod/marvel/id/mg/c/60/55b6a28ef24fa.jpg");
     comicSeries.setRating("R+");
     comicSeries.setComics(givenComics());
 
@@ -166,7 +166,7 @@ public class ComicSeriesDetailsActivityTest extends InjectedInstrumentationTest 
     return comics;
   }
 
-  private List<ComicSeriesDetailViewModel> prepareComicData(ComicSeries comicSeries) {
+  private List<ComicSeriesDetailViewModel> givenComicData(ComicSeries comicSeries) {
     ComicSeriesToComicSeriesDetailsViewModelMapper mapper =
         new ComicSeriesToComicSeriesDetailsViewModelMapper();
     ComicSeriesDetailsViewModel comicSeriesDetailsViewModel = mapper.map(comicSeries);

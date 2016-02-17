@@ -108,12 +108,12 @@ public class CharacterDetailsActivityTest extends InjectedInstrumentationTest {
         new MarvelApiException(ANY_EXCEPTION, new UnknownHostException()));
   }
 
-  @NonNull private Character getCharacter(int i) {
+  @NonNull private Character getCharacter(int id) {
     Character character = new Character();
-    character.setKey("" + i);
-    character.setName("SuperHero - " + i);
-    character.setDescription("Description Super Hero - " + i);
-    character.setThumbnailUrl("https://i.annihil.us/u/prod/marvel/i/mg/c/60/55b6a28ef24fa.jpg");
+    character.setKey("" + id);
+    character.setName("SuperHero - " + id);
+    character.setDescription("Description Super Hero - " + id);
+    character.setThumbnailUrl("https://id.annihil.us/u/prod/marvel/id/mg/c/60/55b6a28ef24fa.jpg");
     return character;
   }
 
