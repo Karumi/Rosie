@@ -248,6 +248,31 @@ public class SamplePresenter extends RosiePresenter<SamplePresenter.View> {
 	/*...*/
 }
 ```
+You can create your own factory that converts Exceptions to Error, here you can unify errors or add UI related info to your errors.
+
+```java
+public class CustomErrorFactory extends ErrorFactory {
+
+	@Inject public CustomErrorFactory() {
+	}
+
+	@Override public Error create(Exception exception) {
+		if (targetException instanceof MyConnectionException) {
+			return new ConnectionError();
+		}
+		return new UnknownError();
+  }
+}
+```
+
+And you need provide this one from your module.
+
+```java
+	@Provides public ErrorHandler providesErrorHandler(CustomErrorFactory errorFactory) {
+		return new ErrorHandler(errorFactory);
+	}
+```
+
 
 ###Repository
 
