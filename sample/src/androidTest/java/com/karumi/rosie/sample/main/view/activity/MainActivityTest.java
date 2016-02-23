@@ -90,7 +90,7 @@ import static org.mockito.Mockito.when;
   @Rule public IntentsTestRule<MainActivity> activityRule =
       new IntentsTestRule<>(MainActivity.class, true, false);
 
-  @Test public void shouldShowsFakeDataBarWhenMarvelKeysNotHasBeenProvided() throws Exception {
+  @Test public void shouldShowFakeDataBarWhenMarvelKeysHasNotBeenProvided() throws Exception {
     givenFakeDataIsEnable();
     givenEmptyCharacters();
     givenEmptyComicSeries();
@@ -100,7 +100,7 @@ import static org.mockito.Mockito.when;
     onView(withId(R.id.tv_disclaimer)).check(matches(isDisplayed()));
   }
 
-  @Test public void shouldShowsErrorIfSomethingWrongHappend() throws Exception {
+  @Test public void shouldShowErrorIfSomethingWrongHappens() throws Exception {
     givenExceptionObtainingCharacters();
     givenEmptyComicSeries();
 
@@ -110,7 +110,7 @@ import static org.mockito.Mockito.when;
         matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
   }
 
-  @Test public void shouldShowsConnectionErrorIfHaveConnectionThroubles() throws Exception {
+  @Test public void shouldShowConnectionErrorIfHaveConnectionTroubles() throws Exception {
     givenConnectionExceptionObtainingCharacters();
     givenEmptyComicSeries();
 
@@ -130,7 +130,7 @@ import static org.mockito.Mockito.when;
         matches(not(isDisplayed())));
   }
 
-  @Test public void shouldShowsCharacterNameIfThereAreCharacters() throws Exception {
+  @Test public void shouldShowCharacterNameIfThereAreCharacters() throws Exception {
     List<Character> superHeroes = givenThereAreSomeCharacters(ANY_NUMBER_OF_CHARACTERS);
 
     startActivity();
@@ -157,7 +157,7 @@ import static org.mockito.Mockito.when;
     intended(hasExtra("CharacterDetailsActivity.CharacterKey", characterSelected.getKey()));
   }
 
-  @Test public void shouldShowsComicSeriesIfTheAreComicSeriesAndTabIsShowed() throws Exception {
+  @Test public void shouldShowComicSeriesIfTheAreComicSeriesAndTabIsShown() throws Exception {
     givenThereAreSomeCharacters(ANY_NUMBER_OF_CHARACTERS);
     List<ComicSeries> comicSeries = givenThereAreSomeComicSeries(ANY_NUMBER_OF_COMIC_SERIES);
 

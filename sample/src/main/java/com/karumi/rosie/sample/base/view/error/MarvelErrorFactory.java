@@ -39,6 +39,6 @@ public class MarvelErrorFactory extends ErrorFactory {
         return new ConnectionError();
       }
     }
-    return new DefaultError();
+    return new UnknownError();
   }
 }

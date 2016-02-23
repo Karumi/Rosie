@@ -16,5 +16,5 @@
 
 package com.karumi.rosie.sample.base.view.error;
 
-public class DefaultError extends Error {
+public class UnknownError extends Error {
 }

@@ -55,12 +55,13 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ComicSeriesDetailsActivityTest extends InjectedInstrumentationTest {
 
-  private static final int ANY_COMIC_SERIE_ID = 1;
+  private static final int ANY_COMIC_SERIES_ID = 1;
   private static final String ANY_EXCEPTION = "AnyException";
   @Rule public IntentsTestRule<ComicSeriesDetailsActivity> activityRule =
       new IntentsTestRule<>(ComicSeriesDetailsActivity.class, true, false);
@@ -68,7 +69,7 @@ public class ComicSeriesDetailsActivityTest extends InjectedInstrumentationTest 
   @Inject
   ComicSeriesRepository comicSeriesRepository;
 
-  @Test public void shouldShowComicSeriesDetailWhenComicSerieIsLoaded() throws Exception {
+  @Test public void shouldShowComicSeriesDetailWhenComicSeriesIsLoaded() throws Exception {
     ComicSeries comicSeries = givenValidComicSeries();
 
     startActivity();
@@ -77,13 +78,17 @@ public class ComicSeriesDetailsActivityTest extends InjectedInstrumentationTest 
     onView(withId(R.id.tv_description)).check(matches(withText(comicSeries.getDescription())));
   }
 
-  @Test public void shouldShowComicIfComicSerieHaveComics() throws Exception {
+  @Test public void shouldShowComicIfComicSeriesHaveComics() throws Exception {
     ComicSeries comicSeries = givenValidComicSeries();
     List<ComicSeriesDetailViewModel> comics = givenComicData(comicSeries);
 
     startActivity();
     onView(withId(R.id.rv_comics)).perform(RecyclerViewActions.scrollToPosition(1));
 
+    assertRecyclerViewShowComics(comics);
+  }
+
+  private void assertRecyclerViewShowComics(List<ComicSeriesDetailViewModel> comics) {
     RecyclerViewInteraction.<ComicSeriesDetailViewModel>onRecyclerView(
         withId(R.id.rv_comics))
         .withItems(comics)
@@ -100,12 +105,13 @@ public class ComicSeriesDetailsActivityTest extends InjectedInstrumentationTest 
 
   @Test public void shouldHideLoadingWhenComicSeriesIsLoaded() throws Exception {
     givenValidComicSeries();
+
     startActivity();
 
     onView((withId(R.id.loading))).check(matches(not(isDisplayed())));
   }
 
-  @Test public void shouldShowsErrorIfSomethingWrongHappend() throws Exception {
+  @Test public void shouldShowErrorIfSomethingWrongHappens() throws Exception {
     givenExceptionObtainingComicSeries();
 
     startActivity();
@@ -114,7 +120,7 @@ public class ComicSeriesDetailsActivityTest extends InjectedInstrumentationTest 
         matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
   }
 
-  @Test public void shouldShowsConnectionErrorIfHaveConnectionThroubles() throws Exception {
+  @Test public void shouldShowConnectionErrorIfHaveConnectionTroubles() throws Exception {
     givenConnectionExceptionObtainingComicSeries();
 
     startActivity();
@@ -125,8 +131,8 @@ public class ComicSeriesDetailsActivityTest extends InjectedInstrumentationTest 
   }
 
   private ComicSeries givenValidComicSeries() throws Exception {
-    ComicSeries comicSeries = getComicSeries(ANY_COMIC_SERIE_ID);
-    when(comicSeriesRepository.getComicSeriesDetail(any(Integer.class))).thenReturn(
+    ComicSeries comicSeries = getComicSeries(ANY_COMIC_SERIES_ID);
+    when(comicSeriesRepository.getComicSeriesDetail(anyInt())).thenReturn(
         comicSeries);
     return comicSeries;
   }
@@ -175,7 +181,7 @@ public class ComicSeriesDetailsActivityTest extends InjectedInstrumentationTest 
 
   private ComicSeriesDetailsActivity startActivity() {
     Intent intent = new Intent();
-    intent.putExtra("ComicSeriesDetailsActivity.ComicSeriesKey", ANY_COMIC_SERIE_ID);
+    intent.putExtra("ComicSeriesDetailsActivity.ComicSeriesKey", ANY_COMIC_SERIES_ID);
 
     return activityRule.launchActivity(intent);
   }

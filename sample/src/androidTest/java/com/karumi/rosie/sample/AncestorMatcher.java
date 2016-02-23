@@ -14,9 +14,6 @@
  *  limitations under the License.
  */
 
-/*
- * http://blog.sqisland.com/2015/05/espresso-match-toolbar-title.html
- */
 package com.karumi.rosie.sample;
 
 import android.support.test.espresso.matcher.BoundedMatcher;

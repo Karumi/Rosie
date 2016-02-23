@@ -58,7 +58,7 @@ public class CharacterDetailsActivityTest extends InjectedInstrumentationTest {
   CharactersRepository charactersRepository;
 
   @Test public void shouldShowCharacterDetailWhenCharacterIsLoaded() throws Exception {
-    Character character = givenValidCharacter();
+    Character character = givenAValidCharacter();
 
     startActivity();
 
@@ -67,14 +67,15 @@ public class CharacterDetailsActivityTest extends InjectedInstrumentationTest {
   }
 
   @Test public void shouldHideLoadingWhenCharacterIsLoaded() throws Exception {
-    givenValidCharacter();
+    givenAValidCharacter();
+
     startActivity();
 
     onView((withId(R.id.loading))).check(matches(not(isDisplayed())));
   }
 
   @Test public void shouldShowsErrorIfSomethingWrongHappend() throws Exception {
-    givenExceptionObtainingCharacter();
+    givenExceptionObtainingACharacter();
 
     startActivity();
 
@@ -82,8 +83,8 @@ public class CharacterDetailsActivityTest extends InjectedInstrumentationTest {
         matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
   }
 
-  @Test public void shouldShowsConnectionErrorIfHaveConnectionThroubles() throws Exception {
-    givenConnectionExceptionObtainingCharacter();
+  @Test public void shouldShowsConnectionErrorIfHasConnectionTroubles() throws Exception {
+    givenConnectionExceptionObtainingACharacter();
 
     startActivity();
 
@@ -92,18 +93,18 @@ public class CharacterDetailsActivityTest extends InjectedInstrumentationTest {
         matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
   }
 
-  private Character givenValidCharacter() throws Exception {
+  private Character givenAValidCharacter() throws Exception {
     Character character = getCharacter(ANY_CHARACTER_ID);
     when(charactersRepository.getByKey(anyString())).thenReturn(
         character);
     return character;
   }
 
-  private void givenExceptionObtainingCharacter() throws Exception {
+  private void givenExceptionObtainingACharacter() throws Exception {
     when(charactersRepository.getByKey(anyString())).thenThrow(new Exception());
   }
 
-  private void givenConnectionExceptionObtainingCharacter() throws Exception {
+  private void givenConnectionExceptionObtainingACharacter() throws Exception {
     when(charactersRepository.getByKey(anyString())).thenThrow(
         new MarvelApiException(ANY_EXCEPTION, new UnknownHostException()));
   }

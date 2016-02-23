@@ -19,8 +19,6 @@ package com.karumi.rosie.sample.main.domain.usecase;
 import com.karumi.rosie.sample.BuildConfig;
 
 public class GetMarvelSettings {
-  public GetMarvelSettings() {
-  }
 
   public boolean haveKeys() {
     return BuildConfig.MARVEL_PUBLIC_KEY != null && BuildConfig.MARVEL_PRIVATE_KEY != null;
