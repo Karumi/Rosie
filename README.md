@@ -248,7 +248,7 @@ public class SamplePresenter extends RosiePresenter<SamplePresenter.View> {
 	/*...*/
 }
 ```
-You can create your own factory that converts Exceptions to Error, here you can unify errors or add UI related info to your errors.
+You can create your own ErrorFactory implementation to map Exceptions to Errors. In your implementation you can unify your error handling.
 
 ```java
 public class CustomErrorFactory extends ErrorFactory {
@@ -265,7 +265,7 @@ public class CustomErrorFactory extends ErrorFactory {
 }
 ```
 
-And you need provide this one from your module.
+Remember to provide your ErrorFactory implementation inside a Dagger module.
 
 ```java
 	@Provides public ErrorHandler providesErrorHandler(CustomErrorFactory errorFactory) {
