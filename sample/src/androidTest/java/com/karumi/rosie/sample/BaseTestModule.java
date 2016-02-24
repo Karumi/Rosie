@@ -14,21 +14,25 @@
  *  limitations under the License.
  */
 
-package com.karumi.rosie.testutils;
+package com.karumi.rosie.sample;
 
-import com.karumi.rosie.domain.usecase.TaskScheduler;
-import com.karumi.rosie.domain.usecase.UseCaseWrapper;
+import android.content.Context;
+import com.karumi.rosie.daggerutils.ForActivity;
+import com.karumi.rosie.sample.main.MainModule;
+import dagger.Module;
+import dagger.Provides;
 
-/**
- * Scheduler to run the test sequentially
- */
-public class FakeTaskScheduler implements TaskScheduler {
+@Module(overrides = true, complete = false, library = true, includes = {
+    MainModule.class
+}) public class BaseTestModule {
 
-  @Override public void execute(UseCaseWrapper useCaseWrapper) {
-    try {
-      useCaseWrapper.execute();
-    } catch (Exception e) {
-      //avoid exceptions for test scheduler
-    }
+  private final Context context;
+
+  public BaseTestModule(Context context) {
+    this.context = context;
+  }
+
+  @Provides @ForActivity Context provideActivityContext() {
+    return context;
   }
 }

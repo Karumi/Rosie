@@ -248,6 +248,31 @@ public class SamplePresenter extends RosiePresenter<SamplePresenter.View> {
 	/*...*/
 }
 ```
+You can create your own ErrorFactory implementation to map Exceptions to Errors. In your implementation you can unify your error handling.
+
+```java
+public class CustomErrorFactory extends ErrorFactory {
+
+	@Inject public CustomErrorFactory() {
+	}
+
+	@Override public Error create(Exception exception) {
+		if (targetException instanceof MyConnectionException) {
+			return new ConnectionError();
+		}
+		return new UnknownError();
+  }
+}
+```
+
+Remember to provide your ErrorFactory implementation inside a Dagger module.
+
+```java
+	@Provides public ErrorHandler providesErrorHandler(CustomErrorFactory errorFactory) {
+		return new ErrorHandler(errorFactory);
+	}
+```
+
 
 ###Repository
 

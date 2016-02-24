@@ -19,6 +19,7 @@ package com.karumi.rosie.sample.comics.view.presenter;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
 import com.karumi.rosie.domain.usecase.annotation.Success;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
+import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 import com.karumi.rosie.repository.PaginatedCollection;
 import com.karumi.rosie.repository.datasource.paginated.Page;
 import com.karumi.rosie.sample.comics.domain.model.ComicSeries;
@@ -73,6 +74,12 @@ public class ComicsSeriesPresenter extends RosiePresenterWithLoading<ComicsSerie
           @Success public void onComicSeriesLoaded(PaginatedCollection<ComicSeries> comicSeries) {
             showComics(comicSeries);
             offset = comicSeries.getPage().getOffset() + NUMBER_OF_COMIC_SERIES_PER_PAGE;
+          }
+        })
+        .onError(new OnErrorCallback() {
+          @Override public boolean onError(Error error) {
+            getView().hideLoading();
+            return false;
           }
         })
         .execute();

@@ -14,21 +14,7 @@
  *  limitations under the License.
  */
 
-package com.karumi.rosie.testutils;
+package com.karumi.rosie.sample.base.view.error;
 
-import com.karumi.rosie.domain.usecase.TaskScheduler;
-import com.karumi.rosie.domain.usecase.UseCaseWrapper;
-
-/**
- * Scheduler to run the test sequentially
- */
-public class FakeTaskScheduler implements TaskScheduler {
-
-  @Override public void execute(UseCaseWrapper useCaseWrapper) {
-    try {
-      useCaseWrapper.execute();
-    } catch (Exception e) {
-      //avoid exceptions for test scheduler
-    }
-  }
+public class ConnectionError extends Error {
 }

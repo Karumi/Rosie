@@ -16,10 +16,13 @@
 
 package com.karumi.rosie.sample.main;
 
+import com.karumi.rosie.domain.usecase.error.ErrorHandler;
 import com.karumi.rosie.repository.datasource.paginated.InMemoryPaginatedCacheDataSource;
 import com.karumi.rosie.repository.datasource.paginated.PaginatedCacheDataSource;
+import com.karumi.rosie.sample.base.view.error.MarvelErrorFactory;
 import com.karumi.rosie.sample.characters.domain.model.Character;
 import com.karumi.rosie.sample.comics.domain.model.ComicSeries;
+import com.karumi.rosie.sample.main.domain.usecase.GetMarvelSettings;
 import com.karumi.rosie.time.TimeProvider;
 import dagger.Module;
 import dagger.Provides;
@@ -45,6 +48,14 @@ import static java.util.concurrent.TimeUnit.MINUTES;
   @Provides @Singleton
   public PaginatedCacheDataSource<Integer, ComicSeries> provideComicsPageInMemoryCache() {
     return new InMemoryPaginatedCacheDataSource<>(new TimeProvider(), COMICS_IN_MEMORY_CACHE_TTL);
+  }
+
+  @Provides public ErrorHandler providesErrorHandler(MarvelErrorFactory errorFactory) {
+    return new ErrorHandler(errorFactory);
+  }
+
+  @Provides @Singleton public GetMarvelSettings provideGetMarvelSettings() {
+    return new GetMarvelSettings();
   }
 
 }

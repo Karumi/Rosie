@@ -14,29 +14,18 @@
  *  limitations under the License.
  */
 
-package com.karumi.rosie.sample.base.view.activity;
+package com.karumi.rosie.sample.base.view.fragment;
 
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.view.View;
-import butterknife.OnClick;
 import com.karumi.rosie.sample.R;
-import com.karumi.rosie.view.RosieActivity;
+import com.karumi.rosie.view.RosieFragment;
 
-public abstract class MarvelActivity extends RosieActivity {
-  @Override protected abstract int getLayoutId();
-
-  @Nullable @OnClick(R.id.iv_toolbar_back) public void onBackButtonClicked() {
-    finish();
-  }
-
+public abstract class MarvelFragment extends RosieFragment {
   public void showGenericError() {
-    View rootView = getWindow().getDecorView().findViewById(android.R.id.content);
-    Snackbar.make(rootView, getString(R.string.generic_error), Snackbar.LENGTH_SHORT).show();
+    Snackbar.make(getView(), getString(R.string.generic_error), Snackbar.LENGTH_SHORT).show();
   }
 
   public void showConnectionError() {
-    View rootView = getWindow().getDecorView().findViewById(android.R.id.content);
-    Snackbar.make(rootView, getString(R.string.connection_error), Snackbar.LENGTH_SHORT).show();
+    Snackbar.make(getView(), getString(R.string.connection_error), Snackbar.LENGTH_SHORT).show();
   }
 }

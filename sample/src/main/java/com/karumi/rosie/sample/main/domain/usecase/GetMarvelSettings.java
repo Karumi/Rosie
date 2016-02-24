@@ -14,21 +14,13 @@
  *  limitations under the License.
  */
 
-package com.karumi.rosie.testutils;
+package com.karumi.rosie.sample.main.domain.usecase;
 
-import com.karumi.rosie.domain.usecase.TaskScheduler;
-import com.karumi.rosie.domain.usecase.UseCaseWrapper;
+import com.karumi.rosie.sample.BuildConfig;
 
-/**
- * Scheduler to run the test sequentially
- */
-public class FakeTaskScheduler implements TaskScheduler {
+public class GetMarvelSettings {
 
-  @Override public void execute(UseCaseWrapper useCaseWrapper) {
-    try {
-      useCaseWrapper.execute();
-    } catch (Exception e) {
-      //avoid exceptions for test scheduler
-    }
+  public boolean haveKeys() {
+    return BuildConfig.MARVEL_PUBLIC_KEY != null && BuildConfig.MARVEL_PRIVATE_KEY != null;
   }
 }

@@ -14,36 +14,33 @@
  *  limitations under the License.
  */
 
-package com.karumi.rosie.sample.main.view.presenter;
+package com.karumi.rosie.sample.base.view.presenter;
 
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
-import com.karumi.rosie.sample.main.domain.usecase.GetMarvelSettings;
-import com.karumi.rosie.view.RosiePresenter;
+import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
+import com.karumi.rosie.sample.base.view.error.ConnectionError;
 import com.karumi.rosie.view.loading.RosiePresenterWithLoading;
-import javax.inject.Inject;
 
-public class FakeDataPresenter extends RosiePresenter<FakeDataPresenter.View> {
-
-  private final GetMarvelSettings getMarvelSettings;
-
-  @Inject
-  public FakeDataPresenter(GetMarvelSettings getMarvelSettings, UseCaseHandler useCaseHandler) {
+public class MarvelPresenter<T extends MarvelPresenter.View> extends RosiePresenterWithLoading<T> {
+  public MarvelPresenter(UseCaseHandler useCaseHandler) {
     super(useCaseHandler);
-    this.getMarvelSettings = getMarvelSettings;
+    registerOnErrorCallback(onErrorCallback);
   }
 
-  @Override protected void initialize() {
-    super.initialize();
-    if (!getMarvelSettings.haveKeys()) {
-      getView().showFakeDisclaimer();
-    } else {
-      getView().hideFakeDisclaimer();
+  private final OnErrorCallback onErrorCallback = new OnErrorCallback() {
+    @Override public boolean onError(Error error) {
+      if (error instanceof ConnectionError) {
+        getView().showConnectionError();
+      } else {
+        getView().showGenericError();
+      }
+      return true;
     }
-  }
+  };
 
   public interface View extends RosiePresenterWithLoading.View {
-    void showFakeDisclaimer();
+    void showGenericError();
 
-    void hideFakeDisclaimer();
+    void showConnectionError();
   }
 }
