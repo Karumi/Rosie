@@ -103,13 +103,16 @@ public class ComicSeriesFakeDataSource extends EmptyReadableDataSource<Integer, 
   }
 
   private void initComicSeries() {
-    allComicSeries =
-        new ComicSeries[] {
-            getGuardiansOfInfinity(),
-            getVision(),
-            getSpidey(),
-            getRedWolf(),
-            getNova()};
+    allComicSeries = new ComicSeries[] {
+        getGuardiansOfInfinity(), getVision(), getSpidey(), getRedWolf(), getNova(),
+        getGuardiansOfInfinity(), getVision(), getSpidey(), getRedWolf(), getNova(),
+        getGuardiansOfInfinity(), getVision(), getSpidey(), getRedWolf(), getNova(),
+        getGuardiansOfInfinity(), getVision(), getSpidey(), getRedWolf(), getNova(),
+        getGuardiansOfInfinity(), getVision(), getSpidey(), getRedWolf(), getNova(),
+        getGuardiansOfInfinity(), getVision(), getSpidey(), getRedWolf(), getNova(),
+        getGuardiansOfInfinity(), getVision(), getSpidey(), getRedWolf(), getNova(),
+        getGuardiansOfInfinity(), getVision(), getSpidey(), getRedWolf(), getNova()
+    };
   }
 
   @NonNull private ComicSeries getGuardiansOfInfinity() {
