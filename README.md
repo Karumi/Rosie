@@ -8,7 +8,7 @@
 Introduction
 ------------
 
-Rosie is an Android framework to create applications following [Clean Architecture][clean] principles.
+Rosie is an Android framework to create applications following the principles of [Clean Architecture][clean].
 
 Rosie divides your application in three layers, **view**, **domain** and **repository**. For each layer, Rosie provides plenty of classes that will make defining and separating these concerns much easier.
 
@@ -346,7 +346,7 @@ page = repository.getPage(Page.withOffsetAndLimit(offset, limit));
 page = repository.getPage(Page.withOffsetAndLimit(offset, limit), ReadPolicy.CACHE_ONLY);
 ```
 
-**To run the application using real data obtained from the Marvel API create a ``marvel.properties`` file inside the ``sample`` directory and add your public and private key there as follows**
+**To run the application using real data obtained from the Marvel API create a ``marvel.properties`` file inside the ``sample`` directory and add your public and private key there as follows:**
 
 ```
 MARVEL_PUBLIC_KEY="YOUR_MARVEL_PUBLIC_KEY"
@@ -381,7 +381,7 @@ Do you want to contribute?
 
 Feel free to report us or add any useful feature to the library, we will be glad to improve it with your help.
 
-Keep in mind that your PRs **must** be validated by Travis-CI. Please, run a local build with ``./gradlew checkstyle build`` before submiting your code.
+Keep in mind that your PRs **must** be validated by Travis-CI. Please, run a local build with ``./gradlew checkstyle build connectedCheck`` before submiting your code.
 
 
 Libraries used in this project
