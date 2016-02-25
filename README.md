@@ -21,9 +21,7 @@ Finally, Rosie comes with Dagger to solve Dependency inversion through Dependenc
 Screenshots
 -----------
 
-#~TODO Real example gif~
 
-![Demo screenshot][sample]
 
 Usage
 -----
