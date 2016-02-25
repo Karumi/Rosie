@@ -43,7 +43,10 @@ public class ComicSeriesFakeDataSource extends EmptyReadableDataSource<Integer, 
   private static final long SLEEP_TIME_IN_MILLISECONDS = 750;
   private static final Random RANDOM = new Random(System.nanoTime());
 
+  private ComicSeries[] allComicSeries;
+
   @Inject public ComicSeriesFakeDataSource() {
+    initComicSeries();
   }
 
   @Override public ComicSeries getByKey(Integer key) {
@@ -81,24 +84,32 @@ public class ComicSeriesFakeDataSource extends EmptyReadableDataSource<Integer, 
     int offset = page.getOffset();
     int limit = page.getLimit();
 
-    for (int i = offset; i - offset < limit && i < NUMBER_OF_COMICS; i++) {
-      comics.add(getComicSeries(i));
+    if (offset < allComicSeries.length) {
+      for (int i = offset; i - offset < limit && i < allComicSeries.length; i++) {
+        comics.add(getComicSeries(i));
+      }
     }
 
     PaginatedCollection<ComicSeries> comicsPage = new PaginatedCollection<>(comics);
     comicsPage.setPage(page);
-    comicsPage.setHasMore(offset + comics.size() < NUMBER_OF_COMICS);
+    comicsPage.setHasMore(offset + comics.size() < allComicSeries.length);
     return comicsPage;
   }
 
   private ComicSeries getComicSeries(int i) {
-    ComicSeries[] allComicSeries =
-        {getGuardiansOfInfinity(), getVision(), getSpidey(), getRedWolf(), getNova()};
-
-    ComicSeries comicSeries = allComicSeries[RANDOM.nextInt(allComicSeries.length)];
-    comicSeries.setName(comicSeries.getName() + " " + i);
+    ComicSeries comicSeries = allComicSeries[i];
     comicSeries.setComplete(true);
     return comicSeries;
+  }
+
+  private void initComicSeries() {
+    allComicSeries =
+        new ComicSeries[] {
+            getGuardiansOfInfinity(),
+            getVision(),
+            getSpidey(),
+            getRedWolf(),
+            getNova()};
   }
 
   @NonNull private ComicSeries getGuardiansOfInfinity() {
