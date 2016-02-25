@@ -113,7 +113,7 @@ public abstract class RosieActivity extends FragmentActivity implements RosiePre
   protected abstract int getLayoutId();
 
   /**
-   * Returns a List<Object> with the additional modules needed to create the Activity scope
+   * Returns a List with the additional modules needed to create the Activity scope
    * graph. Override this method to return the list of modules associated to your Activity
    * graph.
    */

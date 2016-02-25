@@ -76,7 +76,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
   }
 
   /**
-   * Create a new call to can execute an use case. <p/>
+   * Create a new call to can execute an use case.
    *
    * @param useCase use case will be execute.
    * @return Call object for invoke the use case.

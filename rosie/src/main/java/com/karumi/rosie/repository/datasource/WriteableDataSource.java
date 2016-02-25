@@ -30,6 +30,7 @@ public interface WriteableDataSource<K, V extends Identifiable<K>> {
    *
    * @param value The value to be persisted.
    * @return The value after its addition or update.
+   * @throws Exception any exception on the data source.
    */
   V addOrUpdate(V value) throws Exception;
 
@@ -38,6 +39,7 @@ public interface WriteableDataSource<K, V extends Identifiable<K>> {
    *
    * @param values A collection of values to be added or persisted.
    * @return The values that has been persisted.
+   * @throws Exception any exception on the data source.
    */
   Collection<V> addOrUpdateAll(Collection<V> values) throws Exception;
 
@@ -45,11 +47,13 @@ public interface WriteableDataSource<K, V extends Identifiable<K>> {
    * Deletes a value given its associated key.
    *
    * @param key The key that uniquely identifies the value to be deleted.
+   * @throws Exception any exception on the data source.
    */
   void deleteByKey(K key) throws Exception;
 
   /**
    * Delete all the values stored in this data source.
+   * @throws Exception any exception on the data source.
    */
   void deleteAll() throws Exception;
 }
