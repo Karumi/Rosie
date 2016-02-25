@@ -8,20 +8,20 @@
 Introduction
 ------------
 
-Rosie is an Android framework to create applications following the Clean Architecture [[1] [clean]].
+Rosie is an Android framework to create applications following the [Clean Architecture][clean].
 
 Rosie divides your application in three layers, **view**, **domain** and **repository**. For each layer, Rosie provides plenty of classes that will make defining and separating these concerns much easier.
 
-* **View**: It contains all your presentation logic, implemented through the Model-View-Presenter pattern [[2] [mvp]]. Rosie provides classes to represent the main components of this layer like ``RosieActivity``, ``RosieFragment`` or ``RosiePresenter``.
-* **Domain**: Holding all your business logic, its main component is ``RosieUseCase`` that gives you an easy way to define your application use cases and execute them in a background thread using the command pattern [[3] [com]].
-* **Repository**: This layer gives you an abstraction of how to retrieve and store data in your application following the Repository pattern [[4] [rep]]. ``RosieRepository`` and the multiple ``DataSource`` classes gives you the base to start building your own repositories.
+* **View**: It contains all your presentation logic, implemented through the [Model-View-Presenter pattern][mvp]. Rosie provides classes to represent the main components of this layer like ``RosieActivity``, ``RosieFragment`` or ``RosiePresenter``.
+* **Domain**: Holding all your business logic, its main component is ``RosieUseCase`` that gives you an easy way to define your application use cases and execute them in a background thread using the [command pattern][com].
+* **Repository**: This layer gives you an abstraction of how to retrieve and store data in your application following the [Repository pattern][rep]. ``RosieRepository`` and the multiple ``DataSource`` classes gives you the base to start building your own repositories.
 
-Finally, Rosie comes with Dagger to solve Dependency inversion through Dependency Injection [[5] [di]]
+Finally, Rosie comes with Dagger to solve Dependency inversion through [Dependency Injection][di].
 
 Screenshots
 -----------
 
-
+![Screencast](./art/screencast.gif)
 
 Usage
 -----
