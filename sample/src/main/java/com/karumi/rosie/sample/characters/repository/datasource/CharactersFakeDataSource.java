@@ -24,21 +24,24 @@ import com.karumi.rosie.repository.datasource.paginated.Page;
 import com.karumi.rosie.sample.characters.domain.model.Character;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.Random;
 import javax.inject.Inject;
 
 public class CharactersFakeDataSource extends EmptyPaginatedReadableDataSource<String, Character> {
 
-  private static final int NUMBER_OF_CHARACTERS = 45;
   private static final long SLEEP_TIME_IN_MILLISECONDS = 1000;
-  private static final Random RANDOM = new Random(System.nanoTime());
   private static final String SPIDERMAN_KEY = "54";
   private static final String CAPTAIN_MARVEL_KEY = "9";
   private static final String HULK_KEY = "25";
   private static final String THOR_KEY = "60";
   private static final String IRON_MAN_KEY = "29";
+  private static final String SCARLET_KEY = "40";
+  private static final String WOLVERINE_KEY = "70";
+  private static final String STORM_KEY = "80";
+
+  private Character[] characters;
 
   @Inject public CharactersFakeDataSource() {
+    initCharacters();
   }
 
   @Override public Character getByKey(String key) throws Exception {
@@ -58,6 +61,15 @@ public class CharactersFakeDataSource extends EmptyPaginatedReadableDataSource<S
       case THOR_KEY:
         character = getThor();
         break;
+      case SCARLET_KEY:
+        character = getScarletWitch();
+        break;
+      case WOLVERINE_KEY:
+        character = getWolverine();
+        break;
+      case STORM_KEY:
+        character = getStorm();
+        break;
       case IRON_MAN_KEY:
       default:
         character = getIronMan();
@@ -72,26 +84,32 @@ public class CharactersFakeDataSource extends EmptyPaginatedReadableDataSource<S
     int offset = page.getOffset();
     int limit = page.getLimit();
 
-    Collection<Character> characters = new LinkedList<>();
+    Collection<Character> charactersToReturn = new LinkedList<>();
     fakeDelay();
 
-    for (int i = offset; i - offset < limit && i < NUMBER_OF_CHARACTERS; i++) {
-      characters.add(getCharacter(i));
+    if (offset < characters.length) {
+      for (int i = offset; i - offset < limit && i < characters.length; i++) {
+        charactersToReturn.add(characters[i]);
+      }
     }
 
-    PaginatedCollection<Character> charactersPage = new PaginatedCollection<>(characters);
+    PaginatedCollection<Character> charactersPage = new PaginatedCollection<>(charactersToReturn);
     charactersPage.setPage(page);
-    charactersPage.setHasMore(offset + characters.size() < NUMBER_OF_CHARACTERS);
+    charactersPage.setHasMore(offset + charactersToReturn.size() < characters.length);
     return charactersPage;
   }
 
-  private Character getCharacter(int i) {
-    Character[] characters =
-        {getSpiderman(), getCaptainMarvel(), getHulk(), getThor(), getIronMan()};
-
-    Character character = characters[RANDOM.nextInt(characters.length)];
-    character.setName(character.getName() + " " + i);
-    return character;
+  private void initCharacters() {
+    characters =
+        new Character[] {getSpiderman(),
+            getCaptainMarvel(),
+            getHulk(),
+            getThor(),
+            getIronMan(),
+            getScarletWitch(),
+            getWolverine(),
+            getStorm()
+        };
   }
 
   @NonNull private Character getSpiderman() {
@@ -142,6 +160,60 @@ public class CharactersFakeDataSource extends EmptyPaginatedReadableDataSource<S
             + " over-muscled, oafish imbecile, he's quite smart and compassionate."
             + " He's self-assured, and he would never, ever stop fighting for a worthwhile cause.");
     return hulk;
+  }
+
+  @NonNull private Character getScarletWitch() {
+    Character scarlet = new Character();
+    scarlet.setKey(SCARLET_KEY);
+    scarlet.setName("Scarlet Witch");
+    scarlet.setThumbnailUrl("https://i.annihil.us/u/prod/marvel/i/mg/9/b0/537bc2375dfb9.jpg");
+    scarlet.setDescription(
+        "Born at the Wundagore base of the High Evolutionary, in proximity to the eldritch energies"
+            + " of the Elder God Chthon; Wanda and her brother Pietro's mother, Magda, fled "
+            + "Wundagore shortly after their birth. Although not known at the time, Chthon formed "
+            + "a mystic bond with Wanda, who, it was later learned, was destined to serve the role "
+            + "of Nexus Being, a living focal point for the Earth dimension's mystical energy.");
+    return scarlet;
+  }
+
+  @NonNull private Character getWolverine() {
+    Character wolverine = new Character();
+    wolverine.setKey(WOLVERINE_KEY);
+    wolverine.setName("Wolverine");
+    wolverine.setThumbnailUrl("https://i.annihil.us/u/prod/marvel/i/mg/9/00/537bcb1133fd7.jpg");
+    wolverine.setDescription(
+        "Born the second son of wealthy landowners John and Elizabeth Howlett in Alberta, Canada "
+            + "during the late 19th Century, James Howlett was a frail boy of poor health. James "
+            + "was largely neglected by his mother, who was institutionalized for a time "
+            + "following the death of her first son, John Jr., in 1897. He spent most of "
+            + "his early years on the estate grounds and had two playmates that lived on the "
+            + "Howlett estate with him: Rose, a red-headed girl who was brought in from town "
+            + "to be a companion to young James, and a boy nicknamed \"Dog\" who was the son of "
+            + "the groundskeeper, Thomas Logan. Thomas Logan was an alcoholic and was extremely "
+            + "abusive to his son. The children were close friends but as they reached young "
+            + "adulthood, the abuse inflicted upon Dog warped his mind. His actions would lead to"
+            + " a tragic chain of events. that started as the three neared their adolescent years "
+            + "when Dog made unwanted advances toward Rose and James reported it to his father."
+            + " In retaliation Dog killed James's pet dog. This in turn resulted in the expulsion "
+            + "of Thomas Logan and Dog Logan from the estate.");
+    return wolverine;
+  }
+
+  @NonNull private Character getStorm() {
+    Character storm = new Character();
+    storm.setKey(STORM_KEY);
+    storm.setName("Storm");
+    storm.setThumbnailUrl("https://x.annihil.us/u/prod/marvel/i/mg/c/b0/537bc5f8a8df0.jpg");
+    storm.setDescription(
+        "Ororo Monroe is the descendant of an ancient line of African priestesses, all of whom "
+            + "have white hair, blue eyes, and the potential to wield magic. Her mother, N'dare, "
+            + "was an African princess who married American photojournalist David Monroe and moved "
+            + "with him to Manhattan, where Ororo was born. When Ororo was six months old, she and "
+            + "her parents moved to Cairo, Egypt. Five years later, during the Arab-Israeli "
+            + "conflict, a plane crashed into their home. Ororo's parents were killed, but she "
+            + "survived, buried under rubble near her mother's body. The resultant trauma left "
+            + "Ororo with severe claustrophobia that still affects her today.");
+    return storm;
   }
 
   @NonNull private Character getIronMan() {
