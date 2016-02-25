@@ -346,6 +346,12 @@ page = repository.getPage(Page.withOffsetAndLimit(offset, limit));
 page = repository.getPage(Page.withOffsetAndLimit(offset, limit), ReadPolicy.CACHE_ONLY);
 ```
 
+**To run the application using real data obtained from the Marvel API create a ``marvel.properties`` file inside the ``sample`` directory and add your public and private key there as follows**
+
+```
+MARVEL_PUBLIC_KEY="YOUR_MARVEL_PUBLIC_KEY"
+MARVEL_PRIVATE_KEY="YOUR_MARVEL_PRIVATE_KEY"
+```
 
 Add it to your project
 ----------------------
