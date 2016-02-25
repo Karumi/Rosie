@@ -68,7 +68,10 @@ public class RosieRepository<K, V extends Identifiable<K>>
   /**
    * {@link ReadableDataSource#getByKey(Object)}
    *
+   * @param key the key.
    * @param policy Specifies how the value is going to be retrieved.
+   * @return the value for the key.
+   * @throws Exception any exception from the data sources.
    */
   public V getByKey(K key, ReadPolicy policy) throws Exception {
     validateKey(key);
@@ -101,6 +104,8 @@ public class RosieRepository<K, V extends Identifiable<K>>
    * {@link ReadableDataSource#getAll()}
    *
    * @param policy Specifies how the value is going to be retrieved.
+   * @return the collection with all values from data source.
+   * @throws Exception any exception from data source.
    */
   public Collection<V> getAll(ReadPolicy policy) throws Exception {
     Collection<V> values = null;
@@ -130,7 +135,10 @@ public class RosieRepository<K, V extends Identifiable<K>>
   /**
    * {@link WriteableDataSource#addOrUpdate(Identifiable)}
    *
+   * @param value the value to add or update.
    * @param policy Specifies how the value is going to be stored.
+   * @return the value updated.
+   * @throws Exception any exception on the data sources.
    */
   public V addOrUpdate(V value, WritePolicy policy) throws Exception {
     validateValue(value);

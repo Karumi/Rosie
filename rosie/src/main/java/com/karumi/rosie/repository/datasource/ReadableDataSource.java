@@ -31,6 +31,7 @@ public interface ReadableDataSource<K, V> {
    *
    * @param key The key that uniquely identifies the requested value.
    * @return The value associated to the provided key or null if there is not any.
+   * @throws Exception any exception on the data source.
    */
   V getByKey(K key) throws Exception;
 
@@ -39,6 +40,7 @@ public interface ReadableDataSource<K, V> {
    * sense in the context of the data source.
    *
    * @return A collection of values or null if the operation is not implemented by this data source.
+   * @throws Exception any exception on the data source.
    */
   Collection<V> getAll() throws Exception;
 }
