@@ -8,7 +8,7 @@
 Introduction
 ------------
 
-Rosie is an Android framework to create applications following the [Clean Architecture][clean].
+Rosie is an Android framework to create applications following [Clean Architecture][clean] principles.
 
 Rosie divides your application in three layers, **view**, **domain** and **repository**. For each layer, Rosie provides plenty of classes that will make defining and separating these concerns much easier.
 
