@@ -172,7 +172,7 @@ public class SamplePresenter extends RosiePresenter<SamplePresenter.View> {
 }
 ```
 
-All the configuration calls are optional and can be ommited when not needed but keep in mind that provided arguments must match the ones declared in your ``UseCase`` method or an error will be raised. It is important to keep in mind that, by default, your callback methods will be executed in the main thread so you can easily update your UI from them.
+All the configuration calls are optional and can be omitted when not needed but keep in mind that provided arguments must match the ones declared in your ``UseCase`` method or an error will be raised. It is important to keep in mind that, by default, your callback methods will be executed in the main thread so you can easily update your UI from them.
 
 ####Named use cases
 
@@ -338,7 +338,7 @@ Finally, Rosie gives you support for pagination in repositories. If your data is
 Key key = /*...*/; PaginatedCollection<Value> page;
 PaginatedRosieRepository<Key, Value> repository = /*...*/;
 
-// Get a value by its key just as with a regular repoitory
+// Get a value by its key just as with a regular repository
 Value value = repository.getByKey(key);
 // Get a page
 page = repository.getPage(Page.withOffsetAndLimit(offset, limit));
@@ -381,7 +381,7 @@ Do you want to contribute?
 
 Feel free to report us or add any useful feature to the library, we will be glad to improve it with your help.
 
-Keep in mind that your PRs **must** be validated by Travis-CI. Please, run a local build with ``./gradlew checkstyle build connectedCheck`` before submiting your code.
+Keep in mind that your PRs **must** be validated by Travis-CI. Please, run a local build with ``./gradlew checkstyle build connectedCheck`` before submitting your code.
 
 
 Libraries used in this project
