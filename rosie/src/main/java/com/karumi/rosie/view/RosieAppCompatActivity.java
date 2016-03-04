@@ -33,7 +33,7 @@ import dagger.ObjectGraph;
  * library. All activities in this project should extend from this one to be able to use core
  * features like view injection, dependency injection or Rosie presenters.
  */
-public abstract class RosieAppCompatActivity extends AppCompatActivity implements RosiePresenter.View, IRosieActivity {
+public abstract class RosieAppCompatActivity extends AppCompatActivity implements RosiePresenter.View, Injectable {
 
   private ObjectGraph activityScopeGraph;
   private PresenterLifeCycleLinker presenterLifeCycleLinker;

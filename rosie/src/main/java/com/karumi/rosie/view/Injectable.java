@@ -1,5 +1,5 @@
 package com.karumi.rosie.view;
 
-interface IRosieActivity {
+interface Injectable {
   void inject(Object object);
 }

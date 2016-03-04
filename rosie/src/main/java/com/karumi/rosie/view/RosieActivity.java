@@ -30,7 +30,7 @@ import java.util.List;
  * library. All activities in this project should extend from this one to be able to use core
  * features like view injection, dependency injection or Rosie presenters.
  */
-public abstract class RosieActivity extends FragmentActivity implements RosiePresenter.View, IRosieActivity {
+public abstract class RosieActivity extends FragmentActivity implements RosiePresenter.View, Injectable {
 
   private ObjectGraph activityScopeGraph;
   private PresenterLifeCycleLinker presenterLifeCycleLinker;
