@@ -128,7 +128,7 @@ public abstract class RosieFragment extends Fragment implements RosiePresenter.V
 
   private void injectDependencies() {
     Activity activity = getActivity();
-    if (!injected && shouldInjectFragment()) {
+    if (!injected && activity instanceof Injectable && shouldInjectFragment()) {
       ((Injectable) activity).inject(this);
       injected = true;
     }
