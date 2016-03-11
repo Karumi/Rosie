@@ -17,20 +17,23 @@
 package com.karumi.rosie.view;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import butterknife.ButterKnife;
+import android.support.v7.app.AppCompatActivity;
+
 import com.karumi.rosie.application.RosieApplication;
 import com.karumi.rosie.module.RosieActivityModule;
-import dagger.ObjectGraph;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.ButterKnife;
+import dagger.ObjectGraph;
 
 /**
  * Base Activity created to implement some common functionality for every Activity using this
  * library. All activities in this project should extend from this one to be able to use core
  * features like view injection, dependency injection or Rosie presenters.
  */
-public abstract class RosieActivity extends FragmentActivity implements RosiePresenter.View, Injectable {
+public abstract class RosieAppCompatActivity extends AppCompatActivity implements RosiePresenter.View, Injectable {
 
   private ObjectGraph activityScopeGraph;
   private PresenterLifeCycleLinker presenterLifeCycleLinker;
