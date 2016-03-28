@@ -45,7 +45,7 @@ public class CharactersPresenter extends MarvelPresenter<CharactersPresenter.Vie
     this.mapper = mapper;
   }
 
-  @Override protected void update() {
+  @Override public void update() {
     super.update();
     getView().hideCharacters();
     showLoading();

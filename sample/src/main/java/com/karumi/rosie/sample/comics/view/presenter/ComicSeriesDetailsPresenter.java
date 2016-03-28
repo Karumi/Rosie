@@ -46,7 +46,7 @@ public class ComicSeriesDetailsPresenter
     this.comicSeriesKey = comicKey;
   }
 
-  @Override protected void update() {
+  @Override public void update() {
     super.update();
     showLoading();
     getView().hideComicSeriesDetails();

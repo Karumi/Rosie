@@ -41,7 +41,7 @@ public class CharacterDetailsPresenter
     this.getCharacterDetails = getCharacterDetails;
   }
 
-  @Override protected void update() {
+  @Override public void update() {
     super.update();
     showLoading();
     loadCharacterDetails();

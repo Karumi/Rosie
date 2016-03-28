@@ -32,7 +32,7 @@ public class FakeDataPresenter extends RosiePresenter<FakeDataPresenter.View> {
     this.getMarvelSettings = getMarvelSettings;
   }
 
-  @Override protected void initialize() {
+  @Override public void initialize() {
     super.initialize();
     if (!getMarvelSettings.haveKeys()) {
       getView().showFakeDisclaimer();
