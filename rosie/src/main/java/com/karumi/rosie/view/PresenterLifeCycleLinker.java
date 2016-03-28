@@ -29,6 +29,13 @@ public final class PresenterLifeCycleLinker {
 
   private final Set<RosiePresenter> presenters = new HashSet<>();
 
+  /**
+   * Obtains all the presenter instances declared in the source param, configures the associated
+   * view and initializes the presenters lifecycle.
+   *
+   * @param source used to obtain the presenter references.
+   * @param view to be configured as presenters view.
+   */
   public void initializeLifeCycle(Object source, RosiePresenter.View view) {
     if (source == null) {
       throw new IllegalArgumentException(
@@ -44,12 +51,21 @@ public final class PresenterLifeCycleLinker {
     initializePresenters();
   }
 
+  /**
+   * Initializes all the already registered presenters lifecycle.
+   */
   public void initializePresenters() {
     for (RosiePresenter presenter : presenters) {
       presenter.initialize();
     }
   }
 
+  /**
+   * Updates all the already registered presenters lifecycle and updates the view instance
+   * associated to these presenters.
+   *
+   * @param view to be updated for every registered presenter.
+   */
   public void updatePresenters(RosiePresenter.View view) {
     if (view == null) {
       throw new IllegalArgumentException(
@@ -61,6 +77,9 @@ public final class PresenterLifeCycleLinker {
     }
   }
 
+  /**
+   * Pauses all the already registered presenters lifecycle.
+   */
   public void pausePresenters() {
     for (RosiePresenter presenter : presenters) {
       presenter.pause();
@@ -68,12 +87,20 @@ public final class PresenterLifeCycleLinker {
     }
   }
 
+  /**
+   * Destroys all the already registered presenters lifecycle.
+   */
   public void destroyPresenters() {
     for (RosiePresenter presenter : presenters) {
       presenter.destroy();
     }
   }
 
+  /**
+   * Registers a presenter instance.
+   *
+   * @param presenter to be registered
+   */
   public void registerPresenter(RosiePresenter presenter) {
     if (presenter == null) {
       throw new IllegalArgumentException("The presenter instance to be registered can't be null");
@@ -81,6 +108,11 @@ public final class PresenterLifeCycleLinker {
     presenters.add(presenter);
   }
 
+  /**
+   * Updates the view instance associated to all the already registered presenters.
+   *
+   * @param view to be assigned to the presenters.
+   */
   public void setView(RosiePresenter.View view) {
     if (view == null) {
       throw new IllegalArgumentException(
