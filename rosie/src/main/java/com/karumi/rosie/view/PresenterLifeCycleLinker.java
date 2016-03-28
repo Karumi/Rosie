@@ -29,8 +29,8 @@ public final class PresenterLifeCycleLinker {
 
   private final Set<RosiePresenter> presenters = new HashSet<>();
 
-  public void addAnnotatedPresenter(Field[] declaredFields, Object source) {
-    for (Field field : declaredFields) {
+  public void addAnnotatedPresenter(Object source) {
+    for (Field field : source.getClass().getDeclaredFields()) {
       if (field.isAnnotationPresent(Presenter.class)) {
         if (Modifier.isPrivate(field.getModifiers())) {
           throw new RuntimeException(

@@ -47,7 +47,7 @@ public abstract class RosieActivity extends FragmentActivity implements RosiePre
     int layoutId = getLayoutId();
     setContentView(layoutId);
     presenterLifeCycleLinker = new PresenterLifeCycleLinker();
-    presenterLifeCycleLinker.addAnnotatedPresenter(getClass().getDeclaredFields(), this);
+    presenterLifeCycleLinker.addAnnotatedPresenter(this);
     ButterKnife.bind(this);
     presenterLifeCycleLinker.setView(this);
     onPreparePresenter();

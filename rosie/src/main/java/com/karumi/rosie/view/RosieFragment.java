@@ -67,7 +67,7 @@ public abstract class RosieFragment extends Fragment implements RosiePresenter.V
    */
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    presenterLifeCycleLinker.addAnnotatedPresenter(getClass().getDeclaredFields(), this);
+    presenterLifeCycleLinker.addAnnotatedPresenter(this);
     presenterLifeCycleLinker.setView(this);
     onPreparePresenter();
     presenterLifeCycleLinker.initializePresenters();
