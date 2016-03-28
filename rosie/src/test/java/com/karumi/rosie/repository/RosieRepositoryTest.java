@@ -17,7 +17,6 @@
 package com.karumi.rosie.repository;
 
 import android.support.annotation.NonNull;
-import com.karumi.rosie.UnitTest;
 import com.karumi.rosie.doubles.AnyRepositoryKey;
 import com.karumi.rosie.doubles.AnyRepositoryValue;
 import com.karumi.rosie.repository.datasource.CacheDataSource;
@@ -29,7 +28,9 @@ import java.util.EnumSet;
 import java.util.LinkedList;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
@@ -38,7 +39,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class RosieRepositoryTest extends UnitTest {
+@RunWith(MockitoJUnitRunner.class) public class RosieRepositoryTest {
 
   private static final AnyRepositoryKey ANY_KEY = new AnyRepositoryKey(42);
   private static final AnyRepositoryValue ANY_VALUE = new AnyRepositoryValue(ANY_KEY);

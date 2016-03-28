@@ -16,21 +16,22 @@
 
 package com.karumi.rosie.repository.datasource;
 
-import com.karumi.rosie.UnitTest;
 import com.karumi.rosie.doubles.AnyRepositoryKey;
 import com.karumi.rosie.doubles.AnyRepositoryValue;
 import com.karumi.rosie.time.TimeProvider;
 import java.util.LinkedList;
 import java.util.List;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class InMemoryCacheDataSourceTest extends UnitTest {
+@RunWith(MockitoJUnitRunner.class) public class InMemoryCacheDataSourceTest {
 
   private static final long ANY_TTL = 10;
   private static final AnyRepositoryKey ANY_KEY = new AnyRepositoryKey(2);

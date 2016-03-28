@@ -16,14 +16,15 @@
 
 package com.karumi.rosie.view;
 
-import com.karumi.rosie.UnitTest;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class PresenterLifeCycleLinkerTest extends UnitTest {
+@RunWith(MockitoJUnitRunner.class) public class PresenterLifeCycleLinkerTest {
 
   @Mock RosiePresenter anyPresenter1;
   @Mock RosiePresenter anyPresenter2;

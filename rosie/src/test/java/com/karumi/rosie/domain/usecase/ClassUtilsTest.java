@@ -16,12 +16,13 @@
 
 package com.karumi.rosie.domain.usecase;
 
-import com.karumi.rosie.UnitTest;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertTrue;
 
-public class ClassUtilsTest extends UnitTest {
+@RunWith(MockitoJUnitRunner.class) public class ClassUtilsTest {
 
   @Test public void testCanAssignTwoAnyObjects() throws Exception {
     assertTrue(ClassUtils.canAssign(String.class, String.class));

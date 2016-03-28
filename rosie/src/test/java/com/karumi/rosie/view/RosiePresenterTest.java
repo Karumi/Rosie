@@ -16,17 +16,18 @@
 
 package com.karumi.rosie.view;
 
-import com.karumi.rosie.UnitTest;
 import com.karumi.rosie.domain.usecase.RosieUseCase;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 
-public class RosiePresenterTest extends UnitTest {
+@RunWith(MockitoJUnitRunner.class) public class RosiePresenterTest {
 
   @Mock private UseCaseHandler useCaseHandler;
   @Mock private RosieUseCase anyUseCase;

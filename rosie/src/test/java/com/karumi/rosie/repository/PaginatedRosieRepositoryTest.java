@@ -16,7 +16,6 @@
 
 package com.karumi.rosie.repository;
 
-import com.karumi.rosie.UnitTest;
 import com.karumi.rosie.doubles.AnyRepositoryKey;
 import com.karumi.rosie.doubles.AnyRepositoryValue;
 import com.karumi.rosie.repository.datasource.paginated.Page;
@@ -25,7 +24,9 @@ import com.karumi.rosie.repository.datasource.paginated.PaginatedReadableDataSou
 import com.karumi.rosie.repository.policy.ReadPolicy;
 import java.util.LinkedList;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -33,7 +34,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class PaginatedRosieRepositoryTest extends UnitTest {
+@RunWith(MockitoJUnitRunner.class) public class PaginatedRosieRepositoryTest {
 
   private static final int ANY_OFFSET = 0;
   private static final int ANY_LIMIT = 20;
@@ -100,8 +101,7 @@ public class PaginatedRosieRepositoryTest extends UnitTest {
     verify(readableDataSource).getPage(nextPage);
   }
 
-  @Test public void shouldNotRemoveDataFromCacheIfCacheDoNotHaveThisPage()
-      throws Exception {
+  @Test public void shouldNotRemoveDataFromCacheIfCacheDoNotHaveThisPage() throws Exception {
     Page page = Page.withOffsetAndLimit(ANY_OFFSET, ANY_LIMIT);
     givenCacheDataSourceReturnsNonValidValues(page);
     givenReadableDataSourceReturnsValues(page);

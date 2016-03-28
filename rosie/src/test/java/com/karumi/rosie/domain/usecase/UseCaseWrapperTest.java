@@ -16,12 +16,13 @@
 
 package com.karumi.rosie.domain.usecase;
 
-import com.karumi.rosie.UnitTest;
 import com.karumi.rosie.domain.usecase.annotation.UseCase;
 import com.karumi.rosie.domain.usecase.error.ErrorHandler;
 import com.karumi.rosie.domain.usecase.error.ErrorNotHandledException;
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -29,7 +30,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class UseCaseWrapperTest extends UnitTest {
+@RunWith(MockitoJUnitRunner.class) public class UseCaseWrapperTest {
 
   private static final String ANY_FIRST_ARG = "anyValue";
   private static final int ANY_SECOND_ARG = 2;
