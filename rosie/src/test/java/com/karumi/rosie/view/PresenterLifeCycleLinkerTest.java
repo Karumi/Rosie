@@ -4,23 +4,26 @@
  * "Software"), to deal in the Software without restriction, including without limitation the
  * rights to use, copy, modify, merge, publish, distribute, sublicense,
  * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to
-  * do so, subject to the following conditions: The above copyright notice and this permission
-  * notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE
-  * IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-  * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * do so, subject to the following conditions: The above copyright notice and this permission
+ * notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE
+ * IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.karumi.rosie.view;
 
 import com.karumi.rosie.UnitTest;
+import com.karumi.rosie.doubles.AnyClassWithAnAnnotatedPresenter;
+import com.karumi.rosie.doubles.FakePresenter;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import static org.mockito.Mockito.mock;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Mockito.verify;
 
 public class PresenterLifeCycleLinkerTest extends UnitTest {
@@ -28,6 +31,15 @@ public class PresenterLifeCycleLinkerTest extends UnitTest {
   @Mock RosiePresenter anyPresenter1;
   @Mock RosiePresenter anyPresenter2;
   @Mock RosiePresenter.View anyView;
+
+  @Test public void shouldInitializePresentersLifecycleOnInitializeLifecycleIsCalled() {
+    PresenterLifeCycleLinker presenterLifeCycleLinker = givenAPresenterLifecycleLinker();
+    Object source = givenAnyClassWithAnAnnotatedPresenter(anyPresenter1);
+
+    presenterLifeCycleLinker.initializeLifeCycle(source, anyView);
+
+    verify(anyPresenter1).initialize();
+  }
 
   @Test public void shouldCallAllRegisteredPresentersAreCalledWhenInitializeIsCalled() {
     PresenterLifeCycleLinker presenterLifeCycleLinker =
@@ -69,37 +81,32 @@ public class PresenterLifeCycleLinkerTest extends UnitTest {
     verify(anyPresenter2).pause();
   }
 
-  @Test public void shouldConfigureViewToEveryPresenterRegisteredOnUpdatePresenters() {
-    PresenterLifeCycleLinker presenterLifeCycleLinker =
-        givenAPresenterLifecycleLinker(anyPresenter1, anyPresenter2);
-
+  @Test public void shouldUpdateThePresentersViewWhenUpdateIsCalled() {
+    RosiePresenter presenter = givenAnyPresenter();
+    PresenterLifeCycleLinker presenterLifeCycleLinker = givenAPresenterLifecycleLinker(presenter);
 
     presenterLifeCycleLinker.updatePresenters(anyView);
 
-    verify(anyPresenter1).setView(anyView);
-    verify(anyPresenter2).setView(anyView);
+    assertEquals(anyView, presenter.getView());
   }
 
-  @Test public void shouldConfigureViewToEveryPresenterRegisteredOnSetView() {
-    PresenterLifeCycleLinker presenterLifeCycleLinker =
-        givenAPresenterLifecycleLinker(anyPresenter1, anyPresenter2);
-
+  @Test public void shouldUpdateThePresentersViewWhenSetViewIsCalled() {
+    RosiePresenter presenter = givenAnyPresenter();
+    PresenterLifeCycleLinker presenterLifeCycleLinker = givenAPresenterLifecycleLinker(presenter);
 
     presenterLifeCycleLinker.setView(anyView);
 
-    verify(anyPresenter1).setView(anyView);
-    verify(anyPresenter2).setView(anyView);
+    assertEquals(anyView, presenter.getView());
   }
 
   @Test public void shouldResetPresenterViewOnPause() {
-    PresenterLifeCycleLinker presenterLifeCycleLinker =
-        givenAPresenterLifecycleLinker(anyPresenter1);
+    RosiePresenter presenter = givenAnyPresenter();
+    PresenterLifeCycleLinker presenterLifeCycleLinker = givenAPresenterLifecycleLinker(presenter);
 
-    presenterLifeCycleLinker.initializePresenters();
     presenterLifeCycleLinker.updatePresenters(anyView);
     presenterLifeCycleLinker.pausePresenters();
 
-    verify(anyPresenter1).resetView();
+    assertNotEquals(anyView, presenter.getView());
   }
 
   private PresenterLifeCycleLinker givenAPresenterLifecycleLinker(RosiePresenter... presenters) {
@@ -108,5 +115,16 @@ public class PresenterLifeCycleLinkerTest extends UnitTest {
       presenterLifeCycleLinker.registerPresenter(presenter);
     }
     return presenterLifeCycleLinker;
+  }
+
+  private Object givenAnyClassWithAnAnnotatedPresenter(RosiePresenter presenter) {
+    AnyClassWithAnAnnotatedPresenter anyClassWithAnAnnotatedPresenter =
+        new AnyClassWithAnAnnotatedPresenter();
+    anyClassWithAnAnnotatedPresenter.presenter = presenter;
+    return anyClassWithAnAnnotatedPresenter;
+  }
+
+  private RosiePresenter givenAnyPresenter() {
+    return new FakePresenter();
   }
 }
