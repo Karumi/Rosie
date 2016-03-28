@@ -54,8 +54,7 @@ public class CharacterDetailsActivityTest extends InjectedInstrumentationTest {
   @Rule public IntentsTestRule<CharacterDetailsActivity> activityRule =
       new IntentsTestRule<>(CharacterDetailsActivity.class, true, false);
 
-  @Inject
-  CharactersRepository charactersRepository;
+  @Inject CharactersRepository charactersRepository;
 
   @Test public void shouldShowCharacterDetailWhenCharacterIsLoaded() throws Exception {
     Character character = givenAValidCharacter();
@@ -80,7 +79,7 @@ public class CharacterDetailsActivityTest extends InjectedInstrumentationTest {
     startActivity();
 
     onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("¯\\_(ツ)_/¯"))).check(
-        matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        matches(isDisplayed()));
   }
 
   @Test public void shouldShowsConnectionErrorIfHasConnectionTroubles() throws Exception {
@@ -95,8 +94,7 @@ public class CharacterDetailsActivityTest extends InjectedInstrumentationTest {
 
   private Character givenAValidCharacter() throws Exception {
     Character character = getCharacter(ANY_CHARACTER_ID);
-    when(charactersRepository.getByKey(anyString())).thenReturn(
-        character);
+    when(charactersRepository.getByKey(anyString())).thenReturn(character);
     return character;
   }
 
