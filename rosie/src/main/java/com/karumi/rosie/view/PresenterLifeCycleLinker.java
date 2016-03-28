@@ -29,34 +29,10 @@ public final class PresenterLifeCycleLinker {
 
   private final Set<RosiePresenter> presenters = new HashSet<>();
 
-  public void addAnnotatedPresenter(Object source) {
-    for (Field field : source.getClass().getDeclaredFields()) {
-      if (field.isAnnotationPresent(Presenter.class)) {
-        if (Modifier.isPrivate(field.getModifiers())) {
-          throw new RuntimeException(
-              "Presenter must be accessible for this class. The visibility modifier used can't be"
-                  + " private");
-        } else {
-          try {
-            field.setAccessible(true);
-            RosiePresenter presenter = (RosiePresenter) field.get(source);
-            presenters.add(presenter);
-            field.setAccessible(false);
-          } catch (IllegalAccessException e) {
-            IllegalStateException runtimeException = new IllegalStateException(
-                "the presenter " + field.getName() + " can not be access");
-            runtimeException.initCause(e);
-            throw runtimeException;
-          }
-        }
-      }
-    }
-  }
-
-  public void setView(RosiePresenter.View view) {
-    for (RosiePresenter presenter : presenters) {
-      presenter.setView(view);
-    }
+  public void initializeLifeCycle(Object source, RosiePresenter.View view) {
+    addAnnotatedPresenter(source);
+    setView(view);
+    initializePresenters();
   }
 
   public void initializePresenters() {
@@ -65,7 +41,8 @@ public final class PresenterLifeCycleLinker {
     }
   }
 
-  public void updatePresenters() {
+  public void updatePresenters(RosiePresenter.View view) {
+    setView(view);
     for (RosiePresenter presenter : presenters) {
       presenter.update();
     }
@@ -87,4 +64,35 @@ public final class PresenterLifeCycleLinker {
   public void registerPresenter(RosiePresenter presenter) {
     presenters.add(presenter);
   }
+
+  public void setView(RosiePresenter.View view) {
+    for (RosiePresenter presenter : presenters) {
+      presenter.setView(view);
+    }
+  }
+
+  private void addAnnotatedPresenter(Object source) {
+    for (Field field : source.getClass().getDeclaredFields()) {
+      if (field.isAnnotationPresent(Presenter.class)) {
+        if (Modifier.isPrivate(field.getModifiers())) {
+          throw new RuntimeException(
+              "Presenter must be accessible for this class. The visibility modifier used can't be"
+                  + " private");
+        } else {
+          try {
+            field.setAccessible(true);
+            RosiePresenter presenter = (RosiePresenter) field.get(source);
+            registerPresenter(presenter);
+            field.setAccessible(false);
+          } catch (IllegalAccessException e) {
+            IllegalStateException runtimeException = new IllegalStateException(
+                "the presenter " + field.getName() + " can not be access");
+            runtimeException.initCause(e);
+            throw runtimeException;
+          }
+        }
+      }
+    }
+  }
+
 }

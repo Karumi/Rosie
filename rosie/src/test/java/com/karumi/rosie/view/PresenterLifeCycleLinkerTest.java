@@ -27,6 +27,7 @@ public class PresenterLifeCycleLinkerTest extends UnitTest {
 
   @Mock RosiePresenter anyPresenter1;
   @Mock RosiePresenter anyPresenter2;
+  @Mock RosiePresenter.View anyView;
 
   @Test public void shouldCallAllRegisteredPresentersAreCalledWhenInitializeIsCalled() {
     PresenterLifeCycleLinker presenterLifeCycleLinker =
@@ -42,7 +43,7 @@ public class PresenterLifeCycleLinkerTest extends UnitTest {
     PresenterLifeCycleLinker presenterLifeCycleLinker =
         givenAPresenterLifecycleLinker(anyPresenter1, anyPresenter2);
 
-    presenterLifeCycleLinker.updatePresenters();
+    presenterLifeCycleLinker.updatePresenters(anyView);
 
     verify(anyPresenter1).update();
     verify(anyPresenter2).update();
@@ -68,15 +69,26 @@ public class PresenterLifeCycleLinkerTest extends UnitTest {
     verify(anyPresenter2).pause();
   }
 
-  @Test public void shouldConfigureViewToEveryPresenterRegistered() {
+  @Test public void shouldConfigureViewToEveryPresenterRegisteredOnUpdatePresenters() {
     PresenterLifeCycleLinker presenterLifeCycleLinker =
         givenAPresenterLifecycleLinker(anyPresenter1, anyPresenter2);
 
-    RosiePresenter.View view = mock(RosiePresenter.View.class);
-    presenterLifeCycleLinker.setView(view);
 
-    verify(anyPresenter1).setView(view);
-    verify(anyPresenter2).setView(view);
+    presenterLifeCycleLinker.updatePresenters(anyView);
+
+    verify(anyPresenter1).setView(anyView);
+    verify(anyPresenter2).setView(anyView);
+  }
+
+  @Test public void shouldConfigureViewToEveryPresenterRegisteredOnSetView() {
+    PresenterLifeCycleLinker presenterLifeCycleLinker =
+        givenAPresenterLifecycleLinker(anyPresenter1, anyPresenter2);
+
+
+    presenterLifeCycleLinker.setView(anyView);
+
+    verify(anyPresenter1).setView(anyView);
+    verify(anyPresenter2).setView(anyView);
   }
 
   @Test public void shouldResetPresenterViewOnPause() {
@@ -84,7 +96,7 @@ public class PresenterLifeCycleLinkerTest extends UnitTest {
         givenAPresenterLifecycleLinker(anyPresenter1);
 
     presenterLifeCycleLinker.initializePresenters();
-    presenterLifeCycleLinker.updatePresenters();
+    presenterLifeCycleLinker.updatePresenters(anyView);
     presenterLifeCycleLinker.pausePresenters();
 
     verify(anyPresenter1).resetView();

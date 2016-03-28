@@ -63,14 +63,12 @@ public abstract class RosieFragment extends Fragment implements RosiePresenter.V
   }
 
   /**
-   * Injects the Fragment views using Butter Knife library.
+   * Injects the Fragment views using Butter Knife library and initializes the presenter lifecycle.
    */
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    presenterLifeCycleLinker.addAnnotatedPresenter(this);
-    presenterLifeCycleLinker.setView(this);
     onPreparePresenter();
-    presenterLifeCycleLinker.initializePresenters();
+    presenterLifeCycleLinker.initializeLifeCycle(this, this);
   }
 
   /**
@@ -82,16 +80,15 @@ public abstract class RosieFragment extends Fragment implements RosiePresenter.V
   }
 
   /**
-   * Connects the Fragment onResume method with the presenter used in this Activity.
+   * Connects the Fragment onResume method with the presenters associated to the fragment.
    */
   @Override public void onResume() {
     super.onResume();
-    presenterLifeCycleLinker.setView(this);
-    presenterLifeCycleLinker.updatePresenters();
+    presenterLifeCycleLinker.updatePresenters(this);
   }
 
   /**
-   * Connects the Fragment onPause method with the presenter used in this Activity.
+   * Connects the Fragment onPause method with the presenters associated to the fragment.
    */
   @Override public void onPause() {
     super.onPause();
@@ -99,7 +96,7 @@ public abstract class RosieFragment extends Fragment implements RosiePresenter.V
   }
 
   /**
-   * Connects the Fragment onDestroy method with the presenter used in this Activity.
+   * Connects the Fragment onDestroy method with the presenters associated to the fragment.
    */
   @Override public void onDestroy() {
     super.onDestroy();
@@ -115,12 +112,12 @@ public abstract class RosieFragment extends Fragment implements RosiePresenter.V
   }
 
   /**
-   * Returns the layout id associated to the layout used in the activity.
+   * Returns the layout id associated to the layout used in the fragment.
    */
   protected abstract int getLayoutId();
 
   /**
-   * Registers a presenter to link to this activity
+   * Registers a presenter to link to this fragment.
    */
   protected final void registerPresenter(RosiePresenter presenter) {
     presenterLifeCycleLinker.registerPresenter(presenter);
