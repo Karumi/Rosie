@@ -25,11 +25,11 @@ import java.util.Set;
  * Analyzes an Activity or Fragment with Presenter annotations passed as parameter to obtain a list
  * of Presenter instances to be linked to the source lifecycle.
  */
-final class PresenterLifeCycleLinker {
+public final class PresenterLifeCycleLinker {
 
   private final Set<RosiePresenter> presenters = new HashSet<>();
 
-  void addAnnotatedPresenter(Field[] declaredFields, Object source) {
+  public void addAnnotatedPresenter(Field[] declaredFields, Object source) {
     for (Field field : declaredFields) {
       if (field.isAnnotationPresent(Presenter.class)) {
         if (Modifier.isPrivate(field.getModifiers())) {
@@ -53,38 +53,38 @@ final class PresenterLifeCycleLinker {
     }
   }
 
-  void setView(RosiePresenter.View view) {
+  public void setView(RosiePresenter.View view) {
     for (RosiePresenter presenter : presenters) {
       presenter.setView(view);
     }
   }
 
-  void initializePresenters() {
+  public void initializePresenters() {
     for (RosiePresenter presenter : presenters) {
       presenter.initialize();
     }
   }
 
-  void updatePresenters() {
+  public void updatePresenters() {
     for (RosiePresenter presenter : presenters) {
       presenter.update();
     }
   }
 
-  void pausePresenters() {
+  public void pausePresenters() {
     for (RosiePresenter presenter : presenters) {
       presenter.pause();
       presenter.resetView();
     }
   }
 
-  void destroyPresenters() {
+  public void destroyPresenters() {
     for (RosiePresenter presenter : presenters) {
       presenter.destroy();
     }
   }
 
-  void registerPresenter(RosiePresenter presenter) {
+  public void registerPresenter(RosiePresenter presenter) {
     presenters.add(presenter);
   }
 }
