@@ -18,6 +18,7 @@ package com.karumi.rosie.view;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -49,13 +50,14 @@ public abstract class RosieFragment extends Fragment implements RosiePresenter.V
    * Injects the Fragment dependencies if this injection wasn't performed previously in other
    * Fragment life cycle event.
    */
-  @Override public void onAttach(Activity activity) {
-    super.onAttach(activity);
+  @Override public void onAttach(Context context) {
+    super.onAttach(context);
     injectDependencies();
   }
 
   @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
+    injectDependencies();
     int layoutId = getLayoutId();
     View view = inflater.inflate(layoutId, container, false);
     ButterKnife.bind(this, view);
