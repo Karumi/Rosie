@@ -398,7 +398,7 @@ Include the library in your ``build.gradle``
 
 ```groovy
 dependencies{
-    compile 'com.karumi.rosie:rosie:1.0.0'
+    compile 'com.karumi.rosie:rosie:2.0.0'
 }
 ```
 
@@ -408,7 +408,7 @@ or to your ``pom.xml`` if you are using Maven
 <dependency>
     <groupId>com.karumi.rosie</groupId>
     <artifactId>rosie</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
     <type>aar</type>
 </dependency>
 
