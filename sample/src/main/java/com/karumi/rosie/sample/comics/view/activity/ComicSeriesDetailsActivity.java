@@ -21,7 +21,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import butterknife.Bind;
@@ -113,10 +112,9 @@ public class ComicSeriesDetailsActivity extends MarvelActivity
   }
 
   private void initializeAdapter() {
-    LayoutInflater layoutInflater = LayoutInflater.from(this);
     RendererBuilder<ComicSeriesDetailViewModel> rendererBuilder =
         new ComicSeriesDetailRendererBuilder();
-    comicDetailsAdapter = new RVRendererAdapter<>(layoutInflater, rendererBuilder,
+    comicDetailsAdapter = new RVRendererAdapter<>(rendererBuilder,
         new ListAdapteeCollection<ComicSeriesDetailViewModel>());
   }
 }
