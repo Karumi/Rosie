@@ -36,7 +36,7 @@ public class SampleApplication extends RosieApplication {
 }
 ```
 
-**Extend from ``RosieApplication`` is needed to be able to easily use the configuration Rosie provides you related to Dependency Injection. If you do not want to use Dependency Injection in your project, you do not need to extend from ``RosieApplication``.**
+**Extending from ``RosieApplication`` is needed to be able to easily use the configuration Rosie provides you related to Dependency Injection. If you do not want to use Dependency Injection in your project, you do not need to extend from ``RosieApplication``.**
 
 
 Rosie provides several base classes to start implementing your architecture separated in three layers, **view**, **domain** and **repository**. Let's explore them in detail.
@@ -51,7 +51,7 @@ public class SampleActivity extends RosieActivity {
 }
 ```
 
-**Extend from ``RosieActivity`` or ``RosieFragment`` is not mandatory. If your project is already extending from any other base Activity please review the class ``PresenterLifeCycleLinker`` and use it inside your base Activity or your Activities as follow:**
+**Extending from ``RosieActivity`` or ``RosieFragment`` is not mandatory. If your project is already extending from any other base Activity please review the class ``PresenterLifeCycleLinker`` and use it inside your base Activity or your Activities as follow:**
 
 ```java
 public abstract class MyBaseActivity extends FragmentActivity
