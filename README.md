@@ -36,6 +36,8 @@ public class SampleApplication extends RosieApplication {
 }
 ```
 
+**Extending from ``RosieApplication`` is needed to be able to easily use the configuration Rosie provides you related to Dependency Injection. If you do not want to use Dependency Injection in your project, you do not need to extend from ``RosieApplication``.**
+
 
 Rosie provides several base classes to start implementing your architecture separated in three layers, **view**, **domain** and **repository**. Let's explore them in detail.
 
@@ -48,6 +50,42 @@ public class SampleActivity extends RosieActivity {
 	/*...*/
 }
 ```
+
+**Extending from ``RosieActivity`` or ``RosieFragment`` is not mandatory. If your project is already extending from any other base Activity please review the class ``PresenterLifeCycleLinker`` and use it inside your base Activity or your Activities as follow:**
+
+```java
+public abstract class MyBaseActivity extends FragmentActivity
+    implements RosiePresenter.View {
+
+  private PresenterLifeCycleLinker presenterLifeCycleLinker = new PresenterLifeCycleLinker();
+
+  @Override protected void onCreate(Bundle savedInstanceState) {
+    ...
+    presenterLifeCycleLinker.initializeLifeCycle(this, this);
+    ...
+  }
+  @Override protected void onResume() {
+    ...
+    presenterLifeCycleLinker.updatePresenters(this);
+    ...
+  }
+
+  @Override protected void onPause() {
+    ...
+    presenterLifeCycleLinker.pausePresenters();
+    ...
+  }
+
+  @Override protected void onDestroy() {
+    ...
+    super.onDestroy();
+    ...
+  }
+
+}
+```
+
+Rosie provides you some base classes to be extended and give you a quick access to the Dependency Injection and Model View Presenter features, but the usage of inheritance to use these features is not mandatory.
 
 ####Butter Knife
 

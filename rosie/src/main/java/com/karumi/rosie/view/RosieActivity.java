@@ -30,10 +30,11 @@ import java.util.List;
  * library. All activities in this project should extend from this one to be able to use core
  * features like view injection, dependency injection or Rosie presenters.
  */
-public abstract class RosieActivity extends FragmentActivity implements RosiePresenter.View, Injectable {
+public abstract class RosieActivity extends FragmentActivity
+    implements RosiePresenter.View, Injectable {
 
   private ObjectGraph activityScopeGraph;
-  private PresenterLifeCycleLinker presenterLifeCycleLinker;
+  private PresenterLifeCycleLinker presenterLifeCycleLinker = new PresenterLifeCycleLinker();
 
   /**
    * Initializes the object graph associated to the activity scope, links presenters to the
@@ -46,12 +47,9 @@ public abstract class RosieActivity extends FragmentActivity implements RosiePre
     }
     int layoutId = getLayoutId();
     setContentView(layoutId);
-    presenterLifeCycleLinker = new PresenterLifeCycleLinker();
-    presenterLifeCycleLinker.addAnnotatedPresenter(getClass().getDeclaredFields(), this);
     ButterKnife.bind(this);
-    presenterLifeCycleLinker.setView(this);
     onPreparePresenter();
-    presenterLifeCycleLinker.initializePresenters();
+    presenterLifeCycleLinker.initializeLifeCycle(this, this);
   }
 
   /**
@@ -67,8 +65,7 @@ public abstract class RosieActivity extends FragmentActivity implements RosiePre
    */
   @Override protected void onResume() {
     super.onResume();
-    presenterLifeCycleLinker.setView(this);
-    presenterLifeCycleLinker.updatePresenters();
+    presenterLifeCycleLinker.updatePresenters(this);
   }
 
   /**
@@ -91,8 +88,7 @@ public abstract class RosieActivity extends FragmentActivity implements RosiePre
    * Given an object passed as argument uses the object graph associated to the Activity scope
    * to resolve all the dependencies needed by the object and inject them.
    */
-  @Override
-  public final void inject(Object object) {
+  @Override public final void inject(Object object) {
     if (shouldInitializeActivityScopeGraph()) {
       injectActivityModules();
     }
@@ -123,7 +119,7 @@ public abstract class RosieActivity extends FragmentActivity implements RosiePre
   }
 
   /**
-   * Registers a presenter to link to this activity
+   * Registers a presenter to link to this activity.
    */
   protected final void registerPresenter(RosiePresenter presenter) {
     presenterLifeCycleLinker.registerPresenter(presenter);
