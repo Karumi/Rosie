@@ -19,8 +19,7 @@ package com.karumi.rosie.doubles;
 import com.karumi.rosie.view.Presenter;
 import com.karumi.rosie.view.RosiePresenter;
 
-public class AnyClassWithAnAnnotatedPresenter {
+public class AnyClassWithAPrivatePresenterAnnotated {
 
-  @Presenter public RosiePresenter<RosiePresenter.View> presenter;
-
+  @Presenter private RosiePresenter<RosiePresenter.View> presenter;
 }

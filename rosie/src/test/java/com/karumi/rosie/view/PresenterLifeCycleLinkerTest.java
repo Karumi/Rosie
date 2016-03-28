@@ -17,6 +17,7 @@
 package com.karumi.rosie.view;
 
 import com.karumi.rosie.UnitTest;
+import com.karumi.rosie.doubles.AnyClassWithAPrivatePresenterAnnotated;
 import com.karumi.rosie.doubles.AnyClassWithAnAnnotatedPresenter;
 import com.karumi.rosie.doubles.FakePresenter;
 import org.junit.Test;
@@ -107,6 +108,14 @@ public class PresenterLifeCycleLinkerTest extends UnitTest {
     presenterLifeCycleLinker.pausePresenters();
 
     assertNotEquals(anyView, presenter.getView());
+  }
+
+  @Test(expected = PresenterNotAccessibleException.class)
+  public void shouldThrowExceptionIfThereAnnotatedPresenterVisibilityIsPrivate() {
+    AnyClassWithAPrivatePresenterAnnotated source = new AnyClassWithAPrivatePresenterAnnotated();
+    PresenterLifeCycleLinker presenterLifeCycleLinker = givenAPresenterLifecycleLinker();
+
+    presenterLifeCycleLinker.initializeLifeCycle(source, anyView);
   }
 
   private PresenterLifeCycleLinker givenAPresenterLifecycleLinker(RosiePresenter... presenters) {

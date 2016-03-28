@@ -42,8 +42,8 @@ public final class PresenterLifeCycleLinker {
   }
 
   public void updatePresenters(RosiePresenter.View view) {
-    setView(view);
     for (RosiePresenter presenter : presenters) {
+      presenter.setView(view);
       presenter.update();
     }
   }
@@ -75,7 +75,7 @@ public final class PresenterLifeCycleLinker {
     for (Field field : source.getClass().getDeclaredFields()) {
       if (field.isAnnotationPresent(Presenter.class)) {
         if (Modifier.isPrivate(field.getModifiers())) {
-          throw new RuntimeException(
+          throw new PresenterNotAccessibleException(
               "Presenter must be accessible for this class. The visibility modifier used can't be"
                   + " private");
         } else {
@@ -85,14 +85,13 @@ public final class PresenterLifeCycleLinker {
             registerPresenter(presenter);
             field.setAccessible(false);
           } catch (IllegalAccessException e) {
-            IllegalStateException runtimeException = new IllegalStateException(
-                "the presenter " + field.getName() + " can not be access");
-            runtimeException.initCause(e);
-            throw runtimeException;
+            PresenterNotAccessibleException exception = new PresenterNotAccessibleException(
+                "the presenter " + field.getName() + " can not be accessed");
+            exception.initCause(e);
+            throw exception;
           }
         }
       }
     }
   }
-
 }

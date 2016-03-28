@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package com.karumi.rosie.doubles;
+package com.karumi.rosie.view;
 
-import com.karumi.rosie.view.Presenter;
-import com.karumi.rosie.view.RosiePresenter;
+public class PresenterNotAccessibleException extends RuntimeException {
 
-public class AnyClassWithAnAnnotatedPresenter {
-
-  @Presenter public RosiePresenter<RosiePresenter.View> presenter;
-
+  public PresenterNotAccessibleException(String detailMessage) {
+    super(detailMessage);
+  }
 }
