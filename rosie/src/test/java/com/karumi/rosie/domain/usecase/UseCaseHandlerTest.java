@@ -16,7 +16,6 @@
 
 package com.karumi.rosie.domain.usecase;
 
-import com.karumi.rosie.UnitTest;
 import com.karumi.rosie.domain.usecase.annotation.Success;
 import com.karumi.rosie.domain.usecase.annotation.UseCase;
 import com.karumi.rosie.domain.usecase.callback.OnSuccessCallback;
@@ -28,6 +27,8 @@ import com.karumi.rosie.testutils.FakeTaskScheduler;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -41,7 +42,7 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-public class UseCaseHandlerTest extends UnitTest {
+@RunWith(MockitoJUnitRunner.class) public class UseCaseHandlerTest {
 
   private static final int ANY_RETURN_VALUE = 2;
   private static final int ANY_INT_PARAM = 1;

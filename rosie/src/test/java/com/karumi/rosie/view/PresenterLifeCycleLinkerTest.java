@@ -16,18 +16,19 @@
 
 package com.karumi.rosie.view;
 
-import com.karumi.rosie.UnitTest;
 import com.karumi.rosie.doubles.AnyClassWithAPrivatePresenterAnnotated;
 import com.karumi.rosie.doubles.AnyClassWithAnAnnotatedPresenter;
 import com.karumi.rosie.doubles.FakePresenter;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Mockito.verify;
 
-public class PresenterLifeCycleLinkerTest extends UnitTest {
+@RunWith(MockitoJUnitRunner.class) public class PresenterLifeCycleLinkerTest {
 
   @Mock RosiePresenter anyPresenter1;
   @Mock RosiePresenter anyPresenter2;

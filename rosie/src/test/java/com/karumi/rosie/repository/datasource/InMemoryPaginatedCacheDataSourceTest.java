@@ -16,7 +16,6 @@
 
 package com.karumi.rosie.repository.datasource;
 
-import com.karumi.rosie.UnitTest;
 import com.karumi.rosie.doubles.AnyRepositoryKey;
 import com.karumi.rosie.doubles.AnyRepositoryValue;
 import com.karumi.rosie.repository.PaginatedCollection;
@@ -28,11 +27,13 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static junit.framework.Assert.assertEquals;
 
-public class InMemoryPaginatedCacheDataSourceTest extends UnitTest {
+@RunWith(MockitoJUnitRunner.class) public class InMemoryPaginatedCacheDataSourceTest {
 
   private static final long ANY_TTL = 10;
   private static final int ANY_OFFSET = 0;
@@ -90,7 +91,7 @@ public class InMemoryPaginatedCacheDataSourceTest extends UnitTest {
   }
 
   private InMemoryPaginatedCacheDataSource<AnyRepositoryKey, AnyRepositoryValue>
-      givenAnInMemoryPaginatedCacheDataSource() {
+  givenAnInMemoryPaginatedCacheDataSource() {
     return new InMemoryPaginatedCacheDataSource<>(timeProvider, ANY_TTL);
   }
 
