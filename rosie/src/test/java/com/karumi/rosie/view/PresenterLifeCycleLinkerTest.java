@@ -111,7 +111,7 @@ public class PresenterLifeCycleLinkerTest extends UnitTest {
   }
 
   @Test(expected = PresenterNotAccessibleException.class)
-  public void shouldThrowExceptionIfThereAnnotatedPresenterVisibilityIsPrivate() {
+  public void shouldThrowExceptionIfTheAnnotatedPresenterVisibilityIsPrivate() {
     AnyClassWithAPrivatePresenterAnnotated source = new AnyClassWithAPrivatePresenterAnnotated();
     PresenterLifeCycleLinker presenterLifeCycleLinker = givenAPresenterLifecycleLinker();
 
