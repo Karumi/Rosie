@@ -22,7 +22,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import butterknife.Bind;
 import com.karumi.dividers.Direction;
@@ -128,10 +127,8 @@ public class CharactersFragment extends MarvelFragment implements CharactersPres
   }
 
   private void initializeAdapter() {
-    LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
     RendererBuilder<CharacterViewModel> rendererBuilder = new CharacterRendererBuilder(presenter);
     charactersCollection = new CharactersAdapteeCollection();
-    charactersAdapter =
-        new RVRendererAdapter<>(layoutInflater, rendererBuilder, charactersCollection);
+    charactersAdapter = new RVRendererAdapter<>(rendererBuilder, charactersCollection);
   }
 }

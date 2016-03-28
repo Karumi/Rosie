@@ -22,7 +22,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import butterknife.Bind;
 import com.karumi.dividers.Direction;
@@ -128,9 +127,9 @@ public class ComicSeriesFragment extends RosieFragment implements ComicsSeriesPr
   }
 
   private void initializeAdapter() {
-    LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-    RendererBuilder<ComicSeriesViewModel> rendererBuilder = new ComicSeriesRendererBuilder(presenter);
+    RendererBuilder<ComicSeriesViewModel> rendererBuilder =
+        new ComicSeriesRendererBuilder(presenter);
     comicsCollection = new ComicsSeriesAdapteeCollection();
-    comicSeriesAdapter = new RVRendererAdapter<>(layoutInflater, rendererBuilder, comicsCollection);
+    comicSeriesAdapter = new RVRendererAdapter<>(rendererBuilder, comicsCollection);
   }
 }
