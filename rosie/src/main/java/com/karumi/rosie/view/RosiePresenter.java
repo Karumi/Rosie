@@ -47,7 +47,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * Method called in the presenter lifecycle. Invoked when the component containing the presenter
    * is initialized.
    */
-  protected void initialize() {
+  public void initialize() {
     registerGlobalErrorCallback();
   }
 
@@ -55,7 +55,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * Method called in the presenter lifecycle. Invoked when the component containing the presenter
    * is resumed.
    */
-  protected void update() {
+  public void update() {
     registerGlobalErrorCallback();
   }
 
@@ -63,7 +63,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * Method called in the presenter lifecycle. Invoked when the component containing the presenter
    * is paused.
    */
-  protected void pause() {
+  public void pause() {
     unregisterGlobalErrorCallback();
   }
 
@@ -71,7 +71,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * Method called in the presenter lifecycle. Invoked when the component containing the presenter
    * is destroyed.
    */
-  protected void destroy() {
+  public void destroy() {
     globalOnErrorCallbacks.clear();
   }
 
@@ -92,8 +92,15 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * Returns the view configured in the presenter which real implementation is an Activity or
    * Fragment using this presenter.
    */
-  protected final T getView() {
+  public final T getView() {
     return view;
+  }
+
+  /**
+   * Configures the View instance used in this presenter as view.
+   */
+  public void setView(T view) {
+    this.view = view;
   }
 
   /**
@@ -111,13 +118,6 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    */
   protected void registerOnErrorCallback(OnErrorCallback onErrorCallback) {
     globalOnErrorCallbacks.add(onErrorCallback);
-  }
-
-  /**
-   * Configures the View instance used in this presenter as view.
-   */
-  void setView(T view) {
-    this.view = view;
   }
 
   /**

@@ -44,7 +44,7 @@ public class ComicsSeriesPresenter extends RosiePresenterWithLoading<ComicsSerie
     this.getComicSeriesPage = getComicSeriesPage;
   }
 
-  @Override protected void update() {
+  @Override public void update() {
     super.update();
     getView().hideComicSeries();
     showLoading();
