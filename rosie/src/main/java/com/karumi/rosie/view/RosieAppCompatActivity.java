@@ -18,25 +18,23 @@ package com.karumi.rosie.view;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-
+import butterknife.ButterKnife;
 import com.karumi.rosie.application.RosieApplication;
 import com.karumi.rosie.module.RosieActivityModule;
-
+import dagger.ObjectGraph;
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.ButterKnife;
-import dagger.ObjectGraph;
 
 /**
  * Base Activity created to implement some common functionality for every Activity using this
  * library. All activities in this project should extend from this one to be able to use core
  * features like view injection, dependency injection or Rosie presenters.
  */
-public abstract class RosieAppCompatActivity extends AppCompatActivity implements RosiePresenter.View, Injectable {
+public abstract class RosieAppCompatActivity extends AppCompatActivity
+    implements RosiePresenter.View, Injectable {
 
   private ObjectGraph activityScopeGraph;
-  private PresenterLifeCycleLinker presenterLifeCycleLinker;
+  private PresenterLifeCycleLinker presenterLifeCycleLinker = new PresenterLifeCycleLinker();
 
   /**
    * Initializes the object graph associated to the activity scope, links presenters to the
@@ -49,12 +47,9 @@ public abstract class RosieAppCompatActivity extends AppCompatActivity implement
     }
     int layoutId = getLayoutId();
     setContentView(layoutId);
-    presenterLifeCycleLinker = new PresenterLifeCycleLinker();
-    presenterLifeCycleLinker.addAnnotatedPresenter(getClass().getDeclaredFields(), this);
     ButterKnife.bind(this);
-    presenterLifeCycleLinker.setView(this);
     onPreparePresenter();
-    presenterLifeCycleLinker.initializePresenters();
+    presenterLifeCycleLinker.initializeLifeCycle(this, this);
   }
 
   /**
@@ -70,8 +65,7 @@ public abstract class RosieAppCompatActivity extends AppCompatActivity implement
    */
   @Override protected void onResume() {
     super.onResume();
-    presenterLifeCycleLinker.setView(this);
-    presenterLifeCycleLinker.updatePresenters();
+    presenterLifeCycleLinker.updatePresenters(this);
   }
 
   /**
@@ -94,8 +88,7 @@ public abstract class RosieAppCompatActivity extends AppCompatActivity implement
    * Given an object passed as argument uses the object graph associated to the Activity scope
    * to resolve all the dependencies needed by the object and inject them.
    */
-  @Override
-  public final void inject(Object object) {
+  @Override public final void inject(Object object) {
     if (shouldInitializeActivityScopeGraph()) {
       injectActivityModules();
     }
@@ -125,15 +118,15 @@ public abstract class RosieAppCompatActivity extends AppCompatActivity implement
     return new ArrayList<>();
   }
 
+  private boolean shouldInitializeActivityScopeGraph() {
+    return activityScopeGraph == null;
+  }
+
   /**
-   * Registers a presenter to link to this activity
+   * Registers a presenter to link to this activity.
    */
   protected final void registerPresenter(RosiePresenter presenter) {
     presenterLifeCycleLinker.registerPresenter(presenter);
-  }
-
-  private boolean shouldInitializeActivityScopeGraph() {
-    return activityScopeGraph == null;
   }
 
   private void injectActivityModules() {
