@@ -30,6 +30,15 @@ public final class PresenterLifeCycleLinker {
   private final Set<RosiePresenter> presenters = new HashSet<>();
 
   public void initializeLifeCycle(Object source, RosiePresenter.View view) {
+    if (source == null) {
+      throw new IllegalArgumentException(
+          "The source instance used to initialize the presenters can't be null");
+    }
+    if (view == null) {
+      throw new IllegalArgumentException(
+          "The view instance used to initialize the presenters can't be null");
+    }
+
     addAnnotatedPresenter(source);
     setView(view);
     initializePresenters();
@@ -42,6 +51,10 @@ public final class PresenterLifeCycleLinker {
   }
 
   public void updatePresenters(RosiePresenter.View view) {
+    if (view == null) {
+      throw new IllegalArgumentException(
+          "The view instance used to update the presenters can't be null");
+    }
     for (RosiePresenter presenter : presenters) {
       presenter.setView(view);
       presenter.update();
@@ -62,10 +75,17 @@ public final class PresenterLifeCycleLinker {
   }
 
   public void registerPresenter(RosiePresenter presenter) {
+    if (presenter == null) {
+      throw new IllegalArgumentException("The presenter instance to be registered can't be null");
+    }
     presenters.add(presenter);
   }
 
   public void setView(RosiePresenter.View view) {
+    if (view == null) {
+      throw new IllegalArgumentException(
+          "The view instance used to configure the presenters can't be null");
+    }
     for (RosiePresenter presenter : presenters) {
       presenter.setView(view);
     }

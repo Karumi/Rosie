@@ -118,6 +118,35 @@ public class PresenterLifeCycleLinkerTest extends UnitTest {
     presenterLifeCycleLinker.initializeLifeCycle(source, anyView);
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void shouldNotAcceptNullSourcesToInitializeTheLifeCycle() {
+    PresenterLifeCycleLinker presenterLifeCycleLinker = givenAPresenterLifecycleLinker();
+
+    presenterLifeCycleLinker.initializeLifeCycle(null, anyView);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void shouldNotAcceptNullViewsToInitializeTheLifeCycle() {
+    PresenterLifeCycleLinker presenterLifeCycleLinker = givenAPresenterLifecycleLinker();
+    Object source = givenAnyClassWithAnAnnotatedPresenter(anyPresenter1);
+
+    presenterLifeCycleLinker.initializeLifeCycle(source, null);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void shouldNotAcceptNullViewsToConfigureThePresenters() {
+    PresenterLifeCycleLinker presenterLifeCycleLinker = givenAPresenterLifecycleLinker();
+
+    presenterLifeCycleLinker.setView(null);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void shouldNotAcceptNullPresentersToRegister() {
+    PresenterLifeCycleLinker presenterLifeCycleLinker = givenAPresenterLifecycleLinker();
+
+    presenterLifeCycleLinker.registerPresenter(null);
+  }
+
   private PresenterLifeCycleLinker givenAPresenterLifecycleLinker(RosiePresenter... presenters) {
     PresenterLifeCycleLinker presenterLifeCycleLinker = new PresenterLifeCycleLinker();
     for (RosiePresenter presenter : presenters) {
