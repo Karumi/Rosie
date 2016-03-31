@@ -23,6 +23,10 @@ Screenshots
 
 ![Screencast](./art/screencast.gif)
 
+Application UI/UX designs by Luis Herrero.
+
+Data provided by Marvel. © 2016 MARVEL
+
 Usage
 -----
 
