@@ -414,13 +414,19 @@ or to your ``pom.xml`` if you are using Maven
 
 ```
 
+More information?
+-----------------
+
+We are writing some blog posts to explain the main motivations behind Rosie and some desing considerations:
+
+* Presentation layer: http://blog.karumi.com/inside-rosie-the-presentation-layer/
+
 Do you want to contribute?
 --------------------------
 
 Feel free to report us or add any useful feature to the library, we will be glad to improve it with your help.
 
 Keep in mind that your PRs **must** be validated by Travis-CI. Please, run a local build with ``./gradlew checkstyle build connectedCheck`` before submitting your code.
-
 
 Libraries used in this project
 ------------------------------
