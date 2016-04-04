@@ -130,6 +130,9 @@ public abstract class RosieAppCompatActivity extends AppCompatActivity
   }
 
   private void injectActivityModules() {
+    if (!(getApplication() instanceof RosieApplication)) {
+      return;
+    }
     RosieApplication rosieApplication = (RosieApplication) getApplication();
     List<Object> additionalModules = getActivityScopeModules();
     if (additionalModules == null) {
