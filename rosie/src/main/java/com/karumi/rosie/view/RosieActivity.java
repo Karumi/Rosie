@@ -130,6 +130,9 @@ public abstract class RosieActivity extends FragmentActivity
   }
 
   private void injectActivityModules() {
+    if (!(getApplication() instanceof RosieApplication)) {
+      return;
+    }
     RosieApplication rosieApplication = (RosieApplication) getApplication();
     List<Object> additionalModules = getActivityScopeModules();
     if (additionalModules == null) {
