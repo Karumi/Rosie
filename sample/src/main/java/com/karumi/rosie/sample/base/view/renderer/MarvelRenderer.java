@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.karumi.rosie.renderer;
+package com.karumi.rosie.sample.base.view.renderer;
 
 import android.view.View;
 import butterknife.ButterKnife;
@@ -25,7 +25,7 @@ import com.pedrogomez.renderers.Renderer;
  * Renderer classes should extend from this one to be able tu use Butter Knife annotations.
  * Remember to call super in you overridden render method.
  */
-public abstract class RosieRenderer<T> extends Renderer<T> {
+public abstract class MarvelRenderer<T> extends Renderer<T> {
 
   @Override public void render() {
     ButterKnife.bind(this, getRootView());
