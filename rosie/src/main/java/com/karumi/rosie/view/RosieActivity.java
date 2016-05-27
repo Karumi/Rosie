@@ -51,6 +51,14 @@ public abstract class RosieActivity extends FragmentActivity
   }
 
   /**
+   * Called just after setContentView to initialize all the activity views.
+   * Override this method to configure your activity and initialize views.
+   */
+  protected void onPrepareActivity() {
+
+  }
+
+  /**
    * Called before to initialize all the presenter instances linked to the component lifecycle.
    * Override this method to configure your presenter with extra data if needed.
    */

@@ -34,8 +34,8 @@ public abstract class MarvelActivity extends RosieActivity {
   }
 
   @Override
-  protected void onPreparePresenter() {
-    super.onPreparePresenter();
+  protected void onPrepareActivity() {
+    super.onPrepareActivity();
     ButterKnife.bind(this);
   }
 
