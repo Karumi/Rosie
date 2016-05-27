@@ -34,7 +34,6 @@ dependencies {
 
   compile 'com.squareup.dagger:dagger:1.2.2'
   compile 'com.birbit:android-priority-jobqueue:1.3.5'
-  compile 'com.jakewharton:butterknife:8.0.1'
 
   testCompile 'junit:junit:4.12'
   testCompile 'org.mockito:mockito-all:1.10.19'

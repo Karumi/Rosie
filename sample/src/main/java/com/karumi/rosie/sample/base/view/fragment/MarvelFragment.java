@@ -20,7 +20,16 @@ import android.support.design.widget.Snackbar;
 import com.karumi.rosie.sample.R;
 import com.karumi.rosie.view.RosieFragment;
 
+import butterknife.ButterKnife;
+
 public abstract class MarvelFragment extends RosieFragment {
+
+  @Override
+  protected void onPreparePresenter() {
+    super.onPreparePresenter();
+    ButterKnife.bind(this, getView());
+  }
+
   public void showGenericError() {
     Snackbar.make(getView(), getString(R.string.generic_error), Snackbar.LENGTH_SHORT).show();
   }

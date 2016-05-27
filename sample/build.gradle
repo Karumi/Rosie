@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-
 buildscript {
   repositories {
     jcenter()
     mavenCentral()
     maven { url "https://jitpack.io" }
   }
+  dependencies {
+    classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+  }
 }
 
-
 apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
 
 private Properties loadMarvelProperties() {
   Properties props = new Properties()
@@ -80,6 +82,8 @@ dependencies {
   compile 'com.android.support:support-v13:23.1.1'
   compile 'com.android.support:design:23.1.1'
   compile 'com.squareup.picasso:picasso:2.5.2'
+  compile 'com.jakewharton:butterknife:8.0.1'
+  apt 'com.jakewharton:butterknife-compiler:8.0.1'
   compile 'com.github.pedrovgs:renderers:3.0.0'
   compile 'com.karumi:dividers:1.0.3'
   compile 'com.victor:lib:1.0.1' // https://github.com/yankai-victor/Loading

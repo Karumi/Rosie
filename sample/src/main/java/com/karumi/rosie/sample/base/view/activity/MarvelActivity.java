@@ -18,6 +18,8 @@ package com.karumi.rosie.sample.base.view.activity;
 
 import android.support.design.widget.Snackbar;
 import android.view.View;
+
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Optional;
 
@@ -29,6 +31,12 @@ public abstract class MarvelActivity extends RosieActivity {
 
   @Optional @OnClick(R.id.iv_toolbar_back) public void onBackButtonClicked() {
     finish();
+  }
+
+  @Override
+  protected void onPreparePresenter() {
+    super.onPreparePresenter();
+    ButterKnife.bind(this);
   }
 
   public void showGenericError() {

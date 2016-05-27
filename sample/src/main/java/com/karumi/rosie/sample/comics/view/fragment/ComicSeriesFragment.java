@@ -24,6 +24,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import com.karumi.dividers.Direction;
 import com.karumi.dividers.DividerBuilder;
 import com.karumi.dividers.DividerItemDecoration;
@@ -59,6 +61,12 @@ public class ComicSeriesFragment extends RosieFragment implements ComicsSeriesPr
 
   @Override protected int getLayoutId() {
     return R.layout.fragment_comic_series;
+  }
+
+  @Override
+  protected void onPreparePresenter() {
+    super.onPreparePresenter();
+    ButterKnife.bind(this, getView());
   }
 
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {
