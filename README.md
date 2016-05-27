@@ -430,9 +430,7 @@ Libraries used in this project
 * [JUnit] [junit]
 * [Mockito] [mockito]
 * [Robolectric] [robolectric]
-* [ButterKnife] [butterknife]
 * [Dagger] [dagger]
-* [Renderers] [renderers]
 * [Android Priority Job Queue] [jobqueue]
 
 License
@@ -463,6 +461,4 @@ License
 [mockito]: https://github.com/mockito/mockito
 [robolectric]: https://github.com/robolectric/robolectric
 [dagger]: https://github.com/square/dagger
-[butterknife]: https://github.com/JakeWharton/butterknife
-[renderers]: https://github.com/pedrovgs/renderers
 [jobqueue]: https://github.com/yigit/android-priority-jobqueue
