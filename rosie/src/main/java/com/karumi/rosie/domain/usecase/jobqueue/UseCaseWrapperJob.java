@@ -19,6 +19,7 @@ package com.karumi.rosie.domain.usecase.jobqueue;
 import com.karumi.rosie.domain.usecase.UseCaseWrapper;
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
+import com.path.android.jobqueue.RetryConstraint;
 
 /**
  * Job extension created to be able to execute a use case using android-priority-job-queue.
@@ -44,7 +45,7 @@ class UseCaseWrapperJob extends Job {
 
   }
 
-  @Override protected boolean shouldReRunOnThrowable(Throwable throwable) {
-    return false;
+  @Override protected RetryConstraint shouldReRunOnThrowable(Throwable throwable, int runCount, int maxRunCount) {
+    return RetryConstraint.CANCEL;
   }
 }
