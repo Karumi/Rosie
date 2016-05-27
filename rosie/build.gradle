@@ -19,7 +19,7 @@ apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn
 
 android {
   compileSdkVersion 23
-  buildToolsVersion "23.0.1"
+  buildToolsVersion "23.0.3"
 
   defaultConfig {
     minSdkVersion 14
@@ -28,7 +28,7 @@ android {
 }
 
 dependencies {
-  compile 'com.android.support:appcompat-v7:23.1.1'
+  compile 'com.android.support:appcompat-v7:23.4.0'
 
   provided 'com.squareup.dagger:dagger-compiler:1.2.2'
 

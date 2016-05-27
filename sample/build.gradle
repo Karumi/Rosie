@@ -56,7 +56,7 @@ def preDexEnabled = "true".equals(System.getProperty("pre-dex", "true"))
 
 android {
   compileSdkVersion 23
-  buildToolsVersion "23.0.1"
+  buildToolsVersion "23.0.3"
 
   dexOptions {
     preDexLibraries = preDexEnabled
@@ -76,9 +76,9 @@ android {
 
 dependencies {
   compile fileTree(include: ['*.jar'], dir: 'libs')
-  compile 'com.android.support:appcompat-v7:23.1.1'
-  compile 'com.android.support:support-v13:23.1.1'
-  compile 'com.android.support:design:23.1.1'
+  compile 'com.android.support:appcompat-v7:23.4.0'
+  compile 'com.android.support:support-v13:23.4.0'
+  compile 'com.android.support:design:23.4.0'
   compile 'com.squareup.picasso:picasso:2.5.2'
   compile 'com.karumi:dividers:1.0.3'
   compile 'com.victor:lib:1.0.1' // https://github.com/yankai-victor/Loading
@@ -106,6 +106,6 @@ dependencies {
 }
 
 configurations.all {
-  resolutionStrategy.force 'com.android.support:support-annotations:23.0.1'
+  resolutionStrategy.force 'com.android.support:support-annotations:23.4.0'
 }
 
