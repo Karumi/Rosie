@@ -23,7 +23,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
-import butterknife.Bind;
+import butterknife.BindView;
 import com.karumi.rosie.sample.R;
 import com.karumi.rosie.sample.base.view.activity.MarvelActivity;
 import com.karumi.rosie.sample.comics.ComicsModule;
@@ -47,9 +47,9 @@ public class ComicSeriesDetailsActivity extends MarvelActivity
   private static final int INVALID_COMIC_SERIES_KEY_EXTRA = -1;
   private static final int NUMBER_OF_COLUMNS = 3;
 
-  @Bind(R.id.tv_toolbar_title) TextView toolbarTitleView;
-  @Bind(R.id.loading) RotateLoading loadingView;
-  @Bind(R.id.rv_comics) RecyclerView comicsView;
+  @BindView(R.id.tv_toolbar_title) TextView toolbarTitleView;
+  @BindView(R.id.loading) RotateLoading loadingView;
+  @BindView(R.id.rv_comics) RecyclerView comicsView;
 
   @Inject @Presenter ComicSeriesDetailsPresenter presenter;
 
