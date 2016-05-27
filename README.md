@@ -91,17 +91,6 @@ public abstract class MyBaseActivity extends FragmentActivity
 
 Rosie provides you some base classes to be extended and give you a quick access to the Dependency Injection and Model View Presenter features, but the usage of inheritance to use these features is not mandatory.
 
-####Butter Knife
-
-By extending Rosie view classes, you will have access in your activities and fragments to [ButterKnife] [butterknife] annotations to easily inject your views:
-
-```java
-public class SampleActivity extends RosieActivity {
-	@Bind(R.id.sample_view) TextView sampleView;
-	/*...*/
-}
-```
-
 ####Dagger
 
 Besides, you can define the [Dagger] [dagger] module that will contain the dependencies for your activity by overriding the ``getActivityScopeModules`` method:
@@ -172,9 +161,6 @@ To understand when the lifecycle methods are called take a look at the following
 | ``pause``       | ``onPause``    | ``onPause``        |
 | ``destroy``     | ``onDestroy``  | ``onDestroy``      |
 
-####Renderers
-
-Finally, Rosie includes the [Renderers] [renderers] library to simplify your ``RecyclerView`` handling code. If you decide to use Renderers, remember to extend directly from ``RosieRenderer<T>`` to have ButterKnife injections for free in your renderer views.
 
 ###Domain
 
@@ -417,6 +403,12 @@ or to your ``pom.xml`` if you are using Maven
 </dependency>
 
 ```
+
+Changelog
+-----------------
+
+We have removed the direct support to Renderers and Butter Knife libraries on Rosie to simplify its use and make easier its support. The sample is still using this libraries, so you can find an example of how to integrate this libraries in your project.
+
 
 More information?
 -----------------
