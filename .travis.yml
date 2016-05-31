@@ -19,4 +19,4 @@ before_script:
   - adb shell input keyevent 82 &
 
 script:
-  - travis_wait 20 ./gradlew checkstyle build connectedCheck -Dpre-dex=false -Pcom.android.build.threadPoolSize=1 -Dorg.gradle.parallel=false -Dorg.gradle.jvmargs="-Xms2048m -Xmx2048m" -Dorg.gradle.daemon=false
+  - ./gradlew checkstyle build connectedCheck -Dpre-dex=false -Pcom.android.build.threadPoolSize=1 -Dorg.gradle.parallel=false -Dorg.gradle.jvmargs="-Xms2048m -Xmx2048m" -Dorg.gradle.daemon=false
