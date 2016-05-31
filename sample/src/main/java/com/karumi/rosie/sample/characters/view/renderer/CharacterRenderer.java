@@ -23,13 +23,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.OnClick;
-import com.karumi.rosie.renderer.RosieRenderer;
 import com.karumi.rosie.sample.R;
+import com.karumi.rosie.sample.base.view.renderer.MarvelRenderer;
 import com.karumi.rosie.sample.characters.view.presenter.CharactersPresenter;
 import com.karumi.rosie.sample.characters.view.viewmodel.CharacterViewModel;
 import com.squareup.picasso.Picasso;
 
-public class CharacterRenderer extends RosieRenderer<CharacterViewModel> {
+public class CharacterRenderer extends MarvelRenderer<CharacterViewModel> {
 
   private final CharactersPresenter presenter;
 

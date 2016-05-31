@@ -16,11 +16,28 @@
 
 package com.karumi.rosie.sample.base.view.fragment;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import com.karumi.rosie.sample.R;
 import com.karumi.rosie.view.RosieFragment;
 
+import butterknife.ButterKnife;
+
 public abstract class MarvelFragment extends RosieFragment {
+
+  @Nullable
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                     Bundle savedInstanceState) {
+    View view = super.onCreateView(inflater, container, savedInstanceState);
+    ButterKnife.bind(this, view);
+    return view;
+  }
+
   public void showGenericError() {
     Snackbar.make(getView(), getString(R.string.generic_error), Snackbar.LENGTH_SHORT).show();
   }
