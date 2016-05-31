@@ -404,12 +404,6 @@ or to your ``pom.xml`` if you are using Maven
 
 ```
 
-Changelog
------------------
-
-We have removed the direct support to Renderers and Butter Knife libraries on Rosie to simplify its use and make easier its support. The sample is still using this libraries, so you can find an example of how to integrate this libraries in your project.
-
-
 More information?
 -----------------
 
