@@ -81,6 +81,8 @@ dependencies {
   compile 'com.android.support:design:23.4.0'
   compile 'com.squareup.picasso:picasso:2.5.2'
   compile 'com.karumi:dividers:1.0.3'
+  compile 'com.github.pedrovgs:renderers:3.0.0'
+  compile 'com.jakewharton:butterknife:7.0.1'
   compile 'com.victor:lib:1.0.1' // https://github.com/yankai-victor/Loading
   compile 'com.karumi:marvelapiclient:0.0.4'
   provided 'com.squareup.dagger:dagger-compiler:1.2.2'

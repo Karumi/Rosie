@@ -24,7 +24,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import butterknife.ButterKnife;
 
 /**
  * Base Fragment created to implement some common functionality to every Fragment using this
@@ -60,7 +59,6 @@ public abstract class RosieSupportFragment extends Fragment implements RosiePres
         injectDependencies();
         int layoutId = getLayoutId();
         View view = inflater.inflate(layoutId, container, false);
-        ButterKnife.bind(this, view);
         return view;
     }
 
