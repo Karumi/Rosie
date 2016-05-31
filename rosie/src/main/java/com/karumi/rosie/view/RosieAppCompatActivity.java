@@ -18,7 +18,6 @@ package com.karumi.rosie.view;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import butterknife.ButterKnife;
 import com.karumi.rosie.application.RosieApplication;
 import com.karumi.rosie.module.RosieActivityModule;
 import dagger.ObjectGraph;
@@ -47,7 +46,6 @@ public abstract class RosieAppCompatActivity extends AppCompatActivity
     }
     int layoutId = getLayoutId();
     setContentView(layoutId);
-    ButterKnife.bind(this);
     onPreparePresenter();
     presenterLifeCycleLinker.initializeLifeCycle(this, this);
   }

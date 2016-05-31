@@ -20,18 +20,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
-import com.karumi.rosie.renderer.RosieRenderer;
+import com.karumi.rosie.sample.base.view.renderer.MarvelRenderer;
 import com.karumi.rosie.sample.R;
 import com.karumi.rosie.sample.comics.view.presenter.ComicsSeriesPresenter;
 import com.karumi.rosie.sample.comics.view.viewmodel.ComicSeriesViewModel;
 
-public class ComicSeriesRenderer extends RosieRenderer<ComicSeriesViewModel> {
+public class ComicSeriesRenderer extends MarvelRenderer<ComicSeriesViewModel> {
 
   private final ComicsSeriesPresenter presenter;
 
-  @Bind(R.id.tv_comic_series_name) TextView nameView;
+  @BindView(R.id.tv_comic_series_name) TextView nameView;
 
   public ComicSeriesRenderer(ComicsSeriesPresenter presenter) {
     this.presenter = presenter;

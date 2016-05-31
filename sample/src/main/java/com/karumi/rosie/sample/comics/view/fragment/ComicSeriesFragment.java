@@ -19,11 +19,17 @@ package com.karumi.rosie.sample.comics.view.fragment;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
-import butterknife.Bind;
+import android.view.ViewGroup;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import com.karumi.dividers.Direction;
 import com.karumi.dividers.DividerBuilder;
 import com.karumi.dividers.DividerItemDecoration;
@@ -48,8 +54,8 @@ import javax.inject.Inject;
 
 public class ComicSeriesFragment extends RosieFragment implements ComicsSeriesPresenter.View {
 
-  @Bind(R.id.rv_comics) RecyclerView comicSeriesView;
-  @Bind(R.id.loading) RotateLoading loadingView;
+  @BindView(R.id.rv_comics) RecyclerView comicSeriesView;
+  @BindView(R.id.loading) RotateLoading loadingView;
 
   @Inject @Presenter ComicsSeriesPresenter presenter;
 
@@ -59,6 +65,14 @@ public class ComicSeriesFragment extends RosieFragment implements ComicsSeriesPr
 
   @Override protected int getLayoutId() {
     return R.layout.fragment_comic_series;
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    View view = super.onCreateView(inflater, container, savedInstanceState);
+    ButterKnife.bind(this, view);
+    return view;
   }
 
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {
