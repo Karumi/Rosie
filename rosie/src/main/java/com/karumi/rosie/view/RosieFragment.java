@@ -58,7 +58,9 @@ public abstract class RosieFragment extends Fragment implements RosiePresenter.V
   @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     injectDependencies();
-    return inflater.inflate(getLayoutId(), container, false);
+    View view = inflater.inflate(getLayoutId(), container, false);
+    onPrepareFragment(view);
+    return view;
   }
 
   /**
@@ -69,6 +71,15 @@ public abstract class RosieFragment extends Fragment implements RosiePresenter.V
     onPreparePresenter();
     presenterLifeCycleLinker.initializeLifeCycle(this, this);
   }
+
+  /**
+   * Called before returning the view in onCreateView.
+   * Override this method to configure your fragment or bind views.
+   */
+  protected void onPrepareFragment(View view) {
+
+  }
+
 
   /**
    * Called before to initialize all the presenter instances linked to the component lifecycle.

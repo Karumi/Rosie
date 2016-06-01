@@ -30,12 +30,10 @@ import butterknife.ButterKnife;
 
 public abstract class MarvelFragment extends RosieFragment {
 
-  @Nullable
-  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                     Bundle savedInstanceState) {
-    View view = super.onCreateView(inflater, container, savedInstanceState);
+  @Override
+  protected void onPrepareFragment(View view) {
+    super.onPrepareFragment(view);
     ButterKnife.bind(this, view);
-    return view;
   }
 
   public void showGenericError() {

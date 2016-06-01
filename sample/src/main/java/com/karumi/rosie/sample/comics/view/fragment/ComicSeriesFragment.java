@@ -67,12 +67,10 @@ public class ComicSeriesFragment extends RosieFragment implements ComicsSeriesPr
     return R.layout.fragment_comic_series;
   }
 
-  @Nullable
-  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                     Bundle savedInstanceState) {
-    View view = super.onCreateView(inflater, container, savedInstanceState);
+  @Override
+  protected void onPrepareFragment(View view) {
+    super.onPrepareFragment(view);
     ButterKnife.bind(this, view);
-    return view;
   }
 
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {
