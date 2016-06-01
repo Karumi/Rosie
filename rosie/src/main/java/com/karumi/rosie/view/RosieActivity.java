@@ -36,8 +36,8 @@ public abstract class RosieActivity extends FragmentActivity
   private PresenterLifeCycleLinker presenterLifeCycleLinker = new PresenterLifeCycleLinker();
 
   /**
-   * Initializes the object graph associated to the activity scope, links presenters to the
-   * Activity life cycle and initializes view injection using butter knife.
+   * Initializes the object graph associated to the activity scope and links presenters to the
+   * Activity life cycle.
    */
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
