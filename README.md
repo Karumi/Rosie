@@ -91,17 +91,6 @@ public abstract class MyBaseActivity extends FragmentActivity
 
 Rosie provides you some base classes to be extended and give you a quick access to the Dependency Injection and Model View Presenter features, but the usage of inheritance to use these features is not mandatory.
 
-####Butter Knife
-
-By extending Rosie view classes, you will have access in your activities and fragments to [ButterKnife] [butterknife] annotations to easily inject your views:
-
-```java
-public class SampleActivity extends RosieActivity {
-	@Bind(R.id.sample_view) TextView sampleView;
-	/*...*/
-}
-```
-
 ####Dagger
 
 Besides, you can define the [Dagger] [dagger] module that will contain the dependencies for your activity by overriding the ``getActivityScopeModules`` method:
@@ -171,10 +160,6 @@ To understand when the lifecycle methods are called take a look at the following
 | ``update``      | ``onResume``   | ``onResume``       |
 | ``pause``       | ``onPause``    | ``onPause``        |
 | ``destroy``     | ``onDestroy``  | ``onDestroy``      |
-
-####Renderers
-
-Finally, Rosie includes the [Renderers] [renderers] library to simplify your ``RecyclerView`` handling code. If you decide to use Renderers, remember to extend directly from ``RosieRenderer<T>`` to have ButterKnife injections for free in your renderer views.
 
 ###Domain
 
@@ -438,9 +423,7 @@ Libraries used in this project
 * [JUnit] [junit]
 * [Mockito] [mockito]
 * [Robolectric] [robolectric]
-* [ButterKnife] [butterknife]
 * [Dagger] [dagger]
-* [Renderers] [renderers]
 * [Android Priority Job Queue] [jobqueue]
 
 License
@@ -471,6 +454,4 @@ License
 [mockito]: https://github.com/mockito/mockito
 [robolectric]: https://github.com/robolectric/robolectric
 [dagger]: https://github.com/square/dagger
-[butterknife]: https://github.com/JakeWharton/butterknife
-[renderers]: https://github.com/pedrovgs/renderers
 [jobqueue]: https://github.com/yigit/android-priority-jobqueue

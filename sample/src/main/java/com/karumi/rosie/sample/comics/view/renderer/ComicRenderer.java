@@ -22,13 +22,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.Bind;
-import com.karumi.rosie.renderer.RosieRenderer;
 import com.karumi.rosie.sample.R;
+import com.karumi.rosie.sample.base.view.renderer.MarvelRenderer;
 import com.karumi.rosie.sample.comics.view.viewmodel.ComicSeriesDetailViewModel;
 import com.karumi.rosie.sample.comics.view.viewmodel.ComicViewModel;
 import com.squareup.picasso.Picasso;
 
-public class ComicRenderer extends RosieRenderer<ComicSeriesDetailViewModel> {
+public class ComicRenderer extends MarvelRenderer<ComicSeriesDetailViewModel> {
 
   @Bind(R.id.iv_thumbnail) ImageView thumbnailView;
   @Bind(R.id.tv_title) TextView titleView;

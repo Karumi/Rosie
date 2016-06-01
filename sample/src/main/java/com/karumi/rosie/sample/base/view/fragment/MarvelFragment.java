@@ -17,10 +17,21 @@
 package com.karumi.rosie.sample.base.view.fragment;
 
 import android.support.design.widget.Snackbar;
+import android.view.View;
+
 import com.karumi.rosie.sample.R;
 import com.karumi.rosie.view.RosieFragment;
 
+import butterknife.ButterKnife;
+
 public abstract class MarvelFragment extends RosieFragment {
+
+  @Override
+  protected void onPrepareFragment(View view) {
+    super.onPrepareFragment(view);
+    ButterKnife.bind(this, view);
+  }
+
   public void showGenericError() {
     Snackbar.make(getView(), getString(R.string.generic_error), Snackbar.LENGTH_SHORT).show();
   }
