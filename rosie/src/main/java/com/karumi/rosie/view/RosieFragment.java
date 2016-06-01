@@ -58,8 +58,7 @@ public abstract class RosieFragment extends Fragment implements RosiePresenter.V
   @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     injectDependencies();
-    int layoutId = getLayoutId();
-    return inflater.inflate(layoutId, container, false);
+    return inflater.inflate(getLayoutId(), container, false);
   }
 
   /**
