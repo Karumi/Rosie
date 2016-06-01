@@ -21,7 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import butterknife.Bind;
+import butterknife.BindView;
 import com.karumi.rosie.renderer.RosieRenderer;
 import com.karumi.rosie.sample.R;
 import com.karumi.rosie.sample.comics.view.viewmodel.ComicSeriesDetailViewModel;
@@ -30,8 +30,8 @@ import com.squareup.picasso.Picasso;
 
 public class ComicRenderer extends RosieRenderer<ComicSeriesDetailViewModel> {
 
-  @Bind(R.id.iv_thumbnail) ImageView thumbnailView;
-  @Bind(R.id.tv_title) TextView titleView;
+  @BindView(R.id.iv_thumbnail) ImageView thumbnailView;
+  @BindView(R.id.tv_title) TextView titleView;
 
   @Override public void render() {
     super.render();
