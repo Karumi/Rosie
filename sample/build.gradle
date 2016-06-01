@@ -25,6 +25,7 @@ buildscript {
 
 
 apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
 
 private Properties loadMarvelProperties() {
   Properties props = new Properties()
@@ -84,7 +85,8 @@ dependencies {
   compile 'com.victor:lib:1.0.1' // https://github.com/yankai-victor/Loading
   compile 'com.karumi:marvelapiclient:0.0.4'
   compile 'com.github.pedrovgs:renderers:3.0.0'
-  compile 'com.jakewharton:butterknife:7.0.1'
+  compile 'com.jakewharton:butterknife:8.0.1'
+  apt 'com.jakewharton:butterknife-compiler:8.0.1'
   provided 'com.squareup.dagger:dagger-compiler:1.2.2'
   compile project(':rosie')
 

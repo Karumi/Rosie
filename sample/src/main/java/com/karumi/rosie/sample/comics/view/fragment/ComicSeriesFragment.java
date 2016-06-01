@@ -24,7 +24,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import com.karumi.dividers.Direction;
@@ -51,8 +51,8 @@ import javax.inject.Inject;
 
 public class ComicSeriesFragment extends RosieFragment implements ComicsSeriesPresenter.View {
 
-  @Bind(R.id.rv_comics) RecyclerView comicSeriesView;
-  @Bind(R.id.loading) RotateLoading loadingView;
+  @BindView(R.id.rv_comics) RecyclerView comicSeriesView;
+  @BindView(R.id.loading) RotateLoading loadingView;
 
   @Inject @Presenter ComicsSeriesPresenter presenter;
 
