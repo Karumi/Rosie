@@ -63,7 +63,7 @@ public abstract class RosieFragment extends Fragment implements RosiePresenter.V
   }
 
   /**
-   * Injects the Fragment views using Butter Knife library and initializes the presenter lifecycle.
+   * Initializes the presenter lifecycle.
    */
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
