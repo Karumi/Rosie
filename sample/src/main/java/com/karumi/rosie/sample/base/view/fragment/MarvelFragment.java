@@ -16,12 +16,8 @@
 
 package com.karumi.rosie.sample.base.view.fragment;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.karumi.rosie.sample.R;
 import com.karumi.rosie.view.RosieFragment;
