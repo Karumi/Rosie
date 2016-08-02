@@ -26,7 +26,7 @@
   <string name="comic_thumbnail_content_description">Comic thumbnail</string>
   <string name="character_next_icon_content_description">See character details</string>
   <string name="character_thumbnail_content_description">Character thumbnail</string>
-  <string name="fake_data_disclaymer">Mavel keys doesn\'t exist, you need it to access to real data.
+  <string name="fake_data_disclaimer">Marvel keys doesn\'t exist, you need it to access to real data.
     This is the DEMO mode with fake information.
   </string>
   <string name="no_description">Description is not available.</string>

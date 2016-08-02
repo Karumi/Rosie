@@ -28,7 +28,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       style="@style/TextViewDisclaimer"
-      android:text="@string/fake_data_disclaymer"
+      android:text="@string/fake_data_disclaimer"
       />
   <android.support.design.widget.TabLayout
       android:id="@+id/tab_page_indicator"
