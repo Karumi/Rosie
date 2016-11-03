@@ -1,4 +1,4 @@
-![Karumi logo][karumilogo]Rosie [![Build Status](https://travis-ci.org/Karumi/Rosie.svg?branch=master)](https://travis-ci.org/Karumi/Rosie) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.karumi.rosie/rosie/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.karumi.rosie/rosie)
+![Karumi logo][karumilogo]Rosie [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.karumi.rosie/rosie/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.karumi.rosie/rosie)
 ======
 
 > The only way to make the deadline—the only way to go fast—is to keep the code as clean as possible at all times.
