@@ -33,13 +33,13 @@ public class UseCaseHandler {
   private final TaskScheduler taskScheduler;
   private final ErrorHandler errorHandler;
 
-  // This list is used to retain error adapters in a non-weak reference associated with this use case handler
-  private List<OnErrorCallbackToErrorHandlerAdapter> errorAdapters;
+  // This list is used to retain error adapters in a non-weak reference associated with this use
+  // case handler
+  private final List<OnErrorCallback> errorCallbacks = new ArrayList<>();
 
   public UseCaseHandler(TaskScheduler taskScheduler, ErrorHandler errorHandler) {
     this.taskScheduler = taskScheduler;
     this.errorHandler = errorHandler;
-    this.errorAdapters = new ArrayList<>();
   }
 
   /**
@@ -54,10 +54,10 @@ public class UseCaseHandler {
 
     useCase.setOnSuccessCallback(useCaseParams.getOnSuccessCallback());
 
-    OnErrorCallbackToErrorHandlerAdapter errorAdapter =
+    OnErrorCallback onErrorCallback =
         new OnErrorCallbackToErrorHandlerAdapter(errorHandler, useCaseParams.getOnErrorCallback());
-    errorAdapters.add(errorAdapter);
-    useCase.setOnErrorCallback(errorAdapter);
+    errorCallbacks.add(onErrorCallback);
+    useCase.setOnErrorCallback(onErrorCallback);
 
     UseCaseWrapper useCaseWrapper = new UseCaseWrapper(useCase, useCaseParams, errorHandler);
     taskScheduler.execute(useCaseWrapper);
@@ -75,8 +75,8 @@ public class UseCaseHandler {
    * Inner class responsible for routing the errors thrown from the use case to the error handler
    */
   private static class OnErrorCallbackToErrorHandlerAdapter implements OnErrorCallback {
-    private WeakReference<ErrorHandler> errorHandler;
-    private WeakReference<OnErrorCallback> useCaseOnErrorCallback;
+    private final WeakReference<ErrorHandler> errorHandler;
+    private final WeakReference<OnErrorCallback> useCaseOnErrorCallback;
 
     public OnErrorCallbackToErrorHandlerAdapter(ErrorHandler errorHandler,
         OnErrorCallback useCaseOnErrorCallback) {
