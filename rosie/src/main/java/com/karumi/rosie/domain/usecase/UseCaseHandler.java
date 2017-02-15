@@ -85,8 +85,9 @@ public class UseCaseHandler {
     }
 
     @Override public boolean onError(Error error) {
-      if (errorHandler.get() != null) {
-        errorHandler.get().notifyError(error, useCaseOnErrorCallback.get());
+      ErrorHandler errorHandler = this.errorHandler.get();
+      if (errorHandler != null) {
+        errorHandler.notifyError(error, useCaseOnErrorCallback.get());
         return true;
       }
       return false;
