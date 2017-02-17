@@ -19,6 +19,10 @@ package com.karumi.rosie.domain.usecase;
 import com.karumi.rosie.domain.usecase.error.ErrorHandler;
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Invoke methods annotated with UseCase annotation. The RosieUseCase instance will be executed out
  * of the Android main thread and the result of the operation will be provided asynchronously using
@@ -28,6 +32,10 @@ public class UseCaseHandler {
 
   private final TaskScheduler taskScheduler;
   private final ErrorHandler errorHandler;
+
+  // This list is used to retain error adapters in a non-weak reference associated with this use
+  // case handler
+  private final List<OnErrorCallback> errorCallbacks = new ArrayList<>();
 
   public UseCaseHandler(TaskScheduler taskScheduler, ErrorHandler errorHandler) {
     this.taskScheduler = taskScheduler;
@@ -45,8 +53,12 @@ public class UseCaseHandler {
     UseCaseFilter.filter(useCase, useCaseParams);
 
     useCase.setOnSuccessCallback(useCaseParams.getOnSuccessCallback());
-    useCase.setOnErrorCallback(
-        new OnErrorCallbackToErrorHandlerAdapter(errorHandler, useCaseParams.getOnErrorCallback()));
+
+    OnErrorCallback onErrorCallback =
+        new OnErrorCallbackToErrorHandlerAdapter(errorHandler, useCaseParams.getOnErrorCallback());
+    errorCallbacks.add(onErrorCallback);
+    useCase.setOnErrorCallback(onErrorCallback);
+
     UseCaseWrapper useCaseWrapper = new UseCaseWrapper(useCase, useCaseParams, errorHandler);
     taskScheduler.execute(useCaseWrapper);
   }
@@ -63,18 +75,22 @@ public class UseCaseHandler {
    * Inner class responsible for routing the errors thrown from the use case to the error handler
    */
   private static class OnErrorCallbackToErrorHandlerAdapter implements OnErrorCallback {
-    private final ErrorHandler errorHandler;
-    private final OnErrorCallback useCaseOnErrorCallback;
+    private final WeakReference<ErrorHandler> errorHandler;
+    private final WeakReference<OnErrorCallback> useCaseOnErrorCallback;
 
     public OnErrorCallbackToErrorHandlerAdapter(ErrorHandler errorHandler,
         OnErrorCallback useCaseOnErrorCallback) {
-      this.errorHandler = errorHandler;
-      this.useCaseOnErrorCallback = useCaseOnErrorCallback;
+      this.errorHandler = new WeakReference<>(errorHandler);
+      this.useCaseOnErrorCallback = new WeakReference<>(useCaseOnErrorCallback);
     }
 
     @Override public boolean onError(Error error) {
-      errorHandler.notifyError(error, useCaseOnErrorCallback);
-      return true;
+      ErrorHandler errorHandler = this.errorHandler.get();
+      if (errorHandler != null) {
+        errorHandler.notifyError(error, useCaseOnErrorCallback.get());
+        return true;
+      }
+      return false;
     }
   }
 }
