@@ -24,6 +24,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import butterknife.ButterKnife;
 
 /**
  * Base Fragment created to implement some common functionality to every Fragment using this
@@ -57,26 +58,19 @@ public abstract class RosieSupportFragment extends Fragment implements RosiePres
     @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                                  Bundle savedInstanceState) {
         injectDependencies();
-        View view = inflater.inflate(getLayoutId(), container, false);
-        onPrepareFragment(view);
+        int layoutId = getLayoutId();
+        View view = inflater.inflate(layoutId, container, false);
+        ButterKnife.bind(this, view);
         return view;
     }
 
     /**
-     * Initializes the presenter lifecycle.
+     * Injects the Fragment views using Butter Knife library and initializes the presenter lifecycle.
      */
     @Override public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         onPreparePresenter();
         presenterLifeCycleLinker.initializeLifeCycle(this, this);
-    }
-
-    /**
-     * Called before returning the view in onCreateView.
-     * Override this method to configure your fragment or bind views.
-     */
-    protected void onPrepareFragment(View view) {
-
     }
 
     /**

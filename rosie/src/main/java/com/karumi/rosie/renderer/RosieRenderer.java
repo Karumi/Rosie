@@ -14,18 +14,28 @@
  * limitations under the License.
  */
 
-package com.karumi.rosie.sample.characters.view.renderer;
+package com.karumi.rosie.renderer;
 
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import com.karumi.rosie.renderer.RosieRenderer;
-import com.karumi.rosie.sample.R;
-import com.karumi.rosie.sample.characters.view.viewmodel.CharacterViewModel;
+import butterknife.ButterKnife;
+import com.pedrogomez.renderers.Renderer;
 
-public class LoadMoreCharactersRenderer extends RosieRenderer<CharacterViewModel> {
+/**
+ * Renderer extension create to provide Butter Knife view injection in a transparent way. Your
+ * Renderer classes should extend from this one to be able tu use Butter Knife annotations.
+ * Remember to call super in you overridden render method.
+ */
+public abstract class RosieRenderer<T> extends Renderer<T> {
 
-  @Override protected View inflate(LayoutInflater inflater, ViewGroup parent) {
-    return inflater.inflate(R.layout.item_load_more, parent, false);
+  @Override public void render() {
+    ButterKnife.bind(this, getRootView());
+  }
+
+  @Override protected void setUpView(View view) {
+
+  }
+
+  @Override protected void hookListeners(View view) {
+
   }
 }
