@@ -19,11 +19,11 @@ package com.karumi.rosie.sample.comics.view.renderer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.karumi.rosie.renderer.RosieRenderer;
 import com.karumi.rosie.sample.R;
+import com.karumi.rosie.sample.base.view.renderer.MarvelRenderer;
 import com.karumi.rosie.sample.comics.view.viewmodel.ComicSeriesViewModel;
 
-public class LoadMoreComicSeriesRenderer extends RosieRenderer<ComicSeriesViewModel> {
+public class LoadMoreComicSeriesRenderer extends MarvelRenderer<ComicSeriesViewModel> {
 
   @Override protected View inflate(LayoutInflater inflater, ViewGroup parent) {
     return inflater.inflate(R.layout.item_load_more, parent, false);
