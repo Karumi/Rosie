@@ -16,19 +16,20 @@
 
 package com.karumi.rosie.sample.base.view.activity;
 
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Optional;
+
 import com.karumi.rosie.sample.R;
 import com.karumi.rosie.view.RosieActivity;
 
 public abstract class MarvelActivity extends RosieActivity {
   @Override protected abstract int getLayoutId();
 
-  @Nullable @OnClick(R.id.iv_toolbar_back) public void onBackButtonClicked() {
+  @Optional @OnClick(R.id.iv_toolbar_back) public void onBackButtonClicked() {
     finish();
   }
 

@@ -21,7 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.OnClick;
 import com.karumi.rosie.sample.R;
 import com.karumi.rosie.sample.base.view.renderer.MarvelRenderer;
@@ -33,8 +34,8 @@ public class CharacterRenderer extends MarvelRenderer<CharacterViewModel> {
 
   private final CharactersPresenter presenter;
 
-  @Bind(R.id.tv_character_name) TextView nameView;
-  @Bind(R.id.iv_character_image) ImageView avatarView;
+  @BindView(R.id.tv_character_name) TextView nameView;
+  @BindView(R.id.iv_character_image) ImageView avatarView;
 
   public CharacterRenderer(CharactersPresenter presenter) {
     this.presenter = presenter;
