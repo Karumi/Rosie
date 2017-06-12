@@ -1,4 +1,7 @@
 language: android
+dist: trusty
+sudo: required
+group: edge
 
 android:
   components:
