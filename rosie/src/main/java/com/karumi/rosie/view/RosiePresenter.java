@@ -146,8 +146,30 @@ public class RosiePresenter<T extends RosiePresenter.View> {
         interfaceClass = interfaceCandidate;
       }
     }
-    return interfaceClass;
+    if (interfaceClass != null) {
+      return interfaceClass;
+    } else {
+      return getViewInterfaceSuperClass(this.view.getClass());
+    }
   }
+
+  private Class<?> getViewInterfaceSuperClass(Class<?> currentClass) {
+    Class<?> interfaceClass = null;
+    Class<?> superClass = currentClass.getSuperclass();
+    Class<?>[] interfaces = superClass.getInterfaces();
+    for (int i = 0; i < interfaces.length; i++) {
+      Class<?> interfaceCandidate = interfaces[i];
+      if (RosiePresenter.View.class.isAssignableFrom(interfaceCandidate)) {
+        interfaceClass = interfaceCandidate;
+      }
+    }
+    if (interfaceClass != null) {
+      return interfaceClass;
+    } else {
+      return getViewInterfaceSuperClass(superClass);
+    }
+  }
+
 
   private void registerGlobalErrorCallback() {
     if (shouldRegisterGlobalErrorCallbacks) {
