@@ -410,6 +410,11 @@ We are writing some blog posts to explain the main motivations behind Rosie and 
 
 * Presentation layer: http://blog.karumi.com/inside-rosie-the-presentation-layer/
 
+Related projects
+----------------
+
+* [Kotlin MVP-Clean Rosie Architecture](https://android-arsenal.com/details/3/5750)
+
 Do you want to contribute?
 --------------------------
 
