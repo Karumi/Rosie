@@ -124,7 +124,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * Changes the current view instance with a dynamic proxy to avoid real UI updates.
    */
   void resetView() {
-    final Class<?> viewClass = getViewInterfaceClass();
+    final Class<?> viewClass = getViewInterfaceClass(this.view.getClass());
     InvocationHandler emptyHandler = new InvocationHandler() {
       @Override
       public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -137,9 +137,9 @@ public class RosiePresenter<T extends RosiePresenter.View> {
     this.view = (T) Proxy.newProxyInstance(classLoader, interfaces, emptyHandler);
   }
 
-  private Class<?> getViewInterfaceClass() {
+  private Class<?> getViewInterfaceClass(Class<?> currentClass) {
     Class<?> interfaceClass = null;
-    Class<?>[] interfaces = this.view.getClass().getInterfaces();
+    Class<?>[] interfaces = currentClass.getInterfaces();
     for (int i = 0; i < interfaces.length; i++) {
       Class<?> interfaceCandidate = interfaces[i];
       if (RosiePresenter.View.class.isAssignableFrom(interfaceCandidate)) {
@@ -149,27 +149,9 @@ public class RosiePresenter<T extends RosiePresenter.View> {
     if (interfaceClass != null) {
       return interfaceClass;
     } else {
-      return getViewInterfaceSuperClass(this.view.getClass());
+      return getViewInterfaceClass(currentClass.getSuperclass());
     }
   }
-
-  private Class<?> getViewInterfaceSuperClass(Class<?> currentClass) {
-    Class<?> interfaceClass = null;
-    Class<?> superClass = currentClass.getSuperclass();
-    Class<?>[] interfaces = superClass.getInterfaces();
-    for (int i = 0; i < interfaces.length; i++) {
-      Class<?> interfaceCandidate = interfaces[i];
-      if (RosiePresenter.View.class.isAssignableFrom(interfaceCandidate)) {
-        interfaceClass = interfaceCandidate;
-      }
-    }
-    if (interfaceClass != null) {
-      return interfaceClass;
-    } else {
-      return getViewInterfaceSuperClass(superClass);
-    }
-  }
-
 
   private void registerGlobalErrorCallback() {
     if (shouldRegisterGlobalErrorCallbacks) {
