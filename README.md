@@ -45,7 +45,7 @@ public class SampleApplication extends RosieApplication {
 
 Rosie provides several base classes to start implementing your architecture separated in three layers, **view**, **domain** and **repository**. Let's explore them in detail.
 
-###View
+### View
 The view package contains all the classes needed to implement your presentation logic following the MVP pattern. To use the view package, make your ``Activity`` extend from ``RosieActivity`` or your ``Fragment`` from ``RosieFragment`` and specify the layout that Rosie will automatically inflate for you:
 
 ```java
@@ -91,7 +91,7 @@ public abstract class MyBaseActivity extends FragmentActivity
 
 Rosie provides you some base classes to be extended and give you a quick access to the Dependency Injection and Model View Presenter features, but the usage of inheritance to use these features is not mandatory.
 
-####Dagger
+#### Dagger
 
 Besides, you can define the [Dagger] [dagger] module that will contain the dependencies for your activity by overriding the ``getActivityScopeModules`` method:
 
@@ -114,7 +114,7 @@ public class InjectedClass {
 }
 ```
 
-####Presenter
+#### Presenter
 To follow the MVP pattern, Rosie provides a ``RosiePresenter`` class that will be responsible for all your presentation logic. Rosie will take care of linking your view (a ``RosieActivity`` or ``RosieFragment`` implementation) with your presenter and subscribing it to its lifecycle. In order to do that, create a ``RosiePresenter`` and inject it into your activity/fragment with the ``@Presenter`` annotation:
 
 ```java
@@ -161,7 +161,7 @@ To understand when the lifecycle methods are called take a look at the following
 | ``pause``       | ``onPause``    | ``onPause``        |
 | ``destroy``     | ``onDestroy``  | ``onDestroy``      |
 
-###Domain
+### Domain
 
 The domain package is meant to contain all your business logic that will change from app to app. For that reason, Rosie only provides a single ``RosieUseCase`` class that will help you execute your use cases in background following the command pattern.
 
@@ -201,7 +201,7 @@ public class SamplePresenter extends RosiePresenter<SamplePresenter.View> {
 
 All the configuration calls are optional and can be omitted when not needed but keep in mind that provided arguments must match the ones declared in your ``UseCase`` method or an error will be raised. It is important to keep in mind that, by default, your callback methods will be executed in the main thread so you can easily update your UI from them.
 
-####Named use cases
+#### Named use cases
 
 Sometimes you need to specify use cases that are very similar to each other. To avoid creating multiple classes representing every use case configuration, you can create a single ``RosieUseCase`` class with multiple methods. Rosie will be able to identify the use case being called by matching its input parameters. If you create two methods with the ``@UseCase`` annotation that have the same input parameters, you can provide a name to each of them in order to identify them:
 
@@ -230,7 +230,7 @@ public class SamplePresenter extends RosiePresenter<SamplePresenter.View> {
 }
 ```
 
-###Error handling
+### Error handling
 
 Errors can be either manually reported or implicitly notified when an exception is thrown from your use case context. To handle errors, there is a capturing event system that iterates over all your registered ``OnErrorCallback`` implementations and notifies them of the issue. Every callback needs to return a boolean value to inform whether the error has been handled and needs no further management. Callbacks are always called in this specific order:
 
@@ -299,7 +299,7 @@ Remember to provide your ErrorFactory implementation inside a Dagger module.
 ```
 
 
-###Repository
+### Repository
 
 The third layer is meant to encapsulate your data sources. To start using it just extend ``RosieRepository`` and configure its data sources in its constructor:
 
@@ -356,7 +356,7 @@ repository.deleteByKey(key);
 repository.deleteAll();
 ```
 
-####Paginated repositories
+#### Paginated repositories
 
 Finally, Rosie gives you support for pagination in repositories. If your data is paginated, just extend ``PaginatedRosieRepository`` instead of ``RosieRepository``. You will also need to implement your paginated data sources, ``PaginatedReadableDataSource<V>`` and ``PaginatedCacheDataSource<K, V>``. Once your paginated repository is completely defined and configured you will be able to use it just as a regular repository with additional pagination-related methods:
 
