@@ -20,9 +20,6 @@ import com.karumi.rosie.domain.usecase.RosieUseCase;
 import com.karumi.rosie.domain.usecase.UseCaseCall;
 import com.karumi.rosie.domain.usecase.UseCaseHandler;
 import com.karumi.rosie.domain.usecase.error.OnErrorCallback;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,11 +30,7 @@ import java.util.List;
  */
 public class RosiePresenter<T extends RosiePresenter.View> {
 
-  private static final InvocationHandler emptyHandler = new InvocationHandler() {
-    @Override public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-      return null;
-    }
-  };
+  private final RosieViewProxyGenerator<T> rosieViewProxyGenerator = new RosieViewProxyGenerator<>();
   private final UseCaseHandler useCaseHandler;
   private final List<UseCaseCall> useCaseCalls = new LinkedList<>();
   private final List<OnErrorCallback> globalOnErrorCallbacks = new LinkedList<>();
@@ -128,34 +121,7 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * Changes the current view instance with a dynamic proxy to avoid real UI updates.
    */
   void resetView() {
-    final Class[] viewClasses = getViewInterfaceClasses();
-    ClassLoader classLoader = viewClasses[0].getClassLoader();
-    this.view = (T) Proxy.newProxyInstance(classLoader, viewClasses, emptyHandler);
-  }
-
-  private Class<?>[] getViewInterfaceClasses() {
-    List<Class<?>> interfaceClasses = new LinkedList<>();
-    Class<?>[] interfaces = this.view.getClass().getInterfaces();
-    for (int i = 0; i < interfaces.length; i++) {
-      Class<?> interfaceCandidate = interfaces[i];
-      if (RosiePresenter.View.class.isAssignableFrom(
-          interfaceCandidate)) {
-        interfaceClasses.add(interfaceCandidate);
-      }
-    }
-    return interfaceClasses.toArray(new Class[interfaceClasses.size()]);
-  }
-
-  private boolean canDowncastInstance(Class<?> candidate) {
-    ClassLoader classLoader = candidate.getClassLoader();
-    Class[] interfaces = new Class[1];
-    interfaces[0] = candidate;
-    try {
-      T safeCast = (T) Proxy.newProxyInstance(classLoader, interfaces, emptyHandler);
-    } catch (Exception e) {
-      return false;
-    }
-    return true;
+    this.view = rosieViewProxyGenerator.generate(view);
   }
 
   private void registerGlobalErrorCallback() {
