@@ -24,16 +24,21 @@ import java.util.List;
 
 class RosieViewProxyGenerator<T> {
 
-  private static final InvocationHandler emptyHandler = new InvocationHandler() {
+  private static final InvocationHandler EMPTY_HANDLER = new InvocationHandler() {
     @Override public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
       return null;
     }
   };
 
+  /**
+   * Generates a proxy instance for classes implementing RosiePresenter.View. The instance
+   * generated uses a default handler so it will generate any side effect when invoking this
+   * instance but it will be equivalent from the type point of view.
+   */
   T generate(Object view) {
     final Class[] viewClasses = getViewInterfaceClasses(view);
     ClassLoader classLoader = viewClasses[0].getClassLoader();
-    return (T) Proxy.newProxyInstance(classLoader, viewClasses, emptyHandler);
+    return (T) Proxy.newProxyInstance(classLoader, viewClasses, EMPTY_HANDLER);
   }
 
   private Class<?>[] getViewInterfaceClasses(Object view) {

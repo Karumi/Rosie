@@ -27,7 +27,7 @@ public class RosieViewProxyGeneratorTest {
   private final C anyClassExtendingInterfaces = new C();
 
   @Test
-  public void shouldGenerateAClassImplementingBothInterfacesExtendingFromRosieViewUsingAnEmptyHandlerWeCanInvokeWithoutCrashing() {
+  public void shouldGenerateAClassImplementingBothInterfacesExtendingFromRosieView() {
     A a = generator.generate(anyClassExtendingInterfaces);
     B b = generator.generate(anyClassExtendingInterfaces);
 
