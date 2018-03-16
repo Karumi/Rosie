@@ -33,6 +33,11 @@ import java.util.List;
  */
 public class RosiePresenter<T extends RosiePresenter.View> {
 
+  private static final InvocationHandler emptyHandler = new InvocationHandler() {
+    @Override public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+      return null;
+    }
+  };
   private final UseCaseHandler useCaseHandler;
   private final List<UseCaseCall> useCaseCalls = new LinkedList<>();
   private final List<OnErrorCallback> globalOnErrorCallbacks = new LinkedList<>();
@@ -87,7 +92,6 @@ public class RosiePresenter<T extends RosiePresenter.View> {
     return useCaseCall;
   }
 
-
   /**
    * Returns the view configured in the presenter which real implementation is an Activity or
    * Fragment using this presenter.
@@ -124,29 +128,34 @@ public class RosiePresenter<T extends RosiePresenter.View> {
    * Changes the current view instance with a dynamic proxy to avoid real UI updates.
    */
   void resetView() {
-    final Class<?> viewClass = getViewInterfaceClass();
-    InvocationHandler emptyHandler = new InvocationHandler() {
-      @Override
-      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        return null;
-      }
-    };
-    ClassLoader classLoader = viewClass.getClassLoader();
-    Class[] interfaces = new Class[1];
-    interfaces[0] = viewClass;
-    this.view = (T) Proxy.newProxyInstance(classLoader, interfaces, emptyHandler);
+    final Class[] viewClasses = getViewInterfaceClasses();
+    ClassLoader classLoader = viewClasses[0].getClassLoader();
+    this.view = (T) Proxy.newProxyInstance(classLoader, viewClasses, emptyHandler);
   }
 
-  private Class<?> getViewInterfaceClass() {
-    Class<?> interfaceClass = null;
+  private Class<?>[] getViewInterfaceClasses() {
+    List<Class<?>> interfaceClasses = new LinkedList<>();
     Class<?>[] interfaces = this.view.getClass().getInterfaces();
     for (int i = 0; i < interfaces.length; i++) {
       Class<?> interfaceCandidate = interfaces[i];
-      if (RosiePresenter.View.class.isAssignableFrom(interfaceCandidate)) {
-        interfaceClass = interfaceCandidate;
+      if (RosiePresenter.View.class.isAssignableFrom(
+          interfaceCandidate)) {
+        interfaceClasses.add(interfaceCandidate);
       }
     }
-    return interfaceClass;
+    return interfaceClasses.toArray(new Class[interfaceClasses.size()]);
+  }
+
+  private boolean canDowncastInstance(Class<?> candidate) {
+    ClassLoader classLoader = candidate.getClassLoader();
+    Class[] interfaces = new Class[1];
+    interfaces[0] = candidate;
+    try {
+      T safeCast = (T) Proxy.newProxyInstance(classLoader, interfaces, emptyHandler);
+    } catch (Exception e) {
+      return false;
+    }
+    return true;
   }
 
   private void registerGlobalErrorCallback() {
