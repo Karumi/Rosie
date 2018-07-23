@@ -23,6 +23,11 @@ buildscript {
   }
 }
 
+ext {
+  projectMinSdkVersion = 14
+  projectCompileSdkVersion = 27
+  projectTargetSdkVersion = 27
+}
 
 allprojects {
   repositories {

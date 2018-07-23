@@ -55,7 +55,7 @@ def getPrivateMarvelKey() {
 def preDexEnabled = "true".equals(System.getProperty("pre-dex", "true"))
 
 android {
-  compileSdkVersion 23
+  compileSdkVersion projectCompileSdkVersion
   buildToolsVersion "23.0.3"
 
   dexOptions {
@@ -64,8 +64,8 @@ android {
 
   defaultConfig {
     applicationId "com.karumi.rosie.sample"
-    minSdkVersion 18
-    targetSdkVersion 23
+    minSdkVersion projectMinSdkVersion
+    targetSdkVersion projectTargetSdkVersion
     versionCode 1
     versionName "1.0"
     buildConfigField "String", "MARVEL_PUBLIC_KEY", getPublicMarvelKey()
