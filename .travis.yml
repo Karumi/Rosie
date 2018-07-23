@@ -1,14 +1,22 @@
 language: android
 
+before_install:
+  - mkdir "$ANDROID_HOME/licenses" || true
+  - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
+  - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
+
 android:
   components:
     - platform-tools
     - tools
-    - build-tools-23.0.3
-    - android-23
+    - build-tools-27.0.3
+    - android-27
     - extra-android-support
     - extra-google-m2repository
     - extra-android-m2repository
+  licenses:
+    - android-sdk-license-.+
+    - '.+'
 
 script:
   - ./gradlew checkstyle build -Dpre-dex=false -Pcom.android.build.threadPoolSize=1 -Dorg.gradle.parallel=false -Dorg.gradle.jvmargs="-Xms512m -Xmx512m" -Dorg.gradle.daemon=false

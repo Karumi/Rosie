@@ -75,36 +75,38 @@ android {
 }
 
 dependencies {
-  compile fileTree(include: ['*.jar'], dir: 'libs')
-  compile 'com.android.support:appcompat-v7:23.4.0'
-  compile 'com.android.support:support-v13:23.4.0'
-  compile 'com.android.support:design:23.4.0'
-  compile 'com.squareup.picasso:picasso:2.5.2'
-  compile 'com.karumi:dividers:1.0.3'
-  compile 'com.victor:lib:1.0.1' // https://github.com/yankai-victor/Loading
-  compile 'com.karumi:marvelapiclient:0.0.4'
-  compile 'com.github.pedrovgs:renderers:3.0.0'
-  compile 'com.jakewharton:butterknife:7.0.1'
-  provided 'com.squareup.dagger:dagger-compiler:1.2.2'
-  compile project(':rosie')
+  implementation fileTree(include: ['*.jar'], dir: 'libs')
+  implementation 'com.android.support:appcompat-v7:23.4.0'
+  implementation 'com.android.support:support-v13:23.4.0'
+  implementation 'com.android.support:design:23.4.0'
+  implementation 'com.squareup.picasso:picasso:2.5.2'
+  implementation 'com.karumi:dividers:1.0.3'
+  implementation 'com.victor:lib:1.0.1' // https://github.com/yankai-victor/Loading
+  implementation 'com.karumi:marvelapiclient:0.0.4'
+  implementation 'com.github.pedrovgs:renderers:3.0.0'
+  annotationProcessor 'com.jakewharton:butterknife:7.0.1'
+  implementation 'com.jakewharton:butterknife:7.0.1'
+  compileOnly 'com.squareup.dagger:dagger-compiler:1.2.2'
+  annotationProcessor 'com.squareup.dagger:dagger-compiler:1.2.2'
+  implementation project(':rosie')
 
-  androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
-  androidTestCompile('com.google.dexmaker:dexmaker-mockito:1.2') {
+  androidTestImplementation 'com.google.dexmaker:dexmaker:1.2'
+  androidTestImplementation('com.google.dexmaker:dexmaker-mockito:1.2') {
     exclude group: 'org.hamcrest', module: 'hamcrest-core'
   }
-  androidTestCompile 'com.android.support.test:runner:0.4.1'
-  androidTestCompile 'com.android.support.test:rules:0.4.1'
-  androidTestCompile 'org.mockito:mockito-core:1.10.19'
-  androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.1') {
+  androidTestImplementation 'com.android.support.test:runner:0.4.1'
+  androidTestImplementation 'com.android.support.test:rules:0.4.1'
+  androidTestImplementation 'org.mockito:mockito-core:1.10.19'
+  androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.1') {
     exclude group: 'javax.inject', module: 'javax.inject'
     exclude group: 'com.squareup', module: 'javawriter'
   }
-  androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.1') {
+  androidTestImplementation('com.android.support.test.espresso:espresso-contrib:2.2.1') {
     exclude module: 'support-annotations'
     exclude module: 'recyclerview-v7'
     exclude module: 'support-v4'
   }
-  androidTestCompile('com.android.support.test.espresso:espresso-intents:2.2.1')
+  androidTestImplementation('com.android.support.test.espresso:espresso-intents:2.2.1')
 }
 
 configurations.all {
