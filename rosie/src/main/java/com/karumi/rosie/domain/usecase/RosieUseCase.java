@@ -52,15 +52,18 @@ public class RosieUseCase {
    * this method returns the response in the UI Thread.
    */
   protected void notifySuccess(Object... values) {
-    Method[] methodsArray = onSuccessCallback.get().getClass().getMethods();
-    if (methodsArray.length > 0) {
-      Method methodToInvoke =
-          UseCaseFilter.filterValidMethodArgs(values, methodsArray, Success.class);
-      invokeMethodInTheCallbackScheduler(methodToInvoke, values);
-    } else {
-      throw new IllegalStateException(
-          "The OnSuccessCallback instance configured has no methods annotated with the "
-              + "@Success annotation.");
+    OnSuccessCallback successCallback = onSuccessCallback.get();
+    if (successCallback != null) {
+      Method[] methodsArray = successCallback.getClass().getMethods();
+      if (methodsArray.length > 0) {
+        Method methodToInvoke =
+            UseCaseFilter.filterValidMethodArgs(values, methodsArray, Success.class);
+        invokeMethodInTheCallbackScheduler(methodToInvoke, values);
+      } else {
+        throw new IllegalStateException(
+            "The OnSuccessCallback instance configured has no methods annotated with the "
+                + "@Success annotation.");
+      }
     }
   }
 
@@ -74,7 +77,10 @@ public class RosieUseCase {
    */
 
   protected void notifyError(final Error error) throws ErrorNotHandledException {
-    onErrorCallback.get().onError(error);
+    OnErrorCallback errorCallback = onErrorCallback.get();
+    if (errorCallback != null) {
+      errorCallback.onError(error);
+    }
   }
 
   /**
@@ -104,12 +110,12 @@ public class RosieUseCase {
   private void invokeMethodInTheCallbackScheduler(final Method methodToInvoke,
       final Object[] values) {
     if (onSuccessCallback != null) {
-      OnSuccessCallback callback = onSuccessCallback.get();
+      final OnSuccessCallback callback = onSuccessCallback.get();
       if (callback != null) {
         getCallbackScheduler().post(new Runnable() {
           @Override public void run() {
             try {
-              methodToInvoke.invoke(onSuccessCallback.get(), values);
+              methodToInvoke.invoke(callback, values);
             } catch (Exception e) {
               throw new RuntimeException("Internal error invoking the success object", e);
             }
