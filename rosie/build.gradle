@@ -25,6 +25,12 @@ android {
     minSdkVersion projectMinSdkVersion
     targetSdkVersion projectTargetSdkVersion
   }
+
+  testOptions {
+    unitTests.all {
+      systemProperty 'robolectric.enabledSdks', projectCompileSdkVersion
+    }
+  }
 }
 
 dependencies {
