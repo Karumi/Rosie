@@ -405,7 +405,7 @@ import static org.mockito.Mockito.verify;
 
   private class EmptyResponseUseCase extends RosieUseCase {
 
-    public EmptyResponseUseCase() {
+    private EmptyResponseUseCase() {
       setCallbackScheduler(new FakeCallbackScheduler());
     }
 
@@ -416,7 +416,7 @@ import static org.mockito.Mockito.verify;
 
   private class ErrorUseCase extends RosieUseCase {
 
-    public ErrorUseCase() {
+    private ErrorUseCase() {
       setCallbackScheduler(new FakeCallbackScheduler());
     }
 
@@ -431,7 +431,7 @@ import static org.mockito.Mockito.verify;
 
   private class SuccessUseCase extends RosieUseCase {
 
-    public SuccessUseCase() {
+    private SuccessUseCase() {
       setCallbackScheduler(new FakeCallbackScheduler());
     }
 

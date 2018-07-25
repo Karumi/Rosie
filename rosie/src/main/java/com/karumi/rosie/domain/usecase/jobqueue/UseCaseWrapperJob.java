@@ -28,7 +28,7 @@ class UseCaseWrapperJob extends Job {
   private static final int PRIORITY_NORMAL = 3;
   private final UseCaseWrapper useCaseWrapper;
 
-  public UseCaseWrapperJob(UseCaseWrapper useCaseWrapper) {
+  UseCaseWrapperJob(UseCaseWrapper useCaseWrapper) {
     super(new Params(PRIORITY_NORMAL));
     this.useCaseWrapper = useCaseWrapper;
   }

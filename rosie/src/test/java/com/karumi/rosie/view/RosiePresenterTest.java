@@ -55,7 +55,7 @@ import static org.mockito.Mockito.verify;
 
   private static class RosiePresenterWithRegisteredCallback extends RosiePresenter
       implements OnErrorCallback {
-    public RosiePresenterWithRegisteredCallback(UseCaseHandler useCaseHandler) {
+    private RosiePresenterWithRegisteredCallback(UseCaseHandler useCaseHandler) {
       super(useCaseHandler);
       registerOnErrorCallback(this);
     }
