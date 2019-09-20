@@ -78,7 +78,7 @@ public class UseCaseHandler {
     private final WeakReference<ErrorHandler> errorHandler;
     private final WeakReference<OnErrorCallback> useCaseOnErrorCallback;
 
-    public OnErrorCallbackToErrorHandlerAdapter(ErrorHandler errorHandler,
+    private OnErrorCallbackToErrorHandlerAdapter(ErrorHandler errorHandler,
         OnErrorCallback useCaseOnErrorCallback) {
       this.errorHandler = new WeakReference<>(errorHandler);
       this.useCaseOnErrorCallback = new WeakReference<>(useCaseOnErrorCallback);

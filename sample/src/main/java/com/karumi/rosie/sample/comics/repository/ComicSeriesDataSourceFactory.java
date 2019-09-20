@@ -26,7 +26,7 @@ import javax.inject.Inject;
 
 class ComicSeriesDataSourceFactory {
 
-  @Inject public ComicSeriesDataSourceFactory() {
+  @Inject ComicSeriesDataSourceFactory() {
   }
 
   ComicSeriesDataSource createDataSource() {

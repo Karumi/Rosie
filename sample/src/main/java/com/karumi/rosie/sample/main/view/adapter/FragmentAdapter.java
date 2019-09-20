@@ -50,9 +50,9 @@ public class FragmentAdapter extends FragmentPagerAdapter {
 
   private static class ViewPagerFragmentHolder {
     public final Fragment fragment;
-    public final String pageTitle;
+    private final String pageTitle;
 
-    public ViewPagerFragmentHolder(Fragment fragment, String pageTitle) {
+    private ViewPagerFragmentHolder(Fragment fragment, String pageTitle) {
       this.fragment = fragment;
       this.pageTitle = pageTitle;
     }

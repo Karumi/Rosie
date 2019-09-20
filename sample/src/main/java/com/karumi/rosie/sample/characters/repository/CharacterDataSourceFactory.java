@@ -27,7 +27,7 @@ import javax.inject.Inject;
 
 class CharacterDataSourceFactory {
 
-  @Inject public CharacterDataSourceFactory() {
+  @Inject CharacterDataSourceFactory() {
   }
 
   PaginatedReadableDataSource<String, Character> createDataSource() {
